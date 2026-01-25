@@ -1,0 +1,28 @@
+{
+  "name": "rahim-saroar-mishu-portfolio",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@google/genai": "latest",
+    "@google/generative-ai": "^0.24.1",
+    "@remix-run/router": "1.15.3",
+    "lucide-react": "0.263.1",
+    "react": "18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router": "6.22.3",
+    "react-router-dom": "6.22.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}

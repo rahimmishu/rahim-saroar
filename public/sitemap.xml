@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <url>
+    <loc>https://rahim-saroar.vercel.app/</loc>
+    <lastmod>2026-01-25</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+
+    <image:image>
+      <image:loc>https://your-site-name.vercel.app/rahim-saroar-mishu-profile.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu - Profile Picture</image:title>
+      <image:caption>Profile</image:caption>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://your-site-name.vercel.app/rahim-saroar-mishu-content-creator.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu - Content Creator</image:title>
+      <image:caption>Content Creation</image:caption>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://your-site-name.vercel.app/rahim-saroar-mishu-web-developer.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu - College Life</image:title>
+      <image:caption>College</image:caption>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://your-site-name.vercel.app/rahim-saroar-mishu-speaker.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu - Public Speaker</image:title>
+      <image:caption>Public Speaking</image:caption>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://your-site-name.vercel.app/rahim-saroar-mishu-lifestyle.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu - Lifestyle</image:title>
+      <image:caption>Lifestyle</image:caption>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://your-site-name.vercel.app/rahim-saroar-mishu-coding.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu - Coding Workspace</image:title>
+      <image:caption>Workspace</image:caption>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://your-site-name.vercel.app/rahim-saroar-mishu-sugarmill.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu - Travel at Sugarmill</image:title>
+      <image:caption>Travel</image:caption>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://your-site-name.vercel.app/rahim-saroar-mishu-school.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu - School Memories</image:title>
+      <image:caption>School</image:caption>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://your-site-name.vercel.app/rahim-saroar-mishu-J.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu - Workspace Setup</image:title>
+      <image:caption>Workspace</image:caption>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://your-site-name.vercel.app/rahim-saroar-mishu-fuad.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu - With Friend Fuad</image:title>
+      <image:caption>Friend</image:caption>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://your-site-name.vercel.app/rahim-saroar-mishu-coffee.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu - Coffee and Code</image:title>
+      <image:caption>Workspace</image:caption>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://your-site-name.vercel.app/rahim-saroar-mishu-c.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu - Creative Workspace</image:title>
+      <image:caption>Workspace</image:caption>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://your-site-name.vercel.app/rahim-saroar-mishu-biya.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu - Wedding Ceremony Travel</image:title>
+      <image:caption>Travel</image:caption>
+    </image:image>
+
+  </url>
+</urlset>

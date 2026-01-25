@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+    <link rel="shortcut icon" href="/favicon.png" />
+
+    <title>Rahim Saroar Mishu | Future Tech Leader</title>
+    <meta name="description" content="Official Portfolio of Rahim Saroar Mishu - A 19-year-old Full Stack Developer, AI Enthusiast, and Founder of 'Rhythm of Peace' from Bangladesh." />
+    <meta name="keywords" content="Rahim Saroar, Rahim Saroar Mishu, Mishu, Web Developer Bangladesh, AI Expert, Rhythm of Peace" />
+    <meta name="author" content="Rahim Saroar Mishu" />
+
+    <meta property="og:title" content="Rahim Saroar Mishu - Future Tech Leader" />
+    <meta property="og:description" content="Visit the portfolio of Rahim Saroar Mishu to see AI projects & creative works." />
+    <meta property="og:image" content="https://rahim-saroar.vercel.app/1.jpg" />
+    <meta property="og:url" content="https://rahim-saroar.vercel.app/" />
+    <meta property="og:type" content="website" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Poppins', 'sans-serif'],
+              bengali: ['Hind Siliguri', 'sans-serif'],
+              signature: ['Dancing Script', 'cursive'],
+            },
+            colors: {
+              primary: '#2563EB', // Blue-600
+              secondary: '#1E293B', // Slate-800
+              accent: '#3B82F6', // Blue-500
+              dark: '#0f172a', // Slate-900
+            },
+            animation: {
+              marquee: 'marquee 25s linear infinite',
+              cursor: 'cursor .75s step-end infinite',
+            },
+            keyframes: {
+              marquee: {
+                '0%': { transform: 'translateX(0)' },
+                '100%': { transform: 'translateX(-50%)' },
+              },
+              cursor: {
+                '0%, 100%': { opacity: '1' },
+                '50%': { opacity: '0' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- Custom Styles -->
+    <style>
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 5rem; /* Offset for fixed navbar */
+      }
+      body {
+        font-family: 'Poppins', sans-serif;
+      }
+      .font-bengali {
+        font-family: 'Hind Siliguri', sans-serif;
+      }
+      .font-signature {
+        font-family: 'Dancing Script', cursive;
+      }
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      .no-scrollbar::-webkit-scrollbar {
+          display: none;
+      }
+      /* Hide scrollbar for IE, Edge and Firefox */
+      .no-scrollbar {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+      }
+    </style>
+    
+    <!-- Import Map -->
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react/": "https://esm.sh/react@18.2.0/",
+        "react-dom": "https://esm.sh/react-dom@18.2.0?deps=react@18.2.0",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?deps=react@18.2.0",
+        "lucide-react": "https://esm.sh/lucide-react@0.263.1?deps=react@18.2.0",
+        "react-router-dom": "https://esm.sh/react-router-dom@6.22.3?deps=react@18.2.0,react-dom@18.2.0",
+        "react-router": "https://esm.sh/react-router@6.22.3?deps=react@18.2.0",
+        "@remix-run/router": "https://esm.sh/@remix-run/router@1.15.3",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "@google/genai": "https://esm.sh/@google/genai"
+      }
+    }
+    </script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
