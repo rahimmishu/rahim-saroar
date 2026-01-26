@@ -22,6 +22,7 @@ import PhotoGallery from './components/PhotoGallery';
 import AudioPlayer from './components/AudioPlayer';
 import Preloader from './components/Preloader'; // ✅ ইমপোর্ট ঠিক আছে
 import ContextMenu from './components/ContextMenu'; // ✨ নতুন ইমপোর্ট
+import NoiseOverlay from './components/NoiseOverlay'; // ✨ ইমপোর্ট
 
 const App: React.FC = () => {
   // ১. লোডিং স্টেট
@@ -65,6 +66,7 @@ const App: React.FC = () => {
     <main className="min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
       {/* 🔥 সবার উপরে বা নিচে ContextMenu কম্পোনেন্টটি যোগ করুন */}
       <ContextMenu />
+      <NoiseOverlay /> {/* 🔥 এটি যোগ করুন */}
       {/* 🔥 ২. Preloader আপডেট করা হলো: onFinish ফাংশন যোগ করা হয়েছে */}
       {/* যখন Preloader-এর জুম শেষ হবে, তখন এটি setIsLoading(false) কল করবে */}
       {isLoading && <Preloader onFinish={() => setIsLoading(false)} />}
