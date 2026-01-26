@@ -138,14 +138,29 @@ const Hero: React.FC = () => {
                 <div className="absolute inset-0 transition-opacity duration-500 opacity-0 bg-gradient-to-t from-black/40 via-transparent to-transparent group-hover:opacity-100"></div>
               </div>
 
-              {/* Floating Badge on Image */}
-              <div className="absolute p-4 delay-700 bg-white border shadow-xl -bottom-6 -left-6 dark:bg-slate-800 rounded-2xl border-slate-100 dark:border-slate-700 animate-bounce">
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                  <div>
-                    <p className="text-xs font-semibold text-slate-500">Status</p>
-                    <p className="text-sm font-bold text-slate-800 dark:text-white">Open to Work</p>
+              {/* Floating Badge on Image (Updated: Sharper Text) */}
+              <div className="absolute z-20 bottom-5 left-5">
+                {/* 'antialiased' ক্লাস যোগ করা হয়েছে যা টেক্সটকে শার্প করে */}
+                <div className="flex items-center gap-3 px-4 py-3 pr-6 antialiased transition-all duration-300 border rounded-full shadow-lg cursor-pointer bg-white/10 dark:bg-black/40 backdrop-blur-md border-white/20 hover:bg-white/20 group-hover:scale-105">
+                  
+                  {/* Pulsing Dot */}
+                  <div className="relative flex w-3 h-3">
+                    <span className="absolute inline-flex w-full h-full bg-green-400 rounded-full opacity-75 animate-ping"></span>
+                    <span className="relative inline-flex w-3 h-3 bg-green-500 rounded-full"></span>
                   </div>
+
+                  {/* Text Content */}
+                  <div className="flex flex-col items-start justify-center">
+                    {/* অপাসিটি একটু বাড়ানো হয়েছে (white/80) */}
+                    <p className="text-[10px] font-bold text-white/80 uppercase tracking-widest leading-none mb-1">
+                      Status
+                    </p>
+                    {/* ড্রপ শ্যাডো সরিয়ে ফেলা হয়েছে */}
+                    <p className="text-sm font-bold leading-none text-white">
+                      Open to Work
+                    </p>
+                  </div>
+                  
                 </div>
               </div>
 
