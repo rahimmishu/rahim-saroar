@@ -6,7 +6,8 @@ const FloatingWhatsApp: React.FC = () => {
       href="https://wa.link/0smu34"
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-5 right-8 z-50 flex items-center justify-center w-14 h-14 bg-[#25D366] text-white rounded-full shadow-lg hover:shadow-2xl hover:scale-110 transition-all duration-300 group"
+      // পজিশন: bottom-24 (মাঝখানে, চ্যাটবটের উপরে)
+      className="fixed bottom-24 right-6 z-50 w-14 h-14 flex items-center justify-center bg-green-500 text-white rounded-full shadow-xl hover:shadow-green-500/30 hover:scale-110 hover:-translate-y-1 transition-all duration-300 group"
       aria-label="Chat on WhatsApp"
     >
       {/* Pulse Effect Layer */}

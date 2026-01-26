@@ -45,7 +45,7 @@ const Chatbot: React.FC = () => {
   useEffect(() => {
     const initChat = async () => {
       try {
-        const ai = new GoogleGenAI({ apiKey: "AIzaSyAj5Kyyrgq-IUoAv7NeL0hdTHmbYBHyL0A" });
+        const ai = new GoogleGenAI({ apiKey: "AIzaSyCFcqaHvTeuAJF-My1kJmMN1cLERFZUSpM" });
         const chat = ai.chats.create({
           model: 'gemini-3-flash-preview',
           config: {
@@ -107,7 +107,8 @@ const Chatbot: React.FC = () => {
     <>
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-[60] w-[320px] md:w-[350px] bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-300 font-sans">
+        // 🔥 UPDATE: bottom-6 এর বদলে bottom-24 এবং z-[100] দেওয়া হয়েছে যাতে সবার উপরে থাকে
+        <div className="fixed bottom-24 right-6 z-[100] w-[320px] md:w-[350px] bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden animate-in slide-in-from-bottom-10 fade-in duration-300 font-sans">
           
           {/* Header with Close Button */}
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 flex justify-between items-center text-white">
@@ -189,11 +190,10 @@ const Chatbot: React.FC = () => {
         </div>
       )}
 
-      {/* Trigger Button - 🔥 Updated ClassName & Position (Bottom 6) */}
+      {/* Trigger Button - ঠিক আছে (bottom-6) */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          // এখানে ক্লাস নেম পরিবর্তন করা হয়েছে যাতে এটি সবার নিচে (bottom-6) এবং সঠিক সাইজে (w-14 h-14) থাকে
           className="fixed bottom-6 right-6 z-50 w-14 h-14 flex items-center justify-center bg-blue-600 text-white rounded-full shadow-xl hover:shadow-blue-600/30 hover:scale-110 hover:-translate-y-1 transition-all duration-300 group"
         >
           <div className="relative">
