@@ -20,9 +20,13 @@ import FacebookFeed from './components/FacebookFeed';
 import Resources from './components/Resources';
 import PhotoGallery from './components/PhotoGallery';
 import AudioPlayer from './components/AudioPlayer';
+import Preloader from './components/Preloader'; // ✅ ইমপোর্ট ঠিক আছে
 
 const App: React.FC = () => {
-  // ১. টুলস এবং গ্যালারির জন্য স্টেট
+  // ১. লোডিং স্টেট
+  const [isLoading, setIsLoading] = useState(true);
+
+  // টুলস এবং গ্যালারির জন্য স্টেট
   const [isToolsOpen, setIsToolsOpen] = useState(false);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false); 
   
@@ -49,6 +53,9 @@ const App: React.FC = () => {
     }
   }, [isDarkMode]);
 
+  // ❌ আগের টাইমার useEffect টি এখান থেকে সরিয়ে ফেলা হয়েছে
+  // কারণ এখন Preloader নিজেই onFinish কল করবে।
+
   const toggleTheme = () => {
     setIsDarkMode((prev) => !prev);
   };
@@ -56,56 +63,64 @@ const App: React.FC = () => {
   return (
     <main className="min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
       
-      {/* ২. Navbar-এ প্রপস পাঠানো হচ্ছে */}
-      <Navbar 
-        isDarkMode={isDarkMode} 
-        toggleTheme={toggleTheme} 
-        onOpenTools={() => setIsToolsOpen(true)}
-        onOpenGallery={() => setIsGalleryOpen(true)} // 🔥 বাটন ক্লিকের সিগন্যাল
-      />
-      
-      {/* মেইন সেকশনগুলো */}
-      <Hero />
-      <TechMarquee />
-      <FacebookFeed />
-      <Projects />
-      <Resources />
-      <CreativeWork />
-      <ScienceSimulation />
-      <Achievements />
-      <Certifications />
-      <About />
-      <Journey />
-      <Contact />
-      <Footer />
+      {/* 🔥 ২. Preloader আপডেট করা হলো: onFinish ফাংশন যোগ করা হয়েছে */}
+      {/* যখন Preloader-এর জুম শেষ হবে, তখন এটি setIsLoading(false) কল করবে */}
+      {isLoading && <Preloader onFinish={() => setIsLoading(false)} />}
 
-      {/* ফ্লোটিং আইটেমস */}
-      <BackToTop />
-      <FloatingWhatsApp />
-      <Chatbot />
-      <AudioPlayer /> {/* ✅ মিউজিক প্লেয়ার এখানে বসানো হলো */}
-      
-      {/* ৩. PHOTO GALLERY POPUP */}
-      <PhotoGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} />
+      {/* ৩. মেইন কন্টেন্ট র‍্যাপার (স্মুথ ফেড-ইন এনিমেশন সহ) */}
+      <div className={`transition-opacity duration-700 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+        
+        {/* Navbar-এ প্রপস পাঠানো হচ্ছে */}
+        <Navbar 
+          isDarkMode={isDarkMode} 
+          toggleTheme={toggleTheme} 
+          onOpenTools={() => setIsToolsOpen(true)}
+          onOpenGallery={() => setIsGalleryOpen(true)} 
+        />
+        
+        {/* মেইন সেকশনগুলো */}
+        <Hero />
+        <TechMarquee />
+        <FacebookFeed />
+        <Projects />
+        <Resources />
+        <CreativeWork />
+        <ScienceSimulation />
+        <Achievements />
+        <Certifications />
+        <About />
+        <Journey />
+        <Contact />
+        <Footer />
 
-      {/* ৪. TOOLS POPUP MODAL */}
-      {isToolsOpen && (
-        <div className="fixed inset-0 z-[100] bg-slate-900 overflow-y-auto animate-in slide-in-from-bottom-10 duration-300">
-          
-          {/* ক্লোজ বাটন */}
-          <button 
-            onClick={() => setIsToolsOpen(false)}
-            className="fixed top-6 right-6 z-[110] p-3 bg-white/10 hover:bg-red-600 text-white rounded-full backdrop-blur-md border border-white/20 transition-all shadow-xl hover:rotate-90"
-          >
-            <X size={28} />
-          </button>
+        {/* ফ্লোটিং আইটেমস */}
+        <BackToTop />
+        <FloatingWhatsApp />
+        <Chatbot />
+        <AudioPlayer /> 
+        
+        {/* PHOTO GALLERY POPUP */}
+        <PhotoGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} />
 
-          {/* টুলস কন্টেন্ট */}
-          <div className="relative min-h-screen">
-             <Tools />
+        {/* TOOLS POPUP MODAL */}
+        {isToolsOpen && (
+          <div className="fixed inset-0 z-[100] bg-slate-900 overflow-y-auto animate-in slide-in-from-bottom-10 duration-300">
+            
+            {/* ক্লোজ বাটন */}
+            <button 
+              onClick={() => setIsToolsOpen(false)}
+              className="fixed top-6 right-6 z-[110] p-3 bg-white/10 hover:bg-red-600 text-white rounded-full backdrop-blur-md border border-white/20 transition-all shadow-xl hover:rotate-90"
+            >
+              <X size={28} />
+            </button>
+
+            {/* টুলস কন্টেন্ট */}
+            <div className="relative min-h-screen">
+                <Tools />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </main>
   );
 };
