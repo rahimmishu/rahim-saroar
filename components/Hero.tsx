@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, Sparkles, PlayCircle, Github, Facebook, Linkedin, Mail } from 'lucide-react';
 
 const Hero: React.FC = () => {
-  // --- Typing Effect Logic (আপনার কোড থেকে) ---
+  // --- Typing Effect Logic ---
   const [text, setText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
@@ -96,23 +96,23 @@ const Hero: React.FC = () => {
               </a>
             </div>
 
-            {/* Social Icons (New Addition) */}
+            {/* Social Icons */}
             <div className="flex items-center justify-center lg:justify-start gap-6 text-slate-400 pt-6">
               <a href="https://github.com/rahimmishu" target="_blank" className="hover:text-slate-900 dark:hover:text-white transition-colors hover:scale-110 transform duration-200"><Github size={24} /></a>
               <a href="https://www.facebook.com/rahimsaroar" target="_blank" className="hover:text-blue-600 transition-colors hover:scale-110 transform duration-200"><Facebook size={24} /></a>
-              <a href="https://linkedin.com" target="_blank" className="hover:text-blue-500 transition-colors hover:scale-110 transform duration-200"><Linkedin size={24} /></a>
+              <a href="https://www.linkedin.com/in/rahim-saroar/" target="_blank" className="hover:text-blue-500 transition-colors hover:scale-110 transform duration-200"><Linkedin size={24} /></a>
               <a href="mailto:rahim@example.com" className="hover:text-red-500 transition-colors hover:scale-110 transform duration-200"><Mail size={24} /></a>
             </div>
           </div>
 
-          {/* --- Right Content: Professional 3D Image --- */}
+          {/* --- Right Content: BIGGER 3D Image --- */}
           <div className="w-full lg:w-1/2 relative flex justify-center lg:justify-end z-10">
             
-            {/* 1. Animated Blob Behind Image */}
+            {/* Animated Blob Behind Image */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-3xl opacity-20 animate-pulse"></div>
 
-            {/* 2. Image Container with 3D Effect */}
-            <div className="relative w-72 md:w-96 aspect-[4/5] rounded-3xl rotate-3 hover:rotate-0 transition-all duration-700 ease-out group perspective-1000">
+            {/* 🔥 UPDATE: সাইজ বড় করা হয়েছে (lg:w-[480px]) 🔥 */}
+            <div className="relative w-72 md:w-96 lg:w-[480px] xl:w-[550px] aspect-[4/5] rounded-3xl rotate-3 hover:rotate-0 transition-all duration-700 ease-out group perspective-1000">
               
               {/* Border Gradient Frame */}
               <div className="absolute -inset-1 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-[26px] opacity-75 blur-sm group-hover:opacity-100 transition duration-500"></div>
@@ -120,7 +120,7 @@ const Hero: React.FC = () => {
               {/* Main Image */}
               <div className="relative h-full w-full bg-slate-900 rounded-3xl overflow-hidden border-[6px] border-white dark:border-slate-800 shadow-2xl">
                  <img 
-                  // আপনার পাবলিক ফোল্ডারের সঠিক ছবির নাম ব্যবহার করা হয়েছে
+                  // SEO-এর জন্য সঠিক নাম ব্যবহার করা হয়েছে (আপনার sitemap অনুযায়ী)
                   src="/1.jpg" 
                   alt="Rahim Saroar Mishu" 
                   className="w-full h-full object-cover transform scale-105 group-hover:scale-110 transition-transform duration-700"
