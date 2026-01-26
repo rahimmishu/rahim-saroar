@@ -80,13 +80,9 @@ const Hero: React.FC = () => {
             {/* Buttons Area */}
             <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row lg:justify-start">
               
-              {/* 🔥 UPDATE: SHIMMER BUTTON (আলোর ঝলকানি ইফেক্ট যোগ করা হয়েছে) 🔥 */}
+              {/* Shimmer Button */}
               <a href="#projects" className="relative flex items-center justify-center w-full gap-2 px-8 py-4 overflow-hidden font-bold text-white transition-all bg-blue-600 rounded-full shadow-lg group shadow-blue-500/30 hover:bg-blue-700 hover:shadow-blue-600/40 hover:-translate-y-1 sm:w-auto">
-                
-                {/* ✨ Shimmer Effect Layer */}
                 <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-10"></div>
-                
-                {/* Button Text & Icon */}
                 <span className="relative z-20 flex items-center gap-2">
                   View My Projects <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />
                 </span>
@@ -119,52 +115,50 @@ const Hero: React.FC = () => {
             {/* Animated Blob Behind Image */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-3xl opacity-20 animate-pulse"></div>
 
-            {/* 🔥 Tilt3D Wrapper (যেমন ছিল তেমনই আছে) 🔥 */}
-            <Tilt3D className="relative w-72 md:w-96 lg:w-[480px] xl:w-[550px] aspect-[4/5] rounded-3xl rotate-3 hover:rotate-0 transition-all duration-700 ease-out group perspective-1000">
-              
-              {/* Border Gradient Frame */}
-              <div className="absolute -inset-1 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-[26px] opacity-75 blur-sm group-hover:opacity-100 transition duration-500"></div>
-              
-              {/* Main Image */}
-              <div className="relative h-full w-full bg-slate-900 rounded-3xl overflow-hidden border-[6px] border-white dark:border-slate-800 shadow-2xl">
-                 <img 
-                  // SEO-এর জন্য সঠিক নাম ব্যবহার করা হয়েছে
-                  src="/1.jpg" 
-                  alt="Rahim Saroar Mishu" 
-                  className="object-cover w-full h-full transition-transform duration-700 transform scale-105 group-hover:scale-110"
-                />
+            {/* 🔥 UPDATE: 'animate-float' দিয়ে র‍্যাপ করা হয়েছে যাতে ছবি নিজে থেকেই ভাসে 🔥 */}
+            <div className="relative z-20 animate-float">
+              <Tilt3D className="relative w-72 md:w-96 lg:w-[480px] xl:w-[550px] aspect-[4/5] rounded-3xl rotate-3 hover:rotate-0 transition-all duration-700 ease-out group perspective-1000">
                 
-                {/* Overlay Gradient */}
-                <div className="absolute inset-0 transition-opacity duration-500 opacity-0 bg-gradient-to-t from-black/40 via-transparent to-transparent group-hover:opacity-100"></div>
-              </div>
-
-              {/* Floating Badge on Image (Updated: Sharper Text) */}
-              <div className="absolute z-20 bottom-5 left-5">
-                {/* 'antialiased' ক্লাস যোগ করা হয়েছে যা টেক্সটকে শার্প করে */}
-                <div className="flex items-center gap-3 px-4 py-3 pr-6 antialiased transition-all duration-300 border rounded-full shadow-lg cursor-pointer bg-white/10 dark:bg-black/40 backdrop-blur-md border-white/20 hover:bg-white/20 group-hover:scale-105">
+                {/* Border Gradient Frame */}
+                <div className="absolute -inset-1 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-[26px] opacity-75 blur-sm group-hover:opacity-100 transition duration-500"></div>
+                
+                {/* Main Image */}
+                <div className="relative h-full w-full bg-slate-900 rounded-3xl overflow-hidden border-[6px] border-white dark:border-slate-800 shadow-2xl">
+                  <img 
+                    src="/1.jpg" 
+                    alt="Rahim Saroar Mishu" 
+                    className="object-cover w-full h-full transition-transform duration-700 transform scale-105 group-hover:scale-110"
+                  />
                   
-                  {/* Pulsing Dot */}
-                  <div className="relative flex w-3 h-3">
-                    <span className="absolute inline-flex w-full h-full bg-green-400 rounded-full opacity-75 animate-ping"></span>
-                    <span className="relative inline-flex w-3 h-3 bg-green-500 rounded-full"></span>
-                  </div>
-
-                  {/* Text Content */}
-                  <div className="flex flex-col items-start justify-center">
-                    {/* অপাসিটি একটু বাড়ানো হয়েছে (white/80) */}
-                    <p className="text-[10px] font-bold text-white/80 uppercase tracking-widest leading-none mb-1">
-                      Status
-                    </p>
-                    {/* ড্রপ শ্যাডো সরিয়ে ফেলা হয়েছে */}
-                    <p className="text-sm font-bold leading-none text-white">
-                      Open to Work
-                    </p>
-                  </div>
-                  
+                  {/* Overlay Gradient */}
+                  <div className="absolute inset-0 transition-opacity duration-500 opacity-0 bg-gradient-to-t from-black/40 via-transparent to-transparent group-hover:opacity-100"></div>
                 </div>
-              </div>
 
-            </Tilt3D>
+                {/* Floating Badge on Image (Sharper Text) */}
+                <div className="absolute z-20 bottom-5 left-5">
+                  <div className="flex items-center gap-3 px-4 py-3 pr-6 antialiased transition-all duration-300 border rounded-full shadow-lg cursor-pointer bg-white/10 dark:bg-black/40 backdrop-blur-md border-white/20 hover:bg-white/20 group-hover:scale-105">
+                    
+                    {/* Pulsing Dot */}
+                    <div className="relative flex w-3 h-3">
+                      <span className="absolute inline-flex w-full h-full bg-green-400 rounded-full opacity-75 animate-ping"></span>
+                      <span className="relative inline-flex w-3 h-3 bg-green-500 rounded-full"></span>
+                    </div>
+
+                    {/* Text Content */}
+                    <div className="flex flex-col items-start justify-center">
+                      <p className="text-[10px] font-bold text-white/80 uppercase tracking-widest leading-none mb-1">
+                        Status
+                      </p>
+                      <p className="text-sm font-bold leading-none text-white">
+                        Open to Work
+                      </p>
+                    </div>
+                    
+                  </div>
+                </div>
+
+              </Tilt3D>
+            </div>
           </div>
 
         </div>

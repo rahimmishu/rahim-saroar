@@ -55,3 +55,14 @@ html {
 .animate-shimmer {
   animation: shimmer 2.5s infinite;
 }
+
+/* Levitation / Floating Animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); } /* ২০ পিক্সেল উপরে উঠবে */
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite; /* ৬ সেকেন্ডে একবার লুপ হবে */
+}
