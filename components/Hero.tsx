@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Sparkles, PlayCircle, Github, Facebook, Linkedin, Mail } from 'lucide-react';
-import Tilt3D from './Tilt3D'; // ✅ এই ইমপোর্টটি থাকতে হবে
+import Tilt3D from './Tilt3D'; // ✅ এই ইমপোর্টটি যেমন আছে তেমনই থাকবে
 
 const Hero: React.FC = () => {
   // --- Typing Effect Logic ---
@@ -80,9 +80,16 @@ const Hero: React.FC = () => {
             {/* Buttons Area */}
             <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row lg:justify-start">
               
-              {/* Projects Button */}
-              <a href="#projects" className="flex items-center justify-center w-full gap-2 px-8 py-4 font-bold text-white transition-all bg-blue-600 rounded-full shadow-lg group shadow-blue-500/30 hover:bg-blue-700 hover:shadow-blue-600/40 hover:-translate-y-1 sm:w-auto">
-                View My Projects <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />
+              {/* 🔥 UPDATE: SHIMMER BUTTON (আলোর ঝলকানি ইফেক্ট যোগ করা হয়েছে) 🔥 */}
+              <a href="#projects" className="relative flex items-center justify-center w-full gap-2 px-8 py-4 overflow-hidden font-bold text-white transition-all bg-blue-600 rounded-full shadow-lg group shadow-blue-500/30 hover:bg-blue-700 hover:shadow-blue-600/40 hover:-translate-y-1 sm:w-auto">
+                
+                {/* ✨ Shimmer Effect Layer */}
+                <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-10"></div>
+                
+                {/* Button Text & Icon */}
+                <span className="relative z-20 flex items-center gap-2">
+                  View My Projects <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />
+                </span>
               </a>
               
               {/* Movie Button (Red) */}
@@ -112,7 +119,7 @@ const Hero: React.FC = () => {
             {/* Animated Blob Behind Image */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-3xl opacity-20 animate-pulse"></div>
 
-            {/* 🔥 UPDATE: Tilt3D ব্যবহার করা হয়েছে ছবির র‍্যাপার হিসেবে 🔥 */}
+            {/* 🔥 Tilt3D Wrapper (যেমন ছিল তেমনই আছে) 🔥 */}
             <Tilt3D className="relative w-72 md:w-96 lg:w-[480px] xl:w-[550px] aspect-[4/5] rounded-3xl rotate-3 hover:rotate-0 transition-all duration-700 ease-out group perspective-1000">
               
               {/* Border Gradient Frame */}
