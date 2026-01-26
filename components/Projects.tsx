@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { PROJECTS } from '../constants';
 import { ChevronRight, X, Copy, Check, Terminal, Play, Eye, ExternalLink } from 'lucide-react';
+import SpotlightCard from './SpotlightCard';
 
 const Projects: React.FC = () => {
   // ১. কোড মডালের জন্য স্টেট
@@ -10,13 +11,10 @@ const Projects: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const codeRef = useRef<HTMLDivElement>(null);
 
-  // ২. ভিডিও প্লেয়ারের জন্য স্টেট
+  // ২. ভিডিও প্লেয়ারের জন্য স্টেট
   const [showVideoModal, setShowVideoModal] = useState(false);
   
-  // 🔴 আপনার ইউটিউব ভিডিও আইডি (AI Project)
-  const videoId = "E4fGvJ2nGkY"; 
-
-  // 🔵 আপনার ফেসবুক পেজের লিংক (আপডেট করা হয়েছে)
+  // 🔵 আপনার ফেসবুক পেজের লিংক
   const facebookPageLink = "https://www.facebook.com/rhythm2OfPeace";
 
   // ---------------------------------------------------------
@@ -121,8 +119,8 @@ class HandDetector:
         # Initialize MediaPipe Hands Module
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(self.mode, self.maxHands, 
-                                      self.complexity, self.detectionCon, 
-                                      self.trackCon)
+                                        self.complexity, self.detectionCon, 
+                                        self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
         self.tipIds = [4, 8, 12, 16, 20]
         
@@ -256,42 +254,43 @@ if __name__ == "__main__":
   }, [showCodeModal]);
 
   return (
-    <section id="projects" className="py-24 bg-slate-50 dark:bg-slate-800 transition-colors duration-300 relative">
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">Featured Projects</h2>
-          <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg">
+    <section id="projects" className="relative py-24 transition-colors duration-300 bg-slate-50 dark:bg-slate-800">
+      <div className="container px-4 mx-auto md:px-8">
+        <div className="mb-16 text-center">
+          <h2 className="mb-4 text-3xl font-extrabold md:text-4xl text-slate-900 dark:text-white">Featured Projects</h2>
+          <p className="max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-400">
              A showcase of my technical journey through AI, IoT, and Content Creation.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {PROJECTS.map((project) => (
-            <div 
+            // 🔥 UPDATE: সাধারণ div এর পরিবর্তে SpotlightCard ব্যবহার করা হয়েছে
+            <SpotlightCard 
               key={project.id} 
-              className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-700 flex flex-col group"
+              className="flex flex-col h-full overflow-hidden transition-all duration-300 bg-white shadow-sm dark:bg-slate-900 rounded-2xl group hover:shadow-xl dark:border-slate-700"
             >
               <div className="relative h-48 overflow-hidden bg-slate-200 dark:bg-slate-800">
                 <img 
                   src={project.image} 
                   alt={project.title} 
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                  className="object-cover w-full h-full transition-transform duration-700 transform group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
+                <div className="absolute inset-0 transition-colors bg-black/10 group-hover:bg-transparent" />
               </div>
 
-              <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors line-clamp-1">
+              <div className="flex flex-col flex-grow p-6">
+                <h3 className="mb-2 text-lg font-bold transition-colors text-slate-900 dark:text-white group-hover:text-primary line-clamp-1">
                   {project.title}
                 </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 font-medium">
+                <p className="mb-6 text-sm font-medium text-slate-500 dark:text-slate-400 line-clamp-2">
                   {project.meta}
                 </p>
                 
-                <div className="mt-auto pt-4 border-t border-slate-100 dark:border-slate-800">
+                <div className="pt-4 mt-auto border-t border-slate-100 dark:border-slate-800">
                   <button 
                     onClick={() => handleAction(project)}
-                    className="w-full flex items-center justify-between text-primary font-bold text-sm hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
+                    className="flex items-center justify-between w-full text-sm font-bold transition-colors text-primary hover:text-blue-700 dark:hover:text-blue-400"
                   >
                     {project.action}
                     <span className="bg-blue-50 dark:bg-slate-800 p-1.5 rounded-full group-hover:bg-primary group-hover:text-white transition-all">
@@ -305,21 +304,21 @@ if __name__ == "__main__":
                   </button>
                 </div>
               </div>
-            </div>
+            </SpotlightCard>
           ))}
         </div>
       </div>
 
       {/* 🟢 HACKER CODE MODAL */}
       {showCodeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 duration-300 bg-black/90 backdrop-blur-sm animate-in fade-in">
           <div className="bg-[#0a0a0a] rounded-lg shadow-2xl w-full max-w-3xl border border-green-500/30 overflow-hidden font-mono relative">
             
              {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 bg-[#111111] border-b border-green-500/30 relative z-10">
               <div className="flex items-center gap-3">
                 <Terminal size={18} className="text-green-500 animate-pulse" />
-                <span className="text-sm font-bold text-green-400 tracking-wider">ROOT@CYBERDECK:~# cat {activeFilename}</span>
+                <span className="text-sm font-bold tracking-wider text-green-400">ROOT@CYBERDECK:~# cat {activeFilename}</span>
               </div>
               <div className="flex items-center gap-2">
                 <button onClick={copyToClipboard} className="p-1.5 hover:bg-green-500/20 rounded text-green-500/70">
@@ -349,15 +348,15 @@ if __name__ == "__main__":
 
       {/* 🔴 VIDEO POPUP MODAL */}
       {showVideoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-slate-900 rounded-2xl overflow-hidden shadow-2xl w-full max-w-4xl border border-slate-700 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 duration-300 bg-black/90 backdrop-blur-sm animate-in fade-in">
+          <div className="relative w-full max-w-4xl overflow-hidden border shadow-2xl bg-slate-900 rounded-2xl border-slate-700">
             <button 
               onClick={() => setShowVideoModal(false)}
-              className="absolute top-4 right-4 z-10 p-2 bg-black/50 text-white rounded-full hover:bg-red-500 transition-all backdrop-blur-md"
+              className="absolute z-10 p-2 text-white transition-all rounded-full top-4 right-4 bg-black/50 hover:bg-red-500 backdrop-blur-md"
             >
               <X size={24} />
             </button>
-            <div className="relative aspect-video bg-black">
+            <div className="relative bg-black aspect-video">
               <iframe 
                 className="w-full h-full"
                 src="https://www.youtube.com/embed/E4fGvJ2nGkY?autoplay=1"
