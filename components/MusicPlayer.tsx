@@ -19,7 +19,7 @@ const MusicPlayer: React.FC = () => {
   const playlist = [
     {
       title: "Airtel X Bhoot FM",
-      artist: "RJ rasell",
+      artist: "Rahim Saroar",
       src: "/music/airlel-bhootfm.mp3",
       cover: "/music/airlel-bhootfm.jpg"
     },
