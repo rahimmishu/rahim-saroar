@@ -7,9 +7,8 @@ interface PhotoGalleryProps {
 }
 
 const PhotoGallery: React.FC<PhotoGalleryProps> = ({ isOpen, onClose }) => {
-  if (!isOpen) return null; // গ্যালারি বন্ধ থাকলে কিছুই দেখাবে না
+  if (!isOpen) return null;
 
-  // 🔴 টিপস: আপনার public ফোল্ডারের ছবির নামের সাথে এই নামগুলো হুবহু মিলতে হবে
   const photos = [
     { id: 1, src: "/rahim-saroar-mishu-profile.jpg", caption: "Profile" },
     { id: 2, src: "/rahim-saroar-mishu-content-creator.jpg", caption: "Content Creation" },
@@ -49,17 +48,24 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ isOpen, onClose }) => {
           <p className="text-slate-500 mt-2">A glimpse into my world</p>
         </div>
 
-        {/* Gallery Grid (Compact Sized) */}
+        {/* Gallery Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {photos.map((photo) => (
-            <div key={photo.id} className="group relative rounded-xl overflow-hidden aspect-square cursor-pointer shadow-md hover:shadow-xl transition-all">
+            <div 
+              key={photo.id} 
+              // 🔥 UPDATE 1: GPU Acceleration added here (transform-gpu)
+              className="group relative rounded-xl overflow-hidden aspect-square cursor-pointer shadow-md hover:shadow-xl transition-all transform-gpu bg-slate-100 dark:bg-slate-700"
+            >
               <img 
                 src={photo.src} 
-                alt="Rahim Saroar Mishu" 
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                alt={`Rahim Saroar - ${photo.caption}`}
+                // 🔥 UPDATE 2: Lazy loading & Async decoding added
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 will-change-transform"
               />
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <span className="text-white font-medium px-4 py-1 border border-white/30 rounded-full bg-black/30 backdrop-blur-sm">
+                <span className="text-white font-medium px-4 py-1 border border-white/30 rounded-full bg-black/30 backdrop-blur-sm text-sm">
                   {photo.caption}
                 </span>
               </div>
