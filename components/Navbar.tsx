@@ -5,7 +5,7 @@ interface NavbarProps {
   isDarkMode: boolean;
   toggleTheme: () => void;
   onOpenTools: () => void;
-  onOpenGallery: () => void; // ✅ এটি নিশ্চিত করুন যে এখানে ডিফাইন করা আছে
+  onOpenGallery: () => void;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools, onOpenGallery }) => {
@@ -37,16 +37,31 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools, o
     }`}>
       <div className="container mx-auto px-4 md:px-8">
         <div className="flex justify-between items-center">
-          {/* Logo */}
-          <a href="#home" className="text-3xl font-bold text-slate-900 dark:text-white font-signature">
-            Rahim Saroar <span className="text-primary">Mishu</span>
+          
+          {/* 🔥 PREMIUM ANIMATED LOGO/NAME START 🔥 */}
+          <a href="#home" className="group flex items-center gap-2 relative">
+            
+            {/* আইকন এবং এনিমেশন */}
+            <div className="relative hidden xs:block"> {/* xs:block দেওয়া হয়েছে যাতে খুব ছোট মোবাইলে জায়গা না খায় */}
+               <Sparkles className="text-purple-500 group-hover:animate-spin-slow transition-transform duration-500" size={24} />
+               <div className="absolute inset-0 bg-purple-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            </div>
+
+            {/* নামের টেক্সট এবং গ্রেডিয়েন্ট এনিমেশন */}
+            <span className="text-2xl md:text-3xl font-bold font-signature relative overflow-hidden">
+              <span className="bg-gradient-to-r from-slate-900 via-blue-600 to-purple-600 dark:from-white dark:via-blue-400 dark:to-purple-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
+                Rahim Saroar Mishu
+              </span>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 group-hover:w-full transition-all duration-500 ease-out"></span>
+            </span>
           </a>
+          {/* 🔥 PREMIUM ANIMATED LOGO END 🔥 */}
 
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center space-x-8">
             <div className="flex items-center gap-4">
               
-              {/* ✅ Photos Button (Desktop) - এখানে onClick ফাংশনটি বসানো হয়েছে */}
+              {/* Photos Button */}
               <button 
                 onClick={onOpenGallery}
                 className="flex items-center gap-2 px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full font-bold hover:bg-purple-200 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5"
@@ -116,7 +131,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools, o
           {/* Mobile Menu Button & Theme Toggle */}
           <div className="lg:hidden flex items-center gap-4">
             
-            {/* ✅ Photos Button (Mobile Top Bar) */}
+            {/* Photos Button (Mobile Top Bar) */}
             <button 
               onClick={onOpenGallery} 
               className="p-2 text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 rounded-full"
@@ -143,7 +158,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools, o
         {isOpen && (
           <div className="lg:hidden absolute top-full left-0 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-xl border-t border-gray-100 dark:border-slate-800 py-6 px-4 flex flex-col space-y-4 animate-in slide-in-from-top-5">
             
-            {/* ✅ Photos Button (Mobile Menu List) */}
+            {/* Photos Button (Mobile Menu List) */}
             <button 
               onClick={() => { onOpenGallery(); setIsOpen(false); }} 
               className="text-left text-purple-600 font-bold py-2 border-b border-gray-50 dark:border-slate-800 flex items-center gap-2"
