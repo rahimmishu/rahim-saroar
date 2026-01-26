@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { PROJECTS } from '../constants';
 import { ChevronRight, X, Copy, Check, Terminal, Play, Eye, ExternalLink } from 'lucide-react';
-import SpotlightCard from './SpotlightCard';
+import Tilt3D from './Tilt3D'; // ✅ Tilt3D ইমপোর্ট
 
 const Projects: React.FC = () => {
   // ১. কোড মডালের জন্য স্টেট
@@ -138,7 +138,7 @@ class HandDetector:
                 if draw:
                     # Draw skeletal connections in Matrix Green
                     self.mpDraw.draw_landmarks(img, handLms, 
-                                             self.mpHands.HAND_CONNECTIONS)
+                                               self.mpHands.HAND_CONNECTIONS)
         return img
 
     def find_position(self, img, handNo=0, draw=True):
@@ -265,46 +265,50 @@ if __name__ == "__main__":
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           {PROJECTS.map((project) => (
-            // 🔥 UPDATE: সাধারণ div এর পরিবর্তে SpotlightCard ব্যবহার করা হয়েছে
-            <SpotlightCard 
-              key={project.id} 
-              className="flex flex-col h-full overflow-hidden transition-all duration-300 bg-white shadow-sm dark:bg-slate-900 rounded-2xl group hover:shadow-xl dark:border-slate-700"
-            >
-              <div className="relative h-48 overflow-hidden bg-slate-200 dark:bg-slate-800">
-                <img 
-                  src={project.image} 
-                  alt={project.title} 
-                  className="object-cover w-full h-full transition-transform duration-700 transform group-hover:scale-110"
-                />
-                <div className="absolute inset-0 transition-colors bg-black/10 group-hover:bg-transparent" />
-              </div>
-
-              <div className="flex flex-col flex-grow p-6">
-                <h3 className="mb-2 text-lg font-bold transition-colors text-slate-900 dark:text-white group-hover:text-primary line-clamp-1">
-                  {project.title}
-                </h3>
-                <p className="mb-6 text-sm font-medium text-slate-500 dark:text-slate-400 line-clamp-2">
-                  {project.meta}
-                </p>
+            
+            // 🔥 UPDATE: SpotlightCard এর পরিবর্তে Tilt3D ব্যবহার করা হয়েছে
+            <Tilt3D key={project.id} className="h-full">
+              <div className="relative flex flex-col h-full overflow-hidden transition-all duration-300 bg-white shadow-sm dark:bg-slate-900 rounded-2xl group hover:shadow-xl dark:border-slate-700">
                 
-                <div className="pt-4 mt-auto border-t border-slate-100 dark:border-slate-800">
-                  <button 
-                    onClick={() => handleAction(project)}
-                    className="flex items-center justify-between w-full text-sm font-bold transition-colors text-primary hover:text-blue-700 dark:hover:text-blue-400"
-                  >
-                    {project.action}
-                    <span className="bg-blue-50 dark:bg-slate-800 p-1.5 rounded-full group-hover:bg-primary group-hover:text-white transition-all">
-                        {/* ডাইনামিক আইকন সিলেকশন */}
-                        {project.title.includes("AI") ? <Play size={16} fill="currentColor"/> : 
-                         project.title.includes("Hand") ? <Eye size={16} /> :
-                         project.title.includes("GPS") ? <Terminal size={16} /> :
-                         project.title.includes("Rhythm") ? <ExternalLink size={16} /> :
-                         <ChevronRight size={16} />}
-                    </span>
-                  </button>
+                {/* ✨ Shimmer Effect Layer */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none z-10" />
+
+                <div className="relative h-48 overflow-hidden bg-slate-200 dark:bg-slate-800">
+                  <img 
+                    src={project.image} 
+                    alt={project.title} 
+                    className="object-cover w-full h-full transition-transform duration-700 transform group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 transition-colors bg-black/10 group-hover:bg-transparent" />
+                </div>
+
+                <div className="relative z-20 flex flex-col flex-grow p-6">
+                  <h3 className="mb-2 text-lg font-bold transition-colors text-slate-900 dark:text-white group-hover:text-primary line-clamp-1">
+                    {project.title}
+                  </h3>
+                  <p className="mb-6 text-sm font-medium text-slate-500 dark:text-slate-400 line-clamp-2">
+                    {project.meta}
+                  </p>
+                  
+                  <div className="pt-4 mt-auto border-t border-slate-100 dark:border-slate-800">
+                    <button 
+                      onClick={() => handleAction(project)}
+                      className="flex items-center justify-between w-full text-sm font-bold transition-colors text-primary hover:text-blue-700 dark:hover:text-blue-400"
+                    >
+                      {project.action}
+                      <span className="bg-blue-50 dark:bg-slate-800 p-1.5 rounded-full group-hover:bg-primary group-hover:text-white transition-all">
+                          {/* ডাইনামিক আইকন সিলেকশন */}
+                          {project.title.includes("AI") ? <Play size={16} fill="currentColor"/> : 
+                           project.title.includes("Hand") ? <Eye size={16} /> :
+                           project.title.includes("GPS") ? <Terminal size={16} /> :
+                           project.title.includes("Rhythm") ? <ExternalLink size={16} /> :
+                           <ChevronRight size={16} />}
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </SpotlightCard>
+            </Tilt3D>
           ))}
         </div>
       </div>
