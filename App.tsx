@@ -19,7 +19,7 @@ import Tools from './components/Tools';
 import FacebookFeed from './components/FacebookFeed';
 import Resources from './components/Resources';
 import PhotoGallery from './components/PhotoGallery';
-import MusicPlayer from './components/MusicPlayer'; // ✅ নতুন মিউজিক প্লেয়ার ইমপোর্ট করা হলো
+import AudioPlayer from './components/AudioPlayer';
 
 const App: React.FC = () => {
   // ১. টুলস এবং গ্যালারির জন্য স্টেট
@@ -54,7 +54,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen bg-white dark:bg-slate-900 font-sans text-slate-900 dark:text-white transition-colors duration-300">
+    <main className="min-h-screen font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
       
       {/* ২. Navbar-এ প্রপস পাঠানো হচ্ছে */}
       <Navbar 
@@ -83,7 +83,7 @@ const App: React.FC = () => {
       <BackToTop />
       <FloatingWhatsApp />
       <Chatbot />
-      <MusicPlayer /> {/* ✅ মিউজিক প্লেয়ার এখানে বসানো হলো */}
+      <AudioPlayer /> {/* ✅ মিউজিক প্লেয়ার এখানে বসানো হলো */}
       
       {/* ৩. PHOTO GALLERY POPUP */}
       <PhotoGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} />

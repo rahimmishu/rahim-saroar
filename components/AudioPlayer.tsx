@@ -24,10 +24,22 @@ const MusicPlayer: React.FC = () => {
       cover: "/music/airlel-bhootfm.jpg"
     },
     {
+      title: "Airtel Phonk 3D",
+      artist: "Rahim Saroar",
+      src: "/music/phonk.mp3",
+      cover: "/music/phonk.jpg"
+    },
+    {
       title: "Barbaad",
       artist: "Jubin Nautiyal",
       src: "/music/barbaad.mp3",
       cover: "/music/barbaad.jpg"
+    },
+    {
+      title: "Saiyaara",
+      artist: "Faheem Abdullah",
+      src: "/music/saiyaara.mp3",
+      cover: "/music/saiyaara.jpg"
     },
     {
       title: "Chale Aana",
@@ -58,6 +70,24 @@ const MusicPlayer: React.FC = () => {
       artist: "Arijit Singh",
       src: "/music/sanam-re.mp3", 
       cover: "/music/sanam-re.jpg"
+    },
+    {
+      title: "Ishq",
+      artist: "Faheem Abdullah",
+      src: "/music/ishq.mp3",
+      cover: "/music/ishq.jpg"
+    },
+    {
+      title: "Jisko Jovi Milta Hai",
+      artist: "manisha Sharma",
+      src: "/music/jisko.mp3",
+      cover: "/music/jisko.jpg"
+    },
+    {
+      title: "Teri Nazron Ka Dil",
+      artist: "Faheem Abdullah",
+      src: "/music/teri-nazar.mp3",
+      cover: "/music/teri-nazar.jpg"
     }
   ];
 
