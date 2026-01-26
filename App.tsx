@@ -18,14 +18,15 @@ import ScienceSimulation from './components/ScienceSimulation';
 import Tools from './components/Tools';
 import FacebookFeed from './components/FacebookFeed';
 import Resources from './components/Resources';
-import PhotoGallery from './components/PhotoGallery'; // ✅ ইমপোর্ট নিশ্চিত করুন
+import PhotoGallery from './components/PhotoGallery';
+import MusicPlayer from './components/MusicPlayer'; // ✅ নতুন মিউজিক প্লেয়ার ইমপোর্ট করা হলো
 
 const App: React.FC = () => {
   // ১. টুলস এবং গ্যালারির জন্য স্টেট
   const [isToolsOpen, setIsToolsOpen] = useState(false);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false); 
   
-  // ডার্ক মোড স্টেট ইনিশিয়ালাইজেশন
+  // ডার্ক মোড স্টেট ইনিশিয়ালাইজেশন
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme');
@@ -82,9 +83,9 @@ const App: React.FC = () => {
       <BackToTop />
       <FloatingWhatsApp />
       <Chatbot />
+      <MusicPlayer /> {/* ✅ মিউজিক প্লেয়ার এখানে বসানো হলো */}
       
       {/* ৩. PHOTO GALLERY POPUP */}
-      {/* isOpen প্রপসটি PhotoGallery এর ভেতরে রিসিভ করা হবে */}
       <PhotoGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} />
 
       {/* ৪. TOOLS POPUP MODAL */}
