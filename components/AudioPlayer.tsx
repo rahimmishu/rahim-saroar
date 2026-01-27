@@ -88,6 +88,60 @@ const MusicPlayer: React.FC = () => {
       artist: "Faheem Abdullah",
       src: "/music/teri-nazar.mp3",
       cover: "/music/teri-nazar.jpg"
+    },
+     {
+      title: "Dhun",
+      artist: "Arijit Singh",
+      src: "/music/dhun.mp3",
+      cover: "/music/dhun.jpg"
+    },
+     {
+      title: "Khola Janala",
+      artist: "Faheem Abdullah",
+      src: "/music/khola-janala.mp3",
+      cover: "/music/khola-janala.jpg"
+    },
+     {
+      title: "Pal Pal",
+      artist: "Rahim Saroar",
+      src: "/music/pal-pal.mp3",
+      cover: "/music/pal-pal.jpg"
+    },
+     {
+      title: "Pal Pal X Talwinder",
+      artist: "Rahim Saroar",
+      src: "/music/pal.mp3",
+      cover: "/music/pal.jpg"
+    },
+     {
+      title: "Tomar Chokhe Alash Amar",
+      artist: "Arfin Rumey",
+      src: "/music/priyotoma.mp3",
+      cover: "/music/priyotoma.jpg"
+    },
+     {
+      title: "Sahiba",
+      artist: "Adrita Rikhari",
+      src: "/music/sahiba.mp3",
+      cover: "/music/sahiba.jpg"
+    },
+     {
+      title: "Shunno",
+      artist: "Tanveer Evan",
+      src: "/music/shunno.mp3",
+      cover: "/music/shunno.jpg"
+    },
+     {
+      title: "Sun Saathiya",
+      artist: "Priya Saraiya",
+      src: "/music/sun.mp3",
+      cover: "/music/sun.jpg"
+    },
+     {
+      title: "Zaalima",
+      artist: "Shahrujh Khan",
+      src: "/music/zaalima.mp3",
+      cover: "/music/zaalima.jpg"
     }
   ];
 
@@ -166,10 +220,10 @@ const MusicPlayer: React.FC = () => {
       />
 
       {isOpen && (
-        <div className="w-80 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200 dark:border-slate-700 p-4 rounded-2xl shadow-2xl animate-in slide-in-from-right-10 fade-in duration-300 mb-2">
+        <div className="p-4 mb-2 duration-300 border shadow-2xl w-80 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-slate-200 dark:border-slate-700 rounded-2xl animate-in slide-in-from-right-10 fade-in">
            
            {/* Header: Playlist Toggle & Close */}
-           <div className="flex justify-between items-center mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+           <div className="flex items-center justify-between pb-2 mb-4 border-b border-slate-100 dark:border-slate-800">
             
             {/* 🔥 LIST BUTTON */}
             <button 
@@ -180,8 +234,8 @@ const MusicPlayer: React.FC = () => {
               <ListMusic size={20} />
             </button>
 
-            <span className="text-xs font-bold text-pink-500 uppercase flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-pink-500 animate-ping"></span> 
+            <span className="flex items-center gap-2 text-xs font-bold text-pink-500 uppercase">
+              <span className="w-2 h-2 bg-pink-500 rounded-full animate-ping"></span> 
               {showPlaylist ? "Playlist" : "Now Playing"}
             </span>
 
@@ -191,7 +245,7 @@ const MusicPlayer: React.FC = () => {
           {/* 🔥 CONDITIONAL RENDERING: LIST OR ALBUM ART */}
           {showPlaylist ? (
             // --- Playlist View ---
-            <div className="h-40 overflow-y-auto mb-4 pr-1 space-y-2 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
+            <div className="h-40 pr-1 mb-4 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
               {playlist.map((track, index) => (
                 <div 
                   key={index}
@@ -202,7 +256,7 @@ const MusicPlayer: React.FC = () => {
                       : 'hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
                 >
-                  <img src={track.cover} alt="art" className="w-8 h-8 rounded object-cover" />
+                  <img src={track.cover} alt="art" className="object-cover w-8 h-8 rounded" />
                   <div className="flex-1 min-w-0">
                     <p className={`text-xs font-bold truncate ${currentTrack === index ? 'text-pink-600 dark:text-pink-400' : 'text-slate-700 dark:text-slate-300'}`}>
                       {track.title}
@@ -221,13 +275,13 @@ const MusicPlayer: React.FC = () => {
             </div>
           ) : (
             // --- Album Art View (Default) ---
-            <div className="flex gap-4 items-center mb-4">
+            <div className="flex items-center gap-4 mb-4">
               <div className={`w-14 h-14 rounded-lg overflow-hidden shadow-md ${isPlaying ? 'animate-spin-slow' : ''}`}>
-                 <img src={playlist[currentTrack]?.cover} alt="Cover" className="w-full h-full object-cover" />
+                 <img src={playlist[currentTrack]?.cover} alt="Cover" className="object-cover w-full h-full" />
               </div>
               <div className="flex-1 min-w-0">
-                 <h3 className="text-slate-900 dark:text-white font-bold text-sm truncate">{playlist[currentTrack]?.title}</h3>
-                 <p className="text-slate-500 text-xs truncate">{playlist[currentTrack]?.artist}</p>
+                 <h3 className="text-sm font-bold truncate text-slate-900 dark:text-white">{playlist[currentTrack]?.title}</h3>
+                 <p className="text-xs truncate text-slate-500">{playlist[currentTrack]?.artist}</p>
               </div>
             </div>
           )}
@@ -249,21 +303,21 @@ const MusicPlayer: React.FC = () => {
           </div>
 
           {/* Controls */}
-          <div className="flex justify-between items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-2 px-3">
+          <div className="flex items-center justify-between p-2 px-3 bg-slate-100 dark:bg-slate-800 rounded-xl">
              <button onClick={handlePrev} className="p-2 text-slate-600 dark:text-slate-300 hover:text-pink-500"><SkipBack size={18} /></button>
              
-             <button onClick={() => setIsPlaying(!isPlaying)} className="p-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full shadow-lg hover:scale-105 transition-transform">
+             <button onClick={() => setIsPlaying(!isPlaying)} className="p-3 text-white transition-transform rounded-full shadow-lg bg-gradient-to-r from-pink-500 to-rose-500 hover:scale-105">
                 {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" />}
              </button>
              
              <button onClick={handleNext} className="p-2 text-slate-600 dark:text-slate-300 hover:text-pink-500"><SkipForward size={18} /></button>
 
              {/* Volume Control */}
-             <div className="flex items-center gap-1 group ml-2 relative">
+             <div className="relative flex items-center gap-1 ml-2 group">
                 <button onClick={() => setVolume(volume === 0 ? 1 : 0)} className="text-slate-400 hover:text-slate-600 dark:hover:text-white">
                   {volume === 0 ? <VolumeX size={16} /> : volume < 0.5 ? <Volume1 size={16} /> : <Volume2 size={16} />}
                 </button>
-                <div className="w-0 group-hover:w-16 overflow-hidden transition-all duration-300 flex items-center">
+                <div className="flex items-center w-0 overflow-hidden transition-all duration-300 group-hover:w-16">
                   <input 
                     type="range" 
                     min="0" 
@@ -271,7 +325,7 @@ const MusicPlayer: React.FC = () => {
                     step="0.05" 
                     value={volume} 
                     onChange={(e) => setVolume(Number(e.target.value))}
-                    className="w-14 h-1 bg-slate-300 rounded-lg appearance-none cursor-pointer accent-slate-500 ml-1"
+                    className="h-1 ml-1 rounded-lg appearance-none cursor-pointer w-14 bg-slate-300 accent-slate-500"
                   />
                 </div>
              </div>
@@ -282,7 +336,7 @@ const MusicPlayer: React.FC = () => {
       {!isOpen && (
         <button 
           onClick={() => setIsOpen(true)}
-          className="group relative flex items-center justify-center w-14 h-14 bg-white dark:bg-slate-800 rounded-full shadow-xl border border-slate-200 dark:border-slate-700 transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+          className="relative flex items-center justify-center transition-all duration-300 bg-white border rounded-full shadow-xl group w-14 h-14 dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:scale-110 hover:-translate-y-1"
         >
           <div className="absolute inset-0 rounded-full border-[3px] border-transparent border-t-pink-500 border-r-rose-400 animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <Music size={24} className={`text-slate-700 dark:text-white transition-colors group-hover:text-pink-500 ${isPlaying ? 'animate-bounce' : ''}`} />
