@@ -142,6 +142,30 @@ const MusicPlayer: React.FC = () => {
       artist: "Shahrujh Khan",
       src: "/music/zaalima.mp3",
       cover: "/music/zaalima.jpg"
+    },
+    {
+      title: "Dharia",
+      artist: "Sugar",
+      src: "/music/dharia.mp3",
+      cover: "/music/dharia.jpg"
+    },
+    {
+      title: "Jhol",
+      artist: "Annural Khalid",
+      src: "/music/jhol.mp3",
+      cover: "/music/jhol.jpg"
+    },
+    {
+      title: "Lo Safar",
+      artist: "Rahim Saroar",
+      src: "/music/lo-safar.mp3",
+      cover: "/music/lo-safar.jpg"
+    },
+    {
+      title: "Tum Hi Aana",
+      artist: "Jubin Nautiyal",
+      src: "/music/tum-hi-aana.mp3",
+      cover: "/music/tum-hi-aana.jpg"
     }
   ];
 
