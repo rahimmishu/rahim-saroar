@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Quote } from 'lucide-react'; 
+import { X, Quote } from 'lucide-react';
 
 // Components Imports
 import Navbar from './components/Navbar';
@@ -25,9 +25,9 @@ import NoiseOverlay from './components/NoiseOverlay';
 import FloatingDock from './components/FloatingDock';
 import Chatbot from './components/Chatbot';
 import AudioPlayer from './components/AudioPlayer';
-import DynamicTitle from './components/DynamicTitle'; 
+import DynamicTitle from './components/DynamicTitle';
 import ScrollProgressBtn from './components/ScrollProgressBtn';
-import NetworkStatus from './components/NetworkStatus'; 
+import NetworkStatus from './components/NetworkStatus';
 
 // ফিডব্যাক টাইপ ডিফিনিশন
 interface Feedback {
@@ -40,7 +40,7 @@ interface Feedback {
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isToolsOpen, setIsToolsOpen] = useState(false);
-  const [isGalleryOpen, setIsGalleryOpen] = useState(false); 
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   
@@ -91,7 +91,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
-        e.target instanceof HTMLInputElement || 
+        e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement
       ) {
         return;
@@ -99,19 +99,19 @@ const App: React.FC = () => {
 
       if (e.shiftKey) {
         switch(e.key.toLowerCase()) {
-          case 'h': 
+          case 'h':
             window.scrollTo({ top: 0, behavior: 'smooth' });
             break;
-          case 'c': 
+          case 'c':
             setIsChatOpen(prev => !prev);
             break;
-          case 'm': 
+          case 'm':
             setIsMusicPlaying(prev => !prev);
             break;
-          case 'd': 
+          case 'd':
             toggleTheme();
             break;
-          case 'p': 
+          case 'p':
             const projectsSection = document.getElementById('projects');
             if (projectsSection) projectsSection.scrollIntoView({ behavior: 'smooth' });
             break;
@@ -123,14 +123,14 @@ const App: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [toggleTheme]); 
+  }, [toggleTheme]);
 
   return (
     <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
       
       {/* Utilities */}
       <DynamicTitle />
-      <NetworkStatus /> 
+      <NetworkStatus />
       <ContextMenu />
       <NoiseOverlay />
       
@@ -141,11 +141,11 @@ const App: React.FC = () => {
 
       <div className={`transition-opacity duration-1000 ease-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
         
-        <Navbar 
-          isDarkMode={isDarkMode} 
-          toggleTheme={toggleTheme} 
+        <Navbar
+          isDarkMode={isDarkMode}
+          toggleTheme={toggleTheme}
           onOpenTools={() => setIsToolsOpen(true)}
-          onOpenGallery={() => setIsGalleryOpen(true)} 
+          onOpenGallery={() => setIsGalleryOpen(true)}
         />
         
         <Hero />
@@ -158,7 +158,6 @@ const App: React.FC = () => {
 
         <Resources />
         <FacebookFeed />
-        {/* ❌ CreativeWork, ScienceSimulation এবং GitHubStats এখান থেকে বাদ দেওয়া হয়েছে */}
         
         <Achievements />
         <Certifications />
@@ -190,8 +189,8 @@ const App: React.FC = () => {
                     </div>
                     
                     <div className="w-full h-1 mb-4 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-                      <div 
-                        className="h-full bg-blue-500 rounded-full" 
+                      <div
+                        className="h-full bg-blue-500 rounded-full"
                         style={{ width: `${(fb.rating / 5) * 100}%` }}
                       ></div>
                     </div>
