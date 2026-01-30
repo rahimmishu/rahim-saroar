@@ -18,6 +18,7 @@ import Tools from './components/Tools';
 import FacebookFeed from './components/FacebookFeed';
 import Resources from './components/Resources';
 import PhotoGallery from './components/PhotoGallery';
+import GithubStats from './components/GithubStats'; // ✨ GitHub Stats Import
 
 // Special & Utility Components
 import Preloader from './components/Preloader';
@@ -30,6 +31,7 @@ import Chatbot from './components/Chatbot';
 import AudioPlayer from './components/AudioPlayer';
 import DynamicTitle from './components/DynamicTitle'; 
 import ScrollProgressBtn from './components/ScrollProgressBtn';
+import NetworkStatus from './components/NetworkStatus'; 
 
 const App: React.FC = () => {
   // ১. লোডিং স্টেট
@@ -71,10 +73,9 @@ const App: React.FC = () => {
     setIsDarkMode((prev) => !prev);
   };
 
-  // 🔥 KEYBOARD SHORTCUTS HANDLER (NEW FUNCTION)
+  // 🔥 KEYBOARD SHORTCUTS HANDLER
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // যদি ইউজার কোনো ইনপুট ফিল্ডে টাইপ করে, তখন শর্টকাট কাজ করবে না
       if (
         e.target instanceof HTMLInputElement || 
         e.target instanceof HTMLTextAreaElement
@@ -82,22 +83,21 @@ const App: React.FC = () => {
         return;
       }
 
-      // Shift বাটন চেপে ধরে শর্টকাট কাজ করবে (যাতে ভুল করে চাপ না লাগে)
       if (e.shiftKey) {
         switch(e.key.toLowerCase()) {
-          case 'h': // Home
+          case 'h': 
             window.scrollTo({ top: 0, behavior: 'smooth' });
             break;
-          case 'c': // Chatbot Toggle
+          case 'c': 
             setIsChatOpen(prev => !prev);
             break;
-          case 'm': // Music Toggle
+          case 'm': 
             setIsMusicPlaying(prev => !prev);
             break;
-          case 'd': // Dark Mode Toggle
+          case 'd': 
             toggleTheme();
             break;
-          case 'p': // Scroll to Projects (আইডি দিয়ে খুঁজতে হবে)
+          case 'p': 
             const projectsSection = document.getElementById('projects');
             if (projectsSection) projectsSection.scrollIntoView({ behavior: 'smooth' });
             break;
@@ -109,13 +109,14 @@ const App: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [toggleTheme]); // ডিপেন্ডেন্সি অ্যারেতে toggleTheme দিতে হবে
+  }, [isDarkMode]); 
 
   return (
     <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white selection:bg-blue-500/30 selection:text-blue-900 dark:selection:text-blue-200">
       
       {/* 🔥 গ্লোবাল ইউটিলিটি কম্পোনেন্টস */}
       <DynamicTitle />
+      <NetworkStatus /> 
       <ContextMenu />
       <NoiseOverlay />
       
@@ -135,10 +136,14 @@ const App: React.FC = () => {
         <Hero />
         <TechMarquee />
         <About />
-        {/* আইডি যোগ করা হলো যাতে শর্টকাট কাজ করে */}
+
+        {/* ✨ GitHub Stats এখানে যোগ করা হয়েছে */}
+        <GithubStats />
+        
         <section id="projects">
           <Projects />
         </section>
+
         <Resources />
         <FacebookFeed />
         <CreativeWork />
