@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react'; 
+
+// Components Imports
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import TechMarquee from './components/TechMarquee';
@@ -10,19 +12,22 @@ import About from './components/About';
 import Journey from './components/Journey';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import BackToTop from './components/BackToTop';
-import FloatingWhatsApp from './components/FloatingWhatsApp';
-import Chatbot from './components/Chatbot';
 import CreativeWork from './components/CreativeWork';
 import ScienceSimulation from './components/ScienceSimulation';
 import Tools from './components/Tools';
 import FacebookFeed from './components/FacebookFeed';
 import Resources from './components/Resources';
 import PhotoGallery from './components/PhotoGallery';
+
+// Special & Utility Components
+import Preloader from './components/Preloader';
+import ContextMenu from './components/ContextMenu';
+import NoiseOverlay from './components/NoiseOverlay';
+
+// 🔥 ফ্লোটিং কম্পোনেন্টস (FloatingWhatsApp বাদ দেওয়া হয়েছে কারণ এটি Dock-এ আছে)
+import FloatingDock from './components/FloatingDock';
+import Chatbot from './components/Chatbot';
 import AudioPlayer from './components/AudioPlayer';
-import Preloader from './components/Preloader'; // ✅ ইমপোর্ট ঠিক আছে
-import ContextMenu from './components/ContextMenu'; // ✨ নতুন ইমপোর্ট
-import NoiseOverlay from './components/NoiseOverlay'; // ✨ ইমপোর্ট
 
 const App: React.FC = () => {
   // ১. লোডিং স্টেট
@@ -32,8 +37,13 @@ const App: React.FC = () => {
   const [isToolsOpen, setIsToolsOpen] = useState(false);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false); 
   
+  // 🔥 চ্যাট এবং মিউজিক প্লেয়ারের স্টেট
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+
   // ডার্ক মোড স্টেট ইনিশিয়ালাইজেশন
   const [isDarkMode, setIsDarkMode] = useState(() => {
+    // SSR সেফটি চেক
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme) {
@@ -44,6 +54,7 @@ const App: React.FC = () => {
     return false;
   });
 
+  // থিম ইফেক্ট হ্যান্ডলার
   useEffect(() => {
     const html = document.documentElement;
     if (isDarkMode) {
@@ -55,26 +66,24 @@ const App: React.FC = () => {
     }
   }, [isDarkMode]);
 
-  // ❌ আগের টাইমার useEffect টি এখান থেকে সরিয়ে ফেলা হয়েছে
-  // কারণ এখন Preloader নিজেই onFinish কল করবে।
-
   const toggleTheme = () => {
     setIsDarkMode((prev) => !prev);
   };
 
   return (
-    <main className="min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
-      {/* 🔥 সবার উপরে বা নিচে ContextMenu কম্পোনেন্টটি যোগ করুন */}
+    <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white selection:bg-blue-500/30 selection:text-blue-900 dark:selection:text-blue-200">
+      
+      {/* 🔥 গ্লোবাল ইউটিলিটি কম্পোনেন্টস */}
       <ContextMenu />
-      <NoiseOverlay /> {/* 🔥 এটি যোগ করুন */}
-      {/* 🔥 ২. Preloader আপডেট করা হলো: onFinish ফাংশন যোগ করা হয়েছে */}
-      {/* যখন Preloader-এর জুম শেষ হবে, তখন এটি setIsLoading(false) কল করবে */}
+      <NoiseOverlay />
+      
+      {/* 🔥 প্রি-লোডার: জুম এনিমেশন শেষ হলে মেইন কন্টেন্ট দেখাবে */}
       {isLoading && <Preloader onFinish={() => setIsLoading(false)} />}
 
       {/* ৩. মেইন কন্টেন্ট র‍্যাপার (স্মুথ ফেড-ইন এনিমেশন সহ) */}
-      <div className={`transition-opacity duration-700 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`transition-opacity duration-1000 ease-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
         
-        {/* Navbar-এ প্রপস পাঠানো হচ্ছে */}
+        {/* Navbar */}
         <Navbar 
           isDarkMode={isDarkMode} 
           toggleTheme={toggleTheme} 
@@ -82,26 +91,49 @@ const App: React.FC = () => {
           onOpenGallery={() => setIsGalleryOpen(true)} 
         />
         
-        {/* মেইন সেকশনগুলো */}
+        {/* --- মূল সেকশনগুলো --- */}
         <Hero />
         <TechMarquee />
-        <FacebookFeed />
+        
+        <About />
+        
         <Projects />
         <Resources />
+        
+        <FacebookFeed />
+        
         <CreativeWork />
         <ScienceSimulation />
+        
         <Achievements />
         <Certifications />
-        <About />
+        
         <Journey />
         <Contact />
+        
         <Footer />
 
-        {/* ফ্লোটিং আইটেমস */}
-        <BackToTop />
-        <FloatingWhatsApp />
-        <Chatbot />
-        <AudioPlayer /> 
+        {/* --- ফ্লোটিং এলিমেন্টস কানেকশন --- */}
+        
+        {/* 🔥 চ্যাটবট কম্পোনেন্ট */}
+        <Chatbot 
+          isOpen={isChatOpen} 
+          onClose={() => setIsChatOpen(false)} 
+        />
+        
+        {/* 🔥 অডিও প্লেয়ার কম্পোনেন্ট */}
+        <AudioPlayer 
+          isPlaying={isMusicPlaying} 
+          togglePlay={() => setIsMusicPlaying(!isMusicPlaying)} 
+        />
+
+        {/* ❌ FloatingWhatsApp এখান থেকে সরিয়ে দেওয়া হয়েছে (Clean Look) */}
+
+        {/* 🔥 শুধু Floating Dock থাকবে (এর ভেতরেই WhatsApp, Chat, Music সব আছে) */}
+        <FloatingDock 
+          toggleChat={() => setIsChatOpen(!isChatOpen)}
+          toggleMusic={() => setIsMusicPlaying(!isMusicPlaying)}
+        />
         
         {/* PHOTO GALLERY POPUP */}
         <PhotoGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} />
