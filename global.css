@@ -68,30 +68,196 @@ html {
   animation: float 6s ease-in-out infinite; /* ৬ সেকেন্ডে একবার লুপ হবে */
 }
 
-/* --- 🧪 Tubes Cursor Styles (New) --- */
-
-/* টিউবস ইফেক্ট যাতে ঠিকমতো দেখা যায়, তার জন্য ব্যাকগ্রাউন্ড সেট করা */
+/* --- 🧪 Tubes Cursor Styles (Existing) --- */
 body {
   background-color: #0f172a; /* Dark Slate Background */
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* হরাইজন্টাল স্ক্রল বন্ধ রাখা */
+  overflow-x: hidden;
 }
 
-/* ক্যানভাস (টিউবস) পজিশনিং */
 canvas#canvas {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* মাউস ক্লিক যাতে ক্যানভাস ভেদ করে লিংকে লাগে */
-  z-index: 0; /* ব্যাকগ্রাউন্ডের ঠিক উপরে */
+  pointer-events: none; 
+  z-index: 0; 
   opacity: 0.8;
 }
 
-/* মেইন কন্টেন্ট রুট (টিউবসের উপরে থাকবে) */
 #root {
   position: relative;
   z-index: 10; 
+}
+
+/* ---------------------------------------------------- */
+/* 🔥 FEEDBACK SLIDER STYLES (NEWLY ADDED)             */
+/* ---------------------------------------------------- */
+
+.feedback-card {
+  width: 90%;
+  max-width: 400px;
+  padding: 40px 30px;
+  border-radius: 32px;
+  background: white; 
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin: 0 auto; /* সেন্টার করার জন্য */
+}
+
+/* Dark Mode Support for Feedback Card */
+.dark .feedback-card {
+  background: #1e293b; /* Slate-800 */
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.icon-wrapper {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.icon-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--theme-color);
+  border-radius: 50%;
+  opacity: 0.2;
+  filter: blur(25px);
+  transition: background 0.3s ease;
+  z-index: 1;
+}
+
+.icon-stage {
+  position: relative;
+  z-index: 2;
+  color: var(--theme-color);
+  transition: color 0.3s ease;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Animation: Pop In */
+.pop-anim {
+  animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mood-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--theme-color);
+  margin-bottom: 35px;
+  height: 24px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+/* Slider Input Styling */
+.slider-container {
+  margin-bottom: 45px;
+  width: 100%;
+}
+
+.slider-container input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 12px;
+  border-radius: 10px;
+  background: #f1f2f6;
+  outline: none;
+  cursor: grab;
+  /* Dynamic gradient handled by React inline style */
+  background-image: linear-gradient(var(--theme-color), var(--theme-color));
+  background-repeat: no-repeat;
+}
+
+.dark .slider-container input[type=range] {
+  background: #334155; /* Slate-700 */
+}
+
+/* Chrome/Safari Thumb */
+.slider-container input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 5px solid var(--theme-color);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transition: border-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Button Styling */
+.submit-btn {
+  width: 100%;
+  padding: 18px;
+  border-radius: 16px;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background: #2d3436;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.dark .submit-btn {
+  background: #475569; /* Slate-600 */
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn:active {
+  transform: translateY(1px);
+}
+
+/* Success Overlay */
+.success-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  z-index: 10;
+}
+
+.dark .success-overlay {
+  background: #1e293b;
 }

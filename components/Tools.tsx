@@ -1,351 +1,257 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Hand, Scissors, FileText, RefreshCw, Trophy, Cpu, 
-  Play, Pause, RotateCcw, Zap, Maximize2, Minimize2, Settings 
+  X, Gamepad2, Calculator, Trophy, Zap, 
+  RotateCcw, Hand, LayoutGrid, Swords 
 } from 'lucide-react';
 
+// ✅ PokemonGame ইমপোর্ট (নিশ্চিত করুন PokemonGame.tsx ফাইলটি তৈরি করা আছে)
+import PokemonGame from './PokemonGame';
+
 // ==========================================
-// TYPES
+// 1. ROCK PAPER SCISSORS GAME COMPONENT
 // ==========================================
-type Choice = 'rock' | 'paper' | 'scissors' | null;
-type Result = 'win' | 'lose' | 'draw' | null;
+const RockPaperScissorsGame: React.FC = () => {
+  const [pScore, setPScore] = useState(0);
+  const [cScore, setCScore] = useState(0);
+  const [status, setStatus] = useState("CHOOSE YOUR WEAPON");
+  const [pHand, setPHand] = useState("✊");
+  const [cHand, setCHand] = useState("✊");
+  const [isShaking, setIsShaking] = useState(false);
+  const [showVs, setShowVs] = useState(false);
+  const [glowColor, setGlowColor] = useState("transparent");
 
-const Tools: React.FC = () => {
-  // ----------------------------------------
-  // 1. GAME STATE
-  // ----------------------------------------
-  const [playerChoice, setPlayerChoice] = useState<Choice>(null);
-  const [computerChoice, setComputerChoice] = useState<Choice>(null);
-  const [result, setResult] = useState<Result>(null);
-  const [score, setScore] = useState({ player: 0, computer: 0 });
-  const [isProcessing, setIsProcessing] = useState(false);
+  const hands: { [key: string]: string } = { rock: '✊', paper: '✋', scissors: '✌️' };
 
-  // ----------------------------------------
-  // 2. FOCUS TIMER STATE
-  // ----------------------------------------
-  const [timeLeft, setTimeLeft] = useState(25 * 60);
-  const [isActive, setIsActive] = useState(false);
-  const [customTime, setCustomTime] = useState(25);
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [showControls, setShowControls] = useState(false);
+  // Load Score
+  useEffect(() => {
+    const savedP = localStorage.getItem('pScore');
+    const savedC = localStorage.getItem('cScore');
+    if (savedP) setPScore(parseInt(savedP));
+    if (savedC) setCScore(parseInt(savedC));
+  }, []);
 
-  // ----------------------------------------
-  // GAME LOGIC
-  // ----------------------------------------
-  const getIcon = (choice: Choice, size = 24) => {
-    switch (choice) {
-      case 'rock': return <Hand size={size} className="rotate-90" />;
-      case 'paper': return <FileText size={size} />;
-      case 'scissors': return <Scissors size={size} className="-rotate-90" />;
-      default: return <div className="w-6 h-6 rounded-full bg-slate-800 animate-pulse" />;
-    }
+  const resetGame = () => {
+    setPScore(0); setCScore(0);
+    localStorage.setItem('pScore', '0'); localStorage.setItem('cScore', '0');
+    setStatus("SCORE RESET"); setPHand("✊"); setCHand("✊"); setGlowColor("transparent"); setShowVs(false);
   };
 
-  const playGame = (choice: Choice) => {
-    if (isProcessing) return;
-    setIsProcessing(true);
-    setPlayerChoice(choice);
-    setComputerChoice(null);
-    setResult(null);
+  const playGame = (userChoice: string) => {
+    if (isShaking) return;
+    setPHand("✊"); setCHand("✊"); setStatus("WAIT...");
+    setIsShaking(true); setShowVs(false); setGlowColor("transparent");
 
     setTimeout(() => {
-      const choices: Choice[] = ['rock', 'paper', 'scissors'];
-      const randomChoice = choices[Math.floor(Math.random() * choices.length)];
-      setComputerChoice(randomChoice);
-      calculateResult(choice, randomChoice);
-      setIsProcessing(false);
-    }, 1000);
-  };
+      setIsShaking(false); setShowVs(true);
+      const choices = ['rock', 'paper', 'scissors'];
+      const cpuChoice = choices[Math.floor(Math.random() * 3)];
+      setPHand(hands[userChoice]); setCHand(hands[cpuChoice]);
 
-  const calculateResult = (player: Choice, computer: Choice) => {
-    if (player === computer) {
-      setResult('draw');
-    } else if (
-      (player === 'rock' && computer === 'scissors') ||
-      (player === 'paper' && computer === 'rock') ||
-      (player === 'scissors' && computer === 'paper')
-    ) {
-      setResult('win');
-      setScore(prev => ({ ...prev, player: prev.player + 1 }));
-    } else {
-      setResult('lose');
-      setScore(prev => ({ ...prev, computer: prev.computer + 1 }));
-    }
-  };
-
-  // ----------------------------------------
-  // TIMER LOGIC
-  // ----------------------------------------
-  useEffect(() => {
-    let interval: number | undefined;
-    if (isActive && timeLeft > 0) {
-      interval = window.setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
-    } else if (timeLeft === 0) {
-      setIsActive(false);
-    }
-    return () => clearInterval(interval);
-  }, [isActive, timeLeft]);
-
-  // Handle "Esc" Key to Exit Full Screen
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isFullScreen) {
-        setIsFullScreen(false);
+      if (userChoice === cpuChoice) {
+        setStatus("DRAW!"); setGlowColor("rgba(148, 163, 184, 0.4)");
+      } else if (
+        (userChoice === 'rock' && cpuChoice === 'scissors') ||
+        (userChoice === 'paper' && cpuChoice === 'rock') ||
+        (userChoice === 'scissors' && cpuChoice === 'paper')
+      ) {
+        setStatus("YOU WIN!");
+        const newScore = pScore + 1; setPScore(newScore);
+        localStorage.setItem('pScore', newScore.toString());
+        setGlowColor("rgba(16, 185, 129, 0.4)");
+      } else {
+        setStatus("CPU WINS!");
+        const newScore = cScore + 1; setCScore(newScore);
+        localStorage.setItem('cScore', newScore.toString());
+        setGlowColor("rgba(239, 68, 68, 0.4)");
       }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isFullScreen]);
-
-  // Handle Mouse Move to Show/Hide Controls in Fullscreen
-  useEffect(() => {
-    let timeout: number;
-    if (isFullScreen) {
-        const handleMouseMove = () => {
-            setShowControls(true);
-            clearTimeout(timeout);
-            timeout = window.setTimeout(() => setShowControls(false), 2000); // Hide after 2 seconds
-        };
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-            clearTimeout(timeout);
-        };
-    }
-  }, [isFullScreen]);
-
-  const toggleTimer = () => setIsActive(!isActive);
-  
-  const setTime = (minutes: number) => {
-    setIsActive(false);
-    setTimeLeft(minutes * 60);
-    setCustomTime(minutes);
-  };
-
-  const handleCustomTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const val = parseInt(e.target.value);
-      if (!isNaN(val) && val > 0) {
-          setCustomTime(val);
-          setIsActive(false);
-          setTimeLeft(val * 60);
-      }
-  };
-
-  const formatTime = (seconds: number) => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    
-    if (hrs > 0) {
-        return `${hrs}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      setTimeout(() => setGlowColor("transparent"), 800);
+    }, 700);
   };
 
   return (
-    <section id="tools" className="py-24 bg-slate-900 relative overflow-hidden text-white min-h-screen flex items-center justify-center">
-       {/* Background Glows */}
-       <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-blue-600/5 blur-[120px] pointer-events-none"></div>
-       <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-purple-600/5 blur-[120px] pointer-events-none"></div>
+    <div className="relative flex flex-col items-center justify-center w-full h-full">
+       {/* Inject Animations */}
+       <style>{`
+        @keyframes shakePlayer { 0%, 100% { transform: scaleX(-1) translateY(0) rotate(-90deg); } 50% { transform: scaleX(-1) translateY(-30px) rotate(-70deg); } }
+        @keyframes shakeCPU { 0%, 100% { transform: translateY(0) rotate(-90deg); } 50% { transform: translateY(-30px) rotate(-70deg); } }
+        .shake-p { animation: shakePlayer 0.4s ease infinite; }
+        .shake-c { animation: shakeCPU 0.4s ease infinite; }
+        .hand-default-p { transform: scaleX(-1) rotate(-90deg); }
+        .hand-default-c { transform: rotate(-90deg); }
+        .vs-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+      `}</style>
+      
+      {/* Game Card */}
+      <div className="relative bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-2xl w-full max-w-[400px] text-center border border-slate-200 dark:border-slate-700">
+        <div 
+          className="absolute inset-0 -z-10 rounded-[40px] transition-colors duration-500 pointer-events-none blur-xl opacity-50"
+          style={{ background: glowColor }}
+        ></div>
 
-      {/* ==========================
-          FULL SCREEN OVERLAY (PURE ZEN MODE)
-         ========================== */}
-      {isFullScreen && (
-        <div className={`fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center transition-all duration-300 ${showControls ? 'cursor-default' : 'cursor-none'}`}>
-            
-            {/* The Giant Clock - Center of Attention */}
-            <h1 className="text-white font-black leading-none select-none tabular-nums tracking-tight" style={{ fontSize: '28vw' }}>
-                {formatTime(timeLeft)}
-            </h1>
-
-            {/* Hidden Controls - Only visible on mouse move */}
-            <div className={`absolute bottom-10 flex gap-8 transition-opacity duration-500 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
-                <button 
-                    onClick={toggleTimer} 
-                    className="p-4 rounded-full bg-white/10 hover:bg-white/30 backdrop-blur-md text-white transition-all transform hover:scale-110 border border-white/5"
-                >
-                    {isActive ? <Pause size={32} fill="white" /> : <Play size={32} fill="white" />}
-                </button>
-                <button 
-                    onClick={() => {
-                        setIsActive(false);
-                        setTimeLeft(customTime * 60);
-                    }} 
-                    className="p-4 rounded-full bg-white/10 hover:bg-white/30 backdrop-blur-md text-white transition-all transform hover:scale-110 border border-white/5"
-                >
-                    <RotateCcw size={32} />
-                </button>
-                <button 
-                    onClick={() => setIsFullScreen(false)} 
-                    className="p-4 rounded-full bg-red-500/20 hover:bg-red-500/50 backdrop-blur-md text-red-200 transition-all transform hover:scale-110 border border-red-500/20"
-                >
-                    <Minimize2 size={32} />
-                </button>
-            </div>
-        </div>
-      )}
-
-      {/* ==========================
-          NORMAL VIEW
-         ========================== */}
-      <div className="container mx-auto px-4 md:px-8 relative z-10">
-        
-        {/* Header */}
-        <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-800 rounded-full text-xs font-medium text-slate-400 border border-slate-700 mb-4">
-                <Zap size={14} className="text-yellow-500" />
-                <span>ZONE & PLAYGROUND</span>
-            </div>
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white">
-            Productivity <span className="text-slate-600">x</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Entertainment</span>
-          </h2>
+        {/* Score */}
+        <div className="flex justify-between p-4 mb-8 border bg-slate-50 dark:bg-slate-900 rounded-3xl border-slate-200 dark:border-slate-700">
+          <div className="w-1/2 text-center border-r border-slate-200 dark:border-slate-700">
+            <div className="text-[10px] font-black text-slate-400">PLAYER</div>
+            <div className="text-3xl font-black text-slate-800 dark:text-white">{pScore}</div>
+          </div>
+          <div className="w-1/2 text-center">
+            <div className="text-[10px] font-black text-slate-400">CPU</div>
+            <div className="text-3xl font-black text-slate-800 dark:text-white">{cScore}</div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start max-w-6xl mx-auto">
-            
-            {/* 1. GAME SECTION */}
-            <div className="bg-slate-950/50 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden h-full">
-                <div className="flex items-center gap-3 mb-8">
-                    <Trophy className="text-yellow-500" size={24} />
-                    <h3 className="text-xl font-bold">Luck Battle</h3>
-                </div>
+        {/* Arena */}
+        <div className="flex justify-between items-center py-8 min-h-[150px] relative">
+          <div className={`text-[60px] md:text-[80px] leading-none transition-transform duration-100 ${isShaking ? 'shake-p' : 'hand-default-p'}`}>{pHand}</div>
+          {showVs && <div className="absolute z-10 flex items-center justify-center w-10 h-10 text-xs font-black text-white -translate-x-1/2 -translate-y-1/2 bg-indigo-600 border-2 border-white rounded-full shadow-lg left-1/2 top-1/2 vs-pop dark:border-slate-800">VS</div>}
+          <div className={`text-[60px] md:text-[80px] leading-none transition-transform duration-100 ${isShaking ? 'shake-c' : 'hand-default-c'}`}>{cHand}</div>
+        </div>
 
-                <div className="flex justify-between items-center mb-8 bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
-                    <div className="text-center">
-                        <p className="text-slate-500 text-[10px] font-bold tracking-widest mb-1">YOU</p>
-                        <p className="text-3xl font-black text-white">{score.player}</p>
-                    </div>
-                    <div className="px-3 py-1 bg-slate-800 rounded text-[10px] font-mono text-slate-400">VS</div>
-                    <div className="text-center">
-                        <p className="text-slate-500 text-[10px] font-bold tracking-widest mb-1">AI</p>
-                        <p className="text-3xl font-black text-white">{score.computer}</p>
-                    </div>
-                </div>
+        <div className="font-black text-slate-800 dark:text-white mb-8 text-lg min-h-[28px] tracking-wide">{status}</div>
 
-                <div className="flex justify-between items-center mb-10 px-2 h-24">
-                    <div className={`transition-all duration-500 transform ${playerChoice ? 'scale-110' : 'scale-100'}`}>
-                        <div className={`w-20 h-20 rounded-full flex items-center justify-center border-4 shadow-lg transition-colors ${
-                            result === 'win' ? 'border-green-500 bg-green-500/10 text-green-400' : 
-                            result === 'lose' ? 'border-red-500 bg-red-500/10 text-red-400' : 
-                            'border-blue-500 bg-slate-800 text-blue-400'
-                        }`}>
-                            {playerChoice ? getIcon(playerChoice, 32) : <span className="text-[10px] text-slate-500">READY</span>}
-                        </div>
-                    </div>
-                    <div className="text-center w-28">
-                        {isProcessing ? (
-                            <RefreshCw size={20} className="text-blue-500 animate-spin mx-auto" />
-                        ) : result ? (
-                            <span className={`text-2xl font-black ${
-                                result === 'win' ? 'text-green-500' : 
-                                result === 'lose' ? 'text-red-500' : 
-                                'text-slate-400'
-                            }`}>
-                                {result === 'win' ? 'WIN' : result === 'lose' ? 'LOSE' : 'DRAW'}
-                            </span>
-                        ) : (
-                            <span className="text-slate-600 font-mono text-xs">FIGHT</span>
-                        )}
-                    </div>
-                    <div className={`transition-all duration-500 transform ${computerChoice ? 'scale-110' : 'scale-100'}`}>
-                        <div className={`w-20 h-20 rounded-full flex items-center justify-center border-4 shadow-lg transition-colors ${
-                            result === 'lose' ? 'border-green-500 bg-green-500/10 text-green-400' : 
-                            result === 'win' ? 'border-red-500 bg-red-500/10 text-red-400' : 
-                            'border-purple-500 bg-slate-800 text-purple-400'
-                        }`}>
-                            {computerChoice ? getIcon(computerChoice, 32) : <Cpu size={28} className={isProcessing ? "animate-pulse" : ""} />}
-                        </div>
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-3">
-                    {['rock', 'paper', 'scissors'].map((item) => (
-                        <button 
-                            key={item}
-                            onClick={() => playGame(item as Choice)}
-                            disabled={isProcessing}
-                            className="group p-3 bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-blue-500 rounded-xl flex flex-col items-center gap-1 transition-all disabled:opacity-50"
-                        >
-                            {getIcon(item as Choice, 18)}
-                            <span className="text-[10px] font-bold text-slate-500 group-hover:text-blue-400 uppercase">{item}</span>
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            {/* 2. FOCUS TIMER */}
-            <div className="bg-slate-950/50 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden flex flex-col h-full">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 blur-[60px] pointer-events-none"></div>
-                
-                <div className="w-full flex items-center justify-between mb-8">
-                     <div className="flex items-center gap-3">
-                        <Settings className="text-orange-500" size={24} />
-                        <h3 className="text-xl font-bold">Focus Zone</h3>
-                    </div>
-                    <button 
-                        onClick={() => setIsFullScreen(true)}
-                        className="p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors border border-slate-700"
-                        title="Enter Zen Mode"
-                    >
-                        <Maximize2 size={20} />
-                    </button>
-                </div>
-
-                <div className="flex-grow flex flex-col items-center justify-center mb-8">
-                    <div className="text-6xl md:text-7xl font-mono font-bold tracking-tight text-white tabular-nums mb-4">
-                        {formatTime(timeLeft)}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-green-500 animate-pulse' : 'bg-slate-600'}`}></div>
-                        <span className="text-xs font-bold tracking-widest text-slate-500 uppercase">
-                            {isActive ? 'RUNNING' : 'PAUSED'}
-                        </span>
-                    </div>
-                </div>
-
-                <div className="space-y-4">
-                    <div className="grid grid-cols-3 gap-2">
-                         <button onClick={() => setTime(25)} className="py-2 bg-slate-900 border border-slate-800 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:border-orange-500 transition-all">25m</button>
-                         <button onClick={() => setTime(5)} className="py-2 bg-slate-900 border border-slate-800 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:border-green-500 transition-all">5m</button>
-                         <button onClick={() => setTime(60)} className="py-2 bg-slate-900 border border-slate-800 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:border-blue-500 transition-all">60m</button>
-                    </div>
-
-                    <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 focus-within:border-blue-500 transition-colors">
-                        <span className="text-xs text-slate-500 font-bold uppercase whitespace-nowrap">Set Minutes:</span>
-                        <input 
-                            type="number" 
-                            value={customTime}
-                            onChange={handleCustomTimeChange}
-                            className="w-full bg-transparent text-white text-sm font-bold focus:outline-none"
-                        />
-                    </div>
-                </div>
-
-                <div className="flex gap-4 mt-6">
-                    <button 
-                        onClick={toggleTimer}
-                        className={`flex-1 py-4 rounded-xl flex items-center justify-center text-white font-bold shadow-lg transition-all ${
-                            isActive ? 'bg-slate-800 border border-slate-700 hover:bg-slate-700' : 'bg-gradient-to-r from-orange-600 to-red-600 hover:shadow-orange-500/20'
-                        }`}
-                    >
-                        {isActive ? <span className="flex items-center gap-2"><Pause size={20}/> Pause</span> : <span className="flex items-center gap-2"><Play size={20}/> Start Focus</span>}
-                    </button>
-                    
-                    <button 
-                        onClick={() => {setIsActive(false); setTimeLeft(customTime * 60);}}
-                        className="w-16 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-slate-600 transition-all"
-                    >
-                        <RotateCcw size={20} />
-                    </button>
-                </div>
-
-            </div>
-
+        <div className="grid grid-cols-3 gap-3">
+          {[{id:'rock',emoji:'✊',label:'ROCK'},{id:'paper',emoji:'✋',label:'PAPER'},{id:'scissors',emoji:'✌️',label:'SCISSORS'}].map((btn)=>(
+            <button key={btn.id} onClick={()=>playGame(btn.id)} disabled={isShaking} className="p-3 transition-all bg-white border-2 shadow-sm group dark:bg-slate-700 border-slate-200 dark:border-slate-600 rounded-2xl hover:-translate-y-1 hover:border-indigo-500">
+              <span className="block mb-1 text-2xl transition-transform group-hover:scale-110">{btn.emoji}</span>
+              <span className="text-[9px] font-black text-slate-400 group-hover:text-indigo-500 tracking-widest">{btn.label}</span>
+            </button>
+          ))}
         </div>
       </div>
+      
+      <button onClick={resetGame} className="flex items-center gap-2 mt-8 text-xs font-bold underline transition-colors text-slate-400 hover:text-red-500 decoration-2">
+        <RotateCcw size={12} /> RESET SCORE
+      </button>
+    </div>
+  );
+};
+
+// ==========================================
+// 2. MAIN TOOLS (APP LAUNCHER) COMPONENT
+// ==========================================
+const Tools: React.FC = () => {
+  const [activeApp, setActiveApp] = useState<string | null>(null);
+
+  // App Configuration
+  const apps = [
+    {
+      id: 'rps',
+      name: 'RPS Game',
+      icon: <Hand className="rotate-90" size={32} />,
+      color: 'bg-gradient-to-br from-indigo-500 to-purple-600',
+      description: 'Classic Rock Paper Scissors'
+    },
+    // ✨ নতুন PokéBattle গেম যোগ করা হলো
+    {
+      id: 'pokemon',
+      name: 'PokéBattle',
+      icon: <Swords size={32} />,
+      color: 'bg-gradient-to-br from-yellow-400 to-orange-600',
+      description: 'Turn-based RPG Battle'
+    },
+    {
+      id: 'calculator',
+      name: 'Calculator',
+      icon: <Calculator size={32} />,
+      color: 'bg-gradient-to-br from-orange-400 to-red-500',
+      description: 'Coming Soon',
+      disabled: true 
+    },
+    {
+      id: 'focus',
+      name: 'Focus Timer',
+      icon: <Zap size={32} />,
+      color: 'bg-gradient-to-br from-blue-400 to-cyan-500',
+      description: 'Coming Soon',
+      disabled: true
+    }
+  ];
+
+  // Render Active Game Logic
+  const renderActiveApp = () => {
+    switch (activeApp) {
+      case 'rps':
+        return <RockPaperScissorsGame />;
+      case 'pokemon':
+        return <PokemonGame />; // ✨ Pokémon গেম রেন্ডার
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <section id="tools" className="relative flex flex-col items-center justify-center min-h-screen py-24 overflow-hidden bg-slate-900">
+      {/* Background Ambience */}
+      <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-blue-600/10 blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-purple-600/10 blur-[120px] pointer-events-none"></div>
+
+      {/* =======================
+          FULL SCREEN GAME MODE
+         ======================= */}
+      {activeApp ? (
+        <div className="fixed inset-0 z-[9999] bg-slate-950/90 backdrop-blur-md flex flex-col animate-in fade-in duration-300">
+          
+          {/* Top Bar (Close Button) */}
+          <div className="absolute z-50 top-6 right-6">
+            <button 
+              onClick={() => setActiveApp(null)}
+              className="p-3 text-white transition-all border rounded-full shadow-lg bg-white/10 hover:bg-red-500/80 backdrop-blur-md hover:rotate-90 hover:scale-110 border-white/10"
+            >
+              <X size={28} />
+            </button>
+          </div>
+
+          {/* Game Container */}
+          <div className="flex items-center justify-center flex-grow w-full h-full p-4">
+             {renderActiveApp()}
+          </div>
+        </div>
+      ) : (
+        /* =======================
+            APP GRID (LAUNCHER)
+           ======================= */
+        <div className="container relative z-10 px-4 mx-auto">
+          <div className="mb-16 text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-800/50 rounded-full text-xs font-bold text-slate-300 border border-slate-700 mb-6 backdrop-blur-sm">
+              <LayoutGrid size={14} className="text-blue-400" />
+              <span>TOOLS & GAMES</span>
+            </div>
+            <h2 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl">
+              Playground
+            </h2>
+            <p className="max-w-lg mx-auto text-slate-400">
+              Select an app to launch it in full screen. More tools coming soon.
+            </p>
+          </div>
+
+          {/* App Grid */}
+          <div className="grid max-w-4xl grid-cols-2 gap-6 mx-auto md:grid-cols-4">
+            {apps.map((app) => (
+              <button
+                key={app.id}
+                onClick={() => !app.disabled && setActiveApp(app.id)}
+                disabled={app.disabled}
+                className={`group relative flex flex-col items-center p-6 rounded-3xl bg-slate-800/40 border border-slate-700/50 hover:bg-slate-800/80 hover:border-slate-600 transition-all duration-300 ${app.disabled ? 'opacity-50 cursor-not-allowed grayscale' : 'hover:-translate-y-2 hover:shadow-2xl'}`}
+              >
+                {/* App Icon */}
+                <div className={`w-20 h-20 rounded-2xl ${app.color} shadow-lg flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  {app.icon}
+                </div>
+                
+                {/* App Name */}
+                <h3 className="mb-1 text-lg font-bold text-white">{app.name}</h3>
+                <p className="text-xs font-medium text-slate-500">{app.description}</p>
+                
+                {/* Hover Glow */}
+                {!app.disabled && (
+                  <div className="absolute inset-0 transition-opacity opacity-0 pointer-events-none bg-blue-500/5 rounded-3xl group-hover:opacity-100"></div>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 };
