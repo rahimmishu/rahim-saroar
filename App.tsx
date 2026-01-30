@@ -18,7 +18,6 @@ import Tools from './components/Tools';
 import FacebookFeed from './components/FacebookFeed';
 import Resources from './components/Resources';
 import PhotoGallery from './components/PhotoGallery';
-import GithubStats from './components/GithubStats'; // ✨ GitHub Stats Import
 
 // Special & Utility Components
 import Preloader from './components/Preloader';
@@ -137,8 +136,7 @@ const App: React.FC = () => {
         <TechMarquee />
         <About />
 
-        {/* ✨ GitHub Stats এখানে যোগ করা হয়েছে */}
-        <GithubStats />
+        
         
         <section id="projects">
           <Projects />
