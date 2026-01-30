@@ -3,6 +3,8 @@ import React, { useEffect, useRef } from 'react';
 const TubesCursor: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const hueRef = useRef(0);
+  // 🔥 মোবাইলের জন্য ফ্রেম কাউন্টার
+  const frameCounter = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -14,7 +16,6 @@ const TubesCursor: React.FC = () => {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
     
-    // মাউস/টাচ পজিশন
     let mouse = { x: width / 2, y: height / 2 };
     let points: { x: number; y: number }[] = [];
 
@@ -23,15 +24,23 @@ const TubesCursor: React.FC = () => {
       height = canvas.height = window.innerHeight;
     };
 
+    // পিসির জন্য মাউস মুভ (স্বাভাবিক থাকবে)
     const handleMouseMove = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
       points.push({ x: mouse.x, y: mouse.y });
     };
 
-    // 🔥 ফিক্সড: স্ক্রলিং সমস্যা সমাধানের জন্য আপডেট করা হলো
+    // 🔥 ফিক্সড: মোবাইলের জন্য টাচ মুভ হ্যান্ডলার (Throttle করা হয়েছে)
     const handleTouchMove = (e: TouchEvent) => {
-      // ❌ e.preventDefault();  <-- এই লাইনটি মুছে ফেলা হয়েছে
+      frameCounter.current += 1;
+      
+      // প্রতি ৩টি টাচ ইভেন্টের মধ্যে মাত্র ১টি গ্রহণ করবে।
+      // এটি মোবাইলে ল্যাগ কমাবে এবং আঁকা স্মুথ করবে।
+      if (frameCounter.current % 3 !== 0) {
+        return; 
+      }
+
       const touch = e.touches[0];
       mouse.x = touch.clientX;
       mouse.y = touch.clientY;
@@ -50,7 +59,8 @@ const TubesCursor: React.FC = () => {
     };
 
     const animate = () => {
-      if (points.length > 50) {
+      // ট্রেইলের দৈর্ঘ্য একটু কমানো হলো (৫০ থেকে ৪০) পারফরম্যান্সের জন্য
+      if (points.length > 40) {
         points.shift();
       }
 
@@ -101,8 +111,7 @@ const TubesCursor: React.FC = () => {
 
     window.addEventListener('resize', handleResize);
     window.addEventListener('mousemove', handleMouseMove);
-    
-    // 🔥 প্যাসিভ: ট্রু করা হয়েছে যাতে স্ক্রল আটক না যায়
+    // প্যাসিভ ট্রু থাকবে যাতে স্ক্রল ঠিক থাকে
     window.addEventListener('touchmove', handleTouchMove, { passive: true }); 
 
     animate();
@@ -118,11 +127,10 @@ const TubesCursor: React.FC = () => {
     <canvas
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none"
-      // pointer-events-none খুব জরুরি, নাহলে ক্যানভাস টাচ ব্লক করে রাখবে
       style={{ 
         zIndex: 9999, 
         opacity: 1,
-        touchAction: 'none' // ব্রাউজারকে বলা হচ্ছে টাচ অ্যাকশন হ্যান্ডেল না করতে (CSS level fix)
+        touchAction: 'none'
       }} 
     />
   );
