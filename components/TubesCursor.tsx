@@ -2,8 +2,6 @@ import React, { useEffect, useRef } from 'react';
 
 const TubesCursor: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  // অটো কালার চেঞ্জিং-এর জন্য Hue Ref
   const hueRef = useRef(0);
 
   useEffect(() => {
@@ -16,6 +14,7 @@ const TubesCursor: React.FC = () => {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
     
+    // মাউস/টাচ পজিশন
     let mouse = { x: width / 2, y: height / 2 };
     let points: { x: number; y: number }[] = [];
 
@@ -30,14 +29,15 @@ const TubesCursor: React.FC = () => {
       points.push({ x: mouse.x, y: mouse.y });
     };
 
+    // 🔥 ফিক্সড: স্ক্রলিং সমস্যা সমাধানের জন্য আপডেট করা হলো
     const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault();
-      mouse.x = e.touches[0].clientX;
-      mouse.y = e.touches[0].clientY;
+      // ❌ e.preventDefault();  <-- এই লাইনটি মুছে ফেলা হয়েছে
+      const touch = e.touches[0];
+      mouse.x = touch.clientX;
+      mouse.y = touch.clientY;
       points.push({ x: mouse.x, y: mouse.y });
     };
 
-    // পাথ আঁকার ফাংশন
     const drawPath = () => {
       ctx.beginPath();
       ctx.moveTo(points[0].x, points[0].y);
@@ -50,15 +50,13 @@ const TubesCursor: React.FC = () => {
     };
 
     const animate = () => {
-      // ট্রেইল কন্ট্রোল
       if (points.length > 50) {
         points.shift();
       }
 
       ctx.clearRect(0, 0, width, height);
 
-      // 🔥 অটো কালার আপডেট (RGB Effect)
-      hueRef.current += 0.5; // স্পিড কন্ট্রোল (0.5 = স্লো, 1 = ফাস্ট)
+      hueRef.current += 0.5;
       const color1 = `hsl(${hueRef.current}, 100%, 50%)`;
       const color2 = `hsl(${hueRef.current + 60}, 100%, 50%)`;
 
@@ -103,7 +101,9 @@ const TubesCursor: React.FC = () => {
 
     window.addEventListener('resize', handleResize);
     window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    
+    // 🔥 প্যাসিভ: ট্রু করা হয়েছে যাতে স্ক্রল আটক না যায়
+    window.addEventListener('touchmove', handleTouchMove, { passive: true }); 
 
     animate();
 
@@ -118,10 +118,11 @@ const TubesCursor: React.FC = () => {
     <canvas
       ref={canvasRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none"
-      // 🔥 Z-Index বাড়িয়ে দেওয়া হয়েছে যাতে সবার উপরে থাকে
+      // pointer-events-none খুব জরুরি, নাহলে ক্যানভাস টাচ ব্লক করে রাখবে
       style={{ 
         zIndex: 9999, 
-        opacity: 1 
+        opacity: 1,
+        touchAction: 'none' // ব্রাউজারকে বলা হচ্ছে টাচ অ্যাকশন হ্যান্ডেল না করতে (CSS level fix)
       }} 
     />
   );
