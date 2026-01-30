@@ -3,10 +3,11 @@ import React, { useEffect, useRef } from 'react';
 const TubesCursor: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const hueRef = useRef(0);
-  // 🔥 মোবাইলের জন্য ফ্রেম কাউন্টার
-  const frameCounter = useRef(0);
 
   useEffect(() => {
+    // 🔥 চেক: যদি স্ক্রিন সাইজ ৭৬৮ পিক্সেলের কম হয় (মোবাইল), তবে কোড রান করবে না
+    if (window.innerWidth < 768) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -22,30 +23,20 @@ const TubesCursor: React.FC = () => {
     const handleResize = () => {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
+      
+      // রিসাইজ করলে যদি মোবাইল সাইজ হয়ে যায়, ক্যানভাস ক্লিয়ার করে দেব
+      if (window.innerWidth < 768) {
+        ctx.clearRect(0, 0, width, height);
+      }
     };
 
-    // পিসির জন্য মাউস মুভ (স্বাভাবিক থাকবে)
     const handleMouseMove = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
       points.push({ x: mouse.x, y: mouse.y });
     };
 
-    // 🔥 ফিক্সড: মোবাইলের জন্য টাচ মুভ হ্যান্ডলার (Throttle করা হয়েছে)
-    const handleTouchMove = (e: TouchEvent) => {
-      frameCounter.current += 1;
-      
-      // প্রতি ৩টি টাচ ইভেন্টের মধ্যে মাত্র ১টি গ্রহণ করবে।
-      // এটি মোবাইলে ল্যাগ কমাবে এবং আঁকা স্মুথ করবে।
-      if (frameCounter.current % 3 !== 0) {
-        return; 
-      }
-
-      const touch = e.touches[0];
-      mouse.x = touch.clientX;
-      mouse.y = touch.clientY;
-      points.push({ x: mouse.x, y: mouse.y });
-    };
+    // ❌ টাচ ইভেন্ট রিমুভ করে দিয়েছি কারণ ফোনে এটি দরকার নেই
 
     const drawPath = () => {
       ctx.beginPath();
@@ -59,8 +50,10 @@ const TubesCursor: React.FC = () => {
     };
 
     const animate = () => {
-      // ট্রেইলের দৈর্ঘ্য একটু কমানো হলো (৫০ থেকে ৪০) পারফরম্যান্সের জন্য
-      if (points.length > 40) {
+      // মোবাইল স্ক্রিন হলে এনিমেশন লুপ থামিয়ে দেবে (Performance Optimization)
+      if (window.innerWidth < 768) return;
+
+      if (points.length > 50) {
         points.shift();
       }
 
@@ -82,7 +75,7 @@ const TubesCursor: React.FC = () => {
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
 
-        // LAYER 1: Outer Glow
+        // LAYER 1
         drawPath();
         ctx.lineWidth = 60;
         ctx.shadowBlur = 80;
@@ -90,7 +83,7 @@ const TubesCursor: React.FC = () => {
         ctx.strokeStyle = gradient;
         ctx.stroke();
 
-        // LAYER 2: Main Body
+        // LAYER 2
         drawPath();
         ctx.lineWidth = 30;
         ctx.shadowBlur = 40;
@@ -98,7 +91,7 @@ const TubesCursor: React.FC = () => {
         ctx.strokeStyle = gradient;
         ctx.stroke();
 
-        // LAYER 3: White Core
+        // LAYER 3
         ctx.globalCompositeOperation = 'source-over';
         drawPath();
         ctx.lineWidth = 6;
@@ -111,26 +104,25 @@ const TubesCursor: React.FC = () => {
 
     window.addEventListener('resize', handleResize);
     window.addEventListener('mousemove', handleMouseMove);
-    // প্যাসিভ ট্রু থাকবে যাতে স্ক্রল ঠিক থাকে
-    window.addEventListener('touchmove', handleTouchMove, { passive: true }); 
-
+    
     animate();
 
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('touchmove', handleTouchMove);
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full pointer-events-none"
+      // 🔥 'hidden md:block' ক্লাস যোগ করা হয়েছে
+      // hidden = সব ডিভাইসে লুকানো
+      // md:block = শুধুমাত্র মিডিয়াম (ট্যাবলেট/পিসি) স্ক্রিনে দেখাবে
+      className="fixed top-0 left-0 hidden w-full h-full pointer-events-none md:block"
       style={{ 
         zIndex: 9999, 
-        opacity: 1,
-        touchAction: 'none'
+        opacity: 1 
       }} 
     />
   );
