@@ -17,6 +17,7 @@ import FacebookFeed from './components/FacebookFeed';
 import Resources from './components/Resources';
 import PhotoGallery from './components/PhotoGallery';
 import FeedbackSlider from './components/FeedbackSlider';
+import SecretSearch from './components/SecretSearch'; // এই লাইনটি অ্যাড করুন
 
 // Special & Utility Components
 import Preloader from './components/Preloader';
@@ -28,6 +29,8 @@ import AudioPlayer from './components/AudioPlayer';
 import DynamicTitle from './components/DynamicTitle';
 import ScrollProgressBtn from './components/ScrollProgressBtn';
 import NetworkStatus from './components/NetworkStatus';
+
+
 
 // ফিডব্যাক টাইপ ডিফিনিশন
 interface Feedback {
@@ -128,6 +131,9 @@ const App: React.FC = () => {
   return (
     <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
       
+     {/* 🔥 এই লাইনটি একদম শুরুতে বা শেষে অ্যাড করুন */}
+      <SecretSearch />
+
       {/* Utilities */}
       <DynamicTitle />
       <NetworkStatus />
@@ -139,7 +145,11 @@ const App: React.FC = () => {
 
       {isLoading && <Preloader onFinish={() => setIsLoading(false)} />}
 
-      <div className={`transition-opacity duration-1000 ease-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+      {/* মেইন কন্টেন্ট র‍্যাপারে z-index দেওয়া হলো যাতে টিউবগুলো নিচে থাকে */}
+      <div 
+        className={`transition-opacity duration-1000 ease-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+        style={{ position: 'relative', zIndex: 10 }}
+      >
         
         <Navbar
           isDarkMode={isDarkMode}
