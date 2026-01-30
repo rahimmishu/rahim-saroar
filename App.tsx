@@ -28,7 +28,8 @@ import NoiseOverlay from './components/NoiseOverlay';
 import FloatingDock from './components/FloatingDock';
 import Chatbot from './components/Chatbot';
 import AudioPlayer from './components/AudioPlayer';
-import DynamicTitle from './components/DynamicTitle'; // ✨ Dynamic Title Import
+import DynamicTitle from './components/DynamicTitle'; 
+import ScrollProgressBtn from './components/ScrollProgressBtn';
 
 const App: React.FC = () => {
   // ১. লোডিং স্টেট
@@ -70,6 +71,46 @@ const App: React.FC = () => {
     setIsDarkMode((prev) => !prev);
   };
 
+  // 🔥 KEYBOARD SHORTCUTS HANDLER (NEW FUNCTION)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // যদি ইউজার কোনো ইনপুট ফিল্ডে টাইপ করে, তখন শর্টকাট কাজ করবে না
+      if (
+        e.target instanceof HTMLInputElement || 
+        e.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
+
+      // Shift বাটন চেপে ধরে শর্টকাট কাজ করবে (যাতে ভুল করে চাপ না লাগে)
+      if (e.shiftKey) {
+        switch(e.key.toLowerCase()) {
+          case 'h': // Home
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            break;
+          case 'c': // Chatbot Toggle
+            setIsChatOpen(prev => !prev);
+            break;
+          case 'm': // Music Toggle
+            setIsMusicPlaying(prev => !prev);
+            break;
+          case 'd': // Dark Mode Toggle
+            toggleTheme();
+            break;
+          case 'p': // Scroll to Projects (আইডি দিয়ে খুঁজতে হবে)
+            const projectsSection = document.getElementById('projects');
+            if (projectsSection) projectsSection.scrollIntoView({ behavior: 'smooth' });
+            break;
+          default:
+            break;
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [toggleTheme]); // ডিপেন্ডেন্সি অ্যারেতে toggleTheme দিতে হবে
+
   return (
     <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white selection:bg-blue-500/30 selection:text-blue-900 dark:selection:text-blue-200">
       
@@ -77,8 +118,6 @@ const App: React.FC = () => {
       <DynamicTitle />
       <ContextMenu />
       <NoiseOverlay />
-      
-      {/* ❌ Tubes Cursor সরানো হয়েছে */}
       
       {/* 🔥 প্রি-লোডার */}
       {isLoading && <Preloader onFinish={() => setIsLoading(false)} />}
@@ -96,7 +135,10 @@ const App: React.FC = () => {
         <Hero />
         <TechMarquee />
         <About />
-        <Projects />
+        {/* আইডি যোগ করা হলো যাতে শর্টকাট কাজ করে */}
+        <section id="projects">
+          <Projects />
+        </section>
         <Resources />
         <FacebookFeed />
         <CreativeWork />
@@ -119,7 +161,8 @@ const App: React.FC = () => {
           togglePlay={() => setIsMusicPlaying(!isMusicPlaying)} 
         />
 
-        {/* Floating Dock */}
+        <ScrollProgressBtn />
+
         <FloatingDock 
           toggleChat={() => setIsChatOpen(!isChatOpen)}
           toggleMusic={() => setIsMusicPlaying(!isMusicPlaying)}
