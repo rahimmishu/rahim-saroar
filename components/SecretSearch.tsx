@@ -54,7 +54,7 @@ const SecretSearch: React.FC = () => {
         // Google Drive ভিডিও (Preview Link)
         { type: 'video', src: 'https://drive.google.com/file/d/1T5nC_AYzfp3RZ9NvKCHchMTLSktmTajg/preview', title: '😁😁' },
         // ছবি
-        { type: 'image', src: '/secret-pic.jpg', title: 'Batch 2024 Group Photo 📸' }
+        { type: 'image', src: '/secret-pic.jpg', title: 'কি দেখিস রে শ্লা 🥵' }
       ]
     },
 
