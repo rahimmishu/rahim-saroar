@@ -23,12 +23,12 @@ import PhotoGallery from './components/PhotoGallery';
 import Preloader from './components/Preloader';
 import ContextMenu from './components/ContextMenu';
 import NoiseOverlay from './components/NoiseOverlay';
-import TubesCursor from './components/TubesCursor'; // ✨ Tubes Cursor ইমপোর্ট করা হলো
 
 // 🔥 ফ্লোটিং কম্পোনেন্টস
 import FloatingDock from './components/FloatingDock';
 import Chatbot from './components/Chatbot';
 import AudioPlayer from './components/AudioPlayer';
+import DynamicTitle from './components/DynamicTitle'; // ✨ Dynamic Title Import
 
 const App: React.FC = () => {
   // ১. লোডিং স্টেট
@@ -74,11 +74,11 @@ const App: React.FC = () => {
     <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white selection:bg-blue-500/30 selection:text-blue-900 dark:selection:text-blue-200">
       
       {/* 🔥 গ্লোবাল ইউটিলিটি কম্পোনেন্টস */}
+      <DynamicTitle />
       <ContextMenu />
       <NoiseOverlay />
       
-      {/* ✨ Tubes Cursor যোগ করা হলো (ব্যাকগ্রাউন্ডে থাকবে) */}
-      <TubesCursor />
+      {/* ❌ Tubes Cursor সরানো হয়েছে */}
       
       {/* 🔥 প্রি-লোডার */}
       {isLoading && <Preloader onFinish={() => setIsLoading(false)} />}
