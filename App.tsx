@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Quote } from 'lucide-react';
 
 // Components Imports
-import Navbar from './components/Navbar';
+import AppNavbar from './components/AppNavbar';
 import Hero from './components/Hero';
 import TechMarquee from './components/TechMarquee';
 import Projects from './components/Projects';
@@ -152,7 +152,7 @@ const App: React.FC = () => {
         style={{ position: 'relative', zIndex: 10 }}
       >
         
-        <Navbar
+        <AppNavbar
           isDarkMode={isDarkMode}
           toggleTheme={toggleTheme}
           onOpenTools={() => setIsToolsOpen(true)}
