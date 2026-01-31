@@ -4,7 +4,7 @@ import {
   Home, Phone 
 } from 'lucide-react';
 
-// ১. এখানে প্রপস ডিফাইন করা হয়েছে
+// ১. প্রপস ইন্টারফেস ডিফাইন করা
 interface FloatingDockProps {
   toggleChat: () => void;
   toggleMusic: () => void;
@@ -16,7 +16,8 @@ const FloatingDock: React.FC<FloatingDockProps> = ({ toggleChat, toggleMusic }) 
 
   useEffect(() => {
     const toggleVisibility = () => {
-      if (window.scrollY > 100) { // ২০০ এর বদলে ১০০ দিলাম যাতে একটু আগেই দেখা যায়
+      // স্ক্রল ১০০ পিক্সেলের বেশি হলে ডক দেখাবে
+      if (window.scrollY > 100) { 
         setIsVisible(true);
       } else {
         setIsVisible(false);
@@ -43,7 +44,7 @@ const FloatingDock: React.FC<FloatingDockProps> = ({ toggleChat, toggleMusic }) 
       icon: <Bot size={22} />,
       color: "hover:text-purple-400",
       bgGlow: "group-hover:bg-purple-500/20",
-      action: toggleChat // 🔥 আপডেটেড: এখন চ্যাট ওপেন হবে
+      action: toggleChat // 🔥 চ্যাটবট ওপেন হবে
     },
     {
       label: "WhatsApp",
@@ -64,7 +65,7 @@ const FloatingDock: React.FC<FloatingDockProps> = ({ toggleChat, toggleMusic }) 
       icon: <Music size={22} />,
       color: "hover:text-pink-400",
       bgGlow: "group-hover:bg-pink-500/20",
-      action: toggleMusic // 🔥 আপডেটেড: এখন মিউজিক বাজবে
+      action: toggleMusic // 🔥 মিউজিক প্লেয়ার টগল হবে
     }
   ];
 
@@ -117,7 +118,7 @@ const FloatingDock: React.FC<FloatingDockProps> = ({ toggleChat, toggleMusic }) 
           
            {/* Tooltip */}
            <span className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1 text-[10px] font-bold text-white bg-slate-800/90 rounded-full opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-              Top
+             Top
            </span>
         </button>
 

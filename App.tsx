@@ -17,7 +17,7 @@ import FacebookFeed from './components/FacebookFeed';
 import Resources from './components/Resources';
 import PhotoGallery from './components/PhotoGallery';
 import FeedbackSlider from './components/FeedbackSlider';
-import SecretSearch from './components/SecretSearch'; // এই লাইনটি অ্যাড করুন
+// এই লাইনটি অ্যাড করুন
 
 // Special & Utility Components
 import Preloader from './components/Preloader';
@@ -29,6 +29,7 @@ import AudioPlayer from './components/AudioPlayer';
 import DynamicTitle from './components/DynamicTitle';
 import ScrollProgressBtn from './components/ScrollProgressBtn';
 import NetworkStatus from './components/NetworkStatus';
+import SecretVault from './components/SecretVault';
 
 
 
@@ -132,7 +133,7 @@ const App: React.FC = () => {
     <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
       
      {/* 🔥 এই লাইনটি একদম শুরুতে বা শেষে অ্যাড করুন */}
-      <SecretSearch />
+      <SecretVault />
 
       {/* Utilities */}
       <DynamicTitle />

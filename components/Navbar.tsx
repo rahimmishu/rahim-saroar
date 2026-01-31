@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Download, Moon, Sun, Wrench, Sparkles, Camera } from 'lucide-react';
+import { Menu, X, Download, Moon, Sun, Wrench, Sparkles, Camera, Lock } from 'lucide-react';
 
 interface NavbarProps {
   isDarkMode: boolean;
@@ -35,20 +35,20 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools, o
         ? 'bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg shadow-lg py-4' 
         : 'bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm py-6'
     }`}>
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="flex justify-between items-center">
+      <div className="container px-4 mx-auto md:px-8">
+        <div className="flex items-center justify-between">
           
           {/* 🔥 PREMIUM ANIMATED LOGO/NAME START 🔥 */}
-          <a href="#home" className="group flex items-center gap-2 relative">
+          <a href="#home" className="relative flex items-center gap-2 group">
             
             {/* আইকন এবং এনিমেশন */}
-            <div className="relative hidden xs:block"> {/* xs:block দেওয়া হয়েছে যাতে খুব ছোট মোবাইলে জায়গা না খায় */}
-               <Sparkles className="text-purple-500 group-hover:animate-spin-slow transition-transform duration-500" size={24} />
-               <div className="absolute inset-0 bg-purple-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative hidden xs:block">
+               <Sparkles className="text-purple-500 transition-transform duration-500 group-hover:animate-spin-slow" size={24} />
+               <div className="absolute inset-0 transition-opacity duration-500 rounded-full opacity-0 bg-purple-500/20 blur-xl group-hover:opacity-100"></div>
             </div>
 
-            {/* নামের টেক্সট এবং গ্রেডিয়েন্ট এনিমেশন */}
-            <span className="text-2xl md:text-3xl font-bold font-signature relative overflow-hidden">
+            {/* নামের টেক্সট এবং গ্রেডিয়েন্ট এনিমেশন */}
+            <span className="relative overflow-hidden text-2xl font-bold md:text-3xl font-signature">
               <span className="bg-gradient-to-r from-slate-900 via-blue-600 to-purple-600 dark:from-white dark:via-blue-400 dark:to-purple-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
                 Rahim Saroar Mishu
               </span>
@@ -58,7 +58,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools, o
           {/* 🔥 PREMIUM ANIMATED LOGO END 🔥 */}
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="items-center hidden space-x-8 lg:flex">
             <div className="flex items-center gap-4">
               
               {/* Photos Button */}
@@ -91,7 +91,7 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools, o
                   <a 
                     key={link.label}
                     href={link.href} 
-                    className="font-medium transition-colors text-base text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary relative group"
+                    className="relative text-base font-medium transition-colors text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary group"
                   >
                     {link.label}
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 dark:bg-cyan-400 transition-all group-hover:w-full"></span>
@@ -101,17 +101,17 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools, o
               
               <button
                 onClick={onOpenTools}
-                className="font-medium transition-colors text-base text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary flex items-center gap-1"
+                className="flex items-center gap-1 text-base font-medium transition-colors text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary"
               >
                 <Wrench size={18} /> Tools
               </button>
             </div>
             
-            <div className="flex items-center space-x-4 pl-4 border-l border-slate-200 dark:border-slate-800">
+            <div className="flex items-center pl-4 space-x-4 border-l border-slate-200 dark:border-slate-800">
               {/* Theme Toggle */}
               <button 
                 onClick={toggleTheme}
-                className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="p-2 transition-colors rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
               >
                 {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
               </button>
@@ -129,25 +129,25 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools, o
           </div>
 
           {/* Mobile Menu Button & Theme Toggle */}
-          <div className="lg:hidden flex items-center gap-4">
+          <div className="flex items-center gap-4 lg:hidden">
             
             {/* Photos Button (Mobile Top Bar) */}
             <button 
               onClick={onOpenGallery} 
-              className="p-2 text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 rounded-full"
+              className="p-2 text-purple-600 rounded-full dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20"
             >
-                <Camera size={20} />
+              <Camera size={20} />
             </button>
 
             <button 
                 onClick={toggleTheme}
-                className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="p-2 transition-colors rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
               >
                 {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
             <button 
               onClick={() => setIsOpen(!isOpen)}
-              className="text-slate-800 dark:text-white p-2"
+              className="p-2 text-slate-800 dark:text-white"
             >
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
@@ -156,14 +156,14 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools, o
 
         {/* Mobile Dropdown */}
         {isOpen && (
-          <div className="lg:hidden absolute top-full left-0 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-xl border-t border-gray-100 dark:border-slate-800 py-6 px-4 flex flex-col space-y-4 animate-in slide-in-from-top-5">
+          <div className="absolute left-0 flex flex-col w-full px-4 py-6 space-y-4 border-t border-gray-100 shadow-xl lg:hidden top-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md dark:border-slate-800 animate-in slide-in-from-top-5">
             
             {/* Photos Button (Mobile Menu List) */}
             <button 
               onClick={() => { onOpenGallery(); setIsOpen(false); }} 
-              className="text-left text-purple-600 font-bold py-2 border-b border-gray-50 dark:border-slate-800 flex items-center gap-2"
+              className="flex items-center gap-2 py-2 font-bold text-left text-purple-600 border-b border-gray-50 dark:border-slate-800"
             >
-                <Camera size={18} /> Open Photo Gallery
+              <Camera size={18} /> Open Photo Gallery
             </button>
 
             {navLinks.map((link) => (
@@ -179,21 +179,35 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools, o
                 </span>
               </a>
             ))}
+            
             <button
               onClick={() => {
                 onOpenTools();
                 setIsOpen(false);
               }}
-              className="text-left text-slate-600 dark:text-slate-300 hover:text-primary font-medium py-2 flex items-center gap-2"
+              className="flex items-center gap-2 py-2 font-medium text-left text-slate-600 dark:text-slate-300 hover:text-primary"
             >
               <Wrench size={18} /> Tools
             </button>
-            <div className="flex flex-col space-y-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+
+            {/* 🔥 SECRET VAULT BUTTON ADDED HERE 🔥 */}
+            <button 
+              onClick={() => {
+                setIsOpen(false);
+                window.dispatchEvent(new Event('open-secret-search'));
+              }}
+              className="flex items-center w-full py-2 font-medium text-left transition-colors text-slate-600 dark:text-slate-300 hover:text-pink-500"
+            >
+              <Lock size={18} className="mr-2" />
+              Secret Vault
+            </button>
+
+            <div className="flex flex-col pt-4 space-y-3 border-t border-slate-200 dark:border-slate-800">
               <a 
                 href="/resume.pdf"
                 target="_blank"
                 download
-                className="w-full px-4 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-blue-700 shadow-lg shadow-blue-500/30 flex justify-center items-center gap-2"
+                className="flex items-center justify-center w-full gap-2 px-4 py-3 font-semibold text-white rounded-lg shadow-lg bg-primary hover:bg-blue-700 shadow-blue-500/30"
               >
                 <Download size={18} />
                 Download Resume
