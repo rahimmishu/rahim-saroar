@@ -5,6 +5,7 @@ interface MediaItem {
   type: 'image' | 'video';
   src: string;
   title: string;
+  thumbnail?: string; // 🔥 নতুন অপশন: ম্যানুয়াল থাম্বনেইল
 }
 
 const SecretVault: React.FC = () => {
@@ -27,11 +28,12 @@ const SecretVault: React.FC = () => {
     "hotcdi": { 
       msg: "📂 Unlocking Hot Memory Vault...", type: 'gallery',
       items: [
-        { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: '👻' },
-        { type: 'video', src: 'https://www.youtube.com/embed/dQw4w9WgXcQ', title: 'Favorite Song 🎵' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1T5nC_AYzfp3RZ9NvKCHchMTLSktmTajg/preview', title: '😁😁' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1osCjA7soR9r9l7rdt0roG4DewVOk98Nn/preview', title: 'Hot Guju Couple Has Romance In Hotal' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1C-fGEcNowdv6Igyb_PZCtMUtDuB7NIgr/preview', title: 'Horny sex' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: '👻', thumbnail: '/hot.jpg' },
+        { type: 'video', src: 'https://www.youtube.com/embed/dQw4w9WgXcQ', title: 'Favorite Song 🎵' }, // অটোমেটিক থাম্বনেইল আসবে
+        { type: 'video', src: 'https://drive.google.com/file/d/1T5nC_AYzfp3RZ9NvKCHchMTLSktmTajg/preview', title: '😁😁',thumbnail: '/pagla.jpg' },
+        // আপনার আগের ভিডিও আইটেমগুলো এখানে থাকবে...
+        { type: 'video', src: 'https://drive.google.com/file/d/1osCjA7soR9r9l7rdt0roG4DewVOk98Nn/preview', title: 'Hot Guju Couple', thumbnail: '/goju.jpg' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1C-fGEcNowdv6Igyb_PZCtMUtDuB7NIgr/preview', title: 'Romantic Video', thumbnail: '/horny.jpg' },
         { type: 'image', src: '/secret-pic.jpg', title: 'কি দেখিস রে শ্লা 🥵' }
       ]
     },
@@ -68,7 +70,6 @@ const SecretVault: React.FC = () => {
       if (e.key === 'Escape') closeAll();
     };
 
-    // মেনু সিগন্যাল লিসেনার
     const handleNavbarSignal = () => openSecretSearch();
 
     window.addEventListener('keydown', handleKeyDown);
@@ -79,6 +80,30 @@ const SecretVault: React.FC = () => {
       window.removeEventListener('open-secret-search', handleNavbarSignal);
     };
   }, []);
+
+  // 🔥 থাম্বনেইল জেনারেটর ফাংশন
+  const getThumbnail = (src: string, manualThumbnail?: string) => {
+    // ১. ম্যানুয়াল থাম্বনেইল থাকলে সেটাই দেখাবে
+    if (manualThumbnail) return manualThumbnail;
+
+    // ২. ইউটিউব লিংক হলে অটোমেটিক থাম্বনেইল আনবে
+    if (src.includes('youtube.com') || src.includes('youtu.be')) {
+      // ইউটিউব আইডি বের করার লজিক
+      let videoId = null;
+      if (src.includes('embed/')) {
+          videoId = src.split('embed/')[1]?.split('?')[0];
+      } else if (src.includes('v=')) {
+          videoId = src.split('v=')[1]?.split('&')[0];
+      } else {
+          videoId = src.split('/').pop();
+      }
+      
+      if (videoId) return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+    }
+
+    // ৩. অন্যথায় নাল রিটার্ন করবে (ডিফল্ট আইকন দেখাবে)
+    return null;
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,6 +169,7 @@ const SecretVault: React.FC = () => {
         </div>
       )}
 
+      {/* 🔥 GALLERY VIEW UPDATED 🔥 */}
       {showGallery && (
         <div className="fixed inset-0 z-[100000] bg-slate-950/95 backdrop-blur-md flex flex-col p-6 animate-in zoom-in-95 duration-300 overflow-y-auto">
             <div className="flex items-center justify-between w-full max-w-5xl mx-auto mb-8">
@@ -151,14 +177,39 @@ const SecretVault: React.FC = () => {
                 <button onClick={() => setShowGallery(false)} className="p-2 text-white transition-all rounded-full bg-white/10 hover:bg-red-500"><X size={24} /></button>
             </div>
             <div className="grid w-full max-w-5xl grid-cols-1 gap-6 pb-10 mx-auto md:grid-cols-2 lg:grid-cols-3">
-                {galleryItems.map((item, idx) => (
-                    <div key={idx} onClick={() => openMedia(item)} className="relative overflow-hidden border cursor-pointer group bg-slate-900 border-slate-800 rounded-2xl">
-                        <div className="relative flex items-center justify-center aspect-video bg-slate-800">
-                            {item.type === 'video' ? <Video className="w-12 h-12 text-slate-600 group-hover:text-pink-500" /> : <img src={item.src} className="object-cover w-full h-full opacity-80 group-hover:opacity-100" />}
+                {galleryItems.map((item, idx) => {
+                    // থাম্বনেইল চেক করা
+                    const thumbUrl = getThumbnail(item.src, item.thumbnail);
+                    
+                    return (
+                        <div key={idx} onClick={() => openMedia(item)} className="relative overflow-hidden border cursor-pointer group bg-slate-900 border-slate-800 rounded-2xl aspect-video">
+                            <div className="relative flex items-center justify-center w-full h-full bg-slate-800">
+                                {thumbUrl ? (
+                                    // 🔥 যদি থাম্বনেইল পাওয়া যায়
+                                    <>
+                                        <img src={thumbUrl} alt={item.title} className="object-cover w-full h-full transition-opacity opacity-80 group-hover:opacity-100" />
+                                        {/* ভিডিও হলে প্লে বাটন দেখাবে */}
+                                        {item.type === 'video' && (
+                                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10">
+                                                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm">
+                                                    <Play className="w-6 h-6 text-white fill-white" />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </>
+                                ) : (
+                                    // ⚠️ থাম্বনেইল না থাকলে ডিফল্ট আইকন
+                                    item.type === 'video' ? 
+                                    <Video className="w-12 h-12 transition-colors text-slate-600 group-hover:text-pink-500" /> : 
+                                    <img src={item.src} className="object-cover w-full h-full opacity-80 group-hover:opacity-100" />
+                                )}
+                            </div>
+                            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                                <h3 className="font-bold truncate text-slate-200">{item.title}</h3>
+                            </div>
                         </div>
-                        <div className="p-4"><h3 className="font-bold text-slate-200">{item.title}</h3></div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
       )}
@@ -169,8 +220,8 @@ const SecretVault: React.FC = () => {
             <div className="max-w-6xl w-full max-h-[90vh] flex flex-col items-center justify-center">
                 {currentMedia.type === 'video' ? (
                     isExternalVideo(currentMedia.src) ? 
-                    <iframe src={currentMedia.src} className="w-full aspect-video max-h-[85vh] rounded-lg shadow-2xl" allowFullScreen></iframe> : 
-                    <video src={currentMedia.src} controls autoPlay className="w-full h-auto max-h-[85vh] rounded-lg shadow-2xl" />
+                    <iframe src={currentMedia.src} className="w-full aspect-video max-h-[85vh] rounded-lg shadow-2xl bg-black" allowFullScreen allow="autoplay; encrypted-media"></iframe> : 
+                    <video src={currentMedia.src} controls autoPlay className="w-full h-auto max-h-[85vh] rounded-lg shadow-2xl bg-black" />
                 ) : (
                     <img src={currentMedia.src} className="w-auto h-auto max-h-[85vh] rounded-lg object-contain shadow-2xl" />
                 )}
