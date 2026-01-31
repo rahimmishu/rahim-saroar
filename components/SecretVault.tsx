@@ -30,6 +30,7 @@ const SecretVault: React.FC = () => {
         { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: '👻' },
         { type: 'video', src: 'https://www.youtube.com/embed/dQw4w9WgXcQ', title: 'Favorite Song 🎵' },
         { type: 'video', src: 'https://drive.google.com/file/d/1T5nC_AYzfp3RZ9NvKCHchMTLSktmTajg/preview', title: '😁😁' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1osCjA7soR9r9l7rdt0roG4DewVOk98Nn/preview', title: 'Hot Guju Couple Has Romance In Hotal' },
         { type: 'image', src: '/secret-pic.jpg', title: 'কি দেখিস রে শ্লা 🥵' }
       ]
     },
@@ -150,7 +151,7 @@ const SecretVault: React.FC = () => {
             </div>
             <div className="grid w-full max-w-5xl grid-cols-1 gap-6 pb-10 mx-auto md:grid-cols-2 lg:grid-cols-3">
                 {galleryItems.map((item, idx) => (
-                    <div key={idx} onClick={() => openMedia(item)} className="group relative bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden cursor-pointer">
+                    <div key={idx} onClick={() => openMedia(item)} className="relative overflow-hidden border cursor-pointer group bg-slate-900 border-slate-800 rounded-2xl">
                         <div className="relative flex items-center justify-center aspect-video bg-slate-800">
                             {item.type === 'video' ? <Video className="w-12 h-12 text-slate-600 group-hover:text-pink-500" /> : <img src={item.src} className="object-cover w-full h-full opacity-80 group-hover:opacity-100" />}
                         </div>
