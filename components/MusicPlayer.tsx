@@ -1,15 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Play, Pause, SkipForward, SkipBack, Heart, 
-  ExternalLink, Music, X, ListMusic 
+  ExternalLink, X, ListMusic 
 } from 'lucide-react';
 
-interface AudioPlayerProps {
+interface MusicPlayerProps {
   isPlaying: boolean;
   togglePlay: () => void;
 }
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, togglePlay }) => {
+const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [showPlaylist, setShowPlaylist] = useState(false);
@@ -57,7 +57,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, togglePlay }) => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.play().catch(e => console.log("Autoplay blocked", e));
-        setIsOpen(true); // 🔥 গান প্লে হলে অটোমেটিক প্লেয়ার ওপেন হবে
+        setIsOpen(true); // গান প্লে হলে প্লেয়ার ওপেন হবে
       } else {
         audioRef.current.pause();
       }
@@ -131,11 +131,11 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, togglePlay }) => {
     <>
       <audio ref={audioRef} src={currentTrack?.src} />
 
-      {/* ⚠️ Floating Button Removed - Controlled via FloatingDock */}
+      {/* ⚠️ Floating Button Removed - Controlled via FloatingDock Only */}
       
       {/* Main Player Widget */}
       {isOpen && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 md:left-10 md:transform-none z-[100] animate-in slide-in-from-bottom-10 fade-in duration-500 w-full flex justify-center md:block pointer-events-none md:pointer-events-auto">
+        <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 md:left-10 md:transform-none z-[100] animate-in slide-in-from-bottom-10 fade-in duration-500 w-full flex justify-center md:block pointer-events-none md:pointer-events-auto">
           
           <style>{`
             @import url('https://fonts.googleapis.com/css?family=Bitter:400,700&display=swap&subset=latin-ext');
@@ -332,7 +332,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, togglePlay }) => {
             .playlist-item.active { background: rgba(83, 42, 185, 0.1); }
             .dark .playlist-item.active { background: rgba(99, 102, 241, 0.2); }
 
-            /* 🔥 MOBILE RESPONSIVE FIXES (Force Full Height Cover) */
+            /* 🔥 MOBILE RESPONSIVE FIXES (Updated) */
             @media screen and (max-width: 640px) {
                 .player-card {
                     width: 350px;
@@ -376,7 +376,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, togglePlay }) => {
             </div>
 
             {showPlaylist ? (
-                // --- Playlist View ---
                 <div className="playlist-overlay scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
                     <h3 className="mb-4 text-lg font-bold text-slate-700 dark:text-white">Playlist</h3>
                     {playlist.map((track, idx) => (
@@ -397,7 +396,6 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, togglePlay }) => {
                     ))}
                 </div>
             ) : (
-                // --- Default Player View ---
                 <>
                     <div className="player__top">
                         <div className="player-cover">
@@ -461,4 +459,4 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, togglePlay }) => {
   );
 };
 
-export default AudioPlayer;
+export default MusicPlayer;
