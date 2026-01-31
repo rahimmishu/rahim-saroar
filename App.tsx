@@ -25,7 +25,7 @@ import ContextMenu from './components/ContextMenu';
 import NoiseOverlay from './components/NoiseOverlay';
 import FloatingDock from './components/FloatingDock';
 import Chatbot from './components/Chatbot';
-import AudioPlayer from './components/AudioPlayer';
+import MusicPlayer from './components/MusicPlayer';
 import DynamicTitle from './components/DynamicTitle';
 import ScrollProgressBtn from './components/ScrollProgressBtn';
 import NetworkStatus from './components/NetworkStatus';
@@ -220,7 +220,7 @@ const App: React.FC = () => {
 
         {/* Floating Elements */}
         <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
-        <AudioPlayer isPlaying={isMusicPlaying} togglePlay={() => setIsMusicPlaying(!isMusicPlaying)} />
+        <MusicPlayer isPlaying={isMusicPlaying} togglePlay={() => setIsMusicPlaying(!isMusicPlaying)} />
         <ScrollProgressBtn />
         <FloatingDock toggleChat={() => setIsChatOpen(!isChatOpen)} toggleMusic={() => setIsMusicPlaying(!isMusicPlaying)} />
         <PhotoGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} />

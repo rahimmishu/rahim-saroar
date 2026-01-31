@@ -21,7 +21,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, togglePlay }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
 
-  // 🔥 প্লেলিস্ট (অপরিবর্তিত)
+  // 🔥 প্লেলিস্ট
   const playlist = [
     { title: "Airtel X Bhoot FM", artist: "Rahim Saroar", src: "/music/airlel-bhootfm.mp3", cover: "/music/airlel-bhootfm.jpg" },
     { title: "Airtel Phonk 3D", artist: "Rahim Saroar", src: "/music/phonk.mp3", cover: "/music/phonk.jpg" },
@@ -57,7 +57,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, togglePlay }) => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.play().catch(e => console.log("Autoplay blocked", e));
-        setIsOpen(true);
+        setIsOpen(true); // 🔥 গান প্লে হলে অটোমেটিক প্লেয়ার ওপেন হবে
       } else {
         audioRef.current.pause();
       }
@@ -131,23 +131,12 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, togglePlay }) => {
     <>
       <audio ref={audioRef} src={currentTrack?.src} />
 
-      {/* Floating Toggle Button */}
-      {!isOpen && (
-        <button 
-          onClick={() => setIsOpen(true)}
-          className={`fixed bottom-6 left-6 z-[90] p-3 md:p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 border border-white/20 backdrop-blur-md ${
-            isPlaying ? 'bg-[#532ab9] text-white animate-spin-slow' : 'bg-white text-[#acb8cc]'
-          }`}
-        >
-          <Music size={24} />
-        </button>
-      )}
-
+      {/* ⚠️ Floating Button Removed - Controlled via FloatingDock */}
+      
       {/* Main Player Widget */}
       {isOpen && (
-        <div className="fixed bottom-20 left-4 md:left-10 z-[100] animate-in slide-in-from-bottom-10 fade-in duration-500 max-w-[90vw]">
+        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 md:left-10 md:transform-none z-[100] animate-in slide-in-from-bottom-10 fade-in duration-500 w-full flex justify-center md:block pointer-events-none md:pointer-events-auto">
           
-          {/* Injecting Responsive CSS */}
           <style>{`
             @import url('https://fonts.googleapis.com/css?family=Bitter:400,700&display=swap&subset=latin-ext');
             
@@ -161,6 +150,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, togglePlay }) => {
                 font-family: "Bitter", serif;
                 position: relative;
                 transition: all 0.3s ease;
+                pointer-events: auto;
             }
             .dark .player-card {
                 background: #1e293b;
@@ -342,42 +332,31 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, togglePlay }) => {
             .playlist-item.active { background: rgba(83, 42, 185, 0.1); }
             .dark .playlist-item.active { background: rgba(99, 102, 241, 0.2); }
 
-            /* 🔥 MOBILE RESPONSIVE STYLES */
+            /* 🔥 MOBILE RESPONSIVE FIXES (Force Full Height Cover) */
             @media screen and (max-width: 640px) {
                 .player-card {
-                    width: 300px;
+                    width: 350px;
                     padding: 20px;
-                    min-height: auto;
+                    padding-top: 50px;
                 }
                 .player-cover {
-                    width: 110px;
-                    height: 110px;
-                    margin-left: -25px; /* Less negative margin */
+                    width: 140px; 
+                    height: 190px;
+                    margin-left: -20px; 
+                    margin-top: -10px;
                 }
                 .player-controls__item {
-                    font-size: 24px;
-                    width: 40px;
-                    height: 40px;
-                    margin-bottom: 5px;
+                    font-size: 26px;
+                    width: 45px;
+                    height: 45px;
+                    margin-bottom: 8px;
                 }
                 .player-controls {
                     padding-left: 10px;
                 }
-                .album-info__name {
-                    font-size: 16px;
-                }
-                .album-info__track {
-                    font-size: 12px;
-                }
-                .progress__duration, .progress__time {
-                    font-size: 12px;
-                }
-                /* Playlist Adjustments for Mobile */
-                .playlist-overlay {
-                    padding: 15px;
-                }
-                .playlist-item {
-                    padding: 8px;
+                .playlist-toggle {
+                    top: 15px;
+                    left: 20px;
                 }
             }
           `}</style>
@@ -390,10 +369,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, togglePlay }) => {
 
             {/* Playlist Toggle */}
             <div 
-                className="absolute top-[10px] left-[15px] text-[#acb8cc] hover:text-[#532ab9] cursor-pointer z-10" 
+                className="absolute top-[15px] left-[20px] text-[#acb8cc] hover:text-[#532ab9] cursor-pointer z-10 playlist-toggle" 
                 onClick={() => setShowPlaylist(!showPlaylist)}
             >
-                <ListMusic size={20} />
+                <ListMusic size={22} />
             </div>
 
             {showPlaylist ? (
