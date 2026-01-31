@@ -34,6 +34,7 @@ const SecretVault: React.FC = () => {
         // আপনার আগের ভিডিও আইটেমগুলো এখানে থাকবে...
         { type: 'video', src: 'https://drive.google.com/file/d/1osCjA7soR9r9l7rdt0roG4DewVOk98Nn/preview', title: 'Hot Guju Couple', thumbnail: '/goju.jpg' },
         { type: 'video', src: 'https://drive.google.com/file/d/1C-fGEcNowdv6Igyb_PZCtMUtDuB7NIgr/preview', title: 'Romantic Video', thumbnail: '/horny.jpg' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1aW3atn8w4OkSfvmhnt1lEKjuNwVvn_60/preview', title: 'Throat Romantice', thumbnail: '/hornyh.jpg' },
         { type: 'image', src: '/secret-pic.jpg', title: 'কি দেখিস রে শ্লা 🥵' }
       ]
     },
@@ -161,7 +162,7 @@ const SecretVault: React.FC = () => {
                     <div className="flex flex-col items-center text-slate-400">
                         <Lock className="w-8 h-8 mb-2 opacity-50" />
                         <p className="text-sm">Type a code to unlock.</p>
-                        <p className="mt-2 text-xs opacity-50">(Hint: Try 'hotcdi')</p>
+                        <p className="mt-2 text-xs opacity-50">(Hint: Try 'love')</p>
                     </div>
                 )}
             </div>
