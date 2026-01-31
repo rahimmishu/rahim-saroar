@@ -29,7 +29,7 @@ const SecretVault: React.FC = () => {
       msg: "📂 Unlocking Hot Memory Vault...", type: 'gallery',
       items: [
         { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: '👻', thumbnail: '/hot.jpg' },
-        { type: 'video', src: 'https://www.youtube.com/embed/TVjrci5QQ4A', title: 'Favorite Song 🎵' }, // অটোমেটিক থাম্বনেইল আসবে
+        { type: 'video', src: 'https://www.youtube.com/embed/TVjrci5QQ4A', title: 'Favorite romance 🥵' }, // অটোমেটিক থাম্বনেইল আসবে
         { type: 'video', src: 'https://drive.google.com/file/d/1T5nC_AYzfp3RZ9NvKCHchMTLSktmTajg/preview', title: '😁😁',thumbnail: '/pagla.jpg' },
         // আপনার আগের ভিডিও আইটেমগুলো এখানে থাকবে...
         { type: 'video', src: 'https://drive.google.com/file/d/1osCjA7soR9r9l7rdt0roG4DewVOk98Nn/preview', title: 'Hot Guju Couple', thumbnail: '/goju.jpg' },
@@ -127,7 +127,7 @@ const SecretVault: React.FC = () => {
         setTimeout(() => result.action!(), 1000);
       }
     } else {
-      setMessage("❌ Access Denied. Try 'hotcdi'");
+      setMessage("❌ কিরে চোর 🍌 ");
     }
   };
 
