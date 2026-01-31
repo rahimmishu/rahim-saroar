@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Sparkles, PlayCircle, Github, Facebook, Linkedin, Mail } from 'lucide-react';
-import Tilt3D from './Tilt3D'; // ✅ এই ইমপোর্টটি যেমন আছে তেমনই থাকবে
+import Tilt3D from './Tilt3D'; 
+import LifeStatus from './LifeStatus'; // 🔥 এই লাইনটি নতুন অ্যাড করা হয়েছে
 
 const Hero: React.FC = () => {
   // --- Typing Effect Logic ---
@@ -70,12 +71,17 @@ const Hero: React.FC = () => {
 
             {/* Bangla Subtitle */}
             <h2 className="text-2xl font-bold md:text-3xl text-slate-700 dark:text-slate-300 font-bengali">
-               প্রযুক্তির সাথে, স্বপ্নের পথে
+                প্রযুক্তির সাথে, স্বপ্নের পথে
             </h2>
             
             <p className="max-w-lg mx-auto text-lg leading-relaxed text-slate-500 dark:text-slate-400 lg:mx-0">
               Turning ideas into reality with Python, AI, and Creative Coding.
             </p>
+
+            {/* 🔥 NEW LIFE STATUS WIDGET ADDED HERE 🔥 */}
+            <div className="flex justify-center w-full lg:justify-start">
+              <LifeStatus />
+            </div>
 
             {/* Buttons Area */}
             <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row lg:justify-start">
@@ -115,7 +121,7 @@ const Hero: React.FC = () => {
             {/* Animated Blob Behind Image */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-3xl opacity-20 animate-pulse"></div>
 
-            {/* 🔥 UPDATE: 'animate-float' দিয়ে র‍্যাপ করা হয়েছে যাতে ছবি নিজে থেকেই ভাসে 🔥 */}
+            {/* 🔥 animate-float added 🔥 */}
             <div className="relative z-20 animate-float">
               <Tilt3D className="relative w-72 md:w-96 lg:w-[480px] xl:w-[550px] aspect-[4/5] rounded-3xl rotate-3 hover:rotate-0 transition-all duration-700 ease-out group perspective-1000">
                 
@@ -134,7 +140,7 @@ const Hero: React.FC = () => {
                   <div className="absolute inset-0 transition-opacity duration-500 opacity-0 bg-gradient-to-t from-black/40 via-transparent to-transparent group-hover:opacity-100"></div>
                 </div>
 
-                {/* Floating Badge on Image (Sharper Text) */}
+                {/* Floating Badge on Image */}
                 <div className="absolute z-20 bottom-5 left-5">
                   <div className="flex items-center gap-3 px-4 py-3 pr-6 antialiased transition-all duration-300 border rounded-full shadow-lg cursor-pointer bg-white/10 dark:bg-black/40 backdrop-blur-md border-white/20 hover:bg-white/20 group-hover:scale-105">
                     
