@@ -35,6 +35,7 @@ import SecretVault from './components/SecretVault';
 import MobilePremiumFeatures from './components/MobilePremiumFeatures';
 import AuroraBackground from './components/AuroraBackground';
 import DynamicIsland from './components/DynamicIsland';
+// VoiceControl এখান থেকে সরানো হয়েছে কারণ এটি এখন FloatingDock এর ভেতরে আছে
 
 // ফিডব্যাক টাইপ ডিফিনিশন
 interface Feedback {
@@ -135,7 +136,7 @@ const App: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []); // removed toggleTheme dependency to avoid re-binding
+  }, []); 
 
   return (
     <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
@@ -144,6 +145,9 @@ const App: React.FC = () => {
       <SecretVault />
       <AuroraBackground /> {/* 🔥 নতুন অ্যানিমেটেড ব্যাকগ্রাউন্ড */}
       <MobilePremiumFeatures />
+      
+      {/* VoiceControl এখানে দরকার নেই কারণ এটি এখন FloatingDock এর ভেতরে */}
+      
       <DynamicIsland /> {/* 🔥 আইফোন স্টাইল নোটিফিকেশন */}
 
       {/* Utilities */}
@@ -170,13 +174,17 @@ const App: React.FC = () => {
           onOpenGallery={() => setIsGalleryOpen(true)}
         />
         
+        {/* Hero Section */}
         <Hero />
         <TechMarquee />
         
-        {/* 🔥 SCROLL ANIMATIONS START HERE */}
+        {/* 🔥 SCROLL ANIMATIONS START HERE (IDs added for Voice Control) */}
         
         <RevealOnScroll>
-          <About />
+          {/* 👇 id="about" যুক্ত করা হয়েছে */}
+          <section id="about">
+            <About />
+          </section>
         </RevealOnScroll>
         
         <RevealOnScroll delay={0.1}>
@@ -186,7 +194,10 @@ const App: React.FC = () => {
         </RevealOnScroll>
 
         <RevealOnScroll>
-          <Resources />
+          {/* 👇 id="resources" যুক্ত করা হয়েছে */}
+          <section id="resources">
+            <Resources />
+          </section>
         </RevealOnScroll>
 
         <RevealOnScroll>
@@ -194,19 +205,31 @@ const App: React.FC = () => {
         </RevealOnScroll>
         
         <RevealOnScroll>
-          <Achievements />
+          {/* 👇 id="achievements" যুক্ত করা হয়েছে */}
+          <section id="achievements">
+            <Achievements />
+          </section>
         </RevealOnScroll>
 
         <RevealOnScroll>
-          <Certifications />
+          {/* 👇 id="certifications" যুক্ত করা হয়েছে */}
+          <section id="certifications">
+            <Certifications />
+          </section>
         </RevealOnScroll>
 
         <RevealOnScroll>
-          <Journey />
+          {/* 👇 id="journey" যুক্ত করা হয়েছে */}
+          <section id="journey">
+            <Journey />
+          </section>
         </RevealOnScroll>
 
         <RevealOnScroll>
-          <Contact />
+          {/* 👇 id="contact" যুক্ত করা হয়েছে */}
+          <section id="contact">
+            <Contact />
+          </section>
         </RevealOnScroll>
 
         {/* 🔥 SAVED FEEDBACKS SECTION (ANIMATED) */}
@@ -258,7 +281,14 @@ const App: React.FC = () => {
         <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
         <MusicPlayer isPlaying={isMusicPlaying} togglePlay={() => setIsMusicPlaying(!isMusicPlaying)} />
         <ScrollProgressBtn />
-        <FloatingDock toggleChat={() => setIsChatOpen(!isChatOpen)} toggleMusic={() => setIsMusicPlaying(!isMusicPlaying)} />
+        
+        {/* 🔥 FloatingDock আপডেট: toggleTheme পাস করা হয়েছে */}
+        <FloatingDock 
+          toggleChat={() => setIsChatOpen(!isChatOpen)} 
+          toggleMusic={() => setIsMusicPlaying(!isMusicPlaying)}
+          toggleTheme={toggleTheme} 
+        />
+        
         <PhotoGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} />
 
         {isToolsOpen && (
