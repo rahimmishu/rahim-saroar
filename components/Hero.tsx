@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Sparkles, PlayCircle, Github, Facebook, Linkedin, Mail } from 'lucide-react';
 import Tilt3D from './Tilt3D'; // ✅ এই ইমপোর্টটি যেমন আছে তেমনই থাকবে
+import { triggerIsland } from './DynamicIsland'; // ✅ নোটিফিকেশন ইমপোর্ট
 
 const Hero: React.FC = () => {
   // --- Typing Effect Logic ---
@@ -11,6 +12,15 @@ const Hero: React.FC = () => {
 
   const toRotate = ["Web Developer", "AI Enthusiast", "Content Creator"];
 
+  // 🔥 Logic 1: Welcome Message (Site Load হওয়ার ১.৫ সেকেন্ড পর একবারই কল হবে)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      triggerIsland("Entering Digital Workspace... ⚡", "success");
+    }, 4500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // 🔥 Logic 2: Typing Effect (এটি টেক্সট চেঞ্জ হওয়ার সাথে সাথে কল হবে)
   useEffect(() => {
     const handleTyping = () => {
       const i = loopNum % toRotate.length;
@@ -70,7 +80,7 @@ const Hero: React.FC = () => {
 
             {/* Bangla Subtitle */}
             <h2 className="text-2xl font-bold md:text-3xl text-slate-700 dark:text-slate-300 font-bengali">
-               প্রযুক্তির সাথে, স্বপ্নের পথে
+                প্রযুক্তির সাথে, স্বপ্নের পথে
             </h2>
             
             <p className="max-w-lg mx-auto text-lg leading-relaxed text-slate-500 dark:text-slate-400 lg:mx-0">
@@ -115,7 +125,7 @@ const Hero: React.FC = () => {
             {/* Animated Blob Behind Image */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-3xl opacity-20 animate-pulse"></div>
 
-            {/* 🔥 UPDATE: 'animate-float' দিয়ে র‍্যাপ করা হয়েছে যাতে ছবি নিজে থেকেই ভাসে 🔥 */}
+            {/* 🔥 animate-float added 🔥 */}
             <div className="relative z-20 animate-float">
               <Tilt3D className="relative w-72 md:w-96 lg:w-[480px] xl:w-[550px] aspect-[4/5] rounded-3xl rotate-3 hover:rotate-0 transition-all duration-700 ease-out group perspective-1000">
                 
