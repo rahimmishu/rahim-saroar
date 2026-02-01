@@ -76,7 +76,7 @@ const VoiceControl: React.FC<VoiceControlProps> = ({ toggleTheme, toggleChat, to
     },
     {
       // 🔥 11. Secret Vault / Search Command (নতুন যোগ করা হয়েছে)
-      keywords: ['secret', 'search', 'find', 'open search', 'magic', 'ah'],
+      keywords: ['secret', 'search', 'find', 'open search', 'magic', 'ah', 'chudi'],
       action: () => {
          // এটি SecretVault.tsx এ সিগন্যাল পাঠাবে
          window.dispatchEvent(new Event('open-secret-search'));
@@ -109,7 +109,7 @@ const VoiceControl: React.FC<VoiceControlProps> = ({ toggleTheme, toggleChat, to
     if (!isListening) {
       recognition.start();
       setIsListening(true);
-      triggerIsland("Listening... (Try 'Secret', 'Projects', 'Music') 🎙️", "info");
+      triggerIsland("হ হ শুনোছি, তুই কতে থাক! 👂🐸", "info");
     } else {
       recognition.stop();
       setIsListening(false);
