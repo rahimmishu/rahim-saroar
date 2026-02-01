@@ -102,9 +102,13 @@ const FloatingDock: React.FC<FloatingDockProps> = ({ toggleChat, toggleMusic, to
           </button>
         ))}
 
-        {/* 🔥 Call Me এর বদলে Voice Control বাটন এখানে বসানো হলো */}
-        <div className="mx-1 transition-transform duration-300 scale-90 sm:scale-100 hover:scale-110">
-           <VoiceControl toggleTheme={toggleTheme} />
+       {/* 🔥 Voice Control Update: toggleChat ও toggleMusic পাস করা হয়েছে */}
+        <div className="mx-1 scale-90 sm:scale-100 transition-transform duration-300 hover:scale-110">
+           <VoiceControl
+            toggleTheme={toggleTheme} 
+            toggleChat={toggleChat} 
+            toggleMusic={toggleMusic}
+            />
         </div>
 
         {/* Vertical Divider */}
