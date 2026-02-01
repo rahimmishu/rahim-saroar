@@ -33,7 +33,6 @@ import ScrollProgressBtn from './components/ScrollProgressBtn';
 import NetworkStatus from './components/NetworkStatus';
 import SecretVault from './components/SecretVault';
 import MobilePremiumFeatures from './components/MobilePremiumFeatures';
-import AuroraBackground from './components/AuroraBackground';
 import DynamicIsland from './components/DynamicIsland';
 // VoiceControl এখান থেকে সরানো হয়েছে কারণ এটি এখন FloatingDock এর ভেতরে আছে
 
@@ -143,7 +142,7 @@ const App: React.FC = () => {
       
       {/* 🔥 Secret Vault */}
       <SecretVault />
-      <AuroraBackground /> {/* 🔥 নতুন অ্যানিমেটেড ব্যাকগ্রাউন্ড */}
+      
       <MobilePremiumFeatures />
       
       {/* VoiceControl এখানে দরকার নেই কারণ এটি এখন FloatingDock এর ভেতরে */}
