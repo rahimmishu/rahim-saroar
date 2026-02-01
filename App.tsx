@@ -35,6 +35,8 @@ import SecretVault from './components/SecretVault';
 import MobilePremiumFeatures from './components/MobilePremiumFeatures';
 import DynamicIsland from './components/DynamicIsland';
 // VoiceControl এখান থেকে সরানো হয়েছে কারণ এটি এখন FloatingDock এর ভেতরে আছে
+// 🔥 নতুন ইমপোর্ট
+import BatteryOptimizer from './components/BatteryOptimizer';
 
 // ফিডব্যাক টাইপ ডিফিনিশন
 interface Feedback {
@@ -72,7 +74,7 @@ const App: React.FC = () => {
       html.classList.remove('dark');
       localStorage.setItem('theme', 'light');
     }
-
+    
     // 📥 লোড ফিডব্যাক ফ্রম লোকাল স্টোরেজ
     const savedFeedbacks = localStorage.getItem('user_feedbacks');
     if (savedFeedbacks) {
@@ -82,6 +84,21 @@ const App: React.FC = () => {
         console.error("Failed to parse feedbacks:", error);
       }
     }
+
+    // 🔥 Global Haptic Feedback Handler (New Addition)
+    const handleGlobalClick = () => {
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+          navigator.vibrate(5); // একদম হালকা একটা টিক শব্দ/ফিল হবে
+        }
+      };
+  
+      document.addEventListener('click', handleGlobalClick);
+      
+      // Cleanup function
+      return () => {
+        document.removeEventListener('click', handleGlobalClick);
+      };
+
   }, [isDarkMode]);
 
   const toggleTheme = () => setIsDarkMode((prev) => !prev);
@@ -154,6 +171,8 @@ const App: React.FC = () => {
       <NetworkStatus />
       <ContextMenu />
       <NoiseOverlay />
+      {/* 🔥 Battery Optimizer এখানে বসানো হয়েছে */}
+      <BatteryOptimizer isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
       
       {/* 🔥 পপ-আপ ফিডব্যাক স্লাইডার */}
       <FeedbackSlider onSubmit={handleNewFeedback} />
