@@ -1,0 +1,225 @@
+/* CryptoTrader.css */
+.crypto-wrapper {
+    --bg-color: #e0e5ec;
+    --text-color: #4a5568;
+    --shadow-light: #ffffff;
+    --shadow-dark: #a3b1c6;
+    --accent-green: #00b894;
+    --accent-red: #d63031;
+    --chart-grid: rgba(163, 177, 198, 0.2);
+    --chart-text: #718096;
+
+    width: 100%;
+    height: 100%;
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    background-color: #0f172a; /* Main App Background match */
+    padding: 20px;
+}
+
+.crypto-wrapper.dark {
+    --bg-color: #2b3035;
+    --text-color: #e2e8f0;
+    --shadow-light: #363c42;
+    --shadow-dark: #202428;
+    --chart-grid: rgba(255, 255, 255, 0.08);
+    --chart-text: #cbd5e0;
+}
+
+.crypto-card {
+    width: 100%;
+    max-width: 900px;
+    padding: 2rem;
+    border-radius: 30px;
+    background: var(--bg-color);
+    box-shadow: 20px 20px 60px rgba(0,0,0,0.5), -20px -20px 60px rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Controls */
+.crypto-controls {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.crypto-input-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.crypto-select,
+.crypto-theme-toggle {
+    appearance: none;
+    background-color: var(--bg-color);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    color: var(--text-color);
+    font-weight: 600;
+    box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+    transition: all 0.2s ease;
+    outline: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.crypto-select:hover, .crypto-theme-toggle:hover {
+    transform: translateY(-2px);
+}
+
+.crypto-header-info {
+    text-align: right;
+}
+
+.crypto-price-display {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.crypto-status {
+    font-size: 0.8rem;
+    opacity: 0.7;
+    margin-top: 5px;
+    color: var(--accent-green);
+}
+
+/* Chart Area */
+.crypto-chart-wrapper {
+    position: relative;
+    height: 350px;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light);
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.crypto-loader-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0, 0.1);
+    backdrop-filter: blur(2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.crypto-spinner {
+    width: 40px; height: 40px;
+    border: 4px solid var(--text-color);
+    border-top: 4px solid transparent;
+    border-radius: 50%;
+    animation: cryptoSpin 1s linear infinite;
+}
+
+@keyframes cryptoSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* Trading Panel */
+.crypto-trading-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding-top: 10px;
+    border-top: 2px solid transparent;
+}
+
+.crypto-trade-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.crypto-balance-info {
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.crypto-trade-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.crypto-trade-input {
+    flex-grow: 1;
+    min-width: 120px;
+    background-color: var(--bg-color);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    color: var(--text-color);
+    font-weight: 600;
+    box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light);
+    outline: none;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.crypto-btn-trade {
+    padding: 12px 25px;
+    border-radius: 12px;
+    border: none;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+    transition: all 0.2s;
+    flex-grow: 1;
+}
+
+.btn-buy { background-color: var(--accent-green); }
+.btn-sell { background-color: var(--accent-red); }
+
+.crypto-position-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.02);
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.crypto-stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+
+.pnl-val { font-weight: bold; }
+.pnl-positive { color: var(--accent-green); }
+.pnl-negative { color: var(--accent-red); }
+
+.crypto-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    z-index: 100;
+}
+
+@media (max-width: 768px) {
+    .crypto-trading-panel { grid-template-columns: 1fr; }
+    .crypto-controls { gap: 10px; }
+}

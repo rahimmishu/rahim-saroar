@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, Gamepad2, Calculator, Trophy, Zap, 
-  RotateCcw, Hand, LayoutGrid, Swords, Gift, Wifi, CloudSun, Cake, Bird 
+  RotateCcw, Hand, LayoutGrid, Swords, Gift, Wifi, CloudSun, Globe, Cake, Bird, TrendingUp 
 } from 'lucide-react';
 
 // ✅ গেম এবং অ্যাপ ইমপোর্ট
@@ -11,7 +11,8 @@ import SpeedTest from './SpeedTest';
 import WeatherApp from './WeatherApp';
 import CalculatorApp from './Calculator';
 import BirthdayCake from './BirthdayCake';
-import FlappyBird from './FlappyBird'; // ✅ নতুন Flappy Bird গেম
+import FlappyBird from './FlappyBird';
+import CryptoTrader from './CryptoTrader'; // ✅ Crypto Trader
 
 // ==========================================
 // 1. ROCK PAPER SCISSORS GAME COMPONENT
@@ -163,6 +164,14 @@ const Tools: React.FC = () => {
       description: 'Spin & Win Rewards'
     },
     {
+      id: 'crypto',
+      name: 'Crypto Sim',
+      icon: <TrendingUp size={32} />,
+      color: 'bg-gradient-to-br from-slate-600 to-slate-800',
+      description: 'Trade Virtual Assets',
+      disabled: false
+    },
+    {
       id: 'flappy',
       name: 'Neon Flap',
       icon: <Bird size={32} />,
@@ -229,6 +238,8 @@ const Tools: React.FC = () => {
         return <CalculatorApp onClose={() => setActiveApp(null)} />;
       case 'cake': 
         return <BirthdayCake onClose={() => setActiveApp(null)} />;
+      case 'crypto':
+        return <CryptoTrader onClose={() => setActiveApp(null)} />;
       default:
         return null;
     }
