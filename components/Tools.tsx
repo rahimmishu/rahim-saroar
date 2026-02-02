@@ -12,7 +12,7 @@ import WeatherApp from './WeatherApp';
 import CalculatorApp from './Calculator';
 import BirthdayCake from './BirthdayCake';
 import FlappyBird from './FlappyBird';
-import CryptoTrader from './CryptoTrader'; // ✅ Crypto Trader
+import CryptoTrader from './CryptoTrader';
 
 // ==========================================
 // 1. ROCK PAPER SCISSORS GAME COMPONENT
@@ -140,34 +140,34 @@ const RockPaperScissorsGame: React.FC = () => {
 const Tools: React.FC = () => {
   const [activeApp, setActiveApp] = useState<string | null>(null);
 
-  // App Configuration
+  // 🔥 PREMIUM ICONS CONFIGURATION (Shiny Gradients added)
   const apps = [
     {
       id: 'rps',
       name: 'RPS Game',
       icon: <Hand className="rotate-90" size={32} />,
-      color: 'bg-gradient-to-br from-indigo-500 to-purple-600',
+      color: 'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500', 
       description: 'Classic Rock Paper Scissors'
     },
     {
       id: 'pokemon',
       name: 'PokéBattle',
       icon: <Swords size={32} />,
-      color: 'bg-gradient-to-br from-yellow-400 to-orange-600',
+      color: 'bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500', 
       description: 'Turn-based RPG Battle'
     },
     {
       id: 'luck-royale',
       name: 'Luck Royale',
       icon: <Gift size={32} />,
-      color: 'bg-gradient-to-br from-green-400 to-emerald-600',
+      color: 'bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600', 
       description: 'Spin & Win Rewards'
     },
     {
       id: 'crypto',
       name: 'Crypto Sim',
       icon: <TrendingUp size={32} />,
-      color: 'bg-gradient-to-br from-slate-600 to-slate-800',
+      color: 'bg-gradient-to-br from-slate-700 via-gray-800 to-neutral-900', 
       description: 'Trade Virtual Assets',
       disabled: false
     },
@@ -175,7 +175,7 @@ const Tools: React.FC = () => {
       id: 'flappy',
       name: 'Neon Flap',
       icon: <Bird size={32} />,
-      color: 'bg-gradient-to-br from-violet-500 to-fuchsia-600',
+      color: 'bg-gradient-to-br from-fuchsia-500 via-purple-600 to-indigo-600', 
       description: 'Endless Runner',
       disabled: false
     },
@@ -183,7 +183,7 @@ const Tools: React.FC = () => {
       id: 'cake',
       name: '3D Cake',
       icon: <Cake size={32} />,
-      color: 'bg-gradient-to-br from-pink-400 to-rose-600',
+      color: 'bg-gradient-to-br from-rose-400 via-pink-500 to-fuchsia-500', 
       description: 'Blow the Candle!',
       disabled: false
     },
@@ -191,21 +191,21 @@ const Tools: React.FC = () => {
       id: 'speed-test',
       name: 'SpeedFlow',
       icon: <Wifi size={32} />,
-      color: 'bg-gradient-to-br from-cyan-400 to-blue-600',
+      color: 'bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600', 
       description: 'Check Internet Speed'
     },
     {
       id: 'weather',
       name: 'Weather',
       icon: <CloudSun size={32} />,
-      color: 'bg-gradient-to-br from-blue-400 to-indigo-500',
+      color: 'bg-gradient-to-br from-sky-400 via-blue-500 to-violet-600', 
       description: 'Live Forecast'
     },
     {
       id: 'calculator',
       name: 'Calculator',
       icon: <Calculator size={32} />,
-      color: 'bg-gradient-to-br from-orange-400 to-red-500',
+      color: 'bg-gradient-to-br from-orange-400 via-red-500 to-rose-600', 
       description: 'Neumorphic Dual-Theme',
       disabled: false 
     },
@@ -213,7 +213,7 @@ const Tools: React.FC = () => {
       id: 'focus',
       name: 'Focus Timer',
       icon: <Zap size={32} />,
-      color: 'bg-gradient-to-br from-blue-400 to-cyan-500',
+      color: 'bg-gradient-to-br from-blue-400 via-cyan-500 to-teal-500', 
       description: 'Coming Soon',
       disabled: true
     }
@@ -222,26 +222,16 @@ const Tools: React.FC = () => {
   // Render Active Game Logic
   const renderActiveApp = () => {
     switch (activeApp) {
-      case 'rps':
-        return <RockPaperScissorsGame />;
-      case 'pokemon':
-        return <PokemonGame />;
-      case 'luck-royale':
-        return <LuckRoyale onClose={() => setActiveApp(null)} />;
-      case 'flappy':
-        return <FlappyBird onClose={() => setActiveApp(null)} />;
-      case 'speed-test':
-        return <SpeedTest onClose={() => setActiveApp(null)} />;
-      case 'weather':
-        return <WeatherApp onClose={() => setActiveApp(null)} />;
-      case 'calculator':
-        return <CalculatorApp onClose={() => setActiveApp(null)} />;
-      case 'cake': 
-        return <BirthdayCake onClose={() => setActiveApp(null)} />;
-      case 'crypto':
-        return <CryptoTrader onClose={() => setActiveApp(null)} />;
-      default:
-        return null;
+      case 'rps': return <RockPaperScissorsGame />;
+      case 'pokemon': return <PokemonGame />;
+      case 'luck-royale': return <LuckRoyale onClose={() => setActiveApp(null)} />;
+      case 'flappy': return <FlappyBird onClose={() => setActiveApp(null)} />;
+      case 'speed-test': return <SpeedTest onClose={() => setActiveApp(null)} />;
+      case 'weather': return <WeatherApp onClose={() => setActiveApp(null)} />;
+      case 'calculator': return <CalculatorApp onClose={() => setActiveApp(null)} />;
+      case 'cake': return <BirthdayCake onClose={() => setActiveApp(null)} />;
+      case 'crypto': return <CryptoTrader onClose={() => setActiveApp(null)} />;
+      default: return null;
     }
   };
 
@@ -251,13 +241,9 @@ const Tools: React.FC = () => {
       <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-blue-600/10 blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-purple-600/10 blur-[120px] pointer-events-none"></div>
 
-      {/* =======================
-          FULL SCREEN GAME MODE
-         ======================= */}
       {activeApp ? (
         <div className="fixed inset-0 z-[9999] bg-slate-950/90 backdrop-blur-md flex flex-col animate-in fade-in duration-300">
           
-          {/* Top Bar (Close Button) */}
           <div className="absolute z-50 top-6 right-6">
             <button 
               onClick={() => setActiveApp(null)}
@@ -267,15 +253,11 @@ const Tools: React.FC = () => {
             </button>
           </div>
 
-          {/* Game Container */}
           <div className="flex items-center justify-center flex-grow w-full h-full p-4">
              {renderActiveApp()}
           </div>
         </div>
       ) : (
-        /* =======================
-            APP GRID (LAUNCHER)
-           ======================= */
         <div className="container relative z-10 px-4 mx-auto">
           <div className="mb-16 text-center">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-800/50 rounded-full text-xs font-bold text-slate-300 border border-slate-700 mb-6 backdrop-blur-sm">
@@ -290,25 +272,45 @@ const Tools: React.FC = () => {
             </p>
           </div>
 
-          {/* App Grid */}
           <div className="grid max-w-4xl grid-cols-2 gap-6 mx-auto md:grid-cols-4">
             {apps.map((app) => (
               <button
                 key={app.id}
                 onClick={() => !app.disabled && setActiveApp(app.id)}
                 disabled={app.disabled}
-                className={`group relative flex flex-col items-center p-6 rounded-3xl bg-slate-800/40 border border-slate-700/50 hover:bg-slate-800/80 hover:border-slate-600 transition-all duration-300 ${app.disabled ? 'opacity-50 cursor-not-allowed grayscale' : 'hover:-translate-y-2 hover:shadow-2xl'}`}
+                className={`
+                  group relative flex flex-col items-center p-6 rounded-3xl 
+                  bg-slate-800/40 border border-slate-700/50 
+                  hover:bg-slate-800/60 hover:border-slate-500/50 
+                  transition-all duration-300 
+                  ${app.disabled ? 'opacity-50 cursor-not-allowed grayscale' : 'hover:-translate-y-2 hover:shadow-2xl'}
+                `}
               >
-                {/* App Icon */}
-                <div className={`w-20 h-20 rounded-2xl ${app.color} shadow-lg flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                  {app.icon}
+                {/* 🔥 PREMIUM GLOSSY ICON CONTAINER */}
+                <div className={`
+                  w-20 h-20 rounded-2xl ${app.color} 
+                  shadow-2xl flex items-center justify-center text-white mb-6 
+                  group-hover:scale-110 transition-all duration-300 
+                  relative overflow-hidden border border-white/10
+                  group-hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]
+                `}>
+                  {/* Top Shine (Glass Effect) */}
+                  <div className="absolute inset-x-0 top-0 pointer-events-none h-1/2 bg-gradient-to-b from-white/20 to-transparent"></div>
+                  
+                  {/* Bottom Reflection */}
+                  <div className="absolute inset-x-0 bottom-0 pointer-events-none h-1/3 bg-gradient-to-t from-black/10 to-transparent"></div>
+
+                  {/* Icon with Drop Shadow */}
+                  <div className="relative z-10 drop-shadow-[0_2px_3px_rgba(0,0,0,0.3)] filter">
+                    {app.icon}
+                  </div>
                 </div>
                 
                 {/* App Name */}
-                <h3 className="mb-1 text-lg font-bold text-white">{app.name}</h3>
+                <h3 className="mb-1 text-lg font-bold text-white transition-colors group-hover:text-blue-400">{app.name}</h3>
                 <p className="text-xs font-medium text-slate-500">{app.description}</p>
                 
-                {/* Hover Glow */}
+                {/* Hover Glow Background */}
                 {!app.disabled && (
                   <div className="absolute inset-0 transition-opacity opacity-0 pointer-events-none bg-blue-500/5 rounded-3xl group-hover:opacity-100"></div>
                 )}
