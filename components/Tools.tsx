@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, Gamepad2, Calculator, Trophy, Zap, 
-  RotateCcw, Hand, LayoutGrid, Swords 
+  RotateCcw, Hand, LayoutGrid, Swords, Gift 
 } from 'lucide-react';
 
-// ✅ PokemonGame ইমপোর্ট (নিশ্চিত করুন PokemonGame.tsx ফাইলটি তৈরি করা আছে)
+// ✅ আগের গেম ইমপোর্ট (আপনার কোড অনুযায়ী)
 import PokemonGame from './PokemonGame';
+// ✅ নতুন লাক রয়াল গেম ইমপোর্ট
+import LuckRoyale from './LuckRoyale';
 
 // ==========================================
 // 1. ROCK PAPER SCISSORS GAME COMPONENT
@@ -142,13 +144,20 @@ const Tools: React.FC = () => {
       color: 'bg-gradient-to-br from-indigo-500 to-purple-600',
       description: 'Classic Rock Paper Scissors'
     },
-    // ✨ নতুন PokéBattle গেম যোগ করা হলো
     {
       id: 'pokemon',
       name: 'PokéBattle',
       icon: <Swords size={32} />,
       color: 'bg-gradient-to-br from-yellow-400 to-orange-600',
       description: 'Turn-based RPG Battle'
+    },
+    // 🔥 নতুন: Luck Royale যোগ করা হলো
+    {
+      id: 'luck-royale',
+      name: 'Luck Royale',
+      icon: <Gift size={32} />,
+      color: 'bg-gradient-to-br from-green-400 to-emerald-600',
+      description: 'Spin & Win Rewards'
     },
     {
       id: 'calculator',
@@ -174,7 +183,9 @@ const Tools: React.FC = () => {
       case 'rps':
         return <RockPaperScissorsGame />;
       case 'pokemon':
-        return <PokemonGame />; // ✨ Pokémon গেম রেন্ডার
+        return <PokemonGame />;
+      case 'luck-royale': // 🔥 নতুন কেস যোগ করা হলো
+        return <LuckRoyale onClose={() => setActiveApp(null)} />;
       default:
         return null;
     }
