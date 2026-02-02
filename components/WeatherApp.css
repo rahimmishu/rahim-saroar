@@ -1,0 +1,243 @@
+/* WeatherApp.css */
+.weather-app-wrapper {
+  --primary: #60a5fa;
+  --glass: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.12);
+  /* ডিফল্ট কালার */
+  --bg-color-1: #020617; 
+  --bg-color-2: #1e293b;
+  --glow-color: rgba(96, 165, 250, 0.15);
+
+  width: 100%;
+  height: 100%;
+  /* টুলস কন্টেইনারের হাইট */
+  min-height: 80vh; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  /* ব্যাকগ্রাউন্ড এখান থেকে কন্ট্রোল হবে */
+  background: radial-gradient(circle at 20% 30%, var(--bg-color-2) 0%, var(--bg-color-1) 100%);
+  transition: background 1.5s ease-in-out;
+}
+
+/* Weather Effects Layer */
+.weather-effects {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.rain-drop {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.4);
+  width: 2px;
+  height: 15px;
+  top: -20px;
+  animation: fall linear infinite;
+}
+
+.snow-flake {
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+  top: -10px;
+  animation: fall linear infinite, sway ease-in-out infinite;
+}
+
+@keyframes fall {
+  to { transform: translateY(100vh); }
+}
+
+@keyframes sway {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(20px); }
+}
+
+.bg-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--glow-color) 0%, rgba(0, 0, 0, 0) 70%);
+  z-index: 0;
+  filter: blur(60px);
+  animation: float 12s infinite ease-in-out;
+  transition: background 1.5s ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(10%, 5%); }
+}
+
+/* 🔥 এই ক্লাসটি মিসিং ছিল হয়তো */
+.wa-glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--border);
+  border-radius: 32px;
+  padding: 30px;
+  width: 95%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  position: relative;
+  /* ফ্লেক্স লেআউট ফিক্স */
+  display: flex;
+  flex-direction: column;
+}
+
+.search-box {
+  display: flex;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 18px;
+  padding: 5px;
+  margin-bottom: 25px;
+  border: 1px solid var(--border);
+}
+
+.wa-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 10px 15px;
+  color: white;
+  outline: none;
+  font-family: inherit;
+}
+
+.wa-search-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.wa-search-btn:hover {
+  transform: scale(1.05);
+}
+
+.temp-val {
+  font-size: 4.5rem;
+  font-weight: 600;
+  line-height: 1;
+  margin: 10px 0;
+}
+
+.desc-pill {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 15px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  border: 1px solid var(--border);
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  gap: 15px;
+}
+
+.metric-item {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.metric-item label {
+  font-size: 0.6rem;
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+
+.forecast-container {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.forecast-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 5px;
+}
+
+.forecast-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  padding: 10px 5px;
+  border-radius: 12px;
+  min-width: 65px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.forecast-day {
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+.forecast-temp {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.wa-loading {
+  animation: spin 1s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.wa-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 50;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+}
+.wa-close-btn:hover {
+  background: rgba(255,0,0,0.6);
+}

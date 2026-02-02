@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, Gamepad2, Calculator, Trophy, Zap, 
-  RotateCcw, Hand, LayoutGrid, Swords, Gift 
+  RotateCcw, Hand, LayoutGrid, Swords, Gift, Wifi, CloudSun 
 } from 'lucide-react';
 
-// ✅ আগের গেম ইমপোর্ট (আপনার কোড অনুযায়ী)
+// ✅ আগের গেম ইমপোর্ট
 import PokemonGame from './PokemonGame';
-// ✅ নতুন লাক রয়াল গেম ইমপোর্ট
+// ✅ লাক রয়াল গেম ইমপোর্ট
 import LuckRoyale from './LuckRoyale';
+// ✅ স্পিড টেস্ট ইমপোর্ট
+import SpeedTest from './SpeedTest';
+// ✅ নতুন ওয়েদার অ্যাপ ইমপোর্ট
+import WeatherApp from './WeatherApp';
 
 // ==========================================
 // 1. ROCK PAPER SCISSORS GAME COMPONENT
@@ -151,13 +155,27 @@ const Tools: React.FC = () => {
       color: 'bg-gradient-to-br from-yellow-400 to-orange-600',
       description: 'Turn-based RPG Battle'
     },
-    // 🔥 নতুন: Luck Royale যোগ করা হলো
     {
       id: 'luck-royale',
       name: 'Luck Royale',
       icon: <Gift size={32} />,
       color: 'bg-gradient-to-br from-green-400 to-emerald-600',
       description: 'Spin & Win Rewards'
+    },
+    {
+      id: 'speed-test',
+      name: 'SpeedFlow',
+      icon: <Wifi size={32} />,
+      color: 'bg-gradient-to-br from-cyan-400 to-blue-600',
+      description: 'Check Internet Speed'
+    },
+    // 🔥 নতুন: Weather App যোগ করা হলো
+    {
+      id: 'weather',
+      name: 'Weather',
+      icon: <CloudSun size={32} />,
+      color: 'bg-gradient-to-br from-blue-400 to-indigo-500',
+      description: 'Live Forecast'
     },
     {
       id: 'calculator',
@@ -184,8 +202,12 @@ const Tools: React.FC = () => {
         return <RockPaperScissorsGame />;
       case 'pokemon':
         return <PokemonGame />;
-      case 'luck-royale': // 🔥 নতুন কেস যোগ করা হলো
+      case 'luck-royale':
         return <LuckRoyale onClose={() => setActiveApp(null)} />;
+      case 'speed-test':
+        return <SpeedTest onClose={() => setActiveApp(null)} />;
+      case 'weather': // 🔥 Weather App রেন্ডার লজিক
+        return <WeatherApp onClose={() => setActiveApp(null)} />;
       default:
         return null;
     }

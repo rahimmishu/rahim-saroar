@@ -1,0 +1,210 @@
+/* SpeedTest.css */
+.speed-test-wrapper {
+  --card-bg: rgba(20, 20, 25, 0.85);
+  --cyan: #00f3ff;
+  --purple: #bc13fe;
+  --text-muted: #6f7182;
+  --gauge-track: #2b2b36;
+  
+  width: 100%;
+  height: 100%;
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  color: #fff;
+}
+
+.st-glass-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 30px;
+  border-radius: 24px;
+  background: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.st-brand {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+/* --- GAUGE --- */
+.st-gauge-wrapper {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin-bottom: -30px;
+  max-width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.st-gauge-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(135deg);
+  overflow: visible;
+}
+
+.st-track-bg {
+  fill: none;
+  stroke: var(--gauge-track);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 330 600;
+}
+
+.st-track-fill {
+  fill: none;
+  stroke: url(#gradient-dl);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 330 600;
+  stroke-dashoffset: 330;
+  transition: stroke-dashoffset 0.1s linear, stroke 0.3s ease; /* Smooth transition */
+  filter: drop-shadow(0 0 8px rgba(0, 243, 255, 0.4));
+}
+
+.st-needle-group {
+  transform-origin: 100px 100px;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.st-needle {
+  fill: #fff;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
+}
+
+/* --- DISPLAY --- */
+.st-readout {
+  position: relative;
+  z-index: 5;
+  margin-bottom: 30px;
+}
+
+.st-speed-value {
+  font-family: monospace; /* JetBrains Mono fallback */
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -3px;
+}
+
+.st-unit {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.st-status-pill {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+/* --- STATS --- */
+.st-stats-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.st-stat-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 15px;
+  text-align: left;
+  transition: 0.3s;
+}
+
+.st-stat-card.active-dl {
+  border-color: var(--cyan);
+  background: rgba(0, 243, 255, 0.08);
+}
+
+.st-stat-card.active-ul {
+  border-color: var(--purple);
+  background: rgba(188, 19, 254, 0.08);
+}
+
+.st-stat-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.st-stat-num {
+  font-family: monospace;
+  font-size: 20px;
+  color: #fff;
+}
+
+.st-start-btn {
+  width: 100%;
+  padding: 18px;
+  background: #fff;
+  border: none;
+  border-radius: 14px;
+  color: #000;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.st-start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255, 255, 255, 0.15);
+}
+
+.st-start-btn:active {
+  transform: scale(0.98);
+}
+
+.st-start-btn:disabled {
+  background: #333;
+  color: #666;
+  transform: none;
+  cursor: not-allowed;
+}
+
+.st-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.st-close-btn:hover {
+  color: #fff;
+}
