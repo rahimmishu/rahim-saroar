@@ -13,12 +13,16 @@
     "@google/genai": "^1.39.0",
     "@google/generative-ai": "^0.24.1",
     "@remix-run/router": "1.15.3",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/three": "^0.182.0",
+    "canvas-confetti": "^1.9.4",
     "framer-motion": "^12.29.2",
     "lucide-react": "0.263.1",
     "react": "18.3.1",
     "react-dom": "^18.3.1",
     "react-router": "6.22.3",
-    "react-router-dom": "6.22.3"
+    "react-router-dom": "6.22.3",
+    "three": "^0.182.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, Gamepad2, Calculator, Trophy, Zap, 
-  RotateCcw, Hand, LayoutGrid, Swords, Gift, Wifi, CloudSun 
+  RotateCcw, Hand, LayoutGrid, Swords, Gift, Wifi, CloudSun, Globe, Cake 
 } from 'lucide-react';
 
-// ✅ আগের গেম ইমপোর্ট
+// ✅ আগের সব গেম ও অ্যাপ ইমপোর্ট
 import PokemonGame from './PokemonGame';
-// ✅ লাক রয়াল গেম ইমপোর্ট
 import LuckRoyale from './LuckRoyale';
-// ✅ স্পিড টেস্ট ইমপোর্ট
 import SpeedTest from './SpeedTest';
-// ✅ নতুন ওয়েদার অ্যাপ ইমপোর্ট
 import WeatherApp from './WeatherApp';
-// ✅ নতুন ক্যালকুলেটর ইমপোর্ট
 import CalculatorApp from './Calculator';
+import BirthdayCake from './BirthdayCake'; // ✅ Birthday Cake যোগ করা হলো
 
 // ==========================================
 // 1. ROCK PAPER SCISSORS GAME COMPONENT
@@ -165,13 +162,20 @@ const Tools: React.FC = () => {
       description: 'Spin & Win Rewards'
     },
     {
+      id: 'cake',
+      name: '3D Cake',
+      icon: <Cake size={32} />,
+      color: 'bg-gradient-to-br from-pink-400 to-rose-600',
+      description: 'Blow the Candle!',
+      disabled: false
+    },
+    {
       id: 'speed-test',
       name: 'SpeedFlow',
       icon: <Wifi size={32} />,
       color: 'bg-gradient-to-br from-cyan-400 to-blue-600',
       description: 'Check Internet Speed'
     },
-    // 🔥 নতুন: Weather App যোগ করা হলো
     {
       id: 'weather',
       name: 'Weather',
@@ -200,20 +204,14 @@ const Tools: React.FC = () => {
   // Render Active Game Logic
   const renderActiveApp = () => {
     switch (activeApp) {
-      case 'rps':
-        return <RockPaperScissorsGame />;
-      case 'pokemon':
-        return <PokemonGame />;
-      case 'luck-royale':
-        return <LuckRoyale onClose={() => setActiveApp(null)} />;
-      case 'speed-test':
-        return <SpeedTest onClose={() => setActiveApp(null)} />;
-      case 'weather':
-        return <WeatherApp onClose={() => setActiveApp(null)} />;
-      case 'calculator':
-        return <CalculatorApp onClose={() => setActiveApp(null)} />;
-      default:
-        return null;
+      case 'rps': return <RockPaperScissorsGame />;
+      case 'pokemon': return <PokemonGame />;
+      case 'luck-royale': return <LuckRoyale onClose={() => setActiveApp(null)} />;
+      case 'speed-test': return <SpeedTest onClose={() => setActiveApp(null)} />;
+      case 'weather': return <WeatherApp onClose={() => setActiveApp(null)} />;
+      case 'calculator': return <CalculatorApp onClose={() => setActiveApp(null)} />;
+      case 'cake': return <BirthdayCake onClose={() => setActiveApp(null)} />;
+      default: return null;
     }
   };
 
