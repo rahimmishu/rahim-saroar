@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, Gamepad2, Calculator, Trophy, Zap, 
-  RotateCcw, Hand, LayoutGrid, Swords, Gift, Wifi, CloudSun, Globe, Cake 
+  RotateCcw, Hand, LayoutGrid, Swords, Gift, Wifi, CloudSun, Cake, Bird 
 } from 'lucide-react';
 
-// ✅ আগের সব গেম ও অ্যাপ ইমপোর্ট
+// ✅ গেম এবং অ্যাপ ইমপোর্ট
 import PokemonGame from './PokemonGame';
 import LuckRoyale from './LuckRoyale';
 import SpeedTest from './SpeedTest';
 import WeatherApp from './WeatherApp';
 import CalculatorApp from './Calculator';
-import BirthdayCake from './BirthdayCake'; // ✅ Birthday Cake যোগ করা হলো
+import BirthdayCake from './BirthdayCake';
+import FlappyBird from './FlappyBird'; // ✅ নতুন Flappy Bird গেম
 
 // ==========================================
 // 1. ROCK PAPER SCISSORS GAME COMPONENT
@@ -162,6 +163,14 @@ const Tools: React.FC = () => {
       description: 'Spin & Win Rewards'
     },
     {
+      id: 'flappy',
+      name: 'Neon Flap',
+      icon: <Bird size={32} />,
+      color: 'bg-gradient-to-br from-violet-500 to-fuchsia-600',
+      description: 'Endless Runner',
+      disabled: false
+    },
+    {
       id: 'cake',
       name: '3D Cake',
       icon: <Cake size={32} />,
@@ -204,14 +213,24 @@ const Tools: React.FC = () => {
   // Render Active Game Logic
   const renderActiveApp = () => {
     switch (activeApp) {
-      case 'rps': return <RockPaperScissorsGame />;
-      case 'pokemon': return <PokemonGame />;
-      case 'luck-royale': return <LuckRoyale onClose={() => setActiveApp(null)} />;
-      case 'speed-test': return <SpeedTest onClose={() => setActiveApp(null)} />;
-      case 'weather': return <WeatherApp onClose={() => setActiveApp(null)} />;
-      case 'calculator': return <CalculatorApp onClose={() => setActiveApp(null)} />;
-      case 'cake': return <BirthdayCake onClose={() => setActiveApp(null)} />;
-      default: return null;
+      case 'rps':
+        return <RockPaperScissorsGame />;
+      case 'pokemon':
+        return <PokemonGame />;
+      case 'luck-royale':
+        return <LuckRoyale onClose={() => setActiveApp(null)} />;
+      case 'flappy':
+        return <FlappyBird onClose={() => setActiveApp(null)} />;
+      case 'speed-test':
+        return <SpeedTest onClose={() => setActiveApp(null)} />;
+      case 'weather':
+        return <WeatherApp onClose={() => setActiveApp(null)} />;
+      case 'calculator':
+        return <CalculatorApp onClose={() => setActiveApp(null)} />;
+      case 'cake': 
+        return <BirthdayCake onClose={() => setActiveApp(null)} />;
+      default:
+        return null;
     }
   };
 
