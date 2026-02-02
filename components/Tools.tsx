@@ -12,6 +12,8 @@ import LuckRoyale from './LuckRoyale';
 import SpeedTest from './SpeedTest';
 // ✅ নতুন ওয়েদার অ্যাপ ইমপোর্ট
 import WeatherApp from './WeatherApp';
+// ✅ নতুন ক্যালকুলেটর ইমপোর্ট
+import CalculatorApp from './Calculator';
 
 // ==========================================
 // 1. ROCK PAPER SCISSORS GAME COMPONENT
@@ -182,8 +184,8 @@ const Tools: React.FC = () => {
       name: 'Calculator',
       icon: <Calculator size={32} />,
       color: 'bg-gradient-to-br from-orange-400 to-red-500',
-      description: 'Coming Soon',
-      disabled: true 
+      description: 'Neumorphic Dual-Theme',
+      disabled: false 
     },
     {
       id: 'focus',
@@ -206,8 +208,10 @@ const Tools: React.FC = () => {
         return <LuckRoyale onClose={() => setActiveApp(null)} />;
       case 'speed-test':
         return <SpeedTest onClose={() => setActiveApp(null)} />;
-      case 'weather': // 🔥 Weather App রেন্ডার লজিক
+      case 'weather':
         return <WeatherApp onClose={() => setActiveApp(null)} />;
+      case 'calculator':
+        return <CalculatorApp onClose={() => setActiveApp(null)} />;
       default:
         return null;
     }
