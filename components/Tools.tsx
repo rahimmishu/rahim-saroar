@@ -13,7 +13,8 @@ import CalculatorApp from './Calculator';
 import BirthdayCake from './BirthdayCake';
 import FlappyBird from './FlappyBird';
 import CryptoTrader from './CryptoTrader';
-import FocusTimer from './FocusTimer'; // ✅ Focus Timer ইমপোর্ট নিশ্চিত করুন
+import FocusTimer from './FocusTimer';
+import TicTacToe from './TicTacToe';
 
 // ==========================================
 // 1. ROCK PAPER SCISSORS GAME COMPONENT
@@ -210,14 +211,22 @@ const Tools: React.FC = () => {
       description: 'Neumorphic Dual-Theme',
       disabled: false 
     },
-    // 🔥 UPDATED: Focus Timer Enabled & Styled
     {
       id: 'focus',
       name: 'Focus Timer',
       icon: <Zap className="text-white drop-shadow-md" size={32} />,
       color: 'bg-gradient-to-br from-blue-400 via-cyan-500 to-teal-500', 
       description: 'Pomodoro Clock',
-      disabled: false // ✅ Enabled Here
+      disabled: false 
+    },
+    // 🔥 UPDATED: Fixed Icon to Gamepad2 (Grid3X3 removed due to error)
+    {
+      id: 'tictactoe',
+      name: 'Tic Tac Toe',
+      icon: <Gamepad2 className="text-white drop-shadow-md" size={32} />, 
+      color: 'bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700', 
+      description: 'Cyber Style X-O Game',
+      disabled: false
     }
   ];
 
@@ -233,7 +242,8 @@ const Tools: React.FC = () => {
       case 'calculator': return <CalculatorApp onClose={() => setActiveApp(null)} />;
       case 'cake': return <BirthdayCake onClose={() => setActiveApp(null)} />;
       case 'crypto': return <CryptoTrader onClose={() => setActiveApp(null)} />;
-      case 'focus': return <FocusTimer onClose={() => setActiveApp(null)} />; // ✅ Added to Render
+      case 'focus': return <FocusTimer onClose={() => setActiveApp(null)} />;
+      case 'tictactoe': return <TicTacToe onClose={() => setActiveApp(null)} />;
       default: return null;
     }
   };

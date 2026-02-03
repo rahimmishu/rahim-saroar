@@ -1,0 +1,105 @@
+/* TicTacToe.css */
+.ttt-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #0f172a;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+}
+
+.ttt-card {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    text-align: center;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    width: 320px;
+}
+
+.ttt-status {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    min-height: 28px;
+    color: #cbd5e1;
+    text-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+
+.winner-text {
+    color: #38bdf8; /* Cyan */
+    text-shadow: 0 0 15px #38bdf8;
+    animation: popIn 0.3s ease;
+}
+
+.ttt-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.ttt-cell {
+    width: 80px;
+    height: 80px;
+    background: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.5rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.ttt-cell:hover:not(:disabled) {
+    border-color: #475569;
+    background: #1e293b;
+}
+
+.cell-x {
+    color: #ef4444; /* Red */
+    text-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+}
+
+.cell-o {
+    color: #3b82f6; /* Blue */
+    text-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+}
+
+.ttt-reset-btn {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.ttt-reset-btn:hover {
+    transform: scale(1.05);
+}
+
+.ttt-close {
+    position: absolute;
+    top: 15px; right: 15px;
+    background: none; border: none;
+    color: #64748b; cursor: pointer;
+    transition: 0.2s;
+}
+.ttt-close:hover { color: #ef4444; }
+
+@keyframes popIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
