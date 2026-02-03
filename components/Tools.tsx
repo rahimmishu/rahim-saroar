@@ -13,6 +13,7 @@ import CalculatorApp from './Calculator';
 import BirthdayCake from './BirthdayCake';
 import FlappyBird from './FlappyBird';
 import CryptoTrader from './CryptoTrader';
+import FocusTimer from './FocusTimer'; // ✅ Focus Timer ইমপোর্ট নিশ্চিত করুন
 
 // ==========================================
 // 1. ROCK PAPER SCISSORS GAME COMPONENT
@@ -140,33 +141,33 @@ const RockPaperScissorsGame: React.FC = () => {
 const Tools: React.FC = () => {
   const [activeApp, setActiveApp] = useState<string | null>(null);
 
-  // 🔥 PREMIUM ICONS CONFIGURATION (Shiny Gradients added)
+  // 🔥 PREMIUM GLOSSY ICONS CONFIGURATION
   const apps = [
     {
       id: 'rps',
       name: 'RPS Game',
-      icon: <Hand className="rotate-90" size={32} />,
+      icon: <Hand className="text-white rotate-90 drop-shadow-md" size={32} />,
       color: 'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500', 
       description: 'Classic Rock Paper Scissors'
     },
     {
       id: 'pokemon',
       name: 'PokéBattle',
-      icon: <Swords size={32} />,
+      icon: <Swords className="text-white drop-shadow-md" size={32} />,
       color: 'bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500', 
       description: 'Turn-based RPG Battle'
     },
     {
       id: 'luck-royale',
       name: 'Luck Royale',
-      icon: <Gift size={32} />,
+      icon: <Gift className="text-white drop-shadow-md" size={32} />,
       color: 'bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600', 
       description: 'Spin & Win Rewards'
     },
     {
       id: 'crypto',
       name: 'Crypto Sim',
-      icon: <TrendingUp size={32} />,
+      icon: <TrendingUp className="text-white drop-shadow-md" size={32} />,
       color: 'bg-gradient-to-br from-slate-700 via-gray-800 to-neutral-900', 
       description: 'Trade Virtual Assets',
       disabled: false
@@ -174,7 +175,7 @@ const Tools: React.FC = () => {
     {
       id: 'flappy',
       name: 'Neon Flap',
-      icon: <Bird size={32} />,
+      icon: <Bird className="text-white drop-shadow-md" size={32} />,
       color: 'bg-gradient-to-br from-fuchsia-500 via-purple-600 to-indigo-600', 
       description: 'Endless Runner',
       disabled: false
@@ -182,7 +183,7 @@ const Tools: React.FC = () => {
     {
       id: 'cake',
       name: '3D Cake',
-      icon: <Cake size={32} />,
+      icon: <Cake className="text-white drop-shadow-md" size={32} />,
       color: 'bg-gradient-to-br from-rose-400 via-pink-500 to-fuchsia-500', 
       description: 'Blow the Candle!',
       disabled: false
@@ -190,32 +191,33 @@ const Tools: React.FC = () => {
     {
       id: 'speed-test',
       name: 'SpeedFlow',
-      icon: <Wifi size={32} />,
+      icon: <Wifi className="text-white drop-shadow-md" size={32} />,
       color: 'bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600', 
       description: 'Check Internet Speed'
     },
     {
       id: 'weather',
       name: 'Weather',
-      icon: <CloudSun size={32} />,
+      icon: <CloudSun className="text-white drop-shadow-md" size={32} />,
       color: 'bg-gradient-to-br from-sky-400 via-blue-500 to-violet-600', 
       description: 'Live Forecast'
     },
     {
       id: 'calculator',
       name: 'Calculator',
-      icon: <Calculator size={32} />,
+      icon: <Calculator className="text-white drop-shadow-md" size={32} />,
       color: 'bg-gradient-to-br from-orange-400 via-red-500 to-rose-600', 
       description: 'Neumorphic Dual-Theme',
       disabled: false 
     },
+    // 🔥 UPDATED: Focus Timer Enabled & Styled
     {
       id: 'focus',
       name: 'Focus Timer',
-      icon: <Zap size={32} />,
+      icon: <Zap className="text-white drop-shadow-md" size={32} />,
       color: 'bg-gradient-to-br from-blue-400 via-cyan-500 to-teal-500', 
-      description: 'Coming Soon',
-      disabled: true
+      description: 'Pomodoro Clock',
+      disabled: false // ✅ Enabled Here
     }
   ];
 
@@ -231,6 +233,7 @@ const Tools: React.FC = () => {
       case 'calculator': return <CalculatorApp onClose={() => setActiveApp(null)} />;
       case 'cake': return <BirthdayCake onClose={() => setActiveApp(null)} />;
       case 'crypto': return <CryptoTrader onClose={() => setActiveApp(null)} />;
+      case 'focus': return <FocusTimer onClose={() => setActiveApp(null)} />; // ✅ Added to Render
       default: return null;
     }
   };
@@ -241,9 +244,13 @@ const Tools: React.FC = () => {
       <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-blue-600/10 blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-purple-600/10 blur-[120px] pointer-events-none"></div>
 
+      {/* =======================
+          FULL SCREEN GAME MODE
+         ======================= */}
       {activeApp ? (
         <div className="fixed inset-0 z-[9999] bg-slate-950/90 backdrop-blur-md flex flex-col animate-in fade-in duration-300">
           
+          {/* Top Bar (Close Button) */}
           <div className="absolute z-50 top-6 right-6">
             <button 
               onClick={() => setActiveApp(null)}
@@ -253,11 +260,15 @@ const Tools: React.FC = () => {
             </button>
           </div>
 
+          {/* Game Container */}
           <div className="flex items-center justify-center flex-grow w-full h-full p-4">
              {renderActiveApp()}
           </div>
         </div>
       ) : (
+        /* =======================
+            APP GRID (LAUNCHER)
+           ======================= */
         <div className="container relative z-10 px-4 mx-auto">
           <div className="mb-16 text-center">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-800/50 rounded-full text-xs font-bold text-slate-300 border border-slate-700 mb-6 backdrop-blur-sm">
@@ -272,6 +283,7 @@ const Tools: React.FC = () => {
             </p>
           </div>
 
+          {/* App Grid */}
           <div className="grid max-w-4xl grid-cols-2 gap-6 mx-auto md:grid-cols-4">
             {apps.map((app) => (
               <button
