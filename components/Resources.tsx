@@ -6,12 +6,12 @@ const Resources: React.FC = () => {
   const files = [
     {
       id: 1,
-      title: "HSC Exam routine 2026",
-      category: "routine",
-      size: "2.5 MB",
-      date: "Jan 25, 2026",
+      title: "HSC Chemistry 1st Paper - Udvash (2025)",
+      category: "Question Bank",
+      size: "140 MB",
+      date: "Feb 03, 2026",
       icon: <FileCode className="text-cyan-400" size={32} />,
-      link: "/downloads/Exam routine.pdf"
+      link: "https://drive.google.com/file/d/1qWBKueSXK2EL57ezLngcViexqQ-XjXQz/view?usp=drive_link"
     },
     {
       id: 2,
@@ -43,35 +43,35 @@ const Resources: React.FC = () => {
   ];
 
   return (
-    <section id="resources" className="py-20 bg-slate-900 relative">
-      <div className="container mx-auto px-6">
+    <section id="resources" className="relative py-20 bg-slate-900">
+      <div className="container px-6 mx-auto">
         
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+        <div className="mb-16 text-center">
+          <h2 className="mb-4 text-3xl font-bold text-white md:text-5xl">
             Study <span className="text-cyan-400">Resources</span>
           </h2>
-          <p className="text-slate-400 max-w-xl mx-auto">
+          <p className="max-w-xl mx-auto text-slate-400">
             Download my personal notes, suggestions, and coding materials for free.
           </p>
         </div>
 
         {/* Grid Layout */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="grid max-w-4xl gap-6 mx-auto md:grid-cols-2 lg:grid-cols-2">
           {files.map((file) => (
-            <div key={file.id} className="group flex items-center gap-4 bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-cyan-500/50 p-5 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-cyan-500/10">
+            <div key={file.id} className="flex items-center gap-4 p-5 transition-all duration-300 border group bg-slate-800/50 hover:bg-slate-800 border-slate-700 hover:border-cyan-500/50 rounded-2xl hover:-translate-y-1 hover:shadow-lg hover:shadow-cyan-500/10">
               
               {/* Icon Box */}
-              <div className="p-4 bg-slate-900 rounded-xl group-hover:scale-110 transition-transform duration-300">
+              <div className="p-4 transition-transform duration-300 bg-slate-900 rounded-xl group-hover:scale-110">
                 {file.icon}
               </div>
 
               {/* Text Info */}
               <div className="flex-1">
-                <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">
+                <h3 className="text-lg font-bold text-white transition-colors group-hover:text-cyan-400">
                   {file.title}
                 </h3>
-                <div className="flex items-center gap-3 text-xs text-slate-500 mt-1">
+                <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
                   <span className="bg-slate-700 px-2 py-0.5 rounded text-slate-300">{file.category}</span>
                   <span>{file.size}</span>
                   <span>• {file.date}</span>
@@ -82,7 +82,7 @@ const Resources: React.FC = () => {
               <a 
                 href={file.link} 
                 download 
-                className="p-3 bg-cyan-500/10 text-cyan-400 rounded-full hover:bg-cyan-500 hover:text-white transition-all duration-300 border border-cyan-500/20"
+                className="p-3 transition-all duration-300 border rounded-full bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500 hover:text-white border-cyan-500/20"
                 title="Download Now"
               >
                 <Download size={20} />
