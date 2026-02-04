@@ -171,7 +171,7 @@ const App: React.FC = () => {
       <NetworkStatus />
       <ContextMenu />
       <NoiseOverlay />
-      {/* 🔥 Battery Optimizer এখানে বসানো হয়েছে */}
+      {/* 🔥 Battery Optimizer এখানে বসানো হয়েছে */}
       <BatteryOptimizer isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
       
       {/* 🔥 পপ-আপ ফিডব্যাক স্লাইডার */}
