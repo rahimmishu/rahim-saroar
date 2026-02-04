@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  X, Gamepad2, Calculator, Trophy, Zap, 
-  RotateCcw, Hand, LayoutGrid, Swords, Gift, Wifi, CloudSun, Globe, Cake, Bird, TrendingUp, Brain 
+  X, Gamepad2, Calculator, Trophy, Zap, 
+  RotateCcw, Hand, LayoutGrid, Swords, Gift, Wifi, CloudSun, Globe, Cake, Bird, TrendingUp, Brain 
 } from 'lucide-react';
 
 // ✅ গেম এবং অ্যাপ ইমপোর্ট
@@ -15,344 +15,344 @@ import FlappyBird from './FlappyBird';
 import CryptoTrader from './CryptoTrader';
 import FocusTimer from './FocusTimer';
 import TicTacToe from './TicTacToe';
-import MemoryGame from './MemoryGame'; // ✅ নতুন Memory Game ইমপোর্ট করা হয়েছে
+import MemoryGame from './MemoryGame'; // ✅ নতুন Memory Game ইমপোর্ট করা হয়েছে
 
 // ==========================================
 // 1. ROCK PAPER SCISSORS GAME COMPONENT
 // ==========================================
 const RockPaperScissorsGame: React.FC = () => {
-  const [pScore, setPScore] = useState(0);
-  const [cScore, setCScore] = useState(0);
-  const [status, setStatus] = useState("CHOOSE YOUR WEAPON");
-  const [pHand, setPHand] = useState("✊");
-  const [cHand, setCHand] = useState("✊");
-  const [isShaking, setIsShaking] = useState(false);
-  const [showVs, setShowVs] = useState(false);
-  const [glowColor, setGlowColor] = useState("transparent");
+  const [pScore, setPScore] = useState(0);
+  const [cScore, setCScore] = useState(0);
+  const [status, setStatus] = useState("CHOOSE YOUR WEAPON");
+  const [pHand, setPHand] = useState("✊");
+  const [cHand, setCHand] = useState("✊");
+  const [isShaking, setIsShaking] = useState(false);
+  const [showVs, setShowVs] = useState(false);
+  const [glowColor, setGlowColor] = useState("transparent");
 
-  const hands: { [key: string]: string } = { rock: '✊', paper: '✋', scissors: '✌️' };
+  const hands: { [key: string]: string } = { rock: '✊', paper: '✋', scissors: '✌️' };
 
-  // Load Score
-  useEffect(() => {
-    const savedP = localStorage.getItem('pScore');
-    const savedC = localStorage.getItem('cScore');
-    if (savedP) setPScore(parseInt(savedP));
-    if (savedC) setCScore(parseInt(savedC));
-  }, []);
+  // Load Score
+  useEffect(() => {
+    const savedP = localStorage.getItem('pScore');
+    const savedC = localStorage.getItem('cScore');
+    if (savedP) setPScore(parseInt(savedP));
+    if (savedC) setCScore(parseInt(savedC));
+  }, []);
 
-  const resetGame = () => {
-    setPScore(0); setCScore(0);
-    localStorage.setItem('pScore', '0'); localStorage.setItem('cScore', '0');
-    setStatus("SCORE RESET"); setPHand("✊"); setCHand("✊"); setGlowColor("transparent"); setShowVs(false);
-  };
+  const resetGame = () => {
+    setPScore(0); setCScore(0);
+    localStorage.setItem('pScore', '0'); localStorage.setItem('cScore', '0');
+    setStatus("SCORE RESET"); setPHand("✊"); setCHand("✊"); setGlowColor("transparent"); setShowVs(false);
+  };
 
-  const playGame = (userChoice: string) => {
-    if (isShaking) return;
-    setPHand("✊"); setCHand("✊"); setStatus("WAIT...");
-    setIsShaking(true); setShowVs(false); setGlowColor("transparent");
+  const playGame = (userChoice: string) => {
+    if (isShaking) return;
+    setPHand("✊"); setCHand("✊"); setStatus("WAIT...");
+    setIsShaking(true); setShowVs(false); setGlowColor("transparent");
 
-    setTimeout(() => {
-      setIsShaking(false); setShowVs(true);
-      const choices = ['rock', 'paper', 'scissors'];
-      const cpuChoice = choices[Math.floor(Math.random() * 3)];
-      setPHand(hands[userChoice]); setCHand(hands[cpuChoice]);
+    setTimeout(() => {
+      setIsShaking(false); setShowVs(true);
+      const choices = ['rock', 'paper', 'scissors'];
+      const cpuChoice = choices[Math.floor(Math.random() * 3)];
+      setPHand(hands[userChoice]); setCHand(hands[cpuChoice]);
 
-      if (userChoice === cpuChoice) {
-        setStatus("DRAW!"); setGlowColor("rgba(148, 163, 184, 0.4)");
-      } else if (
-        (userChoice === 'rock' && cpuChoice === 'scissors') ||
-        (userChoice === 'paper' && cpuChoice === 'rock') ||
-        (userChoice === 'scissors' && cpuChoice === 'paper')
-      ) {
-        setStatus("YOU WIN!");
-        const newScore = pScore + 1; setPScore(newScore);
-        localStorage.setItem('pScore', newScore.toString());
-        setGlowColor("rgba(16, 185, 129, 0.4)");
-      } else {
-        setStatus("CPU WINS!");
-        const newScore = cScore + 1; setCScore(newScore);
-        localStorage.setItem('cScore', newScore.toString());
-        setGlowColor("rgba(239, 68, 68, 0.4)");
-      }
-      setTimeout(() => setGlowColor("transparent"), 800);
-    }, 700);
-  };
+      if (userChoice === cpuChoice) {
+        setStatus("DRAW!"); setGlowColor("rgba(148, 163, 184, 0.4)");
+      } else if (
+        (userChoice === 'rock' && cpuChoice === 'scissors') ||
+        (userChoice === 'paper' && cpuChoice === 'rock') ||
+        (userChoice === 'scissors' && cpuChoice === 'paper')
+      ) {
+        setStatus("YOU WIN!");
+        const newScore = pScore + 1; setPScore(newScore);
+        localStorage.setItem('pScore', newScore.toString());
+        setGlowColor("rgba(16, 185, 129, 0.4)");
+      } else {
+        setStatus("CPU WINS!");
+        const newScore = cScore + 1; setCScore(newScore);
+        localStorage.setItem('cScore', newScore.toString());
+        setGlowColor("rgba(239, 68, 68, 0.4)");
+      }
+      setTimeout(() => setGlowColor("transparent"), 800);
+    }, 700);
+  };
 
-  return (
-    <div className="relative flex flex-col items-center justify-center w-full h-full">
-       {/* Inject Animations */}
-       <style>{`
-        @keyframes shakePlayer { 0%, 100% { transform: scaleX(-1) translateY(0) rotate(-90deg); } 50% { transform: scaleX(-1) translateY(-30px) rotate(-70deg); } }
-        @keyframes shakeCPU { 0%, 100% { transform: translateY(0) rotate(-90deg); } 50% { transform: translateY(-30px) rotate(-70deg); } }
-        .shake-p { animation: shakePlayer 0.4s ease infinite; }
-        .shake-c { animation: shakeCPU 0.4s ease infinite; }
-        .hand-default-p { transform: scaleX(-1) rotate(-90deg); }
-        .hand-default-c { transform: rotate(-90deg); }
-        .vs-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
-      `}</style>
-      
-      {/* Game Card */}
-      <div className="relative bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-2xl w-full max-w-[400px] text-center border border-slate-200 dark:border-slate-700">
-        <div 
-          className="absolute inset-0 -z-10 rounded-[40px] transition-colors duration-500 pointer-events-none blur-xl opacity-50"
-          style={{ background: glowColor }}
-        ></div>
+  return (
+    <div className="relative flex flex-col items-center justify-center w-full h-full">
+       {/* Inject Animations */}
+       <style>{`
+        @keyframes shakePlayer { 0%, 100% { transform: scaleX(-1) translateY(0) rotate(-90deg); } 50% { transform: scaleX(-1) translateY(-30px) rotate(-70deg); } }
+        @keyframes shakeCPU { 0%, 100% { transform: translateY(0) rotate(-90deg); } 50% { transform: translateY(-30px) rotate(-70deg); } }
+        .shake-p { animation: shakePlayer 0.4s ease infinite; }
+        .shake-c { animation: shakeCPU 0.4s ease infinite; }
+        .hand-default-p { transform: scaleX(-1) rotate(-90deg); }
+        .hand-default-c { transform: rotate(-90deg); }
+        .vs-pop { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+      `}</style>
+      
+      {/* Game Card */}
+      <div className="relative bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-2xl w-full max-w-[400px] text-center border border-slate-200 dark:border-slate-700">
+        <div 
+          className="absolute inset-0 -z-10 rounded-[40px] transition-colors duration-500 pointer-events-none blur-xl opacity-50"
+          style={{ background: glowColor }}
+        ></div>
 
-        {/* Score */}
-        <div className="flex justify-between p-4 mb-8 border bg-slate-50 dark:bg-slate-900 rounded-3xl border-slate-200 dark:border-slate-700">
-          <div className="w-1/2 text-center border-r border-slate-200 dark:border-slate-700">
-            <div className="text-[10px] font-black text-slate-400">PLAYER</div>
-            <div className="text-3xl font-black text-slate-800 dark:text-white">{pScore}</div>
-          </div>
-          <div className="w-1/2 text-center">
-            <div className="text-[10px] font-black text-slate-400">CPU</div>
-            <div className="text-3xl font-black text-slate-800 dark:text-white">{cScore}</div>
-          </div>
-        </div>
+        {/* Score */}
+        <div className="flex justify-between p-4 mb-8 border bg-slate-50 dark:bg-slate-900 rounded-3xl border-slate-200 dark:border-slate-700">
+          <div className="w-1/2 text-center border-r border-slate-200 dark:border-slate-700">
+            <div className="text-[10px] font-black text-slate-400">PLAYER</div>
+            <div className="text-3xl font-black text-slate-800 dark:text-white">{pScore}</div>
+          </div>
+          <div className="w-1/2 text-center">
+            <div className="text-[10px] font-black text-slate-400">CPU</div>
+            <div className="text-3xl font-black text-slate-800 dark:text-white">{cScore}</div>
+          </div>
+        </div>
 
-        {/* Arena */}
-        <div className="flex justify-between items-center py-8 min-h-[150px] relative">
-          <div className={`text-[60px] md:text-[80px] leading-none transition-transform duration-100 ${isShaking ? 'shake-p' : 'hand-default-p'}`}>{pHand}</div>
-          {showVs && <div className="absolute z-10 flex items-center justify-center w-10 h-10 text-xs font-black text-white -translate-x-1/2 -translate-y-1/2 bg-indigo-600 border-2 border-white rounded-full shadow-lg left-1/2 top-1/2 vs-pop dark:border-slate-800">VS</div>}
-          <div className={`text-[60px] md:text-[80px] leading-none transition-transform duration-100 ${isShaking ? 'shake-c' : 'hand-default-c'}`}>{cHand}</div>
-        </div>
+        {/* Arena */}
+        <div className="flex justify-between items-center py-8 min-h-[150px] relative">
+          <div className={`text-[60px] md:text-[80px] leading-none transition-transform duration-100 ${isShaking ? 'shake-p' : 'hand-default-p'}`}>{pHand}</div>
+          {showVs && <div className="absolute z-10 flex items-center justify-center w-10 h-10 text-xs font-black text-white -translate-x-1/2 -translate-y-1/2 bg-indigo-600 border-2 border-white rounded-full shadow-lg left-1/2 top-1/2 vs-pop dark:border-slate-800">VS</div>}
+          <div className={`text-[60px] md:text-[80px] leading-none transition-transform duration-100 ${isShaking ? 'shake-c' : 'hand-default-c'}`}>{cHand}</div>
+        </div>
 
-        <div className="font-black text-slate-800 dark:text-white mb-8 text-lg min-h-[28px] tracking-wide">{status}</div>
+        <div className="font-black text-slate-800 dark:text-white mb-8 text-lg min-h-[28px] tracking-wide">{status}</div>
 
-        <div className="grid grid-cols-3 gap-3">
-          {[{id:'rock',emoji:'✊',label:'ROCK'},{id:'paper',emoji:'✋',label:'PAPER'},{id:'scissors',emoji:'✌️',label:'SCISSORS'}].map((btn)=>(
-            <button key={btn.id} onClick={()=>playGame(btn.id)} disabled={isShaking} className="p-3 transition-all bg-white border-2 shadow-sm group dark:bg-slate-700 border-slate-200 dark:border-slate-600 rounded-2xl hover:-translate-y-1 hover:border-indigo-500">
-              <span className="block mb-1 text-2xl transition-transform group-hover:scale-110">{btn.emoji}</span>
-              <span className="text-[9px] font-black text-slate-400 group-hover:text-indigo-500 tracking-widest">{btn.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-      
-      <button onClick={resetGame} className="flex items-center gap-2 mt-8 text-xs font-bold underline transition-colors text-slate-400 hover:text-red-500 decoration-2">
-        <RotateCcw size={12} /> RESET SCORE
-      </button>
-    </div>
-  );
+        <div className="grid grid-cols-3 gap-3">
+          {[{id:'rock',emoji:'✊',label:'ROCK'},{id:'paper',emoji:'✋',label:'PAPER'},{id:'scissors',emoji:'✌️',label:'SCISSORS'}].map((btn)=>(
+            <button key={btn.id} onClick={()=>playGame(btn.id)} disabled={isShaking} className="p-3 transition-all bg-white border-2 shadow-sm group dark:bg-slate-700 border-slate-200 dark:border-slate-600 rounded-2xl hover:-translate-y-1 hover:border-indigo-500">
+              <span className="block mb-1 text-2xl transition-transform group-hover:scale-110">{btn.emoji}</span>
+              <span className="text-[9px] font-black text-slate-400 group-hover:text-indigo-500 tracking-widest">{btn.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      <button onClick={resetGame} className="flex items-center gap-2 mt-8 text-xs font-bold underline transition-colors text-slate-400 hover:text-red-500 decoration-2">
+        <RotateCcw size={12} /> RESET SCORE
+      </button>
+    </div>
+  );
 };
 
 // ==========================================
 // 2. MAIN TOOLS (APP LAUNCHER) COMPONENT
 // ==========================================
 const Tools: React.FC = () => {
-  const [activeApp, setActiveApp] = useState<string | null>(null);
+  const [activeApp, setActiveApp] = useState<string | null>(null);
 
-  // 🔥 PREMIUM GLOSSY ICONS CONFIGURATION
-  const apps = [
-    {
-      id: 'rps',
-      name: 'RPS Game',
-      icon: <Hand className="text-white rotate-90 drop-shadow-md" size={32} />,
-      color: 'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500', 
-      description: 'Classic Rock Paper Scissors'
-    },
-    {
-      id: 'pokemon',
-      name: 'PokéBattle',
-      icon: <Swords className="text-white drop-shadow-md" size={32} />,
-      color: 'bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500', 
-      description: 'Turn-based RPG Battle'
-    },
-    {
-      id: 'luck-royale',
-      name: 'Luck Royale',
-      icon: <Gift className="text-white drop-shadow-md" size={32} />,
-      color: 'bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600', 
-      description: 'Spin & Win Rewards'
-    },
-    {
-      id: 'crypto',
-      name: 'Crypto Sim',
-      icon: <TrendingUp className="text-white drop-shadow-md" size={32} />,
-      color: 'bg-gradient-to-br from-slate-700 via-gray-800 to-neutral-900', 
-      description: 'Trade Virtual Assets',
-      disabled: false
-    },
-    {
-      id: 'flappy',
-      name: 'Neon Flap',
-      icon: <Bird className="text-white drop-shadow-md" size={32} />,
-      color: 'bg-gradient-to-br from-fuchsia-500 via-purple-600 to-indigo-600', 
-      description: 'Endless Runner',
-      disabled: false
-    },
-    {
-      id: 'cake',
-      name: '3D Cake',
-      icon: <Cake className="text-white drop-shadow-md" size={32} />,
-      color: 'bg-gradient-to-br from-rose-400 via-pink-500 to-fuchsia-500', 
-      description: 'Blow the Candle!',
-      disabled: false
-    },
-    {
-      id: 'speed-test',
-      name: 'SpeedFlow',
-      icon: <Wifi className="text-white drop-shadow-md" size={32} />,
-      color: 'bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600', 
-      description: 'Check Internet Speed'
-    },
-    {
-      id: 'weather',
-      name: 'Weather',
-      icon: <CloudSun className="text-white drop-shadow-md" size={32} />,
-      color: 'bg-gradient-to-br from-sky-400 via-blue-500 to-violet-600', 
-      description: 'Live Forecast'
-    },
-    {
-      id: 'calculator',
-      name: 'Calculator',
-      icon: <Calculator className="text-white drop-shadow-md" size={32} />,
-      color: 'bg-gradient-to-br from-orange-400 via-red-500 to-rose-600', 
-      description: 'Neumorphic Dual-Theme',
-      disabled: false 
-    },
-    {
-      id: 'focus',
-      name: 'Focus Timer',
-      icon: <Zap className="text-white drop-shadow-md" size={32} />,
-      color: 'bg-gradient-to-br from-blue-400 via-cyan-500 to-teal-500', 
-      description: 'Pomodoro Clock',
-      disabled: false 
-    },
-    {
-      id: 'tictactoe',
-      name: 'Tic Tac Toe',
-      icon: <Gamepad2 className="text-white drop-shadow-md" size={32} />, 
-      color: 'bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700', 
-      description: 'Cyber Style X-O Game',
-      disabled: false
-    },
-    // 🔥 NEW: Memory Game Added Here
-    {
-      id: 'memory',
-      name: 'Memory Game',
-      icon: <Brain className="text-white drop-shadow-md" size={32} />, 
-      color: 'bg-gradient-to-br from-pink-500 via-rose-500 to-red-500', 
-      description: 'Find the Masks',
-      disabled: false
-    }
-  ];
+  // 🔥 PREMIUM GLOSSY ICONS CONFIGURATION
+  const apps = [
+    {
+      id: 'rps',
+      name: 'RPS Game',
+      icon: <Hand className="text-white rotate-90 drop-shadow-md" size={32} />,
+      color: 'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500', 
+      description: 'Classic Rock Paper Scissors'
+    },
+    {
+      id: 'pokemon',
+      name: 'PokéBattle',
+      icon: <Swords className="text-white drop-shadow-md" size={32} />,
+      color: 'bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500', 
+      description: 'Turn-based RPG Battle'
+    },
+    {
+      id: 'luck-royale',
+      name: 'Luck Royale',
+      icon: <Gift className="text-white drop-shadow-md" size={32} />,
+      color: 'bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600', 
+      description: 'Spin & Win Rewards'
+    },
+    {
+      id: 'crypto',
+      name: 'Crypto Sim',
+      icon: <TrendingUp className="text-white drop-shadow-md" size={32} />,
+      color: 'bg-gradient-to-br from-slate-700 via-gray-800 to-neutral-900', 
+      description: 'Trade Virtual Assets',
+      disabled: false
+    },
+    {
+      id: 'flappy',
+      name: 'Neon Flap',
+      icon: <Bird className="text-white drop-shadow-md" size={32} />,
+      color: 'bg-gradient-to-br from-fuchsia-500 via-purple-600 to-indigo-600', 
+      description: 'Endless Runner',
+      disabled: false
+    },
+    {
+      id: 'cake',
+      name: '3D Cake',
+      icon: <Cake className="text-white drop-shadow-md" size={32} />,
+      color: 'bg-gradient-to-br from-rose-400 via-pink-500 to-fuchsia-500', 
+      description: 'Blow the Candle!',
+      disabled: false
+    },
+    {
+      id: 'speed-test',
+      name: 'SpeedFlow',
+      icon: <Wifi className="text-white drop-shadow-md" size={32} />,
+      color: 'bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600', 
+      description: 'Check Internet Speed'
+    },
+    {
+      id: 'weather',
+      name: 'Weather',
+      icon: <CloudSun className="text-white drop-shadow-md" size={32} />,
+      color: 'bg-gradient-to-br from-sky-400 via-blue-500 to-violet-600', 
+      description: 'Live Forecast'
+    },
+    {
+      id: 'calculator',
+      name: 'Calculator',
+      icon: <Calculator className="text-white drop-shadow-md" size={32} />,
+      color: 'bg-gradient-to-br from-orange-400 via-red-500 to-rose-600', 
+      description: 'Neumorphic Dual-Theme',
+      disabled: false 
+    },
+    {
+      id: 'focus',
+      name: 'Focus Timer',
+      icon: <Zap className="text-white drop-shadow-md" size={32} />,
+      color: 'bg-gradient-to-br from-blue-400 via-cyan-500 to-teal-500', 
+      description: 'Pomodoro Clock',
+      disabled: false 
+    },
+    {
+      id: 'tictactoe',
+      name: 'Tic Tac Toe',
+      icon: <Gamepad2 className="text-white drop-shadow-md" size={32} />, 
+      color: 'bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700', 
+      description: 'Cyber Style X-O Game',
+      disabled: false
+    },
+    // 🔥 NEW: Memory Game Added Here
+    {
+      id: 'memory',
+      name: 'Memory Game',
+      icon: <Brain className="text-white drop-shadow-md" size={32} />, 
+      color: 'bg-gradient-to-br from-pink-500 via-rose-500 to-red-500', 
+      description: 'Find the Masks',
+      disabled: false
+    }
+  ];
 
-  // Render Active Game Logic
-  const renderActiveApp = () => {
-    switch (activeApp) {
-      case 'rps': return <RockPaperScissorsGame />;
-      case 'pokemon': return <PokemonGame />;
-      case 'luck-royale': return <LuckRoyale onClose={() => setActiveApp(null)} />;
-      case 'flappy': return <FlappyBird onClose={() => setActiveApp(null)} />;
-      case 'speed-test': return <SpeedTest onClose={() => setActiveApp(null)} />;
-      case 'weather': return <WeatherApp onClose={() => setActiveApp(null)} />;
-      case 'calculator': return <CalculatorApp onClose={() => setActiveApp(null)} />;
-      case 'cake': return <BirthdayCake onClose={() => setActiveApp(null)} />;
-      case 'crypto': return <CryptoTrader onClose={() => setActiveApp(null)} />;
-      case 'focus': return <FocusTimer onClose={() => setActiveApp(null)} />;
-      case 'tictactoe': return <TicTacToe onClose={() => setActiveApp(null)} />;
-      case 'memory': return <MemoryGame onClose={() => setActiveApp(null)} />; // ✅ Added to render
-      default: return null;
-    }
-  };
+  // Render Active Game Logic
+  const renderActiveApp = () => {
+    switch (activeApp) {
+      case 'rps': return <RockPaperScissorsGame />;
+      case 'pokemon': return <PokemonGame />;
+      case 'luck-royale': return <LuckRoyale onClose={() => setActiveApp(null)} />;
+      case 'flappy': return <FlappyBird onClose={() => setActiveApp(null)} />;
+      case 'speed-test': return <SpeedTest onClose={() => setActiveApp(null)} />;
+      case 'weather': return <WeatherApp onClose={() => setActiveApp(null)} />;
+      case 'calculator': return <CalculatorApp onClose={() => setActiveApp(null)} />;
+      case 'cake': return <BirthdayCake onClose={() => setActiveApp(null)} />;
+      case 'crypto': return <CryptoTrader onClose={() => setActiveApp(null)} />;
+      case 'focus': return <FocusTimer onClose={() => setActiveApp(null)} />;
+      case 'tictactoe': return <TicTacToe onClose={() => setActiveApp(null)} />;
+      case 'memory': return <MemoryGame onClose={() => setActiveApp(null)} />; // ✅ Added to render
+      default: return null;
+    }
+  };
 
-  return (
-    <section id="tools" className="relative flex flex-col items-center justify-center min-h-screen py-24 overflow-hidden bg-slate-900">
-      {/* Background Ambience */}
-      <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-blue-600/10 blur-[120px] pointer-events-none"></div>
-      <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-purple-600/10 blur-[120px] pointer-events-none"></div>
+  return (
+    <section id="tools" className="relative flex flex-col items-center justify-center min-h-screen py-24 overflow-hidden bg-slate-900">
+      {/* Background Ambience */}
+      <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-blue-600/10 blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-purple-600/10 blur-[120px] pointer-events-none"></div>
 
-      {/* =======================
-          FULL SCREEN GAME MODE
-         ======================= */}
-      {activeApp ? (
-        <div className="fixed inset-0 z-[9999] bg-slate-950/90 backdrop-blur-md flex flex-col animate-in fade-in duration-300">
-          
-          {/* Top Bar (Close Button) */}
-          <div className="absolute z-50 top-6 right-6">
-            <button 
-              onClick={() => setActiveApp(null)}
-              className="p-3 text-white transition-all border rounded-full shadow-lg bg-white/10 hover:bg-red-500/80 backdrop-blur-md hover:rotate-90 hover:scale-110 border-white/10"
-            >
-              <X size={28} />
-            </button>
-          </div>
+      {/* =======================
+          FULL SCREEN GAME MODE
+         ======================= */}
+      {activeApp ? (
+        <div className="fixed inset-0 z-[9999] bg-slate-950/90 backdrop-blur-md flex flex-col animate-in fade-in duration-300">
+          
+          {/* Top Bar (Close Button) */}
+          <div className="absolute z-50 top-6 right-6">
+            <button 
+              onClick={() => setActiveApp(null)}
+              className="p-3 text-white transition-all border rounded-full shadow-lg bg-white/10 hover:bg-red-500/80 backdrop-blur-md hover:rotate-90 hover:scale-110 border-white/10"
+            >
+              <X size={28} />
+            </button>
+          </div>
 
-          {/* Game Container */}
-          <div className="flex items-center justify-center flex-grow w-full h-full p-4">
-             {renderActiveApp()}
-          </div>
-        </div>
-      ) : (
-        /* =======================
-            APP GRID (LAUNCHER)
-           ======================= */
-        <div className="container relative z-10 px-4 mx-auto">
-          <div className="mb-16 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-800/50 rounded-full text-xs font-bold text-slate-300 border border-slate-700 mb-6 backdrop-blur-sm">
-              <LayoutGrid size={14} className="text-blue-400" />
-              <span>TOOLS & GAMES</span>
-            </div>
-            <h2 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl">
-              Playground
-            </h2>
-            <p className="max-w-lg mx-auto text-slate-400">
-              Select an app to launch it in full screen. More tools coming soon.
-            </p>
-          </div>
+          {/* Game Container */}
+          <div className="flex items-center justify-center flex-grow w-full h-full p-4">
+             {renderActiveApp()}
+          </div>
+        </div>
+      ) : (
+        /* =======================
+            APP GRID (LAUNCHER)
+           ======================= */
+        <div className="container relative z-10 px-4 mx-auto">
+          <div className="mb-16 text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-800/50 rounded-full text-xs font-bold text-slate-300 border border-slate-700 mb-6 backdrop-blur-sm">
+              <LayoutGrid size={14} className="text-blue-400" />
+              <span>TOOLS & GAMES</span>
+            </div>
+            <h2 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl">
+              Playground
+            </h2>
+            <p className="max-w-lg mx-auto text-slate-400">
+              Select an app to launch it in full screen. More tools coming soon.
+            </p>
+          </div>
 
-          {/* App Grid */}
-          <div className="grid max-w-4xl grid-cols-2 gap-6 mx-auto md:grid-cols-4">
-            {apps.map((app) => (
-              <button
-                key={app.id}
-                onClick={() => !app.disabled && setActiveApp(app.id)}
-                disabled={app.disabled}
-                className={`
-                  group relative flex flex-col items-center p-6 rounded-3xl 
-                  bg-slate-800/40 border border-slate-700/50 
-                  hover:bg-slate-800/60 hover:border-slate-500/50 
-                  transition-all duration-300 
-                  ${app.disabled ? 'opacity-50 cursor-not-allowed grayscale' : 'hover:-translate-y-2 hover:shadow-2xl'}
-                `}
-              >
-                {/* 🔥 PREMIUM GLOSSY ICON CONTAINER */}
-                <div className={`
-                  w-20 h-20 rounded-2xl ${app.color} 
-                  shadow-2xl flex items-center justify-center text-white mb-6 
-                  group-hover:scale-110 transition-all duration-300 
-                  relative overflow-hidden border border-white/10
-                  group-hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]
-                `}>
-                  {/* Top Shine (Glass Effect) */}
-                  <div className="absolute inset-x-0 top-0 pointer-events-none h-1/2 bg-gradient-to-b from-white/20 to-transparent"></div>
-                  
-                  {/* Bottom Reflection */}
-                  <div className="absolute inset-x-0 bottom-0 pointer-events-none h-1/3 bg-gradient-to-t from-black/10 to-transparent"></div>
+          {/* App Grid */}
+          <div className="grid max-w-4xl grid-cols-2 gap-6 mx-auto md:grid-cols-4">
+            {apps.map((app) => (
+              <button
+                key={app.id}
+                onClick={() => !app.disabled && setActiveApp(app.id)}
+                disabled={app.disabled}
+                className={`
+                  group relative flex flex-col items-center p-6 rounded-3xl 
+                  bg-slate-800/40 border border-slate-700/50 
+                  hover:bg-slate-800/60 hover:border-slate-500/50 
+                  transition-all duration-300 
+                  ${app.disabled ? 'opacity-50 cursor-not-allowed grayscale' : 'hover:-translate-y-2 hover:shadow-2xl'}
+                `}
+              >
+                {/* 🔥 PREMIUM GLOSSY ICON CONTAINER */}
+                <div className={`
+                  w-20 h-20 rounded-2xl ${app.color} 
+                  shadow-2xl flex items-center justify-center text-white mb-6 
+                  group-hover:scale-110 transition-all duration-300 
+                  relative overflow-hidden border border-white/10
+                  group-hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]
+                `}>
+                  {/* Top Shine (Glass Effect) */}
+                  <div className="absolute inset-x-0 top-0 pointer-events-none h-1/2 bg-gradient-to-b from-white/20 to-transparent"></div>
+                  
+                  {/* Bottom Reflection */}
+                  <div className="absolute inset-x-0 bottom-0 pointer-events-none h-1/3 bg-gradient-to-t from-black/10 to-transparent"></div>
 
-                  {/* Icon with Drop Shadow */}
-                  <div className="relative z-10 drop-shadow-[0_2px_3px_rgba(0,0,0,0.3)] filter">
-                    {app.icon}
-                  </div>
-                </div>
-                
-                {/* App Name */}
-                <h3 className="mb-1 text-lg font-bold text-white transition-colors group-hover:text-blue-400">{app.name}</h3>
-                <p className="text-xs font-medium text-slate-500">{app.description}</p>
-                
-                {/* Hover Glow Background */}
-                {!app.disabled && (
-                  <div className="absolute inset-0 transition-opacity opacity-0 pointer-events-none bg-blue-500/5 rounded-3xl group-hover:opacity-100"></div>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </section>
-  );
+                  {/* Icon with Drop Shadow */}
+                  <div className="relative z-10 drop-shadow-[0_2px_3px_rgba(0,0,0,0.3)] filter">
+                    {app.icon}
+                  </div>
+                </div>
+                
+                {/* App Name */}
+                <h3 className="mb-1 text-lg font-bold text-white transition-colors group-hover:text-blue-400">{app.name}</h3>
+                <p className="text-xs font-medium text-slate-500">{app.description}</p>
+                
+                {/* Hover Glow Background */}
+                {!app.disabled && (
+                  <div className="absolute inset-0 transition-opacity opacity-0 pointer-events-none bg-blue-500/5 rounded-3xl group-hover:opacity-100"></div>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+  );
 };
 
 export default Tools;
