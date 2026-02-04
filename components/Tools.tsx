@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, Gamepad2, Calculator, Trophy, Zap, 
-  RotateCcw, Hand, LayoutGrid, Swords, Gift, Wifi, CloudSun, Globe, Cake, Bird, TrendingUp 
+  RotateCcw, Hand, LayoutGrid, Swords, Gift, Wifi, CloudSun, Globe, Cake, Bird, TrendingUp, Brain 
 } from 'lucide-react';
 
 // ✅ গেম এবং অ্যাপ ইমপোর্ট
@@ -15,6 +15,7 @@ import FlappyBird from './FlappyBird';
 import CryptoTrader from './CryptoTrader';
 import FocusTimer from './FocusTimer';
 import TicTacToe from './TicTacToe';
+import MemoryGame from './MemoryGame'; // ✅ নতুন Memory Game ইমপোর্ট করা হয়েছে
 
 // ==========================================
 // 1. ROCK PAPER SCISSORS GAME COMPONENT
@@ -219,13 +220,21 @@ const Tools: React.FC = () => {
       description: 'Pomodoro Clock',
       disabled: false 
     },
-    // 🔥 UPDATED: Fixed Icon to Gamepad2 (Grid3X3 removed due to error)
     {
       id: 'tictactoe',
       name: 'Tic Tac Toe',
       icon: <Gamepad2 className="text-white drop-shadow-md" size={32} />, 
       color: 'bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700', 
       description: 'Cyber Style X-O Game',
+      disabled: false
+    },
+    // 🔥 NEW: Memory Game Added Here
+    {
+      id: 'memory',
+      name: 'Memory Game',
+      icon: <Brain className="text-white drop-shadow-md" size={32} />, 
+      color: 'bg-gradient-to-br from-pink-500 via-rose-500 to-red-500', 
+      description: 'Find the Masks',
       disabled: false
     }
   ];
@@ -244,6 +253,7 @@ const Tools: React.FC = () => {
       case 'crypto': return <CryptoTrader onClose={() => setActiveApp(null)} />;
       case 'focus': return <FocusTimer onClose={() => setActiveApp(null)} />;
       case 'tictactoe': return <TicTacToe onClose={() => setActiveApp(null)} />;
+      case 'memory': return <MemoryGame onClose={() => setActiveApp(null)} />; // ✅ Added to render
       default: return null;
     }
   };
