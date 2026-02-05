@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, Info, BellRing, X } from 'lucide-react';
 
-// 🔥 Haptic Helper Function
+// 🔥 Safe Haptic Helper
 const vibratePhone = (type: 'success' | 'info' | 'error') => {
-  // যদি ডিভাইসে ভাইব্রেশন সাপোর্ট থাকে (Android এ কাজ করবে, iPhone এ রেস্ট্রিকশন আছে)
+  // ব্রাউজার যদি পারমিশন দেয় এবং ইউজার ইন্টার‍্যাক্ট করে থাকে তবেই ভাইব্রেট হবে
   if (typeof navigator !== 'undefined' && navigator.vibrate) {
-    if (type === 'success') {
-      navigator.vibrate([30, 50, 30]); // দুবার ভাইব্রেট করবে (Success Feel)
-    } else if (type === 'error') {
-      navigator.vibrate([50, 50, 100]); // একটু লম্বা ভাইব্রেশন (Error Feel)
-    } else {
-      navigator.vibrate(15); // খুব ছোট একটা 'টিক' (Click Feel)
+    try {
+      // সেফটি চেক: পেজ লোড হওয়ার সাথে সাথে ভাইব্রেট করলে ব্রাউজার এরর দেয়, তাই আমরা এটা চেক করব
+      // @ts-ignore (TypeScript এর জন্য ইগনোর ফ্ল্যাগ, কারণ সব ব্রাউজারে এটি থাকে না)
+      const canVibrate = navigator.userActivation ? navigator.userActivation.hasBeenActive : true;
+
+      if (canVibrate) {
+        if (type === 'success') navigator.vibrate([30, 50, 30]);
+        else if (type === 'error') navigator.vibrate([50, 50, 100]);
+        else navigator.vibrate(15);
+      }
+    } catch (e) {
+      // সাইলেন্টলি ফেইল করবে, কনসোলে লাল এরর দেখাবে না
     }
   }
 };
 
 export const triggerIsland = (msg: string, type: 'success' | 'info' | 'error' = 'success') => {
-  // 📳 নোটিফিকেশন আসার সাথে সাথে ফোন ভাইব্রেট করবে
   vibratePhone(type);
-  
   const event = new CustomEvent('dynamic-island', { detail: { msg, type } });
   window.dispatchEvent(event);
 };
@@ -29,22 +33,44 @@ const DynamicIsland: React.FC = () => {
   const [message, setMessage] = useState('');
   const [type, setType] = useState<'success' | 'info' | 'error'>('success');
 
+  // 🔥 স্টাইল ইনজেকশন (ডুপ্লিকেট রোধ করার জন্য ID ব্যবহার করা হয়েছে)
+  useEffect(() => {
+    const styleId = 'dynamic-island-styles';
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.innerHTML = `
+        @keyframes wiggle {
+          0%, 100% { transform: rotate(0deg); }
+          25% { transform: rotate(-15deg); }
+          75% { transform: rotate(15deg); }
+        }
+        .animate-wiggle {
+          animation: wiggle 0.6s ease-in-out infinite;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }, []);
+
   useEffect(() => {
     const handleEvent = (e: any) => {
       setMessage(e.detail.msg);
       setType(e.detail.type);
-      
       setActive(true);
 
+      // এনিমেশন সিকোয়েন্স
       setTimeout(() => {
         setIsExpanded(true);
-      }, 200);
+      }, 100);
 
-      // ৭ সেকেন্ড পর বন্ধ হবে
-      setTimeout(() => {
+      // ৭ সেকেন্ড পর অটো ক্লোজ হবে
+      const closeTimer = setTimeout(() => {
         setIsExpanded(false);
         setTimeout(() => setActive(false), 500);
       }, 7000);
+
+      return () => clearTimeout(closeTimer);
     };
 
     window.addEventListener('dynamic-island', handleEvent);
@@ -52,7 +78,7 @@ const DynamicIsland: React.FC = () => {
   }, []);
 
   return (
-    // 🔥 Navbar এর নিচে রাখার জন্য 'top-24' ব্যবহার করা হয়েছে
+    // 🔥 Navbar এর নিচে রাখার জন্য 'top-24' ব্যবহার করা হয়েছে
     <div className="fixed top-24 left-1/2 transform -translate-x-1/2 z-[100000] flex justify-center items-start w-full pointer-events-none">
       <div 
         className={`
@@ -61,7 +87,7 @@ const DynamicIsland: React.FC = () => {
           shadow-[0_20px_50px_-10px_rgba(0,0,0,0.5)] 
           transition-all duration-[600ms] cubic-bezier(0.16, 1, 0.3, 1)
           
-          /* 🔥 Auto-Resize Logic Added Here */
+          /* 🔥 Auto-Resize Logic */
           ${active 
             ? (isExpanded 
                 ? 'w-fit min-w-[320px] max-w-[90vw] h-auto min-h-[58px] py-3 px-5 rounded-[32px] opacity-100 translate-y-0 shadow-[0_0_20px_rgba(59,130,246,0.3)]' 
@@ -106,17 +132,6 @@ const DynamicIsland: React.FC = () => {
           </button>
         </div>
       </div>
-
-      <style jsx global>{`
-        @keyframes wiggle {
-          0%, 100% { transform: rotate(0deg); }
-          25% { transform: rotate(-15deg); }
-          75% { transform: rotate(15deg); }
-        }
-        .animate-wiggle {
-          animation: wiggle 0.6s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 };
