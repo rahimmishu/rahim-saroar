@@ -38,6 +38,9 @@ import DynamicIsland from './components/DynamicIsland';
 // 🔥 নতুন ইমপোর্ট
 import BatteryOptimizer from './components/BatteryOptimizer';
 
+// 🔥 Auth Provider Import (NEW Update)
+import { AuthProvider } from './context/AuthContext';
+
 // ফিডব্যাক টাইপ ডিফিনিশন
 interface Feedback {
   name: string;
@@ -155,170 +158,173 @@ const App: React.FC = () => {
   }, []); 
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
-      
-      {/* 🔥 Secret Vault */}
-      <SecretVault />
-      
-      <MobilePremiumFeatures />
-      
-      {/* VoiceControl এখানে দরকার নেই কারণ এটি এখন FloatingDock এর ভেতরে */}
-      
-      <DynamicIsland /> {/* 🔥 আইফোন স্টাইল নোটিফিকেশন */}
-
-      {/* Utilities */}
-      <DynamicTitle />
-      <NetworkStatus />
-      <ContextMenu />
-      <NoiseOverlay />
-      {/* 🔥 Battery Optimizer এখানে বসানো হয়েছে */}
-      <BatteryOptimizer isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
-      
-      {/* 🔥 পপ-আপ ফিডব্যাক স্লাইডার */}
-      <FeedbackSlider onSubmit={handleNewFeedback} />
-
-      {isLoading && <Preloader onFinish={() => setIsLoading(false)} />}
-
-      {/* মেইন কন্টেন্ট র‍্যাপারে z-index দেওয়া হলো যাতে টিউবগুলো নিচে থাকে */}
-      <div 
-        className={`transition-opacity duration-1000 ease-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}
-        style={{ position: 'relative', zIndex: 10 }}
-      >
+    // 🔥 AuthProvider দিয়ে পুরো অ্যাপ র‍্যাপ করা হলো
+    <AuthProvider>
+      <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
         
-        <AppNavbar
-          isDarkMode={isDarkMode}
-          toggleTheme={toggleTheme}
-          onOpenTools={() => setIsToolsOpen(true)}
-          onOpenGallery={() => setIsGalleryOpen(true)}
-        />
+        {/* 🔥 Secret Vault */}
+        <SecretVault />
         
-        {/* Hero Section */}
-        <Hero />
-        <TechMarquee />
+        <MobilePremiumFeatures />
         
-        {/* 🔥 SCROLL ANIMATIONS START HERE (IDs added for Voice Control) */}
+        {/* VoiceControl এখানে দরকার নেই কারণ এটি এখন FloatingDock এর ভেতরে */}
         
-        <RevealOnScroll>
-          {/* 👇 id="about" যুক্ত করা হয়েছে */}
-          <section id="about">
-            <About />
-          </section>
-        </RevealOnScroll>
+        <DynamicIsland /> {/* 🔥 আইফোন স্টাইল নোটিফিকেশন */}
+
+        {/* Utilities */}
+        <DynamicTitle />
+        <NetworkStatus />
+        <ContextMenu />
+        <NoiseOverlay />
+        {/* 🔥 Battery Optimizer এখানে বসানো হয়েছে */}
+        <BatteryOptimizer isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
         
-        <RevealOnScroll delay={0.1}>
-          <section id="projects">
-            <Projects />
-          </section>
-        </RevealOnScroll>
+        {/* 🔥 পপ-আপ ফিডব্যাক স্লাইডার */}
+        <FeedbackSlider onSubmit={handleNewFeedback} />
 
-        <RevealOnScroll>
-          {/* 👇 id="resources" যুক্ত করা হয়েছে */}
-          <section id="resources">
-            <Resources />
-          </section>
-        </RevealOnScroll>
+        {isLoading && <Preloader onFinish={() => setIsLoading(false)} />}
 
-        <RevealOnScroll>
-          <FacebookFeed />
-        </RevealOnScroll>
-        
-        <RevealOnScroll>
-          {/* 👇 id="achievements" যুক্ত করা হয়েছে */}
-          <section id="achievements">
-            <Achievements />
-          </section>
-        </RevealOnScroll>
-
-        <RevealOnScroll>
-          {/* 👇 id="certifications" যুক্ত করা হয়েছে */}
-          <section id="certifications">
-            <Certifications />
-          </section>
-        </RevealOnScroll>
-
-        <RevealOnScroll>
-          {/* 👇 id="journey" যুক্ত করা হয়েছে */}
-          <section id="journey">
-            <Journey />
-          </section>
-        </RevealOnScroll>
-
-        <RevealOnScroll>
-          {/* 👇 id="contact" যুক্ত করা হয়েছে */}
-          <section id="contact">
-            <Contact />
-          </section>
-        </RevealOnScroll>
-
-        {/* 🔥 SAVED FEEDBACKS SECTION (ANIMATED) */}
-        {feedbacks.length > 0 && (
+        {/* মেইন কন্টেন্ট র‍্যাপারে z-index দেওয়া হলো যাতে টিউবগুলো নিচে থাকে */}
+        <div 
+          className={`transition-opacity duration-1000 ease-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+          style={{ position: 'relative', zIndex: 10 }}
+        >
+          
+          <AppNavbar
+            isDarkMode={isDarkMode}
+            toggleTheme={toggleTheme}
+            onOpenTools={() => setIsToolsOpen(true)}
+            onOpenGallery={() => setIsGalleryOpen(true)}
+          />
+          
+          {/* Hero Section */}
+          <Hero />
+          <TechMarquee />
+          
+          {/* 🔥 SCROLL ANIMATIONS START HERE (IDs added for Voice Control) */}
+          
           <RevealOnScroll>
-            <section className="py-16 border-t bg-slate-50 dark:bg-slate-800/30 border-slate-200 dark:border-slate-800">
-              <div className="max-w-6xl px-4 mx-auto">
-                <div className="mb-10 text-center">
-                  <h2 className="mb-3 text-3xl font-bold">Community Love 💖</h2>
-                  <p className="text-slate-500">What visitors are saying about this portfolio</p>
-                </div>
-
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {feedbacks.map((fb, idx) => (
-                    <div key={idx} className="p-6 transition-transform bg-white border shadow-sm dark:bg-slate-800 rounded-2xl border-slate-100 dark:border-slate-700 hover:-translate-y-1">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="p-3 text-blue-500 rounded-full bg-blue-50 dark:bg-slate-700">
-                          <Quote size={20} />
-                        </div>
-                        <span className="font-mono text-xs text-slate-400">{fb.date}</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-2xl font-bold">{fb.rating === 5 ? '🤩' : fb.rating === 4 ? '😄' : '🙂'}</span>
-                        <span className="text-lg font-bold">{fb.label}</span>
-                      </div>
-                      
-                      <div className="w-full h-1 mb-4 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-                        <div
-                          className="h-full bg-blue-500 rounded-full"
-                          style={{ width: `${(fb.rating / 5) * 100}%` }}
-                        ></div>
-                      </div>
-
-                      <p className="font-semibold text-slate-700 dark:text-slate-300">
-                        — {fb.name}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            {/* 👇 id="about" যুক্ত করা হয়েছে */}
+            <section id="about">
+              <About />
             </section>
           </RevealOnScroll>
-        )}
+          
+          <RevealOnScroll delay={0.1}>
+            <section id="projects">
+              <Projects />
+            </section>
+          </RevealOnScroll>
 
-        <Footer />
+          <RevealOnScroll>
+            {/* 👇 id="resources" যুক্ত করা হয়েছে */}
+            <section id="resources">
+              <Resources />
+            </section>
+          </RevealOnScroll>
 
-        {/* Floating Elements */}
-        <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
-        <MusicPlayer isPlaying={isMusicPlaying} togglePlay={() => setIsMusicPlaying(!isMusicPlaying)} />
-        <ScrollProgressBtn />
-        
-        {/* 🔥 FloatingDock আপডেট: toggleTheme পাস করা হয়েছে */}
-        <FloatingDock 
-          toggleChat={() => setIsChatOpen(!isChatOpen)} 
-          toggleMusic={() => setIsMusicPlaying(!isMusicPlaying)}
-          toggleTheme={toggleTheme} 
-        />
-        
-        <PhotoGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} />
+          <RevealOnScroll>
+            <FacebookFeed />
+          </RevealOnScroll>
+          
+          <RevealOnScroll>
+            {/* 👇 id="achievements" যুক্ত করা হয়েছে */}
+            <section id="achievements">
+              <Achievements />
+            </section>
+          </RevealOnScroll>
 
-        {isToolsOpen && (
-          <div className="fixed inset-0 z-[100] bg-slate-900 overflow-y-auto animate-in slide-in-from-bottom-10 duration-300">
-            <button onClick={() => setIsToolsOpen(false)} className="fixed top-6 right-6 z-[110] p-3 bg-white/10 hover:bg-red-600 text-white rounded-full backdrop-blur-md border border-white/20 transition-all shadow-xl hover:rotate-90">
-              <X size={28} />
-            </button>
-            <div className="relative min-h-screen"><Tools /></div>
-          </div>
-        )}
-      </div>
-    </main>
+          <RevealOnScroll>
+            {/* 👇 id="certifications" যুক্ত করা হয়েছে */}
+            <section id="certifications">
+              <Certifications />
+            </section>
+          </RevealOnScroll>
+
+          <RevealOnScroll>
+            {/* 👇 id="journey" যুক্ত করা হয়েছে */}
+            <section id="journey">
+              <Journey />
+            </section>
+          </RevealOnScroll>
+
+          <RevealOnScroll>
+            {/* 👇 id="contact" যুক্ত করা হয়েছে */}
+            <section id="contact">
+              <Contact />
+            </section>
+          </RevealOnScroll>
+
+          {/* 🔥 SAVED FEEDBACKS SECTION (ANIMATED) */}
+          {feedbacks.length > 0 && (
+            <RevealOnScroll>
+              <section className="py-16 border-t bg-slate-50 dark:bg-slate-800/30 border-slate-200 dark:border-slate-800">
+                <div className="max-w-6xl px-4 mx-auto">
+                  <div className="mb-10 text-center">
+                    <h2 className="mb-3 text-3xl font-bold">Community Love 💖</h2>
+                    <p className="text-slate-500">What visitors are saying about this portfolio</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {feedbacks.map((fb, idx) => (
+                      <div key={idx} className="p-6 transition-transform bg-white border shadow-sm dark:bg-slate-800 rounded-2xl border-slate-100 dark:border-slate-700 hover:-translate-y-1">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="p-3 text-blue-500 rounded-full bg-blue-50 dark:bg-slate-700">
+                            <Quote size={20} />
+                          </div>
+                          <span className="font-mono text-xs text-slate-400">{fb.date}</span>
+                        </div>
+                        
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-2xl font-bold">{fb.rating === 5 ? '🤩' : fb.rating === 4 ? '😄' : '🙂'}</span>
+                          <span className="text-lg font-bold">{fb.label}</span>
+                        </div>
+                        
+                        <div className="w-full h-1 mb-4 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
+                          <div
+                            className="h-full bg-blue-500 rounded-full"
+                            style={{ width: `${(fb.rating / 5) * 100}%` }}
+                          ></div>
+                        </div>
+
+                        <p className="font-semibold text-slate-700 dark:text-slate-300">
+                          — {fb.name}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            </RevealOnScroll>
+          )}
+
+          <Footer />
+
+          {/* Floating Elements */}
+          <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+          <MusicPlayer isPlaying={isMusicPlaying} togglePlay={() => setIsMusicPlaying(!isMusicPlaying)} />
+          <ScrollProgressBtn />
+          
+          {/* 🔥 FloatingDock আপডেট: toggleTheme পাস করা হয়েছে */}
+          <FloatingDock 
+            toggleChat={() => setIsChatOpen(!isChatOpen)} 
+            toggleMusic={() => setIsMusicPlaying(!isMusicPlaying)}
+            toggleTheme={toggleTheme} 
+          />
+          
+          <PhotoGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} />
+
+          {isToolsOpen && (
+            <div className="fixed inset-0 z-[100] bg-slate-900 overflow-y-auto animate-in slide-in-from-bottom-10 duration-300">
+              <button onClick={() => setIsToolsOpen(false)} className="fixed top-6 right-6 z-[110] p-3 bg-white/10 hover:bg-red-600 text-white rounded-full backdrop-blur-md border border-white/20 transition-all shadow-xl hover:rotate-90">
+                <X size={28} />
+              </button>
+              <div className="relative min-h-screen"><Tools /></div>
+            </div>
+          )}
+        </div>
+      </main>
+    </AuthProvider>
   );
 };
 

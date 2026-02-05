@@ -16,6 +16,7 @@
     "@types/canvas-confetti": "^1.9.0",
     "@types/three": "^0.182.0",
     "canvas-confetti": "^1.9.4",
+    "firebase": "^12.8.0",
     "framer-motion": "^12.29.2",
     "lightweight-charts": "^4.2.2",
     "lucide-react": "0.263.1",

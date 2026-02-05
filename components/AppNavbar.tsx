@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Camera, Wrench, Sparkles, Home, Briefcase, BookOpen, Award, User, Mail, Lock } from 'lucide-react';
+import { Menu, X, Camera, Wrench, Sparkles, Home, Briefcase, BookOpen, Award, User, Mail, Lock, LogOut, LogIn, ChevronDown } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
+import { useAuth } from '../context/AuthContext'; 
+import AuthModal from './AuthModal'; 
 
 interface NavbarProps {
   isDarkMode: boolean;
@@ -12,6 +14,11 @@ interface NavbarProps {
 const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools, onOpenGallery }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  
+  // 🔥 Auth States
+  const { user, logout } = useAuth();
+  const [isAuthModalOpen, setAuthModalOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false); // ✅ ড্রপডাউন স্টেট
 
   const navLinks = [
     { label: 'Home', href: '#home', icon: <Home size={18} /> },
@@ -62,6 +69,17 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
     }
   };
 
+  // ✅ Logout Handler
+  const handleLogout = async () => {
+    try {
+      await logout();
+      setIsOpen(false);
+      setIsProfileMenuOpen(false);
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
+
   return (
     <>
       {/* 🔥 Floating Premium Navbar */}
@@ -72,15 +90,14 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
           : 'top-6 w-[98%] md:w-[90%] lg:w-[85%] bg-white/40 dark:bg-slate-900/40 backdrop-blur-md py-3 px-6'
         }`}
       >
-          {/* LOGO with Glowing Animation */}
+          {/* LOGO */}
           <a href="#home" onClick={(e) => handleLinkClick(e, '#home')} className="relative flex items-center gap-2 group shrink-0">
              <div className="relative">
-                {/* 🔥 Icon Updated with Glow Shadow */}
-                <Sparkles className="text-fuchsia-500 animate-spin-slow filter drop-shadow-[0_0_8px_rgba(217,70,239,0.5)]" size={20} />
+                <Sparkles className="text-purple-500 animate-spin-slow" size={20} />
              </div>
              
-             {/* 🔥 Animated Name Logic (Updated with Vibrant Colors) */}
-             <span className="hidden pb-1 text-lg font-bold text-transparent md:text-xl font-signature bg-gradient-to-r from-cyan-500 via-fuchsia-500 to-yellow-500 dark:from-cyan-400 dark:via-fuchsia-400 dark:to-yellow-300 bg-clip-text sm:block whitespace-nowrap animate-text-flow">
+             {/* 🔥 Animated Name Logic */}
+             <span className="hidden pb-1 text-lg font-bold text-transparent md:text-xl font-signature bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text sm:block whitespace-nowrap animate-text-flow">
                 Rahim Saroar Mishu
              </span>
           </a>
@@ -121,7 +138,48 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                 <ThemeToggle isDark={isDarkMode} toggleTheme={toggleTheme} />
               </div>
               
-              <a href="/resume.pdf" target="_blank" download className="hidden sm:block px-4 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold rounded-full hover:shadow-lg hover:scale-105 transition-all whitespace-nowrap">
+              {/* ✅ AUTH BUTTON WITH DROPDOWN (DESKTOP) */}
+              {user ? (
+                <div className="relative hidden sm:block">
+                  <button 
+                    onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all"
+                  >
+                    <div className="flex items-center justify-center w-6 h-6 text-xs font-bold text-white rounded-full bg-gradient-to-br from-purple-500 to-blue-500">
+                       {user.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}
+                    </div>
+                    <span className="max-w-[80px] truncate text-xs font-bold text-slate-700 dark:text-slate-200">
+                      {user.displayName?.split(' ')[0] || "User"}
+                    </span>
+                    <ChevronDown size={14} className={`text-slate-400 transition-transform ${isProfileMenuOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {/* Desktop Dropdown Menu */}
+                  {isProfileMenuOpen && (
+                    <div className="absolute right-0 w-48 mt-2 overflow-hidden bg-white border shadow-xl dark:bg-slate-900 rounded-xl border-slate-200 dark:border-slate-700 animate-in fade-in slide-in-from-top-2">
+                       <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+                         <p className="text-sm font-bold truncate text-slate-800 dark:text-white">{user.displayName || "User"}</p>
+                         <p className="text-xs truncate text-slate-500 dark:text-slate-400">{user.email}</p>
+                       </div>
+                       <button onClick={handleLogout} className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-900/10">
+                         <LogOut size={16} /> Logout
+                       </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* 🔥 PREMIUM SIGN IN BUTTON UPDATE (GRADIENT & GLOW) */
+                <button 
+                  onClick={() => setAuthModalOpen(true)}
+                  className="items-center hidden gap-2 px-5 py-2 text-xs font-bold text-white transition-all duration-300 border rounded-full shadow-lg sm:flex bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 shadow-blue-500/20 hover:shadow-cyan-400/40 hover:scale-105 active:scale-95 border-white/20 group"
+                >
+                  <LogIn size={14} className="transition-transform group-hover:translate-x-0.5" /> 
+                  Sign In
+                </button>
+              )}
+
+              {/* Resume Button */}
+              <a href="/resume.pdf" target="_blank" download className="hidden md:block px-4 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold rounded-full hover:shadow-lg hover:scale-105 transition-all whitespace-nowrap">
                 Resume
               </a>
 
@@ -132,12 +190,40 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
           </div>
       </nav>
 
+      {/* ✅ Auth Modal */}
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setAuthModalOpen(false)} />
+
       {/* Mobile Overlay */}
       <div 
         className={`fixed inset-0 z-[40] bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-3xl transition-all duration-500 lg:hidden flex flex-col px-6 overflow-y-auto no-scrollbar pb-20
         ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
         style={{ paddingTop: '100px' }}
       >
+          {/* ✅ Mobile Auth Section */}
+          {user ? (
+            <div className="flex items-center justify-between p-4 mb-6 duration-500 border bg-slate-100 dark:bg-slate-800 rounded-2xl border-slate-200 dark:border-slate-700 animate-in slide-in-from-top-5">
+               <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-10 h-10 text-lg font-bold text-white rounded-full bg-gradient-to-tr from-purple-500 to-blue-500">
+                    {user.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}
+                  </div>
+                  <div className="overflow-hidden">
+                    <div className="font-bold truncate text-slate-800 dark:text-white">{user.displayName || "User"}</div>
+                    <div className="text-xs truncate text-slate-500 dark:text-slate-400">{user.email}</div>
+                  </div>
+               </div>
+               <button onClick={handleLogout} className="p-2 text-red-500 bg-white shadow-sm dark:bg-slate-900 rounded-xl">
+                 <LogOut size={20} />
+               </button>
+            </div>
+          ) : (
+            <button 
+              onClick={() => { setIsOpen(false); setAuthModalOpen(true); }}
+              className="flex items-center justify-center w-full gap-2 py-4 mb-6 font-bold text-white duration-500 shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl animate-in slide-in-from-top-5"
+            >
+              <LogIn size={20} /> Sign In / Register
+            </button>
+          )}
+
           <div className="relative z-10 flex flex-col w-full max-w-md gap-3 mx-auto">
             {navLinks.map((link, idx) => (
               <a 
@@ -158,7 +244,6 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
             ))}
           </div>
 
-          {/* Widget Grid */}
           <div className={`grid grid-cols-2 gap-3 mt-6 w-full max-w-md mx-auto relative z-10 transition-all duration-500 delay-300 ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
               
               <button onClick={() => { onOpenGallery(); setIsOpen(false); }} className="flex flex-col items-center justify-center p-4 transition-all border border-purple-100 bg-purple-50 dark:bg-slate-800 dark:border-slate-700 rounded-2xl active:scale-95">
