@@ -64,25 +64,28 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
 
   return (
     <>
-      {/* 🔥 Floating Premium Navbar (Desktop & Mobile Header) */}
+      {/* 🔥 Floating Premium Navbar */}
       <nav 
         className={`fixed left-1/2 -translate-x-1/2 z-[50] transition-all duration-500 ease-out border border-white/10 rounded-full flex items-center justify-between
         ${scrolled 
-          ? 'top-4 w-[90%] md:w-[70%] lg:w-[60%] bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-2xl py-2 px-6' 
-          : 'top-6 w-[95%] md:w-[85%] lg:w-[75%] bg-white/40 dark:bg-slate-900/40 backdrop-blur-md py-3 px-6'
+          ? 'top-4 w-[95%] md:w-[85%] lg:w-[75%] bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-2xl py-2 px-6' 
+          : 'top-6 w-[98%] md:w-[90%] lg:w-[85%] bg-white/40 dark:bg-slate-900/40 backdrop-blur-md py-3 px-6'
         }`}
       >
-          {/* LOGO */}
+          {/* LOGO with Glowing Animation */}
           <a href="#home" onClick={(e) => handleLinkClick(e, '#home')} className="relative flex items-center gap-2 group shrink-0">
              <div className="relative">
-                <Sparkles className="text-purple-500 animate-pulse" size={20} />
+                {/* 🔥 Icon Updated with Glow Shadow */}
+                <Sparkles className="text-fuchsia-500 animate-spin-slow filter drop-shadow-[0_0_8px_rgba(217,70,239,0.5)]" size={20} />
              </div>
-             <span className="hidden text-xl font-bold text-transparent font-signature bg-gradient-to-r from-slate-800 via-purple-600 to-blue-600 dark:from-white dark:via-purple-400 dark:to-blue-400 bg-clip-text sm:block">
-                Mishu
+             
+             {/* 🔥 Animated Name Logic (Updated with Vibrant Colors) */}
+             <span className="hidden pb-1 text-lg font-bold text-transparent md:text-xl font-signature bg-gradient-to-r from-cyan-500 via-fuchsia-500 to-yellow-500 dark:from-cyan-400 dark:via-fuchsia-400 dark:to-yellow-300 bg-clip-text sm:block whitespace-nowrap animate-text-flow">
+                Rahim Saroar Mishu
              </span>
           </a>
 
-          {/* DESKTOP MENU (Compact) */}
+          {/* DESKTOP MENU */}
           <div className="items-center hidden gap-1 lg:flex">
             <button onClick={onOpenGallery} className="p-2 text-purple-600 transition-all rounded-full dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/30" title="Photos">
               <Camera size={18} />
@@ -99,7 +102,7 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                   ${link.isSpecial 
                     ? 'px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-600/10 to-cyan-400/10 border border-blue-600/20 text-blue-700 dark:text-cyan-400 font-bold text-xs' 
                     : 'text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 px-3 py-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-all'}
-                  flex items-center gap-1.5
+                  flex items-center gap-1.5 whitespace-nowrap
               `}>
                   {link.label}
               </a>
@@ -113,29 +116,28 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
           </div>
           
           {/* Right Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 shrink-0">
               <div className="origin-right scale-90">
                 <ThemeToggle isDark={isDarkMode} toggleTheme={toggleTheme} />
               </div>
               
-              <a href="/resume.pdf" target="_blank" download className="hidden sm:block px-4 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold rounded-full hover:shadow-lg hover:scale-105 transition-all">
+              <a href="/resume.pdf" target="_blank" download className="hidden sm:block px-4 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold rounded-full hover:shadow-lg hover:scale-105 transition-all whitespace-nowrap">
                 Resume
               </a>
 
-              {/* Mobile Menu Toggle Button */}
+              {/* Mobile Menu Toggle */}
               <button onClick={() => setIsOpen(!isOpen)} className="p-2 transition-transform lg:hidden text-slate-800 dark:text-white active:scale-90">
                {isOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
           </div>
       </nav>
 
-      {/* ================= 🔥 MOBILE MENU OVERLAY (Updated with Widgets) 🔥 ================= */}
+      {/* Mobile Overlay */}
       <div 
         className={`fixed inset-0 z-[40] bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-3xl transition-all duration-500 lg:hidden flex flex-col px-6 overflow-y-auto no-scrollbar pb-20
         ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
         style={{ paddingTop: '100px' }}
       >
-          {/* Menu Links */}
           <div className="relative z-10 flex flex-col w-full max-w-md gap-3 mx-auto">
             {navLinks.map((link, idx) => (
               <a 
@@ -156,22 +158,19 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
             ))}
           </div>
 
-          {/* 🔥 WIDGET GRID (Tools, Gallery, Secret Vault) 🔥 */}
+          {/* Widget Grid */}
           <div className={`grid grid-cols-2 gap-3 mt-6 w-full max-w-md mx-auto relative z-10 transition-all duration-500 delay-300 ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
               
-              {/* Gallery Widget */}
               <button onClick={() => { onOpenGallery(); setIsOpen(false); }} className="flex flex-col items-center justify-center p-4 transition-all border border-purple-100 bg-purple-50 dark:bg-slate-800 dark:border-slate-700 rounded-2xl active:scale-95">
                 <div className="p-3 mb-2 text-purple-600 bg-white rounded-full shadow-sm dark:bg-slate-900"><Camera size={20} /></div>
                 <span className="text-sm font-bold text-slate-700 dark:text-slate-200">Gallery</span>
               </button>
 
-              {/* Tools Widget */}
               <button onClick={() => { onOpenTools(); setIsOpen(false); }} className="flex flex-col items-center justify-center p-4 transition-all border border-blue-100 bg-blue-50 dark:bg-slate-800 dark:border-slate-700 rounded-2xl active:scale-95">
                 <div className="p-3 mb-2 text-blue-600 bg-white rounded-full shadow-sm dark:bg-slate-900"><Wrench size={20} /></div>
                 <span className="text-sm font-bold text-slate-700 dark:text-slate-200">Tools</span>
               </button>
 
-              {/* Secret Vault Widget */}
               <button onClick={triggerSecretVault} className="flex items-center justify-between col-span-2 p-4 transition-all border shadow-lg bg-slate-900 dark:bg-black border-slate-700 rounded-2xl active:scale-95 group">
                  <div className="flex items-center gap-3">
                     <div className="p-2 text-pink-500 transition-colors rounded-lg bg-slate-800 group-hover:text-white group-hover:bg-pink-500"><Lock size={18} /></div>
@@ -183,7 +182,6 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
               </button>
 
-              {/* Resume Button */}
               <a href="/resume.pdf" download className="col-span-2 py-3 font-bold text-center text-white transition-transform shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl active:scale-95">
                   Download Resume
               </a>

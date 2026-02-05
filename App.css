@@ -1,0 +1,23 @@
+/* src/index.css */
+
+/* 🔥 New Glowing Text Animation */
+@keyframes text-glow-flow {
+  0%, 100% {
+    background-position: 0% 50%;
+    /* স্বাভাবিক উজ্জ্বলতা এবং হালকা গ্লো */
+    filter: brightness(100%) drop-shadow(0 0 2px rgba(168, 85, 247, 0.4));
+  }
+  50% {
+    background-position: 100% 50%;
+    /* বেশি উজ্জ্বলতা এবং ছড়িয়ে পড়া গ্লো */
+    filter: brightness(130%) drop-shadow(0 0 10px rgba(236, 72, 153, 0.7));
+  }
+}
+
+.animate-text-flow {
+  background-size: 200% auto;
+  /* নতুন অ্যানিমেশন নাম ব্যবহার করা হয়েছে */
+  animation: text-glow-flow 3s linear infinite;
+  /* গ্লো ইফেক্ট ভালোভাবে দেখানোর জন্য */
+  will-change: background-position, filter;
+}
