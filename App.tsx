@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { X, Quote } from 'lucide-react';
+import { X } from 'lucide-react';
 
 // Components Imports
 import AppNavbar from './components/AppNavbar';
 import Hero from './components/Hero';
 import TechMarquee from './components/TechMarquee';
 import Projects from './components/Projects';
-import Achievements from './components/Achievements';
-import Certifications from './components/Certifications';
+// Achievements & Certifications রিমুভ করা হয়েছে
 import About from './components/About';
 import Journey from './components/Journey';
 import Contact from './components/Contact';
@@ -17,11 +16,11 @@ import FacebookFeed from './components/FacebookFeed';
 import Resources from './components/Resources';
 import PhotoGallery from './components/PhotoGallery';
 import FeedbackSlider from './components/FeedbackSlider';
+import FeedbackList from './components/FeedbackList';
 
-// 🔥 Animation Component Import
 import RevealOnScroll from './components/RevealOnScroll';
 
-// Special & Utility Components
+// Utilities
 import Preloader from './components/Preloader';
 import ContextMenu from './components/ContextMenu';
 import NoiseOverlay from './components/NoiseOverlay';
@@ -34,20 +33,9 @@ import NetworkStatus from './components/NetworkStatus';
 import SecretVault from './components/SecretVault';
 import MobilePremiumFeatures from './components/MobilePremiumFeatures';
 import DynamicIsland from './components/DynamicIsland';
-// VoiceControl এখান থেকে সরানো হয়েছে কারণ এটি এখন FloatingDock এর ভেতরে আছে
-// 🔥 নতুন ইমপোর্ট
 import BatteryOptimizer from './components/BatteryOptimizer';
 
-// 🔥 Auth Provider Import (NEW Update)
 import { AuthProvider } from './context/AuthContext';
-
-// ফিডব্যাক টাইপ ডিফিনিশন
-interface Feedback {
-  name: string;
-  rating: number;
-  label: string;
-  date: string;
-}
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -56,10 +44,6 @@ const App: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   
-  // 🔥 ফিডব্যাক স্টেট
-  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
-
-  // ডার্ক মোড এবং ফিডব্যাক লোড করা
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme');
@@ -78,26 +62,13 @@ const App: React.FC = () => {
       localStorage.setItem('theme', 'light');
     }
     
-    // 📥 লোড ফিডব্যাক ফ্রম লোকাল স্টোরেজ
-    const savedFeedbacks = localStorage.getItem('user_feedbacks');
-    if (savedFeedbacks) {
-      try {
-        setFeedbacks(JSON.parse(savedFeedbacks));
-      } catch (error) {
-        console.error("Failed to parse feedbacks:", error);
-      }
-    }
-
-    // 🔥 Global Haptic Feedback Handler (New Addition)
     const handleGlobalClick = () => {
         if (typeof navigator !== 'undefined' && navigator.vibrate) {
-          navigator.vibrate(5); // একদম হালকা একটা টিক শব্দ/ফিল হবে
+          navigator.vibrate(5);
         }
       };
   
       document.addEventListener('click', handleGlobalClick);
-      
-      // Cleanup function
       return () => {
         document.removeEventListener('click', handleGlobalClick);
       };
@@ -106,19 +77,10 @@ const App: React.FC = () => {
 
   const toggleTheme = () => setIsDarkMode((prev) => !prev);
 
-  // 💾 নতুন ফিডব্যাক সেভ করার ফাংশন
   const handleNewFeedback = (data: { name: string; rating: number; label: string }) => {
-    const newFeedback: Feedback = {
-      ...data,
-      date: new Date().toLocaleDateString()
-    };
-    
-    const updatedList = [newFeedback, ...feedbacks]; // নতুনটা সবার উপরে
-    setFeedbacks(updatedList);
-    localStorage.setItem('user_feedbacks', JSON.stringify(updatedList));
+    console.log("New Feedback Submitted:", data);
   };
 
-  // Keyboard Shortcuts Handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
@@ -158,33 +120,23 @@ const App: React.FC = () => {
   }, []); 
 
   return (
-    // 🔥 AuthProvider দিয়ে পুরো অ্যাপ র‍্যাপ করা হলো
     <AuthProvider>
       <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
         
-        {/* 🔥 Secret Vault */}
         <SecretVault />
-        
         <MobilePremiumFeatures />
-        
-        {/* VoiceControl এখানে দরকার নেই কারণ এটি এখন FloatingDock এর ভেতরে */}
-        
-        <DynamicIsland /> {/* 🔥 আইফোন স্টাইল নোটিফিকেশন */}
+        <DynamicIsland />
 
-        {/* Utilities */}
         <DynamicTitle />
         <NetworkStatus />
         <ContextMenu />
         <NoiseOverlay />
-        {/* 🔥 Battery Optimizer এখানে বসানো হয়েছে */}
         <BatteryOptimizer isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
         
-        {/* 🔥 পপ-আপ ফিডব্যাক স্লাইডার */}
         <FeedbackSlider onSubmit={handleNewFeedback} />
 
         {isLoading && <Preloader onFinish={() => setIsLoading(false)} />}
 
-        {/* মেইন কন্টেন্ট র‍্যাপারে z-index দেওয়া হলো যাতে টিউবগুলো নিচে থাকে */}
         <div 
           className={`transition-opacity duration-1000 ease-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}
           style={{ position: 'relative', zIndex: 10 }}
@@ -197,14 +149,10 @@ const App: React.FC = () => {
             onOpenGallery={() => setIsGalleryOpen(true)}
           />
           
-          {/* Hero Section */}
           <Hero />
           <TechMarquee />
           
-          {/* 🔥 SCROLL ANIMATIONS START HERE (IDs added for Voice Control) */}
-          
           <RevealOnScroll>
-            {/* 👇 id="about" যুক্ত করা হয়েছে */}
             <section id="about">
               <About />
             </section>
@@ -217,7 +165,6 @@ const App: React.FC = () => {
           </RevealOnScroll>
 
           <RevealOnScroll>
-            {/* 👇 id="resources" যুক্ত করা হয়েছে */}
             <section id="resources">
               <Resources />
             </section>
@@ -227,85 +174,30 @@ const App: React.FC = () => {
             <FacebookFeed />
           </RevealOnScroll>
           
-          <RevealOnScroll>
-            {/* 👇 id="achievements" যুক্ত করা হয়েছে */}
-            <section id="achievements">
-              <Achievements />
-            </section>
-          </RevealOnScroll>
+          {/* ❌ Achievements & Certifications সেকশন এখান থেকে মুছে ফেলা হয়েছে */}
 
           <RevealOnScroll>
-            {/* 👇 id="certifications" যুক্ত করা হয়েছে */}
-            <section id="certifications">
-              <Certifications />
-            </section>
-          </RevealOnScroll>
-
-          <RevealOnScroll>
-            {/* 👇 id="journey" যুক্ত করা হয়েছে */}
             <section id="journey">
               <Journey />
             </section>
           </RevealOnScroll>
 
           <RevealOnScroll>
-            {/* 👇 id="contact" যুক্ত করা হয়েছে */}
             <section id="contact">
               <Contact />
             </section>
           </RevealOnScroll>
 
-          {/* 🔥 SAVED FEEDBACKS SECTION (ANIMATED) */}
-          {feedbacks.length > 0 && (
-            <RevealOnScroll>
-              <section className="py-16 border-t bg-slate-50 dark:bg-slate-800/30 border-slate-200 dark:border-slate-800">
-                <div className="max-w-6xl px-4 mx-auto">
-                  <div className="mb-10 text-center">
-                    <h2 className="mb-3 text-3xl font-bold">Community Love 💖</h2>
-                    <p className="text-slate-500">What visitors are saying about this portfolio</p>
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {feedbacks.map((fb, idx) => (
-                      <div key={idx} className="p-6 transition-transform bg-white border shadow-sm dark:bg-slate-800 rounded-2xl border-slate-100 dark:border-slate-700 hover:-translate-y-1">
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="p-3 text-blue-500 rounded-full bg-blue-50 dark:bg-slate-700">
-                            <Quote size={20} />
-                          </div>
-                          <span className="font-mono text-xs text-slate-400">{fb.date}</span>
-                        </div>
-                        
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-2xl font-bold">{fb.rating === 5 ? '🤩' : fb.rating === 4 ? '😄' : '🙂'}</span>
-                          <span className="text-lg font-bold">{fb.label}</span>
-                        </div>
-                        
-                        <div className="w-full h-1 mb-4 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-                          <div
-                            className="h-full bg-blue-500 rounded-full"
-                            style={{ width: `${(fb.rating / 5) * 100}%` }}
-                          ></div>
-                        </div>
-
-                        <p className="font-semibold text-slate-700 dark:text-slate-300">
-                          — {fb.name}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </section>
-            </RevealOnScroll>
-          )}
+          <div id="feedback">
+             <FeedbackList />
+          </div>
 
           <Footer />
 
-          {/* Floating Elements */}
           <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
           <MusicPlayer isPlaying={isMusicPlaying} togglePlay={() => setIsMusicPlaying(!isMusicPlaying)} />
           <ScrollProgressBtn />
           
-          {/* 🔥 FloatingDock আপডেট: toggleTheme পাস করা হয়েছে */}
           <FloatingDock 
             toggleChat={() => setIsChatOpen(!isChatOpen)} 
             toggleMusic={() => setIsMusicPlaying(!isMusicPlaying)}

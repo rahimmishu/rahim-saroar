@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"; // ✅ ১. এটি যোগ করুন
 
 // 🔥 আপনার Firebase কনফিগ (আপনার স্ক্রিনশট থেকে নেওয়া)
 const firebaseConfig = {
@@ -17,3 +18,4 @@ const app = initializeApp(firebaseConfig);
 
 // 🔥 অথেন্টিকেশন এক্সপোর্ট করা (যাতে অ্যাপের সব জায়গায় লগইন কাজ করে)
 export const auth = getAuth(app);
+export const db = getFirestore(app); // ✅ ২. ডেটাবেস এক্সপোর্ট করুন

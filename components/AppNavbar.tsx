@@ -24,7 +24,6 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
     { label: 'Home', href: '#home', icon: <Home size={18} /> },
     { label: 'Projects', href: '#projects', icon: <Briefcase size={18} /> },
     { label: 'Resources', href: '#resources', isSpecial: true, icon: <BookOpen size={18} /> }, 
-    { label: 'Certifications', href: '#certifications', icon: <Award size={18} /> },
     { label: 'About', href: '#about', icon: <User size={18} /> },
     { label: 'Contact', href: '#contact', icon: <Mail size={18} /> },
   ];

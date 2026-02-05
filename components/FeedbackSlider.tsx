@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Angry, Frown, Meh, Smile, Star, CheckCircle, X, User } from 'lucide-react';
+import { Angry, Frown, Meh, Smile, Star, CheckCircle, X, User, Loader2 } from 'lucide-react';
+import { db } from "../firebase"; // ✅ Firebase ডেটাবেস ইম্পোর্ট
+import { collection, addDoc, serverTimestamp } from "firebase/firestore"; // ✅ ফায়ারবেস ফাংশন
 
 // Mood Configuration
 const moodConfig: any = {
@@ -11,7 +13,7 @@ const moodConfig: any = {
 };
 
 interface FeedbackSliderProps {
-  onSubmit: (data: { name: string; rating: number; label: string }) => void;
+  onSubmit?: (data: { name: string; rating: number; label: string }) => void;
 }
 
 const FeedbackSlider: React.FC<FeedbackSliderProps> = ({ onSubmit }) => {
@@ -19,9 +21,9 @@ const FeedbackSlider: React.FC<FeedbackSliderProps> = ({ onSubmit }) => {
   const [name, setName] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false); // ✅ লোডিং স্টেট যোগ করা হয়েছে
 
   // 🔥 5 মিনিট (300,000 ms) পর পপ-আপ চালু হবে
-  // টেস্ট করার জন্য 3000 (৩ সেকেন্ড) দিয়ে দেখতে পারেন
   useEffect(() => {
     const timer = setTimeout(() => {
       // যদি আগে সাবমিট না করে থাকে, তবেই দেখাবে
@@ -29,7 +31,7 @@ const FeedbackSlider: React.FC<FeedbackSliderProps> = ({ onSubmit }) => {
       if (!alreadySubmitted) {
         setIsVisible(true);
       }
-    }, 300000); // 300000 ms = 5 minutes
+    }, 300000); // 5 minutes
 
     return () => clearTimeout(timer);
   }, []);
@@ -45,23 +47,42 @@ const FeedbackSlider: React.FC<FeedbackSliderProps> = ({ onSubmit }) => {
   const level = getLevel(value);
   const currentMood = moodConfig[level];
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name.trim()) return alert("Please enter your name!");
     
-    const feedbackData = {
-      name: name,
-      rating: level,
-      label: currentMood.label
-    };
+    setLoading(true); // লোডিং শুরু
 
-    onSubmit(feedbackData);
-    setIsSubmitted(true);
-    
-    // লোকাল স্টোরেজে ফ্ল্যাগ সেট করা যাতে বারবার পপ-আপ না আসে
-    localStorage.setItem('feedback_submitted', 'true');
-    
-    // ২ সেকেন্ড পর অটোমেটিক বন্ধ হবে
-    setTimeout(() => setIsVisible(false), 2500);
+    try {
+      // ✅ ফায়ারবেসে ডাটা সেভ করা হচ্ছে
+      await addDoc(collection(db, "feedbacks"), {
+        name: name,
+        rating: level,          // 1 থেকে 5 এর মধ্যে রেটিং
+        ratingText: currentMood.label, // যেমন: "Good", "Excellent!"
+        createdAt: serverTimestamp(),  // সময়
+      });
+
+      // সফল হলে
+      setIsSubmitted(true);
+      localStorage.setItem('feedback_submitted', 'true');
+      
+      // প্যারেন্ট কম্পোনেন্টকে জানানো (যদি দরকার হয়)
+      if (onSubmit) {
+        onSubmit({
+          name: name,
+          rating: level,
+          label: currentMood.label
+        });
+      }
+      
+      // ২.৫ সেকেন্ড পর অটোমেটিক বন্ধ হবে
+      setTimeout(() => setIsVisible(false), 2500);
+
+    } catch (error) {
+      console.error("Error saving feedback:", error);
+      alert("Something went wrong! Please try again.");
+    }
+
+    setLoading(false); // লোডিং শেষ
   };
 
   if (!isVisible) return null;
@@ -105,7 +126,7 @@ const FeedbackSlider: React.FC<FeedbackSliderProps> = ({ onSubmit }) => {
                 placeholder="Enter your name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-700/50 border-none outline-none focus:ring-2 focus:ring-[var(--theme-color)] transition-all dark:text-white"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-700/50 border-none outline-none focus:ring-2 focus:ring-[var(--theme-color)] transition-all dark:text-white placeholder-slate-400"
               />
             </div>
 
@@ -120,8 +141,13 @@ const FeedbackSlider: React.FC<FeedbackSliderProps> = ({ onSubmit }) => {
               />
             </div>
 
-            <button type="button" className="submit-btn" onClick={handleSubmit}>
-              Share Feedback
+            <button 
+              type="button" 
+              className="flex items-center justify-center gap-2 submit-btn disabled:opacity-70 disabled:cursor-not-allowed" 
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? <Loader2 className="animate-spin" size={20} /> : "Share Feedback"}
             </button>
           </div>
         ) : (
