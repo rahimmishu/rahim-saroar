@@ -3,7 +3,7 @@ import emailjs from '@emailjs/browser';
 import { Mail, Phone, MapPin, Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 // ------------------------------------------
-// 1. Social Links Configuration (আপনার দেওয়া ডাটা)
+// Social Links Configuration
 // ------------------------------------------
 interface SocialLink {
   name: string;
@@ -36,27 +36,6 @@ const SOCIAL_LINKS: SocialLink[] = [
     iconPath: "M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
   },
   {
-    name: "Telegram",
-    url: "https://t.me/rahim_saroar_mishu",
-    colorClass: "hover:text-sky-500",
-    viewBox: "0 0 24 24",
-    iconPath: "M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"
-  },
-  {
-    name: "Threads",
-    url: "https://www.threads.net/@rahim_saroar_mishu",
-    colorClass: "hover:text-white",
-    viewBox: "0 0 24 24",
-    iconPath: "M17.74 24.245C13.29 24.245 12 21.001 12 18.026V16.81C12 16.533 12.235 16.307 12.523 16.307H14.125C14.413 16.307 14.648 16.533 14.648 16.81V18.026C14.648 20.312 15.485 21.758 17.74 21.758C19.866 21.758 20.57 20.218 20.57 18.736V16.273C19.92 16.85 18.913 17.29 17.765 17.29C14.773 17.29 12.13 15.003 12.13 11.52C12.13 8.01 14.773 5.75 17.765 5.75C18.913 5.75 19.92 6.189 20.57 6.767V6.023C20.57 5.746 20.806 5.52 21.094 5.52H22.695C22.983 5.52 23.218 5.746 23.218 6.023V18.736C23.218 21.65 21.468 24.245 17.74 24.245ZM17.765 8.169C16.143 8.169 14.778 9.387 14.778 11.52C14.778 13.626 16.143 14.871 17.765 14.871C19.362 14.871 20.57 13.626 20.57 11.52C20.57 9.387 19.362 8.169 17.765 8.169ZM17.74 0.25C8.085 0.25 0.25 8.085 0.25 17.74C0.25 27.395 8.085 35.23 17.74 35.23C27.395 35.23 35.23 27.395 35.23 17.74C35.23 8.085 27.395 0.25 17.74 0.25Z"
-  },
-  {
-    name: "TikTok",
-    url: "https://www.tiktok.com/@rhythm_of_peace",
-    colorClass: "hover:text-pink-500",
-    viewBox: "0 0 24 24",
-    iconPath: "M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.35-1.11 1.02-1.19 1.75-.24 1.33.24 2.8 1.37 3.65.86.68 2.05.8 3.1.51 1.02-.32 1.83-1.19 1.83-2.3 0-2.35 0-4.69.01-7.04.01-2.48-.01-4.96.01-7.44h4.05Z"
-  },
-  {
     name: "Facebook",
     url: "https://www.facebook.com/rahimsaroar",
     colorClass: "hover:text-blue-600",
@@ -69,6 +48,20 @@ const SOCIAL_LINKS: SocialLink[] = [
     colorClass: "hover:text-green-500",
     viewBox: "0 0 24 24",
     iconPath: "M.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+  },
+  {
+    name: "Telegram",
+    url: "https://t.me/rahim_saroar_mishu",
+    colorClass: "hover:text-sky-500",
+    viewBox: "0 0 24 24",
+    iconPath: "M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"
+  },
+  {
+    name: "TikTok",
+    url: "https://www.tiktok.com/@rhythm_of_peace",
+    colorClass: "hover:text-pink-500",
+    viewBox: "0 0 24 24",
+    iconPath: "M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.35-1.11 1.02-1.19 1.75-.24 1.33.24 2.8 1.37 3.65.86.68 2.05.8 3.1.51 1.02-.32 1.83-1.19 1.83-2.3 0-2.35 0-4.69.01-7.04.01-2.48-.01-4.96.01-7.44h4.05Z"
   }
 ];
 
@@ -77,10 +70,9 @@ const Contact: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  // 🔴 আপনার EmailJS এর আইডিগুলো এখানে বসাবেন
-  const SERVICE_ID = "service_8d5vc4m";   // যেমন: service_xyz
-  const TEMPLATE_ID = "template_tk3oc0r"; // যেমন: template_abc
-  const PUBLIC_KEY = "venO-69iu_6ZPZi4L";   // যেমন: user_123xyz
+  const SERVICE_ID = "service_8d5vc4m"; 
+  const TEMPLATE_ID = "template_tk3oc0r"; 
+  const PUBLIC_KEY = "venO-69iu_6ZPZi4L"; 
 
   const sendEmail = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,119 +95,122 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-24 bg-slate-900 dark:bg-slate-950 text-white transition-colors duration-300 relative overflow-hidden">
-      {/* Background Ambience */}
+    // 🔥 Update 1: Reduced py-24 to py-12 for mobile
+    <section id="contact" className="relative py-12 overflow-hidden text-white transition-colors duration-300 md:py-24 bg-slate-900 dark:bg-slate-950">
       <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-500/5 blur-[100px] pointer-events-none"></div>
 
-      <div className="container mx-auto px-4 md:px-8 relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4">
+      <div className="container relative z-10 px-4 mx-auto md:px-8">
+        
+        {/* Header */}
+        <div className="mb-10 text-center md:mb-16">
+          {/* 🔥 Update 2: Reduced font size for mobile */}
+          <h2 className="mb-3 text-2xl font-extrabold text-white md:text-5xl md:mb-4">
             Let's <span className="text-blue-500">Connect</span>
           </h2>
-          <p className="text-slate-400 max-w-xl mx-auto">
+          <p className="max-w-xl mx-auto text-sm text-slate-400 md:text-base">
             Have a project in mind, want to discuss technology, or just say hi? I'm always open to new opportunities.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16 items-start">
+        <div className="grid items-start grid-cols-1 gap-8 mb-10 lg:grid-cols-2 md:gap-12 md:mb-16">
           
-          {/* 2. Left Side: Contact Info (Vertical Stack) */}
-          <div className="flex flex-col gap-6">
+          {/* 2. Left Side: Contact Info (COMPACT FOR MOBILE) */}
+          <div className="flex flex-col gap-4 md:gap-6">
              {/* Address */}
-             <div className="bg-slate-800 dark:bg-slate-900 p-6 rounded-2xl flex items-center gap-6 border border-slate-700 dark:border-slate-800 hover:border-blue-500/50 transition-colors">
-                <div className="w-14 h-14 bg-slate-900 dark:bg-slate-950 rounded-full flex items-center justify-center text-blue-500 shrink-0">
-                  <MapPin size={24} />
+             {/* 🔥 Update 3: p-4 and smaller icons for mobile */}
+             <div className="flex items-center gap-4 p-4 transition-colors border bg-slate-800 dark:bg-slate-900 md:p-6 rounded-2xl md:gap-6 border-slate-700 dark:border-slate-800 hover:border-blue-500/50">
+                <div className="flex items-center justify-center w-10 h-10 text-blue-500 rounded-full md:w-14 md:h-14 bg-slate-900 dark:bg-slate-950 shrink-0">
+                  <MapPin size={20} className="md:w-6 md:h-6" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-white">Address</h3>
-                  <p className="text-slate-400">Joypurhat, Bangladesh</p>
+                  <h3 className="text-base font-bold text-white md:text-lg">Address</h3>
+                  <p className="text-sm text-slate-400 md:text-base">Joypurhat, Bangladesh</p>
                 </div>
              </div>
 
              {/* Phone */}
-             <a href="tel:+8801749896809" className="bg-slate-800 dark:bg-slate-900 p-6 rounded-2xl flex items-center gap-6 border border-slate-700 dark:border-slate-800 hover:border-green-500/50 transition-colors group">
-                <div className="w-14 h-14 bg-slate-900 dark:bg-slate-950 rounded-full flex items-center justify-center text-green-500 group-hover:scale-110 transition-transform shrink-0">
-                  <Phone size={24} />
+             <a href="tel:+8801749896809" className="flex items-center gap-4 p-4 transition-colors border bg-slate-800 dark:bg-slate-900 md:p-6 rounded-2xl md:gap-6 border-slate-700 dark:border-slate-800 hover:border-green-500/50 group">
+                <div className="flex items-center justify-center w-10 h-10 text-green-500 transition-transform rounded-full md:w-14 md:h-14 bg-slate-900 dark:bg-slate-950 group-hover:scale-110 shrink-0">
+                  <Phone size={20} className="md:w-6 md:h-6" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-white">Phone</h3>
-                  <p className="text-slate-400 font-mono">+880 1749-896809</p>
+                  <h3 className="text-base font-bold text-white md:text-lg">Phone</h3>
+                  <p className="font-mono text-sm text-slate-400 md:text-base">+880 1749-896809</p>
                 </div>
              </a>
 
              {/* Email */}
-             <a href="mailto:rahimsaroarmishu@gmail.com" className="bg-slate-800 dark:bg-slate-900 p-6 rounded-2xl flex items-center gap-6 border border-slate-700 dark:border-slate-800 hover:border-orange-500/50 transition-colors group">
-                <div className="w-14 h-14 bg-slate-900 dark:bg-slate-950 rounded-full flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform shrink-0">
-                  <Mail size={24} />
+             <a href="mailto:rahimsaroarmishu@gmail.com" className="flex items-center gap-4 p-4 transition-colors border bg-slate-800 dark:bg-slate-900 md:p-6 rounded-2xl md:gap-6 border-slate-700 dark:border-slate-800 hover:border-orange-500/50 group">
+                <div className="flex items-center justify-center w-10 h-10 text-orange-500 transition-transform rounded-full md:w-14 md:h-14 bg-slate-900 dark:bg-slate-950 group-hover:scale-110 shrink-0">
+                  <Mail size={20} className="md:w-6 md:h-6" />
                 </div>
-                <div>
-                  <h3 className="font-bold text-lg text-white">Email</h3>
-                  <p className="text-slate-400 text-sm break-all">rahimsaroarmishu@gmail.com</p>
+                <div className="min-w-0">
+                  <h3 className="text-base font-bold text-white md:text-lg">Email</h3>
+                  <p className="text-xs break-all text-slate-400 md:text-sm">rahimsaroarmishu@gmail.com</p>
                 </div>
              </a>
           </div>
 
-          {/* 3. Right Side: Message Form (New Feature) */}
-          <div className="bg-slate-800 dark:bg-slate-900 p-8 rounded-2xl border border-slate-700 dark:border-slate-800 shadow-2xl">
-            <h3 className="text-2xl font-bold text-white mb-6">Send a Message</h3>
-            <form ref={formRef} onSubmit={sendEmail} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* 3. Right Side: Message Form (COMPACT FOR MOBILE) */}
+          <div className="p-5 border shadow-2xl bg-slate-800 dark:bg-slate-900 md:p-8 rounded-2xl border-slate-700 dark:border-slate-800">
+            <h3 className="mb-4 text-xl font-bold text-white md:text-2xl md:mb-6">Send a Message</h3>
+            <form ref={formRef} onSubmit={sendEmail} className="space-y-4 md:space-y-6">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
                     <div className="space-y-2">
-                        <label className="text-sm text-slate-400 font-medium">Your Name</label>
+                        <label className="text-sm font-medium text-slate-400">Your Name</label>
                         <input 
                             type="text" 
                             name="user_name" 
                             required
                             placeholder="John Doe"
-                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 md:py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm md:text-base"
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm text-slate-400 font-medium">Your Email</label>
+                        <label className="text-sm font-medium text-slate-400">Your Email</label>
                         <input 
                             type="email" 
                             name="user_email" 
                             required
                             placeholder="john@example.com"
-                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 md:py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm md:text-base"
                         />
                     </div>
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm text-slate-400 font-medium">Message</label>
+                    <label className="text-sm font-medium text-slate-400">Message</label>
                     <textarea 
                         name="message" 
                         rows={4} 
                         required
                         placeholder="Hello, I'd like to talk about..."
-                        className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"
+                        className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 md:py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none text-sm md:text-base"
                     ></textarea>
                 </div>
 
                 <button 
                     type="submit" 
                     disabled={loading}
-                    className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center w-full gap-2 py-3 text-sm font-bold text-white transition-all bg-blue-600 rounded-lg md:py-4 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed md:text-base"
                 >
                     {loading ? (
-                        <>Sending <Loader2 size={20} className="animate-spin" /></>
+                        <>Sending <Loader2 size={18} className="animate-spin" /></>
                     ) : (
-                        <>Send Message <Send size={20} /></>
+                        <>Send Message <Send size={18} /></>
                     )}
                 </button>
 
-                {/* Status Messages */}
                 {status === 'success' && (
-                    <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg flex items-center gap-3 text-green-400 animate-in fade-in slide-in-from-bottom-2">
-                        <CheckCircle size={20} />
+                    <div className="flex items-center gap-3 p-3 text-sm text-green-400 border rounded-lg md:p-4 bg-green-500/10 border-green-500/20 md:text-base">
+                        <CheckCircle size={18} />
                         <span>Message sent successfully! I'll reply soon.</span>
                     </div>
                 )}
                 
                 {status === 'error' && (
-                    <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3 text-red-400 animate-in fade-in slide-in-from-bottom-2">
-                        <AlertCircle size={20} />
+                    <div className="flex items-center gap-3 p-3 text-sm text-red-400 border rounded-lg md:p-4 bg-red-500/10 border-red-500/20 md:text-base">
+                        <AlertCircle size={18} />
                         <span>Something went wrong. Please check your IDs.</span>
                     </div>
                 )}
@@ -224,10 +219,11 @@ const Contact: React.FC = () => {
 
         </div>
 
-        {/* 4. Social Media Section (Exact same icons as before) */}
-        <div className="border-t border-slate-800 pt-16 text-center">
-            <h3 className="text-2xl font-bold mb-10 text-slate-200">Connect on Socials</h3>
-            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+        {/* 4. Social Media Section */}
+        <div className="pt-8 text-center border-t border-slate-800 md:pt-16">
+            <h3 className="mb-6 text-xl font-bold md:text-2xl md:mb-10 text-slate-200">Connect on Socials</h3>
+            
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-12">
                 {SOCIAL_LINKS.map((link) => (
                     <a
                         key={link.name}

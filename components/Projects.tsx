@@ -119,8 +119,8 @@ class HandDetector:
         # Initialize MediaPipe Hands Module
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(self.mode, self.maxHands, 
-                                        self.complexity, self.detectionCon, 
-                                        self.trackCon)
+                                                            self.complexity, self.detectionCon, 
+                                                            self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
         self.tipIds = [4, 8, 12, 16, 20]
         
@@ -138,7 +138,7 @@ class HandDetector:
                 if draw:
                     # Draw skeletal connections in Matrix Green
                     self.mpDraw.draw_landmarks(img, handLms, 
-                                               self.mpHands.HAND_CONNECTIONS)
+                                                              self.mpHands.HAND_CONNECTIONS)
         return img
 
     def find_position(self, img, handNo=0, draw=True):
@@ -254,26 +254,29 @@ if __name__ == "__main__":
   }, [showCodeModal]);
 
   return (
-    <section id="projects" className="relative py-24 transition-colors duration-300 bg-slate-50 dark:bg-slate-800">
+    // 🔥 Update 1: Reduced py-24 to py-12 for mobile
+    <section id="projects" className="relative py-12 transition-colors duration-300 md:py-24 bg-slate-50 dark:bg-slate-800">
       <div className="container px-4 mx-auto md:px-8">
-        <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-extrabold md:text-4xl text-slate-900 dark:text-white">Featured Projects</h2>
-          <p className="max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-400">
+        {/* 🔥 Update 2: Reduced margins and font sizes for mobile */}
+        <div className="mb-10 text-center md:mb-16">
+          <h2 className="mb-4 text-2xl font-extrabold md:text-4xl text-slate-900 dark:text-white">Featured Projects</h2>
+          <p className="max-w-2xl mx-auto text-base md:text-lg text-slate-600 dark:text-slate-400">
              A showcase of my technical journey through AI, IoT, and Content Creation.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-4">
           {PROJECTS.map((project) => (
             
-            // 🔥 UPDATE: SpotlightCard এর পরিবর্তে Tilt3D ব্যবহার করা হয়েছে
+            // 🔥 UPDATE: SpotlightCard এর পরিবর্তে Tilt3D ব্যবহার করা হয়েছে
             <Tilt3D key={project.id} className="h-full">
               <div className="relative flex flex-col h-full overflow-hidden transition-all duration-300 bg-white shadow-sm dark:bg-slate-900 rounded-2xl group hover:shadow-xl dark:border-slate-700">
                 
                 {/* ✨ Shimmer Effect Layer */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none z-10" />
 
-                <div className="relative h-48 overflow-hidden bg-slate-200 dark:bg-slate-800">
+                {/* 🔥 Update 3: Reduced image height to h-40 for mobile */}
+                <div className="relative h-40 overflow-hidden md:h-48 bg-slate-200 dark:bg-slate-800">
                   <img 
                     src={project.image} 
                     alt={project.title} 
@@ -282,7 +285,8 @@ if __name__ == "__main__":
                   <div className="absolute inset-0 transition-colors bg-black/10 group-hover:bg-transparent" />
                 </div>
 
-                <div className="relative z-20 flex flex-col flex-grow p-6">
+                {/* 🔥 Update 4: Reduced padding to p-5 for mobile */}
+                <div className="relative z-20 flex flex-col flex-grow p-5 md:p-6">
                   <h3 className="mb-2 text-lg font-bold transition-colors text-slate-900 dark:text-white group-hover:text-primary line-clamp-1">
                     {project.title}
                   </h3>
