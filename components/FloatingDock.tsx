@@ -32,7 +32,6 @@ const FloatingDock: React.FC<FloatingDockProps> = ({ toggleChat, toggleMusic, to
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 🔥 Dock Items Configuration
   const dockItems = [
     {
       id: "home",
@@ -50,7 +49,6 @@ const FloatingDock: React.FC<FloatingDockProps> = ({ toggleChat, toggleMusic, to
       bgGlow: "group-hover:bg-purple-500/20",
       action: toggleChat
     },
-    // 🔥 Voice Control Integrated
     {
       id: "voice",
       label: "Voice",
@@ -62,7 +60,7 @@ const FloatingDock: React.FC<FloatingDockProps> = ({ toggleChat, toggleMusic, to
           toggleMusic={toggleMusic}
         />
       ),
-      color: "hover:text-red-400", // মাইকের জন্য লাল আভা
+      color: "hover:text-red-400", 
       bgGlow: "group-hover:bg-red-500/20",
     },
     {
@@ -95,32 +93,35 @@ const FloatingDock: React.FC<FloatingDockProps> = ({ toggleChat, toggleMusic, to
         opacity: isVisible ? 1 : 0 
       }}
       transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
-      className="fixed bottom-6 left-1/2 z-[9999] touch-none"
+      
+      // 🔥 ফিক্স: মোবাইলের জন্য scale-[0.85] এবং bottom-4
+      // ডেস্কটপে sm:scale-100 এবং bottom-6 থাকবে
+      className="fixed bottom-4 left-1/2 z-[9999] touch-none scale-[0.85] sm:scale-100 origin-bottom"
     >
       {/* Glass Container */}
-      <div className="flex items-center gap-1 px-4 py-3 border shadow-2xl sm:gap-2 bg-slate-900/80 dark:bg-black/80 backdrop-blur-2xl border-white/10 rounded-2xl shadow-black/50 ring-1 ring-white/5 cursor-grab active:cursor-grabbing">
+      {/* মোবাইলে প্যাডিং কমানো হয়েছে (p-2) */}
+      <div className="flex items-center gap-1 px-3 py-2 border shadow-2xl sm:px-4 sm:py-3 sm:gap-2 bg-slate-900/80 dark:bg-black/80 backdrop-blur-2xl border-white/10 rounded-2xl shadow-black/50 ring-1 ring-white/5 cursor-grab active:cursor-grabbing">
         
         {/* Drag Handle */}
-        <div className="mr-2 transition-colors text-slate-500 hover:text-white">
+        <div className="mr-1 transition-colors text-slate-500 hover:text-white sm:mr-2">
             <GripHorizontal size={20} />
         </div>
 
         {/* Separator */}
         <div className="w-[1px] h-6 bg-white/10 mr-1"></div>
 
-        {/* 🔥 Unified Loop for All Items */}
+        {/* Unified Loop for All Items */}
         {dockItems.map((item, index) => (
           <div
             key={item.id}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
-            // 🔥 ফিক্স: শুধু নরমাল আইকনে ক্লিক অ্যাকশন হবে, কাস্টম কম্পোনেন্টে নয়
             {...(!item.isCustom ? { onClick: item.action } : {})}
-            className={`group relative p-3 rounded-xl transition-all duration-300 ease-out flex items-center justify-center cursor-pointer
+            className={`group relative p-2 sm:p-3 rounded-xl transition-all duration-300 ease-out flex items-center justify-center cursor-pointer
               ${item.color} ${hoveredIndex === index ? 'scale-125 -translate-y-2 mx-1' : 'scale-100'}
             `}
           >
-            {/* Hover Glow Effect (সবার জন্য সেম) */}
+            {/* Hover Glow Effect */}
             <span className={`absolute inset-0 rounded-xl blur-md transition-opacity duration-300 opacity-0 group-hover:opacity-100 ${item.bgGlow}`}></span>
             
             {/* Render Icon or Custom Component */}
@@ -128,7 +129,7 @@ const FloatingDock: React.FC<FloatingDockProps> = ({ toggleChat, toggleMusic, to
               {item.isCustom ? item.component : item.icon}
             </span>
 
-            {/* Tooltip (সবার জন্য এখান থেকেই দেখাবে) */}
+            {/* Tooltip */}
             <span className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1 text-[10px] font-bold tracking-wider text-white bg-slate-800/90 backdrop-blur-md rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-90 group-hover:scale-100 shadow-xl border border-white/10 whitespace-nowrap pointer-events-none z-20">
               {item.label}
               <span className="absolute w-2 h-2 rotate-45 -translate-x-1/2 -bottom-1 left-1/2 bg-slate-800/90"></span>
@@ -147,7 +148,7 @@ const FloatingDock: React.FC<FloatingDockProps> = ({ toggleChat, toggleMusic, to
         {/* Scroll to Top */}
         <button
           onClick={scrollToTop}
-          className="relative p-3 transition-all duration-300 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 hover:scale-110 active:scale-95 group"
+          className="relative p-2 transition-all duration-300 rounded-xl sm:p-3 text-slate-400 hover:text-white hover:bg-white/10 hover:scale-110 active:scale-95 group"
         >
           <ArrowUp size={22} className="group-hover:animate-bounce" />
            <span className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1 text-[10px] font-bold text-white bg-slate-800/90 rounded-full opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">

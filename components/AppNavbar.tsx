@@ -85,8 +85,8 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
       <nav 
         className={`fixed left-1/2 -translate-x-1/2 z-[50] transition-all duration-500 ease-out border border-white/10 rounded-full flex items-center justify-between
         ${scrolled 
-          ? 'top-4 w-[95%] md:w-[85%] lg:w-[75%] bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-2xl py-2 px-6' 
-          : 'top-6 w-[98%] md:w-[90%] lg:w-[85%] bg-white/40 dark:bg-slate-900/40 backdrop-blur-md py-3 px-6'
+          ? 'top-4 w-[95%] md:w-[85%] lg:w-[75%] bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-2xl py-2 px-4 md:px-6' 
+          : 'top-6 w-[98%] md:w-[90%] lg:w-[85%] bg-white/40 dark:bg-slate-900/40 backdrop-blur-md py-3 px-4 md:px-6'
         }`}
       >
           {/* LOGO */}
@@ -95,9 +95,10 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                 <Sparkles className="text-purple-500 animate-spin-slow" size={20} />
              </div>
              
-             {/* 🔥 Animated Name Logic */}
-             <span className="hidden pb-1 text-lg font-bold text-transparent md:text-xl font-signature bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text sm:block whitespace-nowrap animate-text-flow">
-                Rahim Saroar Mishu
+             {/* 🔥 Animated Name Logic (FIXED FOR MOBILE) */}
+             {/* hidden ক্লাস সরিয়ে text-sm দেওয়া হয়েছে এবং Mishu অংশটি মোবাইলে হাইড করা হয়েছে */}
+             <span className="pb-1 text-sm font-bold text-transparent md:text-xl font-signature bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text whitespace-nowrap animate-text-flow">
+                Rahim Saroar <span className="hidden sm:inline">Mishu</span>
              </span>
           </a>
 
@@ -132,8 +133,8 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
           </div>
           
           {/* Right Actions */}
-          <div className="flex items-center gap-3 shrink-0">
-              <div className="origin-right scale-90">
+          <div className="flex items-center gap-2 md:gap-3 shrink-0">
+              <div className="origin-right scale-75 md:scale-90">
                 <ThemeToggle isDark={isDarkMode} toggleTheme={toggleTheme} />
               </div>
               
