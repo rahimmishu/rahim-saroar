@@ -3,26 +3,25 @@ import { Facebook, ExternalLink, ThumbsUp, MessageCircle, Share2 } from 'lucide-
 
 const FacebookFeed: React.FC = () => {
   
-  // ✅ পাবলিক ফোল্ডারের ছবির জন্য এভাবে লিখুন
-const PROFILE_PIC = "/fb-profile.png"; 
-  // টিপস: আপনি আপনার আসল ছবির লিংক এখানে পেস্ট করবেন।
+  // ✅ ১. প্রোফাইল পিকচার (আপনার দেওয়া পাথ)
+  const PROFILE_PIC = "/fb-profile.png"; 
 
-  // ✅ ২. আপনার পোস্টের তথ্য
+  // ✅ ২. আপনার পোস্টের তথ্য (আপনার দেওয়া বাংলা কন্টেন্ট)
   const posts = [
     {
       id: 1,
       date: "January 20, 2026",
-      text: "আলহামদুলিল্লাহ! অবশেষে আমার পার্সোনাল পোর্টফোলিও ওয়েবসাইট লাইভ হলো। React, Next.js এবং Tailwind CSS দিয়ে তৈরি। আপনাদের মতামত আশা করছি! 🚀💻",
-      image: "/portfolio.png", //
-      link: "https://www.facebook.com/rahimsaroar", // 
+      text: "আলহামদুলিল্লাহ! অবশেষে আমার পার্সোনাল পোর্টফোলিও ওয়েবসাইট লাইভ হলো। React, Next.js এবং Tailwind CSS দিয়ে তৈরি। আপনাদের মতামত আশা করছি! 🚀💻",
+      image: "/portfolio.png", 
+      link: "https://www.facebook.com/rahimsaroar",
       likes: "120",
       comments: "45"
     },
     {
       id: 2,
       date: "December 16, 2025",
-      text: "বিজয় দিবসের শুভেচ্ছা! 🇧🇩 প্রযুক্তির সাথে স্বপ্নের পথে এগিয়ে যাক বাংলাদেশ।",
-      image: "/victory.jpg", //
+      text: "বিজয় দিবসের শুভেচ্ছা! 🇧🇩 প্রযুক্তির সাথে স্বপ্নের পথে এগিয়ে যাক বাংলাদেশ।",
+      image: "/victory.jpg",
       link: "https://www.facebook.com/rahimsaroar",
       likes: "250",
       comments: "82"
@@ -31,7 +30,7 @@ const PROFILE_PIC = "/fb-profile.png";
       id: 3,
       date: "November 10, 2025",
       text: "নতুন কিছু শেখার চেষ্টা করছি... কোডিং ইজ লাভ! 💻☕ #WebDevelopment #CodingLife",
-      image: "/code-scaled.jpg", //
+      image: "/code-scaled.jpg",
       link: "https://www.facebook.com/rahimsaroar",
       likes: "120",
       comments: "12"
@@ -39,39 +38,46 @@ const PROFILE_PIC = "/fb-profile.png";
   ];
 
   return (
-    <section className="py-20 bg-slate-900 border-t border-white/5 relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
+    // 🔥 FIX: Theme based background (Light: Slate-50, Dark: Dark Blue)
+    <section className="py-20 bg-slate-50 dark:bg-[#0B1120] border-t border-slate-200 dark:border-slate-800 transition-colors duration-500 relative overflow-hidden">
+      
+      {/* Background Glow (Theme Adaptive) */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container relative z-10 px-6 mx-auto">
         
         {/* Header */}
-        <div className="flex flex-col items-center text-center mb-12">
-            <div className="p-3 bg-blue-600/20 rounded-full text-blue-500 mb-4 animate-bounce-slow">
+        <div className="flex flex-col items-center mb-12 text-center">
+            <div className="p-3 mb-4 text-blue-600 bg-blue-100 rounded-full dark:bg-blue-600/20 dark:text-blue-500 animate-bounce-slow">
                 <Facebook size={32} />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                Latest from <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Facebook</span>
+            <h2 className="mb-2 text-3xl font-extrabold md:text-5xl text-slate-900 dark:text-white">
+                Latest from <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-400">Facebook</span>
             </h2>
-            {/* ✅ নাম পরিবর্তন করা হয়েছে */}
-            <p className="text-slate-400">Follow <span className='text-blue-400 font-semibold'>Rahim Saroar</span> for daily updates</p>
+            <p className="text-slate-600 dark:text-slate-400">
+                Follow <span className='font-semibold text-blue-600 dark:text-blue-400'>Rahim Saroar</span> for daily updates
+            </p>
         </div>
 
         {/* Posts Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid gap-8 md:grid-cols-3">
           {posts.map((post) => (
-            <div key={post.id} className="bg-slate-950/50 backdrop-blur-sm border border-slate-800 rounded-2xl overflow-hidden hover:border-blue-500/40 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_30px_-10px_rgba(59,130,246,0.3)] group">
+            <div 
+              key={post.id} 
+              // 🔥 FIX: Card Styling for Light/Dark Mode
+              className="bg-white dark:bg-[#151e32] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-blue-500/40 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group"
+            >
               
               {/* Image Section */}
-              <div className="h-52 overflow-hidden bg-slate-900 relative">
+              <div className="relative overflow-hidden h-52 bg-slate-100 dark:bg-slate-900">
                 <img 
                   src={post.image} 
                   alt="Post" 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                  className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110" 
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
+                <div className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-gradient-to-t from-black/50 via-transparent to-transparent group-hover:opacity-100" />
                 
-                <a href={post.link} target="_blank" rel="noopener noreferrer" className="absolute top-4 right-4 bg-white/10 hover:bg-blue-600 text-white p-2 rounded-full backdrop-blur-md transition-colors border border-white/20">
+                <a href={post.link} target="_blank" rel="noopener noreferrer" className="absolute p-2 transition-colors rounded-full shadow-sm top-4 right-4 bg-white/90 dark:bg-black/50 hover:bg-blue-600 dark:hover:bg-blue-600 text-slate-700 dark:text-white hover:text-white backdrop-blur-md">
                     <ExternalLink size={16} />
                 </a>
               </div>
@@ -79,26 +85,28 @@ const PROFILE_PIC = "/fb-profile.png";
               {/* Content Section */}
               <div className="p-6">
                 <div className="flex items-center gap-3 mb-4">
-                    {/* ✅ আপনার প্রোফাইল পিকচার এখানে দেখাবে */}
-                    <img src={PROFILE_PIC} alt="Profile" className="w-10 h-10 rounded-full border-2 border-blue-500/30 object-cover" />
+                    {/* প্রোফাইল পিকচার */}
+                    <div className="w-10 h-10 overflow-hidden border-2 rounded-full border-slate-200 dark:border-blue-500/30">
+                        <img src={PROFILE_PIC} alt="Profile" className="object-cover w-full h-full" />
+                    </div>
                     <div>
-                        {/* ✅ নাম পরিবর্তন করা হয়েছে */}
-                        <h4 className="text-sm font-bold text-white leading-none mb-1">Rahim Saroar</h4>
-                        <span className="text-xs text-slate-500">{post.date}</span>
+                        <h4 className="mb-1 text-sm font-bold leading-none text-slate-900 dark:text-white">Rahim Saroar</h4>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">{post.date}</span>
                     </div>
                 </div>
 
-                <p className="text-slate-300 text-sm line-clamp-3 mb-6 leading-relaxed font-light">
+                {/* Post Text (Light/Dark text color fixed) */}
+                <p className="mb-6 text-sm font-normal leading-relaxed text-slate-700 dark:text-slate-300 line-clamp-3">
                   {post.text}
                 </p>
 
                 {/* Footer Stats */}
-                <div className="flex justify-between items-center pt-4 border-t border-white/5 text-slate-500 text-xs font-mono">
+                <div className="flex items-center justify-between pt-4 text-xs font-medium border-t border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400">
                     <div className="flex gap-4">
-                        <span className="flex items-center gap-1 hover:text-blue-400 transition-colors"><ThumbsUp size={14} /> {post.likes}</span>
-                        <span className="flex items-center gap-1 hover:text-blue-400 transition-colors"><MessageCircle size={14} /> {post.comments}</span>
+                        <span className="flex items-center gap-1 transition-colors hover:text-blue-600 dark:hover:text-blue-400"><ThumbsUp size={14} /> {post.likes}</span>
+                        <span className="flex items-center gap-1 transition-colors hover:text-blue-600 dark:hover:text-blue-400"><MessageCircle size={14} /> {post.comments}</span>
                     </div>
-                    <span className="flex items-center gap-1 hover:text-blue-400 transition-colors cursor-pointer"><Share2 size={14} /> Share</span>
+                    <span className="flex items-center gap-1 transition-colors cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"><Share2 size={14} /> Share</span>
                 </div>
               </div>
 
@@ -107,9 +115,9 @@ const PROFILE_PIC = "/fb-profile.png";
         </div>
 
         {/* View All Button */}
-        <div className="text-center mt-12">
+        <div className="mt-12 text-center">
             <a href="https://www.facebook.com/rahimsaroar" target="_blank" rel="noopener noreferrer" 
-               className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-full hover:shadow-lg hover:shadow-blue-500/30 transition-all active:scale-95">
+               className="inline-flex items-center gap-2 px-8 py-3 font-semibold text-white transition-all bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 hover:shadow-blue-600/30 active:scale-95">
                 Visit Facebook Profile <ExternalLink size={18} />
             </a>
         </div>

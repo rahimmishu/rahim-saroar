@@ -57,6 +57,13 @@ const SOCIAL_LINKS: SocialLink[] = [
     iconPath: "M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"
   },
   {
+    name: "Threads",
+    url: "https://www.threads.net/@rahim_saroar_mishu",
+    colorClass: "hover:text-white",
+    viewBox: "0 0 24 24",
+    iconPath: "M17.74 24.245C13.29 24.245 12 21.001 12 18.026V16.81C12 16.533 12.235 16.307 12.523 16.307H14.125C14.413 16.307 14.648 16.533 14.648 16.81V18.026C14.648 20.312 15.485 21.758 17.74 21.758C19.866 21.758 20.57 20.218 20.57 18.736V16.273C19.92 16.85 18.913 17.29 17.765 17.29C14.773 17.29 12.13 15.003 12.13 11.52C12.13 8.01 14.773 5.75 17.765 5.75C18.913 5.75 19.92 6.189 20.57 6.767V6.023C20.57 5.746 20.806 5.52 21.094 5.52H22.695C22.983 5.52 23.218 5.746 23.218 6.023V18.736C23.218 21.65 21.468 24.245 17.74 24.245ZM17.765 8.169C16.143 8.169 14.778 9.387 14.778 11.52C14.778 13.626 16.143 14.871 17.765 14.871C19.362 14.871 20.57 13.626 20.57 11.52C20.57 9.387 19.362 8.169 17.765 8.169ZM17.74 0.25C8.085 0.25 0.25 8.085 0.25 17.74C0.25 27.395 8.085 35.23 17.74 35.23C27.395 35.23 35.23 27.395 35.23 17.74C35.23 8.085 27.395 0.25 17.74 0.25Z"
+  },
+  {
     name: "TikTok",
     url: "https://www.tiktok.com/@rhythm_of_peace",
     colorClass: "hover:text-pink-500",
@@ -81,13 +88,11 @@ const Contact: React.FC = () => {
     if (formRef.current) {
       emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, PUBLIC_KEY)
         .then((result) => {
-            console.log(result.text);
             setLoading(false);
             setStatus('success');
             setTimeout(() => setStatus('idle'), 5000);
             formRef.current?.reset();
         }, (error) => {
-            console.log(error.text);
             setLoading(false);
             setStatus('error');
         });
@@ -95,122 +100,131 @@ const Contact: React.FC = () => {
   };
 
   return (
-    // 🔥 Update 1: Reduced py-24 to py-12 for mobile
-    <section id="contact" className="relative py-12 overflow-hidden text-white transition-colors duration-300 md:py-24 bg-slate-900 dark:bg-slate-950">
-      <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-500/5 blur-[100px] pointer-events-none"></div>
+    <section id="contact" className="relative py-12 overflow-hidden text-white md:py-24 bg-slate-950">
+      
+      {/* 🌌 Background Ambience (Fixed & Enhanced) */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-purple-500/10 rounded-full blur-[80px] pointer-events-none"></div>
 
       <div className="container relative z-10 px-4 mx-auto md:px-8">
         
         {/* Header */}
         <div className="mb-10 text-center md:mb-16">
-          {/* 🔥 Update 2: Reduced font size for mobile */}
-          <h2 className="mb-3 text-2xl font-extrabold text-white md:text-5xl md:mb-4">
-            Let's <span className="text-blue-500">Connect</span>
+          <h2 className="mb-3 text-3xl font-extrabold tracking-tight text-white md:text-5xl md:mb-4">
+            Let's <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Connect</span>
           </h2>
-          <p className="max-w-xl mx-auto text-sm text-slate-400 md:text-base">
+          <p className="max-w-xl mx-auto text-sm leading-relaxed text-slate-400 md:text-base">
             Have a project in mind, want to discuss technology, or just say hi? I'm always open to new opportunities.
           </p>
         </div>
 
         <div className="grid items-start grid-cols-1 gap-8 mb-10 lg:grid-cols-2 md:gap-12 md:mb-16">
           
-          {/* 2. Left Side: Contact Info (COMPACT FOR MOBILE) */}
+          {/* --------------------------------------
+             LEFT: Contact Info Cards (Glassmorphism)
+             -------------------------------------- */}
           <div className="flex flex-col gap-4 md:gap-6">
-             {/* Address */}
-             {/* 🔥 Update 3: p-4 and smaller icons for mobile */}
-             <div className="flex items-center gap-4 p-4 transition-colors border bg-slate-800 dark:bg-slate-900 md:p-6 rounded-2xl md:gap-6 border-slate-700 dark:border-slate-800 hover:border-blue-500/50">
-                <div className="flex items-center justify-center w-10 h-10 text-blue-500 rounded-full md:w-14 md:h-14 bg-slate-900 dark:bg-slate-950 shrink-0">
-                  <MapPin size={20} className="md:w-6 md:h-6" />
+             
+             {/* Address Card */}
+             <div className="flex items-center gap-5 p-5 transition-all duration-300 border shadow-lg bg-slate-900/50 backdrop-blur-md md:p-6 rounded-2xl border-slate-800 hover:border-blue-500/40 hover:bg-slate-900 group">
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)] group-hover:shadow-[0_0_20px_rgba(59,130,246,0.6)] shrink-0">
+                  <MapPin size={24} />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white md:text-lg">Address</h3>
+                  <h3 className="mb-1 text-lg font-bold text-white">Address</h3>
                   <p className="text-sm text-slate-400 md:text-base">Joypurhat, Bangladesh</p>
                 </div>
              </div>
 
-             {/* Phone */}
-             <a href="tel:+8801749896809" className="flex items-center gap-4 p-4 transition-colors border bg-slate-800 dark:bg-slate-900 md:p-6 rounded-2xl md:gap-6 border-slate-700 dark:border-slate-800 hover:border-green-500/50 group">
-                <div className="flex items-center justify-center w-10 h-10 text-green-500 transition-transform rounded-full md:w-14 md:h-14 bg-slate-900 dark:bg-slate-950 group-hover:scale-110 shrink-0">
-                  <Phone size={20} className="md:w-6 md:h-6" />
+             {/* Phone Card */}
+             <a href="tel:+8801749896809" className="flex items-center gap-5 p-5 transition-all duration-300 border shadow-lg bg-slate-900/50 backdrop-blur-md md:p-6 rounded-2xl border-slate-800 hover:border-green-500/40 hover:bg-slate-900 group">
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-green-500/10 text-green-400 group-hover:bg-green-500 group-hover:text-white transition-all shadow-[0_0_15px_rgba(34,197,94,0.2)] group-hover:shadow-[0_0_20px_rgba(34,197,94,0.6)] shrink-0">
+                  <Phone size={24} />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white md:text-lg">Phone</h3>
+                  <h3 className="mb-1 text-lg font-bold text-white">Phone</h3>
                   <p className="font-mono text-sm text-slate-400 md:text-base">+880 1749-896809</p>
                 </div>
              </a>
 
-             {/* Email */}
-             <a href="mailto:rahimsaroarmishu@gmail.com" className="flex items-center gap-4 p-4 transition-colors border bg-slate-800 dark:bg-slate-900 md:p-6 rounded-2xl md:gap-6 border-slate-700 dark:border-slate-800 hover:border-orange-500/50 group">
-                <div className="flex items-center justify-center w-10 h-10 text-orange-500 transition-transform rounded-full md:w-14 md:h-14 bg-slate-900 dark:bg-slate-950 group-hover:scale-110 shrink-0">
-                  <Mail size={20} className="md:w-6 md:h-6" />
+             {/* Email Card */}
+             <a href="mailto:rahimsaroarmishu@gmail.com" className="flex items-center gap-5 p-5 transition-all duration-300 border shadow-lg bg-slate-900/50 backdrop-blur-md md:p-6 rounded-2xl border-slate-800 hover:border-orange-500/40 hover:bg-slate-900 group">
+                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-orange-500/10 text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition-all shadow-[0_0_15px_rgba(249,115,22,0.2)] group-hover:shadow-[0_0_20px_rgba(249,115,22,0.6)] shrink-0">
+                  <Mail size={24} />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="text-base font-bold text-white md:text-lg">Email</h3>
-                  <p className="text-xs break-all text-slate-400 md:text-sm">rahimsaroarmishu@gmail.com</p>
+                  <h3 className="mb-1 text-lg font-bold text-white">Email</h3>
+                  <p className="text-sm break-all text-slate-400 md:text-base">rahimsaroarmishu@gmail.com</p>
                 </div>
              </a>
           </div>
 
-          {/* 3. Right Side: Message Form (COMPACT FOR MOBILE) */}
-          <div className="p-5 border shadow-2xl bg-slate-800 dark:bg-slate-900 md:p-8 rounded-2xl border-slate-700 dark:border-slate-800">
-            <h3 className="mb-4 text-xl font-bold text-white md:text-2xl md:mb-6">Send a Message</h3>
-            <form ref={formRef} onSubmit={sendEmail} className="space-y-4 md:space-y-6">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+          {/* --------------------------------------
+             RIGHT: Premium Contact Form
+             -------------------------------------- */}
+          <div className="relative p-6 overflow-hidden border shadow-2xl bg-slate-900/40 backdrop-blur-xl md:p-8 rounded-3xl border-slate-800/80">
+            {/* Subtle Gradient Line at Top */}
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500"></div>
+
+            <h3 className="mb-6 text-xl font-bold text-white md:text-2xl">Send a Message</h3>
+            
+            <form ref={formRef} onSubmit={sendEmail} className="space-y-5">
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-400">Your Name</label>
+                        <label className="ml-1 text-sm font-medium text-slate-400">Your Name</label>
                         <input 
                             type="text" 
                             name="user_name" 
                             required
                             placeholder="John Doe"
-                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 md:py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm md:text-base"
+                            className="w-full px-4 py-3 text-sm text-white transition-all border bg-slate-950/50 border-slate-800 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 md:text-base placeholder:text-slate-600"
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-400">Your Email</label>
+                        <label className="ml-1 text-sm font-medium text-slate-400">Your Email</label>
                         <input 
                             type="email" 
                             name="user_email" 
                             required
                             placeholder="john@example.com"
-                            className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 md:py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm md:text-base"
+                            className="w-full px-4 py-3 text-sm text-white transition-all border bg-slate-950/50 border-slate-800 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 md:text-base placeholder:text-slate-600"
                         />
                     </div>
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-400">Message</label>
+                    <label className="ml-1 text-sm font-medium text-slate-400">Message</label>
                     <textarea 
                         name="message" 
                         rows={4} 
                         required
                         placeholder="Hello, I'd like to talk about..."
-                        className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 md:py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none text-sm md:text-base"
+                        className="w-full px-4 py-3 text-sm text-white transition-all border resize-none bg-slate-950/50 border-slate-800 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 md:text-base placeholder:text-slate-600"
                     ></textarea>
                 </div>
 
                 <button 
                     type="submit" 
                     disabled={loading}
-                    className="flex items-center justify-center w-full gap-2 py-3 text-sm font-bold text-white transition-all bg-blue-600 rounded-lg md:py-4 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed md:text-base"
+                    className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-[0.98]"
                 >
                     {loading ? (
-                        <>Sending <Loader2 size={18} className="animate-spin" /></>
+                        <>Sending <Loader2 size={20} className="animate-spin" /></>
                     ) : (
-                        <>Send Message <Send size={18} /></>
+                        <>Send Message <Send size={20} /></>
                     )}
                 </button>
 
                 {status === 'success' && (
-                    <div className="flex items-center gap-3 p-3 text-sm text-green-400 border rounded-lg md:p-4 bg-green-500/10 border-green-500/20 md:text-base">
-                        <CheckCircle size={18} />
+                    <div className="flex items-center gap-3 p-4 text-sm text-green-400 border bg-green-500/10 border-green-500/20 rounded-xl md:text-base animate-in fade-in slide-in-from-bottom-2">
+                        <CheckCircle size={20} />
                         <span>Message sent successfully! I'll reply soon.</span>
                     </div>
                 )}
                 
                 {status === 'error' && (
-                    <div className="flex items-center gap-3 p-3 text-sm text-red-400 border rounded-lg md:p-4 bg-red-500/10 border-red-500/20 md:text-base">
-                        <AlertCircle size={18} />
+                    <div className="flex items-center gap-3 p-4 text-sm text-red-400 border bg-red-500/10 border-red-500/20 rounded-xl md:text-base animate-in fade-in slide-in-from-bottom-2">
+                        <AlertCircle size={20} />
                         <span>Something went wrong. Please check your IDs.</span>
                     </div>
                 )}
@@ -219,24 +233,26 @@ const Contact: React.FC = () => {
 
         </div>
 
-        {/* 4. Social Media Section */}
-        <div className="pt-8 text-center border-t border-slate-800 md:pt-16">
-            <h3 className="mb-6 text-xl font-bold md:text-2xl md:mb-10 text-slate-200">Connect on Socials</h3>
+        {/* --------------------------------------
+           Social Media Section
+           -------------------------------------- */}
+        <div className="pt-10 text-center border-t border-slate-800/50 md:pt-16">
+            <h3 className="mb-8 text-xl font-bold md:text-2xl text-slate-300">Connect on Socials</h3>
             
-            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-12">
+            <div className="flex flex-wrap items-center justify-center gap-6">
                 {SOCIAL_LINKS.map((link) => (
                     <a
                         key={link.name}
                         href={link.url}
                         target="_blank"
                         rel="noreferrer"
-                        className={`text-slate-400 transition-all duration-300 transform hover:scale-110 ${link.colorClass}`}
+                        className={`text-slate-500 transition-all duration-300 transform hover:scale-125 ${link.colorClass}`}
                         aria-label={link.name}
                     >
                         <svg 
                             viewBox={link.viewBox} 
                             fill="currentColor" 
-                            className="w-8 h-8 md:w-10 md:h-10"
+                            className="w-6 h-6 md:w-8 md:h-8"
                         >
                             <path d={link.iconPath} />
                         </svg>

@@ -182,15 +182,16 @@ const App: React.FC = () => {
             </section>
           </RevealOnScroll>
 
+          <div id="feedback">
+             <FeedbackList />
+          </div>
+
           <RevealOnScroll>
             <section id="contact">
               <Contact />
             </section>
           </RevealOnScroll>
 
-          <div id="feedback">
-             <FeedbackList />
-          </div>
 
           <Footer />
 
