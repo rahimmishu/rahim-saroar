@@ -16,14 +16,17 @@
     "@types/canvas-confetti": "^1.9.0",
     "@types/three": "^0.182.0",
     "canvas-confetti": "^1.9.4",
+    "clsx": "^2.1.1",
     "firebase": "^12.8.0",
     "framer-motion": "^12.29.2",
     "lightweight-charts": "^4.2.2",
     "lucide-react": "0.263.1",
+    "motion": "^12.33.0",
     "react": "18.3.1",
     "react-dom": "^18.3.1",
     "react-router": "6.22.3",
     "react-router-dom": "6.22.3",
+    "tailwind-merge": "^3.4.0",
     "three": "^0.182.0"
   },
   "devDependencies": {

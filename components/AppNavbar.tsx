@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Camera, Wrench, Sparkles, Home, Briefcase, BookOpen, Award, User, Mail, Lock, LogOut, LogIn, ChevronDown } from 'lucide-react';
+import { Menu, X, Camera, Wrench, Sparkles, Home, Briefcase, BookOpen, User, Mail, Lock, LogOut, LogIn, ChevronDown, ArrowRight } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { useAuth } from '../context/AuthContext'; 
 import AuthModal from './AuthModal'; 
+// ✅ Rainbow Button Import
+import { RainbowButton } from './ui/rainbow-button'; 
 
 interface NavbarProps {
   isDarkMode: boolean;
@@ -15,10 +17,9 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   
-  // 🔥 Auth States
   const { user, logout } = useAuth();
   const [isAuthModalOpen, setAuthModalOpen] = useState(false);
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false); // ✅ ড্রপডাউন স্টেট
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const navLinks = [
     { label: 'Home', href: '#home', icon: <Home size={18} /> },
@@ -68,7 +69,6 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
     }
   };
 
-  // ✅ Logout Handler
   const handleLogout = async () => {
     try {
       await logout();
@@ -81,7 +81,6 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
 
   return (
     <>
-      {/* 🔥 Floating Premium Navbar */}
       <nav 
         className={`fixed left-1/2 -translate-x-1/2 z-[50] transition-all duration-500 ease-out border border-white/10 rounded-full flex items-center justify-between
         ${scrolled 
@@ -94,11 +93,8 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
              <div className="relative">
                 <Sparkles className="text-purple-500 animate-spin-slow" size={20} />
              </div>
-             
-             {/* 🔥 Animated Name Logic (FIXED FOR MOBILE) */}
-             {/* hidden ক্লাস সরিয়ে text-sm দেওয়া হয়েছে এবং Mishu অংশটি মোবাইলে হাইড করা হয়েছে */}
              <span className="pb-1 text-sm font-bold text-transparent md:text-xl font-signature bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text whitespace-nowrap animate-text-flow">
-                Rahim Saroar <span className="hidden sm:inline">Mishu</span>
+               Rahim Saroar <span className="hidden sm:inline">Mishu</span>
              </span>
           </a>
 
@@ -110,20 +106,40 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
 
             <div className="w-px h-4 mx-2 bg-slate-300 dark:bg-slate-700"></div>
 
-            {navLinks.map((link) => (
-              <a 
-                key={link.label} 
-                href={link.href} 
-                onClick={(e) => handleLinkClick(e, link.href)}
-                className={`
-                  ${link.isSpecial 
-                    ? 'px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-600/10 to-cyan-400/10 border border-blue-600/20 text-blue-700 dark:text-cyan-400 font-bold text-xs' 
-                    : 'text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 px-3 py-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-all'}
-                  flex items-center gap-1.5 whitespace-nowrap
-              `}>
+            {navLinks.map((link) => {
+              if (link.label === 'Resources') {
+                return (
+                  <a 
+                    key={link.label} 
+                    href={link.href} 
+                    onClick={(e) => handleLinkClick(e, link.href)}
+                    // 🔥 আপনার রিকোয়েস্ট অনুযায়ী div র‍্যাপার যোগ করা হয়েছে
+                    className="mx-1"
+                  >
+                    <div className="flex items-center justify-center p-0"> {/* Navbar-এর মধ্যে বেশি প্যাডিং দিলে সমস্যা হতে পারে তাই p-0 বা কম প্যাডিং দিয়েছি */}
+                      <RainbowButton className="group">
+                        {link.label}
+                         <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                      </RainbowButton>
+                    </div>
+                  </a>
+                );
+              }
+
+              return (
+                <a 
+                  key={link.label} 
+                  href={link.href} 
+                  onClick={(e) => handleLinkClick(e, link.href)}
+                  className={`
+                    text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 px-3 py-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-all
+                    flex items-center gap-1.5 whitespace-nowrap
+                  `}
+                >
                   {link.label}
-              </a>
-            ))}
+                </a>
+              );
+            })}
 
             <div className="w-px h-4 mx-2 bg-slate-300 dark:bg-slate-700"></div>
 
@@ -138,7 +154,6 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                 <ThemeToggle isDark={isDarkMode} toggleTheme={toggleTheme} />
               </div>
               
-              {/* ✅ AUTH BUTTON WITH DROPDOWN (DESKTOP) */}
               {user ? (
                 <div className="relative hidden sm:block">
                   <button 
@@ -154,7 +169,6 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                     <ChevronDown size={14} className={`text-slate-400 transition-transform ${isProfileMenuOpen ? 'rotate-180' : ''}`} />
                   </button>
 
-                  {/* Desktop Dropdown Menu */}
                   {isProfileMenuOpen && (
                     <div className="absolute right-0 w-48 mt-2 overflow-hidden bg-white border shadow-xl dark:bg-slate-900 rounded-xl border-slate-200 dark:border-slate-700 animate-in fade-in slide-in-from-top-2">
                        <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
@@ -168,7 +182,6 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                   )}
                 </div>
               ) : (
-                /* 🔥 PREMIUM SIGN IN BUTTON UPDATE (GRADIENT & GLOW) */
                 <button 
                   onClick={() => setAuthModalOpen(true)}
                   className="items-center hidden gap-2 px-5 py-2 text-xs font-bold text-white transition-all duration-300 border rounded-full shadow-lg sm:flex bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 shadow-blue-500/20 hover:shadow-cyan-400/40 hover:scale-105 active:scale-95 border-white/20 group"
@@ -178,19 +191,16 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                 </button>
               )}
 
-              {/* Resume Button */}
               <a href="/resume.pdf" target="_blank" download className="hidden md:block px-4 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold rounded-full hover:shadow-lg hover:scale-105 transition-all whitespace-nowrap">
                 Resume
               </a>
 
-              {/* Mobile Menu Toggle */}
               <button onClick={() => setIsOpen(!isOpen)} className="p-2 transition-transform lg:hidden text-slate-800 dark:text-white active:scale-90">
                {isOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
           </div>
       </nav>
 
-      {/* ✅ Auth Modal */}
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setAuthModalOpen(false)} />
 
       {/* Mobile Overlay */}
@@ -199,7 +209,6 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
         ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
         style={{ paddingTop: '100px' }}
       >
-          {/* ✅ Mobile Auth Section */}
           {user ? (
             <div className="flex items-center justify-between p-4 mb-6 duration-500 border bg-slate-100 dark:bg-slate-800 rounded-2xl border-slate-200 dark:border-slate-700 animate-in slide-in-from-top-5">
                <div className="flex items-center gap-3">
