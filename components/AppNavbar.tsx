@@ -5,6 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal'; 
 // ✅ Rainbow Button Import
 import { RainbowButton } from './ui/rainbow-button'; 
+// ✅ GitHub Star Button Import
+import { GitHubStarButton } from './ui/github-star'; 
 
 interface NavbarProps {
   isDarkMode: boolean;
@@ -113,13 +115,12 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                     key={link.label} 
                     href={link.href} 
                     onClick={(e) => handleLinkClick(e, link.href)}
-                    // 🔥 আপনার রিকোয়েস্ট অনুযায়ী div র‍্যাপার যোগ করা হয়েছে
                     className="mx-1"
                   >
-                    <div className="flex items-center justify-center p-0"> {/* Navbar-এর মধ্যে বেশি প্যাডিং দিলে সমস্যা হতে পারে তাই p-0 বা কম প্যাডিং দিয়েছি */}
-                      <RainbowButton className="group">
+                    <div className="flex items-center justify-center p-0">
+                      <RainbowButton className="h-8 px-4 text-xs font-bold group">
                         {link.label}
-                         <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                        <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                       </RainbowButton>
                     </div>
                   </a>
@@ -191,9 +192,15 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                 </button>
               )}
 
-              <a href="/resume.pdf" target="_blank" download className="hidden md:block px-4 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-bold rounded-full hover:shadow-lg hover:scale-105 transition-all whitespace-nowrap">
-                Resume
-              </a>
+              {/* ✅ Resume Button এর পরিবর্তে GitHub Star Button (Desktop) - FIXED HERE */}
+              <div className="hidden md:block">
+                 <GitHubStarButton 
+                    owner="rahimmishu" 
+                    repo="rahim-saroar" 
+                    stars={1870} 
+                    className="h-8 px-3 text-xs"
+                 />
+              </div>
 
               <button onClick={() => setIsOpen(!isOpen)} className="p-2 transition-transform lg:hidden text-slate-800 dark:text-white active:scale-90">
                {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -276,9 +283,19 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
               </button>
 
-              <a href="/resume.pdf" download className="col-span-2 py-3 font-bold text-center text-white transition-transform shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl active:scale-95">
-                  Download Resume
-              </a>
+              {/* ✅ Resume Button এর পরিবর্তে GitHub Star Button (Mobile) */}
+               <div className="flex flex-col items-center justify-center gap-8 p-8">
+                  <div className="flex flex-wrap items-center justify-center gap-6"></div>
+                   <GitHubStarButton owner="rahimmishu" repo="rahim-saroar" stars={1200} />
+                  <GitHubStarButton owner="facebook" repo="react" />
+                 <GitHubStarButton owner="vercel" repo="next.js" />
+              </div>
+               <div className="space-y-2 text-center">
+              <p className="text-sm text-muted-foreground">
+               Real-time GitHub stars with premium rolling animations and particle
+               effects.
+               </p>
+             </div>
           </div>
       </div>
     </>
