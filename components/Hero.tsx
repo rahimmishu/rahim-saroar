@@ -46,8 +46,7 @@ const Hero: React.FC = () => {
   }, [text, isDeleting, loopNum, typingSpeed]);
 
   return (
-    <section id="home" className="relative flex items-center min-h-screen pt-24 pb-12 overflow-hidden transition-colors duration-300 bg-slate-50 dark:bg-slate-900">
-      
+    <section id="home" className="relative flex items-center min-h-screen pt-24 pb-12 overflow-hidden transition-colors duration-300 bg-white dark:bg-black">
       {/* Background Shapes (Decoration) */}
       <div className="absolute right-0 rounded-full top-20 w-96 h-96 bg-purple-500/10 blur-3xl -z-10"></div>
       <div className="absolute bottom-0 left-0 rounded-full w-72 h-72 bg-blue-500/10 blur-3xl -z-10"></div>

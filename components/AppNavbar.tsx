@@ -192,7 +192,7 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                 </button>
               )}
 
-              {/* ✅ Resume Button এর পরিবর্তে GitHub Star Button (Desktop) - FIXED HERE */}
+              {/* ✅ Desktop: Clean Single GitHub Button (Untouched as requested) */}
               <div className="hidden md:block">
                  <GitHubStarButton 
                     owner="rahimmishu" 
@@ -283,19 +283,15 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
               </button>
 
-              {/* ✅ Resume Button এর পরিবর্তে GitHub Star Button (Mobile) */}
-               <div className="flex flex-col items-center justify-center gap-8 p-8">
-                  <div className="flex flex-wrap items-center justify-center gap-6"></div>
-                   <GitHubStarButton owner="rahimmishu" repo="rahim-saroar" stars={1200} />
-                  <GitHubStarButton owner="facebook" repo="react" />
-                 <GitHubStarButton owner="vercel" repo="next.js" />
+              {/* ✅ MOBILE VIEW UPDATE: ডেমো কোড সরিয়ে ক্লিন সিঙ্গেল বাটন দেওয়া হলো */}
+              <div className="flex justify-center col-span-2 py-4">
+                  <GitHubStarButton 
+                      owner="rahimmishu" 
+                      repo="rahim-saroar" 
+                      stars={1870} // Desktop এর সাথে মিল রেখে ১৮৭০ দেওয়া হলো
+                      className="justify-center w-full py-3"
+                  />
               </div>
-               <div className="space-y-2 text-center">
-              <p className="text-sm text-muted-foreground">
-               Real-time GitHub stars with premium rolling animations and particle
-               effects.
-               </p>
-             </div>
           </div>
       </div>
     </>

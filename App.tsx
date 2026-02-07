@@ -6,7 +6,7 @@ import AppNavbar from './components/AppNavbar';
 import Hero from './components/Hero';
 import TechMarquee from './components/TechMarquee';
 import Projects from './components/Projects';
-// Achievements & Certifications রিমুভ করা হয়েছে
+// Achievements & Certifications রিমুভ করা হয়েছে
 import About from './components/About';
 import Journey from './components/Journey';
 import Contact from './components/Contact';
@@ -23,7 +23,7 @@ import RevealOnScroll from './components/RevealOnScroll';
 // Utilities
 import Preloader from './components/Preloader';
 import ContextMenu from './components/ContextMenu';
-import NoiseOverlay from './components/NoiseOverlay';
+// ❌ NoiseOverlay পুরোপুরি রিমুভ করা হয়েছে যাতে Pure Black পাওয়া যায়
 import FloatingDock from './components/FloatingDock';
 import Chatbot from './components/Chatbot';
 import MusicPlayer from './components/MusicPlayer';
@@ -34,6 +34,9 @@ import SecretVault from './components/SecretVault';
 import MobilePremiumFeatures from './components/MobilePremiumFeatures';
 import DynamicIsland from './components/DynamicIsland';
 import BatteryOptimizer from './components/BatteryOptimizer';
+
+// ✅ Sunlight Spotlight Import
+import { SunlightSpotlight } from './components/ui/sunlight-spotlight';
 
 import { AuthProvider } from './context/AuthContext';
 
@@ -121,8 +124,12 @@ const App: React.FC = () => {
 
   return (
     <AuthProvider>
-      <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
+      {/* 🔥 পরিবর্তন: dark:bg-slate-900 এর বদলে dark:bg-black ব্যবহার করা হয়েছে (Pure Black) */}
+      <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-black text-slate-900 dark:text-white">
         
+        {/* 🔥 পরিবর্তন: className="z-[50]" দেওয়া হয়েছে যাতে আলো সব কন্টেন্টের ওপরে ভাসে */}
+        <SunlightSpotlight className="z-[50]" />
+
         <SecretVault />
         <MobilePremiumFeatures />
         <DynamicIsland />
@@ -130,7 +137,9 @@ const App: React.FC = () => {
         <DynamicTitle />
         <NetworkStatus />
         <ContextMenu />
-        <NoiseOverlay />
+        
+        {/* NoiseOverlay রিমুভ করা হয়েছে */}
+        
         <BatteryOptimizer isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
         
         <FeedbackSlider onSubmit={handleNewFeedback} />
@@ -174,8 +183,6 @@ const App: React.FC = () => {
             <FacebookFeed />
           </RevealOnScroll>
           
-          {/* ❌ Achievements & Certifications সেকশন এখান থেকে মুছে ফেলা হয়েছে */}
-
           <RevealOnScroll>
             <section id="journey">
               <Journey />
@@ -208,7 +215,8 @@ const App: React.FC = () => {
           <PhotoGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} />
 
           {isToolsOpen && (
-            <div className="fixed inset-0 z-[100] bg-slate-900 overflow-y-auto animate-in slide-in-from-bottom-10 duration-300">
+            // 🔥 পরিবর্তন: টুলস এর ব্যাকগ্রাউন্ডও Pure Black (bg-black) করা হয়েছে
+            <div className="fixed inset-0 z-[100] bg-black overflow-y-auto animate-in slide-in-from-bottom-10 duration-300">
               <button onClick={() => setIsToolsOpen(false)} className="fixed top-6 right-6 z-[110] p-3 bg-white/10 hover:bg-red-600 text-white rounded-full backdrop-blur-md border border-white/20 transition-all shadow-xl hover:rotate-90">
                 <X size={28} />
               </button>
