@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, Calculator, Zap, RotateCcw, Hand, LayoutGrid, 
-  Swords, Gift, Wifi, CloudSun, Cake, Bird, TrendingUp, Brain, Gamepad2 
+  Swords, Gift, Wifi, CloudSun, Cake, Bird, TrendingUp, Brain, Gamepad2,
+  GraduationCap // ✅ নতুন আইকন ইমপোর্ট
 } from 'lucide-react';
 
 // ✅ গেম এবং অ্যাপ ইমপোর্ট
@@ -16,6 +17,10 @@ import CryptoTrader from './CryptoTrader';
 import FocusTimer from './FocusTimer';
 import TicTacToe from './TicTacToe';
 import MemoryGame from './MemoryGame';
+import GpaCalculator from './GpaCalculator'; 
+
+import { Terminal } from 'lucide-react'; 
+import TerminalApp from './TerminalApp';
 
 // ==========================================
 // 1. ROCK PAPER SCISSORS GAME COMPONENT
@@ -153,6 +158,14 @@ const Tools: React.FC = () => {
       description: 'Classic Rock Paper Scissors'
     },
     {
+      id: 'gpa-calc',
+      name: 'GPA Scientific',
+      // ✅ নতুন GPA ক্যালকুলেটর আইকন এবং কালার
+      icon: <GraduationCap className="text-white drop-shadow-md" size={32} />,
+      color: 'bg-gradient-to-br from-teal-400 via-emerald-500 to-green-600', 
+      description: 'HSC & Varsity CGPA'
+    },
+    {
       id: 'pokemon',
       name: 'PokéBattle',
       icon: <Swords className="text-white drop-shadow-md" size={32} />,
@@ -221,9 +234,15 @@ const Tools: React.FC = () => {
       disabled: false 
     },
     {
+    id: 'terminal',
+    name: 'Hacker Terminal',
+    icon: <Terminal className="text-white drop-shadow-md" size={32} />,
+    color: 'bg-gradient-to-br from-gray-800 via-gray-900 to-black', 
+    description: 'Command Line Interface'
+    },
+    {
       id: 'tictactoe',
       name: 'Tic Tac Toe',
-      // ✅ Grid3X3 এরর ফিক্স করার জন্য LayoutGrid ব্যবহার করা হলো
       icon: <LayoutGrid className="text-white drop-shadow-md" size={32} />, 
       color: 'bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-700', 
       description: 'Cyber Style X-O Game',
@@ -243,6 +262,7 @@ const Tools: React.FC = () => {
   const renderActiveApp = () => {
     switch (activeApp) {
       case 'rps': return <RockPaperScissorsGame />;
+      case 'gpa-calc': return <GpaCalculator />; // ✅ GPA Calculator রেন্ডার
       case 'pokemon': return <PokemonGame />;
       case 'luck-royale': return <LuckRoyale onClose={() => setActiveApp(null)} />;
       case 'flappy': return <FlappyBird onClose={() => setActiveApp(null)} />;
@@ -252,6 +272,7 @@ const Tools: React.FC = () => {
       case 'cake': return <BirthdayCake onClose={() => setActiveApp(null)} />;
       case 'crypto': return <CryptoTrader onClose={() => setActiveApp(null)} />;
       case 'focus': return <FocusTimer onClose={() => setActiveApp(null)} />;
+      case 'terminal': return <TerminalApp onClose={() => setActiveApp(null)} />;
       case 'tictactoe': return <TicTacToe onClose={() => setActiveApp(null)} />;
       case 'memory': return <MemoryGame onClose={() => setActiveApp(null)} />;
       default: return null;
@@ -281,7 +302,7 @@ const Tools: React.FC = () => {
           </div>
 
           {/* Game Container */}
-          <div className="flex items-center justify-center flex-grow w-full h-full p-4">
+          <div className="flex items-center justify-center flex-grow w-full h-full p-4 overflow-auto">
              {renderActiveApp()}
           </div>
         </div>
