@@ -39,10 +39,10 @@ const FacebookFeed: React.FC = () => {
 
   return (
     // 🔥 FIX: Theme based background (Light: Slate-50, Dark: Dark Blue)
-    <section className="py-20 bg-slate-50 dark:bg-[#0B1120] border-t border-slate-200 dark:border-slate-800 transition-colors duration-500 relative overflow-hidden">
+    <section className="relative py-20 overflow-hidden transition-colors duration-500 border-t bg-slate-50 dark:bg-black border-slate-200 dark:border-zinc-900">
       
       {/* Background Glow (Theme Adaptive) */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/5 dark:bg-blue-600/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container relative z-10 px-6 mx-auto">
         
@@ -65,11 +65,11 @@ const FacebookFeed: React.FC = () => {
             <div 
               key={post.id} 
               // 🔥 FIX: Card Styling for Light/Dark Mode
-              className="bg-white dark:bg-[#151e32] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden hover:border-blue-500/40 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group"
-            >
+              className="overflow-hidden transition-all duration-300 bg-white border dark:bg-zinc-950 border-slate-200 dark:border-zinc-900 rounded-2xl hover:border-blue-500/40 hover:-translate-y-2 hover:shadow-xl group"
+              >
               
               {/* Image Section */}
-              <div className="relative overflow-hidden h-52 bg-slate-100 dark:bg-slate-900">
+              <div className="relative overflow-hidden h-52 bg-slate-100 dark:bg-zinc-900">
                 <img 
                   src={post.image} 
                   alt="Post" 
@@ -101,7 +101,7 @@ const FacebookFeed: React.FC = () => {
                 </p>
 
                 {/* Footer Stats */}
-                <div className="flex items-center justify-between pt-4 text-xs font-medium border-t border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400">
+                <div className="flex items-center justify-between pt-4 text-xs font-medium border-t border-slate-100 dark:border-zinc-900 text-slate-500 dark:text-slate-400">
                     <div className="flex gap-4">
                         <span className="flex items-center gap-1 transition-colors hover:text-blue-600 dark:hover:text-blue-400"><ThumbsUp size={14} /> {post.likes}</span>
                         <span className="flex items-center gap-1 transition-colors hover:text-blue-600 dark:hover:text-blue-400"><MessageCircle size={14} /> {post.comments}</span>

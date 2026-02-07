@@ -69,8 +69,7 @@ const Journey: React.FC = () => {
   ];
 
   return (
-    <section id="journey" className="py-24 relative overflow-hidden bg-slate-50 dark:bg-[#0B1120] transition-colors duration-500">
-      
+    <section id="journey" className="relative py-24 overflow-hidden transition-colors duration-500 bg-slate-50 dark:bg-black">
       {/* 🌟 Background Elements (Premium Glows) */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
           <div className="absolute top-[20%] right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px]"></div>
@@ -108,15 +107,15 @@ const Journey: React.FC = () => {
                 <div className="hidden w-5/12 md:block"></div>
 
                 {/* 2. The Center Node (Icon) */}
-                <div className="absolute left-[20px] md:left-1/2 -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-50 dark:bg-[#0B1120] border-4 border-slate-100 dark:border-slate-800 shadow-[0_0_0_4px_rgba(59,130,246,0.1)] z-20 group">
+                <div className="absolute left-[20px] md:left-1/2 -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-50 dark:bg-black border-4 border-slate-100 dark:border-zinc-800 shadow-[0_0_0_4px_rgba(59,130,246,0.1)] z-20 group">
                    <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${item.gradient} group-hover:scale-150 transition-transform duration-300`}></div>
                 </div>
 
                 {/* 3. The Content Card */}
                 <div className="w-full pl-12 md:w-5/12 md:pl-0">
                   <div className={`
-                    relative p-6 rounded-2xl border border-slate-200 dark:border-slate-800 
-                    bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl shadow-sm hover:shadow-xl 
+                    relative p-6 rounded-2xl border border-slate-200 dark:border-zinc-800
+                    bg-white/50 dark:bg-zinc-950 backdrop-blur-xl shadow-sm hover:shadow-xl
                     transition-all duration-300 hover:-translate-y-1 group
                   `}>
                     
@@ -124,10 +123,10 @@ const Journey: React.FC = () => {
                     <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none`}></div>
 
                     <div className="flex items-start justify-between mb-2">
-                       <span className={`px-3 py-1 text-xs font-bold rounded-full bg-slate-100 dark:bg-slate-800 ${item.color} border border-slate-200 dark:border-slate-700`}>
+                       <span className={`px-3 py-1 text-xs font-bold rounded-full bg-slate-100 dark:bg-zinc-900 ${item.color} border border-slate-200 dark:border-zinc-800`}>
                           {item.year}
                        </span>
-                       <div className={`p-2 rounded-lg bg-slate-50 dark:bg-slate-800 ${item.color}`}>
+                       <div className={`p-2 rounded-lg bg-slate-50 dark:bg-zinc-900 ${item.color}`}>
                           {item.icon}
                        </div>
                     </div>

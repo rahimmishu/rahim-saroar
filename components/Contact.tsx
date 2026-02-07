@@ -100,7 +100,7 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="relative py-12 overflow-hidden text-white md:py-24 bg-slate-950">
+    <section id="contact" className="relative py-12 overflow-hidden text-white bg-black md:py-24">
       
       {/* 🌌 Background Ambience (Fixed & Enhanced) */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none"></div>
@@ -126,7 +126,7 @@ const Contact: React.FC = () => {
           <div className="flex flex-col gap-4 md:gap-6">
              
              {/* Address Card */}
-             <div className="flex items-center gap-5 p-5 transition-all duration-300 border shadow-lg bg-slate-900/50 backdrop-blur-md md:p-6 rounded-2xl border-slate-800 hover:border-blue-500/40 hover:bg-slate-900 group">
+             <div className="flex items-center gap-5 p-5 transition-all duration-300 border shadow-lg bg-zinc-950/50 backdrop-blur-md md:p-6 rounded-2xl border-zinc-800 hover:border-blue-500/40 hover:bg-black group">
                 <div className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center bg-blue-500/10 text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)] group-hover:shadow-[0_0_20px_rgba(59,130,246,0.6)] shrink-0">
                   <MapPin size={24} />
                 </div>
@@ -162,7 +162,7 @@ const Contact: React.FC = () => {
           {/* --------------------------------------
              RIGHT: Premium Contact Form
              -------------------------------------- */}
-          <div className="relative p-6 overflow-hidden border shadow-2xl bg-slate-900/40 backdrop-blur-xl md:p-8 rounded-3xl border-slate-800/80">
+          <div className="relative p-6 overflow-hidden border shadow-2xl bg-zinc-950/40 backdrop-blur-xl md:p-8 rounded-3xl border-zinc-800/80">
             {/* Subtle Gradient Line at Top */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500"></div>
 
@@ -187,8 +187,8 @@ const Contact: React.FC = () => {
                             name="user_email" 
                             required
                             placeholder="john@example.com"
-                            className="w-full px-4 py-3 text-sm text-white transition-all border bg-slate-950/50 border-slate-800 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 md:text-base placeholder:text-slate-600"
-                        />
+                            className="w-full px-4 py-3 text-sm text-white transition-all bg-black border border-zinc-800 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 md:text-base placeholder:text-slate-600"
+                            />
                     </div>
                 </div>
 
@@ -236,7 +236,7 @@ const Contact: React.FC = () => {
         {/* --------------------------------------
            Social Media Section
            -------------------------------------- */}
-        <div className="pt-10 text-center border-t border-slate-800/50 md:pt-16">
+        <div className="pt-10 text-center border-t border-zinc-800/50 md:pt-16">
             <h3 className="mb-8 text-xl font-bold md:text-2xl text-slate-300">Connect on Socials</h3>
             
             <div className="flex flex-wrap items-center justify-center gap-6">

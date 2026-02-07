@@ -255,7 +255,7 @@ if __name__ == "__main__":
 
   return (
     // 🔥 Update 1: Reduced py-24 to py-12 for mobile
-    <section id="projects" className="relative py-12 transition-colors duration-300 md:py-24 bg-slate-50 dark:bg-slate-800">
+    <section id="projects" className="relative py-12 transition-colors duration-300 md:py-24 bg-slate-50 dark:bg-black">
       <div className="container px-4 mx-auto md:px-8">
         {/* 🔥 Update 2: Reduced margins and font sizes for mobile */}
         <div className="mb-10 text-center md:mb-16">
@@ -270,13 +270,13 @@ if __name__ == "__main__":
             
             // 🔥 UPDATE: SpotlightCard এর পরিবর্তে Tilt3D ব্যবহার করা হয়েছে
             <Tilt3D key={project.id} className="h-full">
-              <div className="relative flex flex-col h-full overflow-hidden transition-all duration-300 bg-white shadow-sm dark:bg-slate-900 rounded-2xl group hover:shadow-xl dark:border-slate-700">
+             <div className="relative flex flex-col h-full overflow-hidden transition-all duration-300 bg-white shadow-sm dark:bg-zinc-950 rounded-2xl group hover:shadow-xl dark:border-zinc-800">
                 
                 {/* ✨ Shimmer Effect Layer */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none z-10" />
 
                 {/* 🔥 Update 3: Reduced image height to h-40 for mobile */}
-                <div className="relative h-40 overflow-hidden md:h-48 bg-slate-200 dark:bg-slate-800">
+                <div className="relative h-40 overflow-hidden md:h-48 bg-slate-200 dark:bg-zinc-900">
                   <img 
                     src={project.image} 
                     alt={project.title} 
@@ -294,13 +294,13 @@ if __name__ == "__main__":
                     {project.meta}
                   </p>
                   
-                  <div className="pt-4 mt-auto border-t border-slate-100 dark:border-slate-800">
+                  <div className="pt-4 mt-auto border-t border-slate-100 dark:border-zinc-800">
                     <button 
                       onClick={() => handleAction(project)}
                       className="flex items-center justify-between w-full text-sm font-bold transition-colors text-primary hover:text-blue-700 dark:hover:text-blue-400"
                     >
                       {project.action}
-                      <span className="bg-blue-50 dark:bg-slate-800 p-1.5 rounded-full group-hover:bg-primary group-hover:text-white transition-all">
+                      <span className="bg-blue-50 dark:bg-zinc-800 p-1.5 rounded-full group-hover:bg-primary group-hover:text-white transition-all">
                           {/* ডাইনামিক আইকন সিলেকশন */}
                           {project.title.includes("AI") ? <Play size={16} fill="currentColor"/> : 
                            project.title.includes("Hand") ? <Eye size={16} /> :

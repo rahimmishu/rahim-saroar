@@ -17,7 +17,7 @@ const FeedbackList = () => {
   }, []);
 
   return (
-    <section className="relative py-20 overflow-hidden transition-colors duration-300 bg-slate-50 dark:bg-slate-950">
+    <section className="relative py-20 overflow-hidden transition-colors duration-300 bg-slate-50 dark:bg-black">
       
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none"></div>
@@ -39,8 +39,8 @@ const FeedbackList = () => {
             {[...feedbacks, ...feedbacks].map((item, index) => (
               <div 
                 key={`${item.id}-${index}`} 
-                className="w-[300px] md:w-[380px] p-6 transition-all bg-white border shadow-lg dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 rounded-2xl backdrop-blur-sm hover:border-yellow-500/30 flex-shrink-0 whitespace-normal group relative"
-              >
+                className="w-[300px] md:w-[380px] p-6 transition-all bg-white border shadow-lg dark:bg-zinc-950/60 border-slate-200 dark:border-zinc-800 rounded-2xl backdrop-blur-sm hover:border-yellow-500/30 flex-shrink-0 whitespace-normal group relative"
+                >
                 {/* Quote Icon */}
                 <Quote className="absolute transition-colors top-4 right-6 text-slate-200 dark:text-slate-700 group-hover:text-yellow-500/20" size={40} />
 
@@ -78,7 +78,7 @@ const FeedbackList = () => {
         </div>
       ) : (
         /* Empty State */
-        <div className="max-w-md p-10 mx-auto text-center border border-dashed border-slate-300 dark:border-slate-800 rounded-2xl text-slate-500">
+        <div className="max-w-md p-10 mx-auto text-center border border-dashed border-slate-300 dark:border-zinc-800 rounded-2xl text-slate-500">
            <MessageCircle className="mx-auto mb-2 opacity-50" />
            <p>No feedbacks yet. Be the first to share!</p>
         </div>

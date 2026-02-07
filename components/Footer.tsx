@@ -2,10 +2,11 @@ import React from 'react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-slate-950 text-white py-8 border-t border-slate-900">
-      <div className="container mx-auto px-4 md:px-8 text-center">
-        <p className="text-slate-500 text-sm">
-          © 2026 Rahim Saroar Mishu. Made with ❤️ in Bangladesh.
+    // পরিবর্তন: bg-slate-950 -> bg-black এবং border-slate-900 -> border-zinc-900
+    <footer className="py-8 text-white bg-black border-t border-zinc-900">
+      <div className="container px-4 mx-auto text-center md:px-8">
+        <p className="text-sm text-slate-500">
+          © 2026 Rahim Saroar Mishu. Made with ❤️ and React. All rights reserved.
         </p>
       </div>
     </footer>

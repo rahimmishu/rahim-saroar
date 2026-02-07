@@ -85,10 +85,10 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
     <>
       <nav 
         className={`fixed left-1/2 -translate-x-1/2 z-[50] transition-all duration-500 ease-out border border-white/10 rounded-full flex items-center justify-between
-        ${scrolled 
-          ? 'top-4 w-[95%] md:w-[85%] lg:w-[75%] bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-2xl py-2 px-4 md:px-6' 
-          : 'top-6 w-[98%] md:w-[90%] lg:w-[85%] bg-white/40 dark:bg-slate-900/40 backdrop-blur-md py-3 px-4 md:px-6'
-        }`}
+        ${scrolled
+          ? 'top-4 w-[95%] md:w-[85%] lg:w-[75%] bg-white/80 dark:bg-black/80 backdrop-blur-xl shadow-2xl py-2 px-4 md:px-6' 
+          : 'top-6 w-[98%] md:w-[90%] lg:w-[85%] bg-white/40 dark:bg-black/40 backdrop-blur-md py-3 px-4 md:px-6'
+          }`}
       >
           {/* LOGO */}
           <a href="#home" onClick={(e) => handleLinkClick(e, '#home')} className="relative flex items-center gap-2 group shrink-0">
@@ -171,7 +171,7 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                   </button>
 
                   {isProfileMenuOpen && (
-                    <div className="absolute right-0 w-48 mt-2 overflow-hidden bg-white border shadow-xl dark:bg-slate-900 rounded-xl border-slate-200 dark:border-slate-700 animate-in fade-in slide-in-from-top-2">
+                    <div className="absolute right-0 w-48 mt-2 overflow-hidden bg-white border shadow-xl dark:bg-black rounded-xl border-slate-200 dark:border-zinc-800 animate-in fade-in slide-in-from-top-2">
                        <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
                          <p className="text-sm font-bold truncate text-slate-800 dark:text-white">{user.displayName || "User"}</p>
                          <p className="text-xs truncate text-slate-500 dark:text-slate-400">{user.email}</p>
@@ -212,12 +212,12 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
 
       {/* Mobile Overlay */}
       <div 
-        className={`fixed inset-0 z-[40] bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-3xl transition-all duration-500 lg:hidden flex flex-col px-6 overflow-y-auto no-scrollbar pb-20
+        className={`fixed inset-0 z-[40] bg-white/95 dark:bg-black/95 backdrop-blur-3xl transition-all duration-500 lg:hidden flex flex-col px-6 overflow-y-auto no-scrollbar pb-20
         ${isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
-        style={{ paddingTop: '100px' }}
+       style={{ paddingTop: '100px' }}
       >
           {user ? (
-            <div className="flex items-center justify-between p-4 mb-6 duration-500 border bg-slate-100 dark:bg-slate-800 rounded-2xl border-slate-200 dark:border-slate-700 animate-in slide-in-from-top-5">
+            <div className="flex items-center justify-between p-4 mb-6 duration-500 border bg-slate-100 dark:bg-zinc-900 rounded-2xl border-slate-200 dark:border-zinc-800 animate-in slide-in-from-top-5">
                <div className="flex items-center gap-3">
                   <div className="flex items-center justify-center w-10 h-10 text-lg font-bold text-white rounded-full bg-gradient-to-tr from-purple-500 to-blue-500">
                     {user.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}
@@ -249,7 +249,7 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                 className={`group flex items-center gap-4 text-lg font-bold p-3 rounded-xl border transition-all duration-300
                   ${link.isSpecial 
                     ? 'bg-blue-50/50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400' 
-                    : 'bg-white/50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'}
+                    : 'bg-white/50 dark:bg-zinc-900/50 border-slate-200 dark:border-zinc-800 text-slate-700 dark:text-slate-300'}
                   ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}
                 `}
                 style={{ transitionDelay: `${idx * 50}ms` }}
@@ -262,12 +262,12 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
 
           <div className={`grid grid-cols-2 gap-3 mt-6 w-full max-w-md mx-auto relative z-10 transition-all duration-500 delay-300 ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
               
-              <button onClick={() => { onOpenGallery(); setIsOpen(false); }} className="flex flex-col items-center justify-center p-4 transition-all border border-purple-100 bg-purple-50 dark:bg-slate-800 dark:border-slate-700 rounded-2xl active:scale-95">
+              <button onClick={() => { onOpenGallery(); setIsOpen(false); }} className="flex flex-col items-center justify-center p-4 transition-all border border-purple-100 bg-purple-50 dark:bg-zinc-900 dark:border-zinc-800 rounded-2xl active:scale-95">
                 <div className="p-3 mb-2 text-purple-600 bg-white rounded-full shadow-sm dark:bg-slate-900"><Camera size={20} /></div>
                 <span className="text-sm font-bold text-slate-700 dark:text-slate-200">Gallery</span>
               </button>
 
-              <button onClick={() => { onOpenTools(); setIsOpen(false); }} className="flex flex-col items-center justify-center p-4 transition-all border border-blue-100 bg-blue-50 dark:bg-slate-800 dark:border-slate-700 rounded-2xl active:scale-95">
+              <button onClick={() => { onOpenGallery(); setIsOpen(false); }} className="flex flex-col items-center justify-center p-4 transition-all border border-purple-100 bg-purple-50 dark:bg-zinc-900 dark:border-zinc-800 rounded-2xl active:scale-95">
                 <div className="p-3 mb-2 text-blue-600 bg-white rounded-full shadow-sm dark:bg-slate-900"><Wrench size={20} /></div>
                 <span className="text-sm font-bold text-slate-700 dark:text-slate-200">Tools</span>
               </button>

@@ -53,7 +53,7 @@ const Resources: React.FC = () => {
 
   return (
     // 🔥 FIX: Theme based background (Light: Slate-50, Dark: Slate-950/Dark Blue)
-    <section id="resources" className="py-20 bg-slate-50 dark:bg-[#0B1120] transition-colors duration-500">
+    <section id="resources" className="py-20 transition-colors duration-500 bg-slate-50 dark:bg-black">
       <div className="container px-4 mx-auto md:px-6">
         
         {/* Header */}
@@ -72,8 +72,8 @@ const Resources: React.FC = () => {
             <div 
               key={file.id} 
               // 🔥 FIX: Card Background (Light: White, Dark: Dark Blue #151e32) & Hover Effects
-              className="relative flex items-center justify-between w-full gap-3 p-4 overflow-hidden transition-all duration-300 border bg-white dark:bg-[#151e32] border-slate-200 dark:border-slate-800 rounded-2xl group hover:shadow-lg hover:-translate-y-1 hover:border-blue-500/30 dark:hover:border-cyan-500/30"
-            >
+              className="relative flex items-center justify-between w-full gap-3 p-4 overflow-hidden transition-all duration-300 bg-white border dark:bg-zinc-950 border-slate-200 dark:border-zinc-800 rounded-2xl group hover:shadow-lg hover:-translate-y-1 hover:border-blue-500/30 dark:hover:border-cyan-500/30"
+              >
               
               {/* Left Side: Icon + Text */}
               <div className="flex items-center flex-1 min-w-0 gap-4">
@@ -90,8 +90,7 @@ const Resources: React.FC = () => {
                       {file.title}
                     </h3>
                     <div className="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-slate-500 dark:text-slate-400">
-                      <span className="bg-slate-100 dark:bg-slate-700/50 px-2 py-0.5 rounded text-slate-600 dark:text-slate-300 font-medium truncate max-w-[100px] border border-slate-200 dark:border-slate-700">
-                        {file.category}
+                      <span className="bg-slate-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-slate-600 dark:text-zinc-300 font-medium truncate max-w-[100px] border border-slate-200 dark:border-zinc-800">
                       </span>
                       <span className="font-medium whitespace-nowrap">{file.size}</span>
                       <span className="hidden sm:inline opacity-60">• {file.date}</span>
@@ -103,7 +102,7 @@ const Resources: React.FC = () => {
               <a 
                 href={file.link} 
                 download 
-                className="p-3 transition-all duration-300 rounded-full shadow-sm shrink-0 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-blue-600 hover:text-white dark:hover:bg-cyan-500 dark:hover:text-white hover:shadow-md"
+                className="p-3 transition-all duration-300 rounded-full shadow-sm shrink-0 bg-slate-100 dark:bg-zinc-900 text-slate-500 dark:text-slate-400 hover:bg-blue-600 hover:text-white dark:hover:bg-cyan-500 dark:hover:text-white hover:shadow-md"
                 title="Download Now"
               >
                 <Download size={20} />
