@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Camera, Wrench, Sparkles, Home, Briefcase, BookOpen, User, Mail, Lock, LogOut, LogIn, ChevronDown, ArrowRight } from 'lucide-react';
+import { Menu, X, Camera, Wrench, Sparkles, Home, Briefcase, BookOpen, User, Mail, Lock, LogOut, LogIn, ChevronDown, ArrowRight, UserCircle } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { useAuth } from '../context/AuthContext'; 
 import AuthModal from './AuthModal'; 
@@ -7,6 +7,8 @@ import AuthModal from './AuthModal';
 import { RainbowButton } from './ui/rainbow-button'; 
 // ✅ GitHub Star Button Import
 import { GitHubStarButton } from './ui/github-star'; 
+// 🔥 ১. রাউটিং হুক ইমপোর্ট
+import { useNavigate } from 'react-router-dom';
 
 interface NavbarProps {
   isDarkMode: boolean;
@@ -22,6 +24,9 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
   const { user, logout } = useAuth();
   const [isAuthModalOpen, setAuthModalOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+
+  // 🔥 ২. নেভিগেশন হুক
+  const navigate = useNavigate();
 
   const navLinks = [
     { label: 'Home', href: '#home', icon: <Home size={18} /> },
@@ -54,6 +59,19 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
     e.preventDefault();
     setIsOpen(false);
     
+    // যদি আমরা প্রোফাইল পেজে থাকি, তবে প্রথমে হোমে যেতে হবে
+    if (window.location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => {
+            const targetId = href.replace('#', '');
+            const element = document.getElementById(targetId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 100);
+        return;
+    }
+
     const targetId = href.replace('#', '');
     const element = document.getElementById(targetId);
     
@@ -76,9 +94,17 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
       await logout();
       setIsOpen(false);
       setIsProfileMenuOpen(false);
+      navigate('/'); // লগআউটের পর হোমে নিয়ে যাবে
     } catch (error) {
       console.error("Logout failed", error);
     }
+  };
+
+  // 🔥 ৩. প্রোফাইলে যাওয়ার ফাংশন
+  const goToProfile = () => {
+    navigate('/profile');
+    setIsProfileMenuOpen(false);
+    setIsOpen(false);
   };
 
   return (
@@ -171,14 +197,20 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                   </button>
 
                   {isProfileMenuOpen && (
-                    <div className="absolute right-0 w-48 mt-2 overflow-hidden bg-white border shadow-xl dark:bg-black rounded-xl border-slate-200 dark:border-zinc-800 animate-in fade-in slide-in-from-top-2">
-                       <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
-                         <p className="text-sm font-bold truncate text-slate-800 dark:text-white">{user.displayName || "User"}</p>
-                         <p className="text-xs truncate text-slate-500 dark:text-slate-400">{user.email}</p>
-                       </div>
-                       <button onClick={handleLogout} className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-900/10">
-                         <LogOut size={16} /> Logout
-                       </button>
+                    <div className="absolute right-0 w-56 mt-2 overflow-hidden bg-white border shadow-xl dark:bg-black rounded-xl border-slate-200 dark:border-zinc-800 animate-in fade-in slide-in-from-top-2">
+                        <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+                          <p className="text-sm font-bold truncate text-slate-800 dark:text-white">{user.displayName || "User"}</p>
+                          <p className="text-xs truncate text-slate-500 dark:text-slate-400">{user.email}</p>
+                        </div>
+                        
+                        {/* 🔥 ৪. My Profile বাটন যোগ করা হলো */}
+                        <button onClick={goToProfile} className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left transition-colors text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5">
+                          <UserCircle size={16} /> My Profile
+                        </button>
+
+                        <button onClick={handleLogout} className="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-red-500 transition-colors hover:bg-red-50 dark:hover:bg-red-900/10">
+                          <LogOut size={16} /> Logout
+                        </button>
                     </div>
                   )}
                 </div>
@@ -192,14 +224,14 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                 </button>
               )}
 
-              {/* ✅ Desktop: Clean Single GitHub Button (Untouched as requested) */}
+              {/* ✅ Desktop: Clean Single GitHub Button */}
               <div className="hidden md:block">
-                 <GitHubStarButton 
+                  <GitHubStarButton 
                     owner="rahimmishu" 
                     repo="rahim-saroar" 
                     stars={1870} 
                     className="h-8 px-3 text-xs"
-                 />
+                   />
               </div>
 
               <button onClick={() => setIsOpen(!isOpen)} className="p-2 transition-transform lg:hidden text-slate-800 dark:text-white active:scale-90">
@@ -217,18 +249,29 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
        style={{ paddingTop: '100px' }}
       >
           {user ? (
-            <div className="flex items-center justify-between p-4 mb-6 duration-500 border bg-slate-100 dark:bg-zinc-900 rounded-2xl border-slate-200 dark:border-zinc-800 animate-in slide-in-from-top-5">
-               <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-10 h-10 text-lg font-bold text-white rounded-full bg-gradient-to-tr from-purple-500 to-blue-500">
-                    {user.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}
-                  </div>
-                  <div className="overflow-hidden">
-                    <div className="font-bold truncate text-slate-800 dark:text-white">{user.displayName || "User"}</div>
-                    <div className="text-xs truncate text-slate-500 dark:text-slate-400">{user.email}</div>
-                  </div>
+            <div className="flex flex-col gap-2 mb-6 animate-in slide-in-from-top-5">
+               {/* Mobile User Info Card */}
+               <div className="flex items-center justify-between p-4 border bg-slate-100 dark:bg-zinc-900 rounded-2xl border-slate-200 dark:border-zinc-800">
+                <div className="flex items-center gap-3">
+                   <div className="flex items-center justify-center w-10 h-10 text-lg font-bold text-white rounded-full bg-gradient-to-tr from-purple-500 to-blue-500">
+                     {user.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}
+                   </div>
+                   <div className="overflow-hidden">
+                     <div className="font-bold truncate text-slate-800 dark:text-white">{user.displayName || "User"}</div>
+                     <div className="text-xs truncate text-slate-500 dark:text-slate-400">{user.email}</div>
+                   </div>
+                </div>
+                <button onClick={handleLogout} className="p-2 text-red-500 bg-white shadow-sm dark:bg-slate-900 rounded-xl">
+                  <LogOut size={20} />
+                </button>
                </div>
-               <button onClick={handleLogout} className="p-2 text-red-500 bg-white shadow-sm dark:bg-slate-900 rounded-xl">
-                 <LogOut size={20} />
+
+               {/* 🔥 ৫. Mobile Profile Button */}
+               <button 
+                  onClick={goToProfile} 
+                  className="flex items-center justify-center w-full gap-2 p-3 font-bold text-white transition-all bg-blue-600 rounded-xl active:scale-95"
+               >
+                  <UserCircle size={18} /> View My Dashboard
                </button>
             </div>
           ) : (
@@ -277,18 +320,17 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                     <div className="p-2 text-pink-500 transition-colors rounded-lg bg-slate-800 group-hover:text-white group-hover:bg-pink-500"><Lock size={18} /></div>
                     <div className="text-left">
                         <div className="text-sm font-bold text-white">Secret Vault</div>
-                        <div className="text-[10px] text-slate-400">Tap to unlock</div>
+                        <div className="text-left text-[10px] text-slate-400">Tap to unlock</div>
                     </div>
                  </div>
                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
               </button>
 
-              {/* ✅ MOBILE VIEW UPDATE: ডেমো কোড সরিয়ে ক্লিন সিঙ্গেল বাটন দেওয়া হলো */}
               <div className="flex justify-center col-span-2 py-4">
                   <GitHubStarButton 
                       owner="rahimmishu" 
                       repo="rahim-saroar" 
-                      stars={1870} // Desktop এর সাথে মিল রেখে ১৮৭০ দেওয়া হলো
+                      stars={1870} 
                       className="justify-center w-full py-3"
                   />
               </div>

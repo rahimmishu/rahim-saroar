@@ -1,8 +1,9 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore"; // ✅ ১. এটি যোগ করুন
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage"; // ✅ ১. স্টোরেজ ইমপোর্ট করা হলো
 
-// 🔥 আপনার Firebase কনফিগ (আপনার স্ক্রিনশট থেকে নেওয়া)
+// 🔥 আপনার Firebase কনফিগ
 const firebaseConfig = {
   apiKey: "AIzaSyBvJ5SRxWp_6qG9mkWMm6flHEWJHT85ftY",
   authDomain: "rahim-cc7e4.firebaseapp.com",
@@ -14,8 +15,10 @@ const firebaseConfig = {
 };
 
 // অ্যাপ ইনিশিলাইজ করা
-const app = initializeApp(firebaseConfig);
+// ✅ ২. এখানে 'export' যোগ করা হয়েছে যাতে UserProfile.tsx এটি ব্যবহার করতে পারে
+export const app = initializeApp(firebaseConfig);
 
-// 🔥 অথেন্টিকেশন এক্সপোর্ট করা (যাতে অ্যাপের সব জায়গায় লগইন কাজ করে)
+// 🔥 অথেন্টিকেশন, ডাটাবেস এবং স্টোরেজ এক্সপোর্ট করা
 export const auth = getAuth(app);
-export const db = getFirestore(app); // ✅ ২. ডেটাবেস এক্সপোর্ট করুন
+export const db = getFirestore(app);
+export const storage = getStorage(app); // ✅ ৩. স্টোরেজ এক্সপোর্ট করা হলো (ছবির জন্য লাগবে)
