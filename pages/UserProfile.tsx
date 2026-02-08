@@ -4,7 +4,7 @@ import { updateProfile } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { Save, User, ShoppingCart, CreditCard, Loader2, CheckCircle2 } from 'lucide-react';
 
-// 🔥 নির্ভরযোগ্য DiceBear অবতার লিংক (বিভিন্ন স্টাইল)
+// 🔥 ৮টি প্রি-সেট অবতারের লিস্ট
 const AVATAR_LIST = [
   "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix",
   "https://api.dicebear.com/7.x/adventurer/svg?seed=Aneka",
@@ -19,12 +19,11 @@ const AVATAR_LIST = [
 const UserProfile = () => {
   const [user, setUser] = useState(auth.currentUser);
   const [name, setName] = useState(user?.displayName || "");
-  // যদি ইউজারের ছবি না থাকে, তবে প্রথম অবতারটি ডিফল্ট হিসেবে দেখাবে
   const [photoURL, setPhotoURL] = useState(user?.photoURL || AVATAR_LIST[0]);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
 
-  // ফায়ারস্টোর থেকে লেটেস্ট ডাটা আনার জন্য (যাতে রিফ্রেশ দিলেও ছবি ঠিক থাকে)
+  // ফায়ারস্টোর থেকে লেটেস্ট ডাটা আনার জন্য
   useEffect(() => {
     const fetchUserData = async () => {
       if (user) {
@@ -53,13 +52,20 @@ const UserProfile = () => {
         photoURL: photoURL 
       });
       
-      // ২. ডাটাবেস আপডেট (যাতে পার্মানেন্টলি সেভ থাকে)
+      // ২. ডাটাবেস আপডেট
       await setDoc(doc(db, "users", user.uid), { 
         displayName: name, 
         photoURL: photoURL 
       }, { merge: true });
       
+      // 🔥 ৩. লোকাল ইউজার ডাটা ফোর্স আপডেট (যাতে সব জায়গায় রিফ্লেক্ট করে)
+      await user.reload();
+
       alert("Profile updated successfully! 🎉");
+      
+      // 🔥 ৪. পেজ রিলোড - যাতে Navbar এর ছবিও আপডেট হয়
+      window.location.reload(); 
+
     } catch (error: any) {
       console.error(error);
       alert("Error updating profile: " + error.message);
