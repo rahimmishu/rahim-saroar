@@ -2,7 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-   <meta name="viewport" content="width=1024" />
+    
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script>
+        (function() {
+            var viewport = document.getElementById('viewport');
+            var screenWidth = window.screen.width;
+
+            // যদি স্ক্রিন সাইজ ১০২৪ এর নিচে হয় (মানে মোবাইল বা ট্যাব)
+            if (screenWidth < 1024) {
+                // width=1100: ডেস্কটপ সাইজ ফোর্স করবে
+                // initial-scale=0.6: একটু জুম হয়ে থাকবে (যাতে লেখা একদম ছোট না দেখায়)
+                viewport.setAttribute('content', 'width=1100, initial-scale=0.6, user-scalable=yes');
+            }
+        })();
+    </script>
 
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <link rel="icon" type="image/png" href="/favicon.png" />
@@ -14,11 +29,14 @@
     <meta name="description" content="Portfolio of Rahim Saroar Mishu - A Full Stack Developer, AI Enthusiast, and Content Creator from Bangladesh. Specializing in Python, React, and Creative Coding." />
     <meta name="keywords" content="Rahim Saroar, Rahim Saroar Mishu, Web Developer Bangladesh, AI Expert, Rahim Saroar Portfolio, Rhythm of Peace, React Developer, Next.js Portfolio" />
     <meta name="author" content="Rahim Saroar Mishu" />
-    <meta name="robots" content="index, follow, max-image-preview:large" /> <link rel="canonical" href="https://rahim-saroar.vercel.app/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" /> 
+    <link rel="canonical" href="https://rahim-saroar.vercel.app/" />
+    
     <meta property="og:title" content="Rahim Saroar Mishu - Future Tech Leader" />
     <meta property="og:description" content="Explore the world of Rahim Saroar Mishu - AI projects, web development, and creative journey." />
     <meta property="og:image" content="https://rahim-saroar.vercel.app/1.jpg" />
-    <meta property="og:image:alt" content="Rahim Saroar Mishu Profile Picture" /> <meta property="og:url" content="https://rahim-saroar.vercel.app/" />
+    <meta property="og:image:alt" content="Rahim Saroar Mishu Profile Picture" /> 
+    <meta property="og:url" content="https://rahim-saroar.vercel.app/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Rahim Saroar Mishu Portfolio" />
     <meta property="og:locale" content="en_US" />
@@ -43,20 +61,11 @@
         "https://www.facebook.com/rhythm2OfPeace"
       ],
       "jobTitle": ["Full Stack Developer", "AI Enthusiast", "Content Creator"],
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Rhythm of Peace"
-      },
-      "alumniOf": {
-        "@type": "HighSchool",
-        "name": "Mongalbari Sirajia High School"
-      },
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Joypurhat",
         "addressCountry": "Bangladesh"
-      },
-      "knowsAbout": ["Web Development", "Python", "Artificial Intelligence", "Content Creation"]
+      }
     }
     </script>
 
@@ -113,24 +122,13 @@
         margin: 0;
         overflow-x: hidden;
       }
-      .font-bengali {
-        font-family: 'Hind Siliguri', sans-serif;
-      }
-      .font-signature {
-        font-family: 'Dancing Script', cursive;
-      }
-      .no-scrollbar::-webkit-scrollbar {
-          display: none;
-      }
-      .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-      }
-      #root {
-        position: relative;
-        z-index: 10;
-        min-height: 100vh;
-      }
+      
+      /* ফন্ট সেটিংস */
+      .font-bengali { font-family: 'Hind Siliguri', sans-serif; }
+      .font-signature { font-family: 'Dancing Script', cursive; }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      #root { position: relative; z-index: 10; min-height: 100vh; }
     </style>
     
     <script type="importmap">
@@ -153,7 +151,6 @@
 </head>
 <body>
     <div id="root"></div>
-
     <script type="module" src="/index.tsx"></script>
 </body>
 </html>
