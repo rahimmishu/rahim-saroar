@@ -3,8 +3,9 @@ import { auth, db } from '../firebase';
 import { updateProfile } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { Save, User, ShoppingCart, CreditCard, Loader2, CheckCircle2 } from 'lucide-react';
+// 🔥 ১. useNavigate ইমপোর্ট করুন
+import { useNavigate } from 'react-router-dom';
 
-// 🔥 ৮টি প্রি-সেট অবতারের লিস্ট
 const AVATAR_LIST = [
   "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix",
   "https://api.dicebear.com/7.x/adventurer/svg?seed=Aneka",
@@ -23,7 +24,9 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
 
-  // ফায়ারস্টোর থেকে লেটেস্ট ডাটা আনার জন্য
+  // 🔥 ২. নেভিগেশন হুক
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (user) {
@@ -46,25 +49,23 @@ const UserProfile = () => {
     if (!user) return;
     setLoading(true);
     try {
-      // ১. ফায়ারবেস অথেন্টিকেশন প্রোফাইল আপডেট
       await updateProfile(user, { 
         displayName: name,
         photoURL: photoURL 
       });
       
-      // ২. ডাটাবেস আপডেট
       await setDoc(doc(db, "users", user.uid), { 
         displayName: name, 
         photoURL: photoURL 
       }, { merge: true });
       
-      // 🔥 ৩. লোকাল ইউজার ডাটা ফোর্স আপডেট (যাতে সব জায়গায় রিফ্লেক্ট করে)
       await user.reload();
 
       alert("Profile updated successfully! 🎉");
       
-      // 🔥 ৪. পেজ রিলোড - যাতে Navbar এর ছবিও আপডেট হয়
-      window.location.reload(); 
+      // 🔥 ৩. রিলোড এর বদলে হোম পেজে পাঠিয়ে দিন (Temporary Fix)
+      // অথবা রিলোড রাখতে চাইলে vercel.json ফাইলটি অবশ্যই অ্যাড করতে হবে
+      navigate('/'); 
 
     } catch (error: any) {
       console.error(error);
@@ -75,6 +76,7 @@ const UserProfile = () => {
 
   return (
     <div className="container min-h-screen px-4 pt-24 pb-12 mx-auto text-white bg-black">
+      {/* ... বাকি সব কোড আগের মতোই থাকবে ... */}
       <h1 className="mb-8 text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
         My Dashboard
       </h1>
