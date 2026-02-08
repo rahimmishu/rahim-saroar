@@ -66,6 +66,7 @@ const UserProfile = () => {
       // 🔥 ৩. রিলোড এর বদলে হোম পেজে পাঠিয়ে দিন (Temporary Fix)
       // অথবা রিলোড রাখতে চাইলে vercel.json ফাইলটি অবশ্যই অ্যাড করতে হবে
       navigate('/'); 
+      window.location.href = '/';
 
     } catch (error: any) {
       console.error(error);
