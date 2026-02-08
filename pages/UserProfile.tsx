@@ -4,16 +4,16 @@ import { updateProfile } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { Save, User, ShoppingCart, CreditCard, Loader2, CheckCircle2 } from 'lucide-react';
 
-// 🔥 ৮টি প্রি-সেট অবতারের লিস্ট
+// 🔥 নির্ভরযোগ্য DiceBear অবতার লিংক (বিভিন্ন স্টাইল)
 const AVATAR_LIST = [
-  "https://avatar.iran.liara.run/public/boy?username=Ash",
-  "https://avatar.iran.liara.run/public/girl?username=Lisa",
-  "https://avatar.iran.liara.run/public/boy?username=John",
-  "https://avatar.iran.liara.run/public/girl?username=Maria",
-  "https://avatar.iran.liara.run/public/boy?username=David",
-  "https://avatar.iran.liara.run/public/girl?username=Sophie",
-  "https://avatar.iran.liara.run/public/job/doctor/male",
-  "https://avatar.iran.liara.run/public/job/designer/female"
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Aneka",
+  "https://api.dicebear.com/7.x/micah/svg?seed=Mishu",
+  "https://api.dicebear.com/7.x/micah/svg?seed=Sara",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Robot1",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=CoolGuy",
+  "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Happy",
+  "https://api.dicebear.com/7.x/lorelei/svg?seed=Artist"
 ];
 
 const UserProfile = () => {
@@ -107,7 +107,7 @@ const UserProfile = () => {
               
               {/* Current Avatar Display */}
               <div className="flex flex-col items-center justify-center mb-8">
-                <div className="relative w-32 h-32 overflow-hidden border-4 rounded-full shadow-xl border-blue-500/50 bg-slate-800 shadow-blue-500/20">
+                <div className="relative w-32 h-32 overflow-hidden bg-white border-4 rounded-full shadow-xl border-blue-500/50 shadow-blue-500/20">
                   <img 
                     src={photoURL} 
                     alt="Profile" 
@@ -125,11 +125,11 @@ const UserProfile = () => {
                     <button
                       key={index}
                       onClick={() => setPhotoURL(avatar)}
-                      className={`relative rounded-full overflow-hidden transition-all duration-300 hover:scale-110 
-                        ${photoURL === avatar ? 'ring-4 ring-blue-500 scale-110 shadow-lg shadow-blue-500/40' : 'ring-1 ring-white/10 opacity-70 hover:opacity-100'}
+                      className={`relative rounded-full overflow-hidden transition-all duration-300 bg-white hover:scale-110 
+                        ${photoURL === avatar ? 'ring-4 ring-blue-500 scale-110 shadow-lg shadow-blue-500/40' : 'ring-1 ring-white/10 opacity-80 hover:opacity-100'}
                       `}
                     >
-                      <img src={avatar} alt={`Avatar ${index}`} className="w-full h-full bg-slate-800" />
+                      <img src={avatar} alt={`Avatar ${index}`} className="w-full h-full" />
                       
                       {/* Selected Indicator */}
                       {photoURL === avatar && (
