@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Angry, Frown, Meh, Smile, Star, CheckCircle, X, User, Loader2 } from 'lucide-react';
-import { db } from "../firebase"; // ✅ Firebase ডেটাবেস ইম্পোর্ট
-import { collection, addDoc, serverTimestamp } from "firebase/firestore"; // ✅ ফায়ারবেস ফাংশন
+import { db } from "../firebase"; 
+import { collection, addDoc, serverTimestamp } from "firebase/firestore"; 
 
 // Mood Configuration
 const moodConfig: any = {
@@ -21,17 +21,15 @@ const FeedbackSlider: React.FC<FeedbackSliderProps> = ({ onSubmit }) => {
   const [name, setName] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false); // ✅ লোডিং স্টেট যোগ করা হয়েছে
+  const [loading, setLoading] = useState(false);
 
-  // 🔥 5 মিনিট (300,000 ms) পর পপ-আপ চালু হবে
   useEffect(() => {
     const timer = setTimeout(() => {
-      // যদি আগে সাবমিট না করে থাকে, তবেই দেখাবে
       const alreadySubmitted = localStorage.getItem('feedback_submitted');
       if (!alreadySubmitted) {
         setIsVisible(true);
       }
-    }, 300000); // 5 minutes
+    }, 300000); 
 
     return () => clearTimeout(timer);
   }, []);
@@ -50,22 +48,19 @@ const FeedbackSlider: React.FC<FeedbackSliderProps> = ({ onSubmit }) => {
   const handleSubmit = async () => {
     if (!name.trim()) return alert("Please enter your name!");
     
-    setLoading(true); // লোডিং শুরু
+    setLoading(true);
 
     try {
-      // ✅ ফায়ারবেসে ডাটা সেভ করা হচ্ছে
       await addDoc(collection(db, "feedbacks"), {
         name: name,
-        rating: level,          // 1 থেকে 5 এর মধ্যে রেটিং
-        ratingText: currentMood.label, // যেমন: "Good", "Excellent!"
-        createdAt: serverTimestamp(),  // সময়
+        rating: level,
+        ratingText: currentMood.label,
+        createdAt: serverTimestamp(),
       });
 
-      // সফল হলে
       setIsSubmitted(true);
       localStorage.setItem('feedback_submitted', 'true');
       
-      // প্যারেন্ট কম্পোনেন্টকে জানানো (যদি দরকার হয়)
       if (onSubmit) {
         onSubmit({
           name: name,
@@ -74,7 +69,6 @@ const FeedbackSlider: React.FC<FeedbackSliderProps> = ({ onSubmit }) => {
         });
       }
       
-      // ২.৫ সেকেন্ড পর অটোমেটিক বন্ধ হবে
       setTimeout(() => setIsVisible(false), 2500);
 
     } catch (error) {
@@ -82,27 +76,150 @@ const FeedbackSlider: React.FC<FeedbackSliderProps> = ({ onSubmit }) => {
       alert("Something went wrong! Please try again.");
     }
 
-    setLoading(false); // লোডিং শেষ
+    setLoading(false);
   };
 
   if (!isVisible) return null;
 
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+      
+      {/* CSS Injection for Styles */}
+      <style>{`
+        .feedback-card {
+          background: #ffffff;
+          width: 100%;
+          max-width: 400px;
+          border-radius: 24px;
+          padding: 32px;
+          text-align: center;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+          transition: all 0.3s ease;
+        }
+        .dark .feedback-card {
+          background: #1e293b;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .icon-wrapper {
+          position: relative;
+          width: 100px;
+          height: 100px;
+          margin: 0 auto 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .icon-glow {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background: var(--theme-color);
+          filter: blur(20px);
+          opacity: 0.3;
+          animation: pulse 2s infinite;
+        }
+        .icon-stage {
+          position: relative;
+          z-index: 10;
+          color: var(--theme-color);
+          filter: drop-shadow(0 5px 15px var(--theme-shadow));
+        }
+        .mood-label {
+          color: var(--theme-color);
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          font-size: 14px;
+          margin-bottom: 24px;
+        }
+        .slider-container input[type="range"] {
+          -webkit-appearance: none;
+          width: 100%;
+          height: 8px;
+          border-radius: 4px;
+          background: #e2e8f0;
+          outline: none;
+          background-image: linear-gradient(to right, var(--theme-color), var(--theme-color));
+          background-repeat: no-repeat;
+          margin-bottom: 24px;
+        }
+        .dark .slider-container input[type="range"] {
+          background: #334155;
+        }
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 24px;
+          height: 24px;
+          background: #fff;
+          border: 4px solid var(--theme-color);
+          border-radius: 50%;
+          cursor: pointer;
+          box-shadow: 0 0 10px var(--theme-shadow);
+          transition: transform 0.1s;
+        }
+        .slider-container input[type="range"]::-webkit-slider-thumb:hover {
+          transform: scale(1.2);
+        }
+        .submit-btn {
+          width: 100%;
+          padding: 14px;
+          border-radius: 12px;
+          border: none;
+          background: var(--theme-color);
+          color: white;
+          font-weight: bold;
+          font-size: 16px;
+          cursor: pointer;
+          box-shadow: 0 5px 15px var(--theme-shadow);
+          transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .submit-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px var(--theme-shadow);
+        }
+        .submit-btn:active {
+          transform: translateY(0);
+        }
+        .pop-anim {
+          animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+          from { transform: scale(0); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes pulse {
+          0% { transform: scale(0.8); opacity: 0.3; }
+          50% { transform: scale(1.1); opacity: 0.1; }
+          100% { transform: scale(0.8); opacity: 0.3; }
+        }
+        /* Success Overlay Styles */
+        .success-overlay {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+          min-height: 300px; /* Fixed height to match form view */
+        }
+      `}</style>
+
       <div 
-        className="relative mx-4 feedback-card"
+        className="relative mx-4 feedback-card dark"
         style={{
           '--theme-color': currentMood.color,
           '--theme-shadow': currentMood.shadow,
         } as React.CSSProperties}
       >
-        {/* Close Button */}
-        <button 
-          onClick={() => setIsVisible(false)}
-          className="absolute transition-colors top-4 right-4 text-slate-400 hover:text-red-500"
-        >
-          <X size={24} />
-        </button>
+        {/* Close Button (Only show if not submitted) */}
+        {!isSubmitted && (
+          <button 
+            onClick={() => setIsVisible(false)}
+            className="absolute transition-colors top-4 right-4 text-slate-400 hover:text-red-500"
+          >
+            <X size={24} />
+          </button>
+        )}
 
         {!isSubmitted ? (
           <div className="form-view">
@@ -151,12 +268,17 @@ const FeedbackSlider: React.FC<FeedbackSliderProps> = ({ onSubmit }) => {
             </button>
           </div>
         ) : (
-          <div className="success-overlay active">
+          /* 🔥 SUCCESS MESSAGE FIXED */
+          <div className="duration-300 success-overlay animate-in fade-in zoom-in">
             <div style={{ color: '#00b894', marginBottom: '20px' }}>
-              <CheckCircle size={80} className="pop-anim" />
+              <CheckCircle size={80} className="pop-anim drop-shadow-lg" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Thank You!</h2>
-            <p className="text-slate-400">Feedback saved successfully.</p>
+            <h2 className="mb-2 text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">
+              Thank You!
+            </h2>
+            <p className="text-lg font-medium text-slate-500 dark:text-slate-400">
+              Your feedback helps us grow.
+            </p>
           </div>
         )}
       </div>
