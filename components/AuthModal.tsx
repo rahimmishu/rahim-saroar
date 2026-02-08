@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { X, Mail, Lock, User, ArrowRight, Loader2, Sparkles, ShieldCheck } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { X, Mail, Lock, User, ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
@@ -9,6 +9,8 @@ import {
   signInWithPopup 
 } from "firebase/auth";
 import { auth } from "../firebase";
+// 🔥 reCAPTCHA Import
+import ReCAPTCHA from "react-google-recaptcha";
 
 // 🔥 Google Icon (SVG)
 const GoogleIcon = () => (
@@ -40,38 +42,38 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 🔥 Robot Verification State
-  const [captcha, setCaptcha] = useState({ num1: 0, num2: 0, answer: 0 });
-  const [captchaInput, setCaptchaInput] = useState("");
-
-  const generateCaptcha = () => {
-    const n1 = Math.floor(Math.random() * 10);
-    const n2 = Math.floor(Math.random() * 10);
-    setCaptcha({ num1: n1, num2: n2, answer: n1 + n2 });
-    setCaptchaInput("");
-  };
+  // 🔥 reCAPTCHA State
+  const [captchaValue, setCaptchaValue] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   useEffect(() => {
     if (isOpen) {
-      generateCaptcha();
       setError("");
       setEmail("");
       setPassword("");
       setName("");
-      setCaptchaInput("");
+      setCaptchaValue(null);
+      // Reset captcha when modal opens
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
     }
   }, [isOpen]);
 
-  // 🔥 Handle Social Login (Google/Facebook)
+  // 🔥 Handle Social Login
   const handleSocialLogin = async (providerName: 'google' | 'facebook') => {
     setError("");
     setLoading(true);
     try {
       const provider = providerName === 'google' ? new GoogleAuthProvider() : new FacebookAuthProvider();
       await signInWithPopup(auth, provider);
-      onClose(); // Close modal on success
+      onClose();
     } catch (err: any) {
-      setError(err.message);
+      if (err.code === 'auth/popup-closed-by-user') {
+        setError("Login cancelled by user.");
+      } else {
+        setError(err.message);
+      }
     }
     setLoading(false);
   };
@@ -80,9 +82,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     e.preventDefault();
     setError("");
 
-    // ১. রোবট ভেরিফিকেশন চেক (শুধুমাত্র ইমেইল লগইনের জন্য)
-    if (parseInt(captchaInput) !== captcha.answer) {
-      setError("Incorrect Math Answer! 🤖");
+    // 🔥 ১. reCAPTCHA ভেরিফিকেশন চেক
+    // আপনি চাইলে শুধু সাইন আপের জন্য রাখতে পারেন: if (isSignUp && !captchaValue)
+    if (!captchaValue) {
+      setError("Please verify you are not a robot! 🤖");
       return;
     }
 
@@ -97,7 +100,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       }
       onClose();
     } catch (err: any) {
-      // ফায়ারবেস এরর হ্যান্ডলিং
       if (err.code === 'auth/invalid-credential') setError("Invalid email or password.");
       else if (err.code === 'auth/email-already-in-use') setError("Email already in use.");
       else if (err.code === 'auth/weak-password') setError("Password must be at least 6 chars.");
@@ -105,7 +107,9 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       else if (err.code === 'auth/wrong-password') setError("Wrong password.");
       else setError(err.message); 
       
-      generateCaptcha();
+      // Error হলে ক্যাপচা রিসেট করুন
+      setCaptchaValue(null);
+      recaptchaRef.current?.reset();
     }
     setLoading(false);
   };
@@ -161,17 +165,17 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             </button>
           </div>
 
-          {/* 🔥 NEW: Social Login Buttons */}
+          {/* Social Login Buttons */}
           <div className="grid grid-cols-2 gap-3 mb-6">
             <button 
               onClick={() => handleSocialLogin('google')}
-              className="flex items-center justify-center gap-2 py-2.5 px-4 bg-white hover:bg-slate-100 text-slate-900 rounded-xl font-bold text-sm transition-all duration-300 transform active:scale-95 shadow-lg"
+              className="flex items-center justify-center gap-2 py-2.5 px-4 bg-white hover:bg-gray-100 text-slate-900 rounded-xl font-bold text-sm transition-all duration-300 transform active:scale-[0.98] shadow-lg border border-transparent hover:border-gray-200"
             >
               <GoogleIcon /> Google
             </button>
             <button 
               onClick={() => handleSocialLogin('facebook')}
-              className="flex items-center justify-center gap-2 py-2.5 px-4 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 text-[#1877F2] border border-[#1877F2]/20 rounded-xl font-bold text-sm transition-all duration-300 transform active:scale-95"
+              className="flex items-center justify-center gap-2 py-2.5 px-4 bg-[#1877F2]/10 hover:bg-[#1877F2]/20 text-[#1877F2] border border-[#1877F2]/20 rounded-xl font-bold text-sm transition-all duration-300 transform active:scale-[0.98]"
             >
               <FacebookIcon /> Facebook
             </button>
@@ -235,22 +239,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               />
             </div>
 
-            {/* 🔥 Math Captcha (Only needed for email signup) */}
-            <div className="flex items-center justify-between p-1 pl-3 border bg-white/5 border-white/10 rounded-xl">
-               <div className="flex items-center gap-3">
-                 <ShieldCheck className="text-purple-400" size={18} />
-                 <span className="text-sm font-medium text-slate-300">
-                   Solve: <span className="font-bold tracking-wider text-white">{captcha.num1} + {captcha.num2} = ?</span>
-                 </span>
-               </div>
-               <input
-                 type="number"
-                 placeholder="Ans"
-                 className="w-20 py-2 text-center text-white bg-transparent border-l outline-none border-white/10 focus:bg-white/5"
-                 value={captchaInput}
-                 onChange={(e) => setCaptchaInput(e.target.value)}
-                 required
-               />
+            {/* 🔥 Google reCAPTCHA v2 Checkbox */}
+            <div className="flex justify-center overflow-hidden rounded-xl">
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                theme="dark"
+                // ⚠️ আপনার গুগল সাইট কী এখানে বসান (6Ldrf...)
+                sitekey="6LdRf2QsAAAAABV0r5hJeTC5nHVs79BY32bN-8c7" 
+                onChange={(value) => setCaptchaValue(value)}
+              />
             </div>
 
             {/* Submit Button */}
@@ -273,7 +270,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           {/* Footer Decoration */}
           <div className="mt-6 text-center">
             <p className="text-[10px] text-slate-500">
-              Secured by Firebase & MathShield™
+              Secured by Firebase & Google reCAPTCHA™
             </p>
           </div>
         </div>
