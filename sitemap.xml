@@ -1,53 +1,202 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-
   <url>
     <loc>https://rahim-saroar.vercel.app/</loc>
-    <lastmod>2024-02-06</lastmod>
+    <lastmod>2026-02-08</lastmod>
     <priority>1.0</priority>
-    
     <image:image>
-      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-profile.jpg</image:loc>
-      <image:title>Rahim Saroar Mishu Profile</image:title>
+      <image:loc>https://rahim-saroar.vercel.app/users/9.jpg</image:loc>
     </image:image>
-
     <image:image>
-      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-content-creator.jpg</image:loc>
-      <image:title>Rahim Saroar Mishu Content Creator</image:title>
+      <image:loc>https://rahim-saroar.vercel.app/users/4.jpg</image:loc>
     </image:image>
-
     <image:image>
-      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-web-developer.jpg</image:loc>
-      <image:title>Rahim Saroar Mishu Web Developer</image:title>
+      <image:loc>https://rahim-saroar.vercel.app/users/2.jpg</image:loc>
     </image:image>
-    
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/users/5.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/users/3.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/1.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/arrow.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/background.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/background2.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/blonde.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/code-scaled.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/deep.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/f.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/favicon.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/fb-profile.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/fok.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/goju.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/gps-tracker-new.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/hand-tracking.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/horny.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/hornyh.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/hot.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/jarvis-ai.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/manual.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/map-bg.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/og-image.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/pagla.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/portfolio.png</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-biya.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-c.jpg</image:loc>
+    </image:image>
     <image:image>
       <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-coding.jpg</image:loc>
-      <image:title>Rahim Saroar Mishu Coding Workspace</image:title>
     </image:image>
-
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-coffee.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-content-creator.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-fuad.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-J.jpg</image:loc>
+    </image:image>
     <image:image>
       <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-lifestyle.jpg</image:loc>
-      <image:title>Rahim Saroar Mishu Lifestyle</image:title>
     </image:image>
-
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-profile.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-school.jpg</image:loc>
+    </image:image>
     <image:image>
       <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-speaker.jpg</image:loc>
-      <image:title>Rahim Saroar Mishu Public Speaker</image:title>
     </image:image>
-
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-speaker.png</image:loc>
+    </image:image>
     <image:image>
       <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-sugarmill.jpg</image:loc>
-      <image:title>Rahim Saroar Mishu Travel</image:title>
     </image:image>
-
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-web-developer.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/secret-pic.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/step.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/victory.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/wheel.jpg</image:loc>
+    </image:image>
   </url>
-  
   <url>
-    <loc>https://rahim-saroar.vercel.app/resume.pdf</loc>
-    <lastmod>2024-02-06</lastmod>
+    <loc>https://rahim-saroar.vercel.app/about</loc>
+    <lastmod>2026-02-08</lastmod>
     <priority>0.8</priority>
   </url>
-
+  <url>
+    <loc>https://rahim-saroar.vercel.app/contact</loc>
+    <lastmod>2026-02-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rahim-saroar.vercel.app/projects</loc>
+    <lastmod>2026-02-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rahim-saroar.vercel.app/certifications</loc>
+    <lastmod>2026-02-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rahim-saroar.vercel.app/achievements</loc>
+    <lastmod>2026-02-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rahim-saroar.vercel.app/techstack</loc>
+    <lastmod>2026-02-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rahim-saroar.vercel.app/resources</loc>
+    <lastmod>2026-02-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rahim-saroar.vercel.app/creativework</loc>
+    <lastmod>2026-02-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rahim-saroar.vercel.app/journey</loc>
+    <lastmod>2026-02-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rahim-saroar.vercel.app/profile</loc>
+    <lastmod>2026-02-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rahim-saroar.vercel.app/secret</loc>
+    <lastmod>2026-02-08</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>
