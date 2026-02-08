@@ -77,12 +77,21 @@ html {
   animation: float 6s ease-in-out infinite; /* ৬ সেকেন্ডে একবার লুপ হবে */
 }
 
-/* --- 🧪 Tubes Cursor Styles (Existing) --- */
+/* --- 🧪 Body Styles (Updated for Pure Black Dark Mode) --- */
 body {
-  background-color: #0f172a; /* Dark Slate Background */
+  /* ডিফল্ট (Light Mode) preloader er ager screen */
+  background-color: #000000; 
+  color: #0f172a;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 🔥 Dark Mode এর জন্য Pure Black */
+.dark body {
+  background-color: #000000 !important; 
+  color: #ffffff;
 }
 
 canvas#canvas {
@@ -102,7 +111,7 @@ canvas#canvas {
 }
 
 /* ---------------------------------------------------- */
-/* 🔥 FEEDBACK SLIDER STYLES (NEWLY ADDED)             */
+/* 🔥 FEEDBACK SLIDER STYLES                           */
 /* ---------------------------------------------------- */
 
 .feedback-card {
@@ -121,8 +130,9 @@ canvas#canvas {
 
 /* Dark Mode Support for Feedback Card */
 .dark .feedback-card {
-  background: #1e293b; /* Slate-800 */
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  /* ব্যাকগ্রাউন্ড কালো হওয়ায় কার্ডটি একটু আলাদা রাখার জন্য Slate-900 রাখা হলো */
+  background: #111827; 
+  box-shadow: 0 20px 60px rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -268,5 +278,5 @@ canvas#canvas {
 }
 
 .dark .success-overlay {
-  background: #1e293b;
+  background: #111827; /* Darker background for success overlay in dark mode */
 }

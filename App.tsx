@@ -43,7 +43,7 @@ import { AuthProvider } from './context/AuthContext';
 // 🔥 ২. নতুন পেজ ইমপোর্ট (নিশ্চিত করুন পাথ সঠিক আছে)
 import UserProfile from './pages/UserProfile'; 
 
-// 🔥 ৩. স্ক্রল টু টপ কম্পোনেন্ট (রাউট চেঞ্জ হলে পেজের শুরুতে নিয়ে যাবে)
+// 🔥 ৩. স্ক্রল টু টপ কম্পোনেন্ট (রাউট চেঞ্জ হলে পেজের শুরুতে নিয়ে যাবে)
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -83,7 +83,7 @@ const AppContent: React.FC = () => {
           navigator.vibrate(5);
         }
       };
-   
+    
       document.addEventListener('click', handleGlobalClick);
       return () => {
         document.removeEventListener('click', handleGlobalClick);
@@ -135,13 +135,14 @@ const AppContent: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []); 
 
-  // রাউটের লোকেশন পাওয়ার জন্য
+  // রাউটের লোকেশন পাওয়ার জন্য
   const location = useLocation();
   // প্রোফাইল পেজে থাকলে কিছু গ্লোবাল কম্পোনেন্ট হাইড করার জন্য (অপশনাল)
   const isProfilePage = location.pathname === '/profile';
 
   return (
-      <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-black text-slate-900 dark:text-white">
+      // 👇 পরিবর্তন: dark:bg-[#000000] ব্যবহার করা হয়েছে Pure Black এর জন্য
+      <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-[#000000] text-slate-900 dark:text-white">
         
         <Toaster 
            position="top-center" 
