@@ -18,25 +18,25 @@ const Resources: React.FC = () => {
     },
     {
       id: 2,
-      title: "Physics First Paper Suggestion",
-      category: "Suggestion",
-      size: "1.2 MB",
-      date: "Dec 10, 2025",
+      title: "HSC Biology 1st Paper - Udvash (2026)",
+      category: "Question Bank",
+      size: "180 MB",
+      date: "Feb 08, 2026",
       icon: <BookOpen className="text-purple-500" />,
       color: "text-purple-500",
       bg: "bg-purple-100 dark:bg-purple-500/10",
-      link: "/downloads/physics_sugg.pdf"
+      link: "https://drive.google.com/file/d/1KCHJcwC7QvKD754CgyU0fSQDwUDo3ExX/view?usp=drive_link"
     },
     {
       id: 3,
-      title: "Python Basic Cheat Sheet",
-      category: "Programming",
-      size: "5.0 MB",
-      date: "Nov 20, 2025",
+      title: "HSC Biology 2nd Paper - Udvash (2026",
+      category: "Question Bank",
+      size: "235 MB",
+      date: "Feb 08, 2026",
       icon: <FileText className="text-green-500" />,
       color: "text-green-500",
       bg: "bg-green-100 dark:bg-green-500/10",
-      link: "/downloads/python_sheet.pdf"
+      link: "https://drive.google.com/file/d/1jma6a6U-CSZiqbF6t_tSfQf1HGb2dAJx/view?usp=drive_link"
     },
     {
       id: 4,
