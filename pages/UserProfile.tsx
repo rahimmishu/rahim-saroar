@@ -5,6 +5,7 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 import { Save, User, ShoppingCart, CreditCard, Loader2, CheckCircle2 } from 'lucide-react';
 // 🔥 ১. useNavigate ইমপোর্ট করুন
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const AVATAR_LIST = [
   "https://api.dicebear.com/7.x/adventurer/svg?seed=Felix",
@@ -62,16 +63,16 @@ const UserProfile = () => {
       await user.reload();
       
 
-      alert("Profile updated successfully! 🎉");
+      toast.success("Profile updated successfully! 🎉");
       
-      // 🔥 ৩. রিলোড এর বদলে হোম পেজে পাঠিয়ে দিন (Temporary Fix)
-      // অথবা রিলোড রাখতে চাইলে vercel.json ফাইলটি অবশ্যই অ্যাড করতে হবে
-      navigate('/'); 
-      window.location.href = '/';
+    
+      setTimeout(() => {
+         window.location.href = '/'; 
+      }, 1500);
 
     } catch (error: any) {
       console.error(error);
-      alert("Error updating profile: " + error.message);
+     toast.error("Update failed: " + error.message);
     }
     setLoading(false);
   };

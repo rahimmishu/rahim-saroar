@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 // 🔥 ১. রাউটিং ইমপোর্ট করা হলো
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 
 // Components Imports
 import AppNavbar from './components/AppNavbar';
@@ -141,6 +142,25 @@ const AppContent: React.FC = () => {
 
   return (
       <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-black text-slate-900 dark:text-white">
+        
+        <Toaster 
+           position="top-center" 
+           reverseOrder={false} 
+           toastOptions={{
+             style: {
+               background: '#333',
+               color: '#fff',
+               borderRadius: '10px',
+               border: '1px solid #444',
+             },
+             success: {
+               iconTheme: {
+                 primary: '#10B981',
+                 secondary: 'white',
+               },
+             },
+           }}
+        />
         
         <SunlightSpotlight className="z-[50]" />
         <ScrollToTop />
