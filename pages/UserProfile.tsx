@@ -60,6 +60,7 @@ const UserProfile = () => {
       }, { merge: true });
       
       await user.reload();
+      await user.getIdToken(true);
 
       alert("Profile updated successfully! 🎉");
       
