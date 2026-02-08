@@ -92,7 +92,8 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ isOpen, onClose }) => {
   ];
 
   return (
-    <div className="fixed inset-0 z-[100] bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-300">
+    // ✅ OVERLAY: Pure Black with Opacity
+    <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-300">
       
       {/* Close Button */}
       <button 
@@ -102,8 +103,8 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ isOpen, onClose }) => {
         <X size={32} />
       </button>
 
-      {/* Main Content Scrollable */}
-      <div className="bg-white dark:bg-slate-800 w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl p-6 md:p-10 relative">
+      {/* ✅ MAIN CONTENT: Pure Black Background (bg-black) with subtle border */}
+      <div className="bg-white dark:bg-black border dark:border-neutral-800 w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl p-6 md:p-10 relative">
         
         {/* Header */}
         <div className="flex flex-col items-center mb-8 text-center">
@@ -111,7 +112,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ isOpen, onClose }) => {
             <Camera className="text-purple-500" />
             <span>Life in <span className="text-purple-500">Frames</span></span>
           </div>
-          <p className="mt-2 text-slate-500">A glimpse into my world</p>
+          <p className="mt-2 text-slate-500 dark:text-neutral-400">A glimpse into my world</p>
         </div>
 
         {/* Gallery Grid */}
@@ -120,11 +121,12 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ isOpen, onClose }) => {
             <div 
               key={photo.id} 
               // 🔥 GPU Acceleration & Optimization
-              className="relative overflow-hidden transition-all shadow-md cursor-pointer group rounded-xl aspect-square hover:shadow-xl transform-gpu bg-slate-100 dark:bg-slate-700"
+              // ✅ CARD BG: Neutral-900 (Almost Black) for slight contrast
+              className="relative overflow-hidden transition-all shadow-md cursor-pointer group rounded-xl aspect-square hover:shadow-xl transform-gpu bg-slate-100 dark:bg-neutral-900"
             >
               <img 
                 src={photo.src} 
-                alt={photo.alt} // ✅ এখানে এখন ইউনিক এবং শক্তিশালী কীওয়ার্ড ব্যবহার হচ্ছে
+                alt={photo.alt} 
                 loading="lazy"
                 decoding="async"
                 className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110 will-change-transform"
@@ -139,7 +141,8 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Social Link */}
-        <div className="pt-6 mt-8 text-center border-t border-slate-200 dark:border-slate-700">
+        {/* ✅ BORDER: Neutral-800 for dark mode */}
+        <div className="pt-6 mt-8 text-center border-t border-slate-200 dark:border-neutral-800">
              <a href="https://www.facebook.com/rahimsaroar" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 text-blue-500 hover:underline">
                 <Instagram size={18} /> See more on Facebook
              </a>

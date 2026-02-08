@@ -1,57 +1,68 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth, updateProfile } from "firebase/auth";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { doc, setDoc, getDoc, getFirestore } from "firebase/firestore";
-import { Camera, Save, User, ShoppingCart, CreditCard, Loader2 } from 'lucide-react';
-import { app } from '../firebase'; // আপনার ফায়ারবেস কনফিগ পাথ
+import { auth, db } from '../firebase'; 
+import { updateProfile } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { Save, User, ShoppingCart, CreditCard, Loader2, CheckCircle2 } from 'lucide-react';
 
-const auth = getAuth(app);
-const storage = getStorage(app);
-const db = getFirestore(app);
+// 🔥 ৮টি প্রি-সেট অবতারের লিস্ট
+const AVATAR_LIST = [
+  "https://avatar.iran.liara.run/public/boy?username=Ash",
+  "https://avatar.iran.liara.run/public/girl?username=Lisa",
+  "https://avatar.iran.liara.run/public/boy?username=John",
+  "https://avatar.iran.liara.run/public/girl?username=Maria",
+  "https://avatar.iran.liara.run/public/boy?username=David",
+  "https://avatar.iran.liara.run/public/girl?username=Sophie",
+  "https://avatar.iran.liara.run/public/job/doctor/male",
+  "https://avatar.iran.liara.run/public/job/designer/female"
+];
 
 const UserProfile = () => {
   const [user, setUser] = useState(auth.currentUser);
   const [name, setName] = useState(user?.displayName || "");
+  // যদি ইউজারের ছবি না থাকে, তবে প্রথম অবতারটি ডিফল্ট হিসেবে দেখাবে
+  const [photoURL, setPhotoURL] = useState(user?.photoURL || AVATAR_LIST[0]);
   const [loading, setLoading] = useState(false);
-  const [photoURL, setPhotoURL] = useState(user?.photoURL || "");
-  const [activeTab, setActiveTab] = useState('profile'); // profile, cart, payments
+  const [activeTab, setActiveTab] = useState('profile');
 
-  // প্রোফাইল ছবি আপলোড হ্যান্ডলার
-  const handleImageUpload = async (e: any) => {
-    const file = e.target.files[0];
-    if (!file || !user) return;
+  // ফায়ারস্টোর থেকে লেটেস্ট ডাটা আনার জন্য (যাতে রিফ্রেশ দিলেও ছবি ঠিক থাকে)
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            if (data.photoURL) setPhotoURL(data.photoURL);
+            if (data.displayName) setName(data.displayName);
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+    fetchUserData();
+  }, [user]);
 
-    setLoading(true);
-    try {
-      const storageRef = ref(storage, `users/${user.uid}/profile.jpg`);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      
-      await updateProfile(user, { photoURL: url });
-      setPhotoURL(url);
-      
-      // Firestore-এ ইউজার ডাটা আপডেট
-      await setDoc(doc(db, "users", user.uid), { photoURL: url }, { merge: true });
-      
-      alert("Profile picture updated!");
-    } catch (error) {
-      console.error(error);
-      alert("Error uploading image");
-    }
-    setLoading(false);
-  };
-
-  // নাম আপডেট হ্যান্ডলার
   const handleUpdateProfile = async () => {
     if (!user) return;
     setLoading(true);
     try {
-      await updateProfile(user, { displayName: name });
-      await setDoc(doc(db, "users", user.uid), { displayName: name }, { merge: true });
-      alert("Profile updated successfully!");
-    } catch (error) {
+      // ১. ফায়ারবেস অথেন্টিকেশন প্রোফাইল আপডেট
+      await updateProfile(user, { 
+        displayName: name,
+        photoURL: photoURL 
+      });
+      
+      // ২. ডাটাবেস আপডেট (যাতে পার্মানেন্টলি সেভ থাকে)
+      await setDoc(doc(db, "users", user.uid), { 
+        displayName: name, 
+        photoURL: photoURL 
+      }, { merge: true });
+      
+      alert("Profile updated successfully! 🎉");
+    } catch (error: any) {
       console.error(error);
-      alert("Error updating profile");
+      alert("Error updating profile: " + error.message);
     }
     setLoading(false);
   };
@@ -91,27 +102,43 @@ const UserProfile = () => {
           
           {/* PROFILE TAB */}
           {activeTab === 'profile' && (
-            <div className="max-w-xl">
+            <div className="max-w-2xl">
               <h2 className="mb-6 text-xl font-bold">Profile Details</h2>
               
-              {/* Image Upload */}
-              <div className="flex items-center gap-6 mb-8">
-                <div className="relative group">
-                  <div className="w-24 h-24 overflow-hidden border-2 rounded-full border-white/20">
-                    <img 
-                      src={photoURL || "https://via.placeholder.com/150"} 
-                      alt="Profile" 
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                  <label className="absolute inset-0 flex items-center justify-center transition-all rounded-full opacity-0 cursor-pointer bg-black/50 group-hover:opacity-100">
-                    <Camera size={24} />
-                    <input type="file" className="hidden" onChange={handleImageUpload} />
-                  </label>
+              {/* Current Avatar Display */}
+              <div className="flex flex-col items-center justify-center mb-8">
+                <div className="relative w-32 h-32 overflow-hidden border-4 rounded-full shadow-xl border-blue-500/50 bg-slate-800 shadow-blue-500/20">
+                  <img 
+                    src={photoURL} 
+                    alt="Profile" 
+                    className="object-cover w-full h-full"
+                  />
                 </div>
-                <div>
-                  <p className="mb-1 text-sm text-slate-400">Update your photo</p>
-                  <p className="text-xs text-slate-500">Recommended: Square JPG, PNG</p>
+                <p className="mt-3 text-sm text-slate-400">Choose an avatar below</p>
+              </div>
+
+              {/* 🔥 Avatar Selection Grid */}
+              <div className="mb-8">
+                <label className="block mb-4 text-sm font-bold text-slate-300">Select an Avatar</label>
+                <div className="grid grid-cols-4 gap-3 sm:grid-cols-8">
+                  {AVATAR_LIST.map((avatar, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setPhotoURL(avatar)}
+                      className={`relative rounded-full overflow-hidden transition-all duration-300 hover:scale-110 
+                        ${photoURL === avatar ? 'ring-4 ring-blue-500 scale-110 shadow-lg shadow-blue-500/40' : 'ring-1 ring-white/10 opacity-70 hover:opacity-100'}
+                      `}
+                    >
+                      <img src={avatar} alt={`Avatar ${index}`} className="w-full h-full bg-slate-800" />
+                      
+                      {/* Selected Indicator */}
+                      {photoURL === avatar && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
+                          <CheckCircle2 size={24} className="text-white drop-shadow-md" />
+                        </div>
+                      )}
+                    </button>
+                  ))}
                 </div>
               </div>
 
@@ -121,25 +148,26 @@ const UserProfile = () => {
                   <label className="block mb-2 text-sm text-slate-400">Display Name</label>
                   <input 
                     type="text" 
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full p-3 text-white border outline-none bg-white/5 border-white/10 rounded-xl focus:border-blue-500"
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                    className="w-full p-3 text-white transition-all border outline-none bg-white/5 border-white/10 rounded-xl focus:border-blue-500 focus:bg-white/10" 
+                    placeholder="Enter your name"
                   />
                 </div>
                 <div>
                   <label className="block mb-2 text-sm text-slate-400">Email</label>
                   <input 
                     type="email" 
-                    value={user?.email || ""}
-                    disabled
-                    className="w-full p-3 border cursor-not-allowed bg-white/5 border-white/10 rounded-xl text-slate-500"
+                    value={user?.email || ""} 
+                    disabled 
+                    className="w-full p-3 border cursor-not-allowed bg-white/5 border-white/10 rounded-xl text-slate-500" 
                   />
                 </div>
                 
                 <button 
-                  onClick={handleUpdateProfile}
-                  disabled={loading}
-                  className="flex items-center gap-2 px-6 py-3 mt-4 font-bold transition-all bg-blue-600 rounded-xl hover:bg-blue-700 disabled:opacity-50"
+                  onClick={handleUpdateProfile} 
+                  disabled={loading} 
+                  className="flex items-center justify-center w-full gap-2 px-8 py-3 mt-6 font-bold transition-all sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl hover:shadow-lg hover:shadow-blue-500/20 disabled:opacity-50 active:scale-95"
                 >
                   {loading ? <Loader2 className="animate-spin" /> : <Save size={18} />} Save Changes
                 </button>

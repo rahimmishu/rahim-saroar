@@ -97,16 +97,16 @@ const RockPaperScissorsGame: React.FC = () => {
         @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
       `}</style>
       
-      {/* Game Card */}
-      <div className="relative bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-2xl w-full max-w-[400px] text-center border border-slate-200 dark:border-slate-700">
+      {/* Game Card - UPDATED FOR PURE BLACK */}
+      <div className="relative bg-white dark:bg-black p-8 rounded-[40px] shadow-2xl w-full max-w-[400px] text-center border border-slate-200 dark:border-neutral-800">
         <div 
           className="absolute inset-0 -z-10 rounded-[40px] transition-colors duration-500 pointer-events-none blur-xl opacity-50"
           style={{ background: glowColor }}
         ></div>
 
-        {/* Score */}
-        <div className="flex justify-between p-4 mb-8 border bg-slate-50 dark:bg-slate-900 rounded-3xl border-slate-200 dark:border-slate-700">
-          <div className="w-1/2 text-center border-r border-slate-200 dark:border-slate-700">
+        {/* Score - UPDATED */}
+        <div className="flex justify-between p-4 mb-8 border bg-slate-50 dark:bg-neutral-900 rounded-3xl border-slate-200 dark:border-neutral-800">
+          <div className="w-1/2 text-center border-r border-slate-200 dark:border-neutral-800">
             <div className="text-[10px] font-black text-slate-400">PLAYER</div>
             <div className="text-3xl font-black text-slate-800 dark:text-white">{pScore}</div>
           </div>
@@ -119,7 +119,7 @@ const RockPaperScissorsGame: React.FC = () => {
         {/* Arena */}
         <div className="flex justify-between items-center py-8 min-h-[150px] relative">
           <div className={`text-[60px] md:text-[80px] leading-none transition-transform duration-100 ${isShaking ? 'shake-p' : 'hand-default-p'}`}>{pHand}</div>
-          {showVs && <div className="absolute z-10 flex items-center justify-center w-10 h-10 text-xs font-black text-white -translate-x-1/2 -translate-y-1/2 bg-indigo-600 border-2 border-white rounded-full shadow-lg left-1/2 top-1/2 vs-pop dark:border-slate-800">VS</div>}
+          {showVs && <div className="absolute z-10 flex items-center justify-center w-10 h-10 text-xs font-black text-white -translate-x-1/2 -translate-y-1/2 bg-indigo-600 border-2 border-white rounded-full shadow-lg left-1/2 top-1/2 vs-pop dark:border-black">VS</div>}
           <div className={`text-[60px] md:text-[80px] leading-none transition-transform duration-100 ${isShaking ? 'shake-c' : 'hand-default-c'}`}>{cHand}</div>
         </div>
 
@@ -127,7 +127,8 @@ const RockPaperScissorsGame: React.FC = () => {
 
         <div className="grid grid-cols-3 gap-3">
           {[{id:'rock',emoji:'✊',label:'ROCK'},{id:'paper',emoji:'✋',label:'PAPER'},{id:'scissors',emoji:'✌️',label:'SCISSORS'}].map((btn)=>(
-            <button key={btn.id} onClick={()=>playGame(btn.id)} disabled={isShaking} className="p-3 transition-all bg-white border-2 shadow-sm group dark:bg-slate-700 border-slate-200 dark:border-slate-600 rounded-2xl hover:-translate-y-1 hover:border-indigo-500">
+            // UPDATED BUTTON COLORS
+            <button key={btn.id} onClick={()=>playGame(btn.id)} disabled={isShaking} className="p-3 transition-all bg-white border-2 shadow-sm group dark:bg-neutral-900 border-slate-200 dark:border-neutral-800 rounded-2xl hover:-translate-y-1 hover:border-indigo-500">
               <span className="block mb-1 text-2xl transition-transform group-hover:scale-110">{btn.emoji}</span>
               <span className="text-[9px] font-black text-slate-400 group-hover:text-indigo-500 tracking-widest">{btn.label}</span>
             </button>
@@ -280,22 +281,24 @@ const Tools: React.FC = () => {
   };
 
   return (
-    <section id="tools" className="relative flex flex-col items-center justify-center min-h-screen py-24 overflow-hidden bg-slate-900">
-      {/* Background Ambience */}
-      <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-blue-600/10 blur-[120px] pointer-events-none"></div>
-      <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-purple-600/10 blur-[120px] pointer-events-none"></div>
+    // ✅ MAIN BACKGROUND CHANGED TO PURE BLACK (bg-black)
+    <section id="tools" className="relative flex flex-col items-center justify-center min-h-screen py-24 overflow-hidden bg-black">
+      {/* Background Ambience - Opacity Adjusted for Black BG */}
+      <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-blue-600/20 blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-purple-600/20 blur-[120px] pointer-events-none"></div>
 
       {/* =======================
           FULL SCREEN GAME MODE
          ======================= */}
       {activeApp ? (
-        <div className="fixed inset-0 z-[9999] bg-slate-950/90 backdrop-blur-md flex flex-col animate-in fade-in duration-300">
+        // ✅ FULLSCREEN BACKDROP CHANGED TO BLACK
+        <div className="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-md flex flex-col animate-in fade-in duration-300">
           
           {/* Top Bar (Close Button) */}
           <div className="absolute z-50 top-6 right-6">
             <button 
               onClick={() => setActiveApp(null)}
-              className="p-3 text-white transition-all border rounded-full shadow-lg bg-white/10 hover:bg-red-500/80 backdrop-blur-md hover:rotate-90 hover:scale-110 border-white/10"
+              className="p-3 text-white transition-all border rounded-full shadow-lg bg-neutral-800/50 hover:bg-red-500/80 backdrop-blur-md hover:rotate-90 hover:scale-110 border-white/10"
             >
               <X size={28} />
             </button>
@@ -312,14 +315,14 @@ const Tools: React.FC = () => {
            ======================= */
         <div className="container relative z-10 px-4 mx-auto">
           <div className="mb-16 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-slate-800/50 rounded-full text-xs font-bold text-slate-300 border border-slate-700 mb-6 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-neutral-900/80 rounded-full text-xs font-bold text-neutral-400 border border-neutral-800 mb-6 backdrop-blur-sm">
               <LayoutGrid size={14} className="text-blue-400" />
               <span>TOOLS & GAMES</span>
             </div>
             <h2 className="mb-4 text-4xl font-black tracking-tight text-white md:text-5xl">
               Playground
             </h2>
-            <p className="max-w-lg mx-auto text-slate-400">
+            <p className="max-w-lg mx-auto text-neutral-500">
               Select an app to launch it in full screen. More tools coming soon.
             </p>
           </div>
@@ -333,8 +336,8 @@ const Tools: React.FC = () => {
                 disabled={app.disabled}
                 className={`
                   group relative flex flex-col items-center p-6 rounded-3xl 
-                  bg-slate-800/40 border border-slate-700/50 
-                  hover:bg-slate-800/60 hover:border-slate-500/50 
+                  bg-neutral-900/40 border border-white/5 
+                  hover:bg-neutral-900/80 hover:border-white/20 
                   transition-all duration-300 
                   ${app.disabled ? 'opacity-50 cursor-not-allowed grayscale' : 'hover:-translate-y-2 hover:shadow-2xl'}
                 `}
@@ -361,7 +364,7 @@ const Tools: React.FC = () => {
                 
                 {/* App Name */}
                 <h3 className="mb-1 text-lg font-bold text-white transition-colors group-hover:text-blue-400">{app.name}</h3>
-                <p className="text-xs font-medium text-slate-500">{app.description}</p>
+                <p className="text-xs font-medium text-neutral-500">{app.description}</p>
                 
                 {/* Hover Glow Background */}
                 {!app.disabled && (
