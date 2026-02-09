@@ -1,6 +1,10 @@
 <div align="center">
-  <h1>Rahim Saroar Mishu</h1>
-  <h3>Architecting Next-Gen AI & Web Experiences</h3>
+  <h1 align="center">Hi 👋, I'm Rahim Saroar</h1>
+<p align="center">
+  <a href="https://git.io/typing-svg">
+    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=A855F7&background=00000000&center=true&vCenter=true&width=435&lines=Building+Next-Gen+Web+Apps;Full+Stack+Developer;AI+Enthusiast" alt="Typing SVG" />
+  </a>
+</p>
 </div>
 
 <div align="center">
