@@ -1,18 +1,20 @@
 import React from 'react';
 import './ThemeToggle.css';
 
+// ✅ ইন্টারফেস আপডেট করা হয়েছে (isDark -> isDarkMode)
 interface ThemeToggleProps {
-  isDark: boolean;
+  isDarkMode: boolean;
   toggleTheme: () => void;
 }
 
-const ThemeToggle: React.FC<ThemeToggleProps> = ({ isDark, toggleTheme }) => {
+const ThemeToggle: React.FC<ThemeToggleProps> = ({ isDarkMode, toggleTheme }) => {
   return (
     <label className="switch">
       {/* React State এর মাধ্যমে চেকড ভ্যালু কন্ট্রোল করা হচ্ছে */}
       <input 
         type="checkbox" 
-        checked={!isDark} // Note: ডিজাইন অনুযায়ী চেকড হলে আকাশী (Light Mode), আনচেকড হলে কালো (Dark Mode)
+        // ✅ নাম পরিবর্তন করা হয়েছে
+        checked={!isDarkMode} 
         onChange={toggleTheme} 
       />
       <span className="slider">
