@@ -61,12 +61,13 @@ const AppContent: React.FC = () => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
    
   const [isDarkMode, setIsDarkMode] = useState(() => {
+
     if (typeof window !== 'undefined') {
       const savedTheme = localStorage.getItem('theme');
       return savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
     }
     return false;
-  });
+    });
 
   useEffect(() => {
     const html = document.documentElement;

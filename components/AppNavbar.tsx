@@ -124,14 +124,15 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
           ${scrolled ? 'shadow-purple-500/10 dark:shadow-purple-400/5' : 'shadow-blue-500/5'}`}
         >
           {/* 💎 Glass Morphism Container */}
-          <div className={`relative rounded-[30px] overflow-hidden backdrop-blur-2xl transition-all duration-700
+          {/* 🛠️ FIX: 'overflow-hidden' সরিয়ে দিয়েছি যাতে ড্রপডাউন মেনু কেটে না যায় */}
+          <div className={`relative rounded-[30px] backdrop-blur-2xl transition-all duration-700
             ${scrolled 
               ? 'bg-white/85 dark:bg-black/85 shadow-[0_8px_32px_0_rgba(139,92,246,0.15)] dark:shadow-[0_8px_32px_0_rgba(139,92,246,0.08)]' 
               : 'bg-white/60 dark:bg-black/50 shadow-[0_4px_24px_0_rgba(99,102,241,0.08)]'
             }`}
           >
-            {/* 🎨 Animated Gradient Overlay */}
-            <div className="absolute inset-0 opacity-30 dark:opacity-20 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 animate-gradient-x"></div>
+            {/* 🎨 Animated Gradient Overlay (Rounded যোগ করা হয়েছে যাতে বর্ডারের বাইরে না যায়) */}
+            <div className="absolute inset-0 rounded-[30px] opacity-30 dark:opacity-20 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 animate-gradient-x"></div>
             
             {/* 🔷 Main Content */}
             <div className={`relative flex items-center justify-between transition-all duration-500
@@ -262,7 +263,7 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
 
                     {/* 💎 Premium Dropdown Menu */}
                     {isProfileMenuOpen && (
-                      <div className="absolute right-0 mt-3 overflow-hidden duration-300 border shadow-2xl w-60 bg-white/95 dark:bg-black/95 backdrop-blur-2xl border-white/20 dark:border-white/10 shadow-purple-500/20 dark:shadow-purple-400/10 rounded-3xl animate-in fade-in slide-in-from-top-3">
+                      <div className="absolute right-0 mt-3 overflow-hidden duration-300 border shadow-2xl w-60 bg-white/95 dark:bg-black/95 backdrop-blur-2xl border-white/20 dark:border-white/10 shadow-purple-500/20 dark:shadow-purple-400/10 rounded-3xl animate-in fade-in slide-in-from-top-3 z-[60]">
                         {/* 🎨 Gradient header */}
                         <div className="relative px-5 py-4 border-b border-slate-100/50 dark:border-slate-800/50 bg-gradient-to-br from-purple-50/50 to-pink-50/50 dark:from-purple-900/20 dark:to-pink-900/20">
                           <p className="text-sm font-bold truncate text-slate-800 dark:text-white">{user.displayName || "User"}</p>
