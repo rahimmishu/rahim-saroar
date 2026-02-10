@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight, Sparkles, PlayCircle, Github, Facebook, Linkedin, Mail } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowRight, Sparkles, Github, Facebook, Linkedin, Mail, Coffee } from 'lucide-react';
 import Tilt3D from './Tilt3D'; 
 import { triggerIsland } from './DynamicIsland'; 
 
@@ -9,6 +9,36 @@ const Hero: React.FC = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(150);
+
+  // ☕ Coffee Button Ripple State
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+  const coffeeRef = useRef<HTMLAnchorElement>(null);
+
+  const handleCoffeeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const btn = coffeeRef.current;
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const id = Date.now();
+    setRipples(prev => [...prev, { id, x, y }]);
+    setTimeout(() => setRipples(prev => prev.filter(r => r.id !== id)), 700);
+  };
+
+  // 💙 Projects Button Ripple State
+  const [projectRipples, setProjectRipples] = useState<{ id: number; x: number; y: number }[]>([]);
+  const projectsRef = useRef<HTMLAnchorElement>(null);
+
+  const handleProjectsClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const btn = projectsRef.current;
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const id = Date.now();
+    setProjectRipples(prev => [...prev, { id, x, y }]);
+    setTimeout(() => setProjectRipples(prev => prev.filter(r => r.id !== id)), 700);
+  };
 
   const toRotate = ["Web Developer", "AI Enthusiast", "Content Creator"];
 
@@ -39,42 +69,196 @@ const Hero: React.FC = () => {
   return (
     <section id="home" className="relative flex items-center min-h-screen pt-24 pb-12 overflow-hidden transition-colors duration-300 bg-white dark:bg-black">
       
-      {/* 🔥 CSS Animation for Moving Blobs (Injected here for safety) */}
+      {/* 🔥 CSS Animations */}
       <style>{`
         @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
+          0%   { transform: translate(0px, 0px) scale(1); }
+          33%  { transform: translate(30px, -50px) scale(1.1); }
+          66%  { transform: translate(-20px, 20px) scale(0.9); }
           100% { transform: translate(0px, 0px) scale(1); }
         }
-        .animate-blob {
-          animation: blob 7s infinite;
+        .animate-blob { animation: blob 7s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+
+        /* ☕ 1. Wavy Steam */
+        @keyframes steam {
+          0%   { transform: translateY(0px) translateX(0px) scaleX(1);    opacity: 0.7; }
+          25%  { transform: translateY(-5px)  translateX(3px)  scaleX(1.1); opacity: 0.5; }
+          50%  { transform: translateY(-10px) translateX(-3px) scaleX(0.9); opacity: 0.3; }
+          75%  { transform: translateY(-14px) translateX(2px)  scaleX(1.1); opacity: 0.15; }
+          100% { transform: translateY(-18px) translateX(0px)  scaleX(0.7); opacity: 0; }
         }
-        .animation-delay-2000 {
-          animation-delay: 2s;
+        .steam-1 { animation: steam 1.6s ease-in-out infinite 0.0s; }
+        .steam-2 { animation: steam 1.6s ease-in-out infinite 0.4s; }
+        .steam-3 { animation: steam 1.6s ease-in-out infinite 0.8s; }
+
+        /* ☕ 2. Rotating Border Gradient */
+        @keyframes rotate-border {
+          0%   { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
-        .animation-delay-4000 {
-          animation-delay: 4s;
+        .rotate-border {
+          animation: rotate-border 3s linear infinite;
         }
+
+        /* ☕ 3. Shimmer Sweep */
+        @keyframes coffee-shimmer {
+          0%   { transform: translateX(-120%) skewX(-20deg); opacity: 0; }
+          10%  { opacity: 1; }
+          90%  { opacity: 1; }
+          100% { transform: translateX(220%)  skewX(-20deg); opacity: 0; }
+        }
+        .coffee-shimmer { animation: coffee-shimmer 2.2s ease-in-out infinite; }
+
+        /* ☕ 4. Gold Heartbeat Glow */
+        @keyframes gold-glow {
+          0%,100% { box-shadow: 0 0 15px 2px rgba(251,191,36,0.5), 0 0 35px 6px rgba(245,158,11,0.25), 0 4px 20px rgba(249,115,22,0.3); }
+          50%     { box-shadow: 0 0 28px 6px rgba(251,191,36,0.8), 0 0 60px 12px rgba(245,158,11,0.45), 0 4px 30px rgba(249,115,22,0.5); }
+        }
+        .gold-glow { animation: gold-glow 1.8s ease-in-out infinite; }
+
+        /* ☕ 5. Coffee Cup Bounce */
+        @keyframes cup-bounce {
+          0%,100% { transform: translateY(0px) rotate(0deg); }
+          25%     { transform: translateY(-3px) rotate(-6deg); }
+          75%     { transform: translateY(-3px) rotate(6deg); }
+        }
+        .cup-bounce { animation: cup-bounce 2s ease-in-out infinite; }
+
+        /* ☕ 6. Floating Sparkle Stars */
+        @keyframes float-star {
+          0%   { transform: translateY(0px)  scale(0) rotate(0deg);   opacity: 0; }
+          20%  { opacity: 1; }
+          80%  { opacity: 0.6; }
+          100% { transform: translateY(-28px) scale(1.2) rotate(180deg); opacity: 0; }
+        }
+        .star-1 { animation: float-star 2.4s ease-in-out infinite 0.0s; }
+        .star-2 { animation: float-star 2.4s ease-in-out infinite 0.6s; }
+        .star-3 { animation: float-star 2.4s ease-in-out infinite 1.2s; }
+        .star-4 { animation: float-star 2.4s ease-in-out infinite 1.8s; }
+
+        /* ☕ 7. Ripple on click */
+        @keyframes ripple-out {
+          0%   { transform: scale(0);   opacity: 0.6; }
+          100% { transform: scale(4);   opacity: 0; }
+        }
+        .ripple-circle { animation: ripple-out 0.7s ease-out forwards; }
+
+        /* ☕ 8. Gradient background shift */
+        @keyframes gradient-shift {
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .gradient-shift {
+          background-size: 200% 200%;
+          animation: gradient-shift 3s ease infinite;
+        }
+
+        /* 💙 9. Blue Heartbeat Glow (Projects Button) */
+        @keyframes blue-glow {
+          0%,100% { box-shadow: 0 0 15px 2px rgba(59,130,246,0.5), 0 0 35px 6px rgba(99,102,241,0.25), 0 4px 20px rgba(139,92,246,0.3); }
+          50%     { box-shadow: 0 0 28px 6px rgba(59,130,246,0.8), 0 0 60px 12px rgba(99,102,241,0.45), 0 4px 30px rgba(139,92,246,0.5); }
+        }
+        .blue-glow { animation: blue-glow 1.8s ease-in-out infinite; }
+
+        /* 💙 10. Blue Rotating Border */
+        @keyframes rotate-border-blue {
+          0%   { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .rotate-border-blue { animation: rotate-border-blue 3s linear infinite; }
+
+        /* 💙 11. Projects button shimmer */
+        @keyframes blue-shimmer {
+          0%   { transform: translateX(-120%) skewX(-20deg); opacity: 0; }
+          10%  { opacity: 1; }
+          90%  { opacity: 1; }
+          100% { transform: translateX(220%) skewX(-20deg); opacity: 0; }
+        }
+        .blue-shimmer { animation: blue-shimmer 2.2s ease-in-out infinite; }
+
+        /* 💙 12. Arrow float */
+        @keyframes arrow-float {
+          0%,100% { transform: translateX(0px); }
+          50%     { transform: translateX(5px); }
+        }
+        .arrow-float { animation: arrow-float 1.2s ease-in-out infinite; }
+
+        /* 📸 PHOTO PREMIUM ANIMATIONS */
+
+        /* 13. Rotating conic border */
+        @keyframes spin-border {
+          0%   { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .spin-border { animation: spin-border 4s linear infinite; }
+        .spin-border-reverse { animation: spin-border 6s linear infinite reverse; }
+
+        /* 14. Photo float */
+        @keyframes photo-float {
+          0%,100% { transform: translateY(0px) rotate(2deg); }
+          50%     { transform: translateY(-18px) rotate(-1deg); }
+        }
+        .photo-float { animation: photo-float 5s ease-in-out infinite; }
+
+        /* 15. Orbit ring */
+        @keyframes orbit {
+          0%   { transform: rotate(0deg) translateX(170px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateX(170px) rotate(-360deg); }
+        }
+        @keyframes orbit-reverse {
+          0%   { transform: rotate(0deg) translateX(195px) rotate(0deg); }
+          100% { transform: rotate(-360deg) translateX(195px) rotate(360deg); }
+        }
+        .orbit-dot   { animation: orbit 6s linear infinite; }
+        .orbit-dot-2 { animation: orbit 6s linear infinite 2s; }
+        .orbit-dot-r { animation: orbit-reverse 9s linear infinite; }
+
+        /* 16. Floating badge pop-in */
+        @keyframes badge-float {
+          0%,100% { transform: translateY(0px) scale(1); }
+          50%     { transform: translateY(-8px) scale(1.04); }
+        }
+        .badge-float-1 { animation: badge-float 3.5s ease-in-out infinite 0s; }
+        .badge-float-2 { animation: badge-float 3.5s ease-in-out infinite 1.2s; }
+        .badge-float-3 { animation: badge-float 3.5s ease-in-out infinite 2.4s; }
+
+        /* 17. Corner sparkles */
+        @keyframes corner-spark {
+          0%,100% { opacity: 0.4; transform: scale(0.8) rotate(0deg); }
+          50%     { opacity: 1;   transform: scale(1.3) rotate(180deg); }
+        }
+        .corner-spark { animation: corner-spark 2s ease-in-out infinite; }
+
+        /* 18. Photo overlay shimmer on hover */
+        @keyframes photo-shimmer {
+          0%   { transform: translateX(-120%) skewX(-15deg); }
+          100% { transform: translateX(220%)  skewX(-15deg); }
+        }
+        .photo-shimmer { animation: photo-shimmer 3.5s ease-in-out infinite; }
+
+        /* 19. Glow pulse rings */
+        @keyframes ring-pulse {
+          0%   { transform: scale(1);   opacity: 0.5; }
+          100% { transform: scale(1.6); opacity: 0;   }
+        }
+        .ring-pulse-1 { animation: ring-pulse 2.5s ease-out infinite 0s; }
+        .ring-pulse-2 { animation: ring-pulse 2.5s ease-out infinite 0.8s; }
+        .ring-pulse-3 { animation: ring-pulse 2.5s ease-out infinite 1.6s; }
       `}</style>
 
-      {/* 🔥 GRID BACKGROUND STRUCTURE (Added) */}
+      {/* 🔥 GRID BACKGROUND STRUCTURE */}
       <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
       </div>
 
-      {/* 🔥 UPGRADED PROFESSIONAL BACKGROUND (Fixed Z-Index) */}
+      {/* 🔥 UPGRADED PROFESSIONAL BACKGROUND */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Purple Blob - Top Right */}
         <div className="absolute top-0 -right-4 w-96 h-96 bg-purple-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[128px] opacity-50 dark:opacity-40 animate-blob"></div>
-        
-        {/* Blue Blob - Top Right (Overlapping) */}
         <div className="absolute top-0 -right-4 w-96 h-96 bg-blue-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[128px] opacity-50 dark:opacity-40 animate-blob animation-delay-2000"></div>
-        
-        {/* Pink Blob - Bottom Left */}
         <div className="absolute -bottom-32 -left-20 w-96 h-96 bg-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[128px] opacity-50 dark:opacity-40 animate-blob animation-delay-4000"></div>
-        
-        {/* Cyan Blob - Center (Subtle) */}
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/10 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] opacity-30 dark:opacity-20 animate-pulse"></div>
       </div>
 
@@ -115,15 +299,140 @@ const Hero: React.FC = () => {
 
             {/* Buttons Area */}
             <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row lg:justify-start">
-              <a href="#projects" className="relative flex items-center justify-center w-full gap-2 px-8 py-4 overflow-hidden font-bold text-white transition-all bg-blue-600 rounded-full shadow-lg group shadow-blue-500/30 hover:bg-blue-700 hover:shadow-blue-600/40 hover:-translate-y-1 sm:w-auto">
-                <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-10"></div>
-                <span className="relative z-20 flex items-center gap-2">
-                  View My Projects <ArrowRight size={20} className="transition-transform group-hover:translate-x-1" />
+              
+              {/* 💙 ULTRA PREMIUM View My Projects Button */}
+              <a
+                ref={projectsRef}
+                href="#projects"
+                onClick={handleProjectsClick}
+                className="blue-glow relative flex items-center justify-center w-full sm:w-auto gap-3 px-8 py-4 overflow-hidden font-bold rounded-full transition-all duration-300 hover:-translate-y-[6px] hover:scale-[1.05] active:scale-95 select-none group"
+                style={{
+                  background: 'linear-gradient(135deg, #2563eb, #6366f1, #8b5cf6, #2563eb)',
+                  color: '#ffffff',
+                  border: '2px solid rgba(99,102,241,0.7)',
+                }}
+              >
+                {/* 🌀 Rotating Border Ring - Blue */}
+                <span className="pointer-events-none absolute -inset-[2px] rounded-full overflow-hidden z-0">
+                  <span className="absolute rounded-full rotate-border-blue -inset-4"
+                    style={{ background: 'conic-gradient(from 0deg, transparent 60%, rgba(147,197,253,0.9) 80%, transparent 100%)' }}
+                  />
+                </span>
+
+                {/* ✨ Shimmer sweep - Blue */}
+                <span className="blue-shimmer pointer-events-none absolute inset-0 w-[40%] h-full bg-gradient-to-r from-transparent via-white/30 to-transparent z-10 rounded-full" />
+
+                {/* 💥 Ripples on click */}
+                {projectRipples.map(r => (
+                  <span
+                    key={r.id}
+                    className="absolute z-20 rounded-full pointer-events-none ripple-circle bg-white/40"
+                    style={{ width: 40, height: 40, left: r.x - 20, top: r.y - 20 }}
+                  />
+                ))}
+
+                {/* ✨ Floating sparkle stars - Blue */}
+                <span className="absolute inset-0 z-10 overflow-hidden rounded-full pointer-events-none">
+                  <span className="star-1 absolute left-[18%] bottom-3 text-blue-200 text-[9px]">★</span>
+                  <span className="star-2 absolute left-[38%] bottom-2 text-white text-[7px]">✦</span>
+                  <span className="star-3 absolute left-[60%] bottom-3 text-indigo-200 text-[9px]">★</span>
+                  <span className="star-4 absolute left-[78%] bottom-2 text-white text-[7px]">✦</span>
+                </span>
+
+                {/* 🎯 Inner Content */}
+                <span className="relative z-30 flex items-center gap-3">
+
+                  {/* 🚀 Rocket icon with bounce */}
+                  <span className="text-lg leading-none cup-bounce">🚀</span>
+
+                  {/* Text Stack */}
+                  <span className="flex flex-col items-start leading-none gap-[2px]">
+                    <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-white/60">
+                      Explore Work
+                    </span>
+                    <span className="text-[15px] font-black tracking-wide text-white">
+                      View My Projects
+                    </span>
+                  </span>
+
+                  {/* Arrow with float animation */}
+                  <ArrowRight size={20} className="arrow-float text-white/90" />
                 </span>
               </a>
-              <a href="https://movie-dekhbi.vercel.app" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full gap-2 px-8 py-4 font-bold text-white transition-all bg-red-600 border rounded-full shadow-lg group hover:bg-red-700 border-red-500/50 shadow-red-500/30 hover:shadow-red-500/50 hover:-translate-y-1 sm:w-auto font-bengali">
-                <PlayCircle size={20} className="animate-pulse" /> মুভি দেখবি?
+
+              {/* ☕ ULTRA PREMIUM Buy Me a Coffee Button */}
+              <a
+                ref={coffeeRef}
+                href="https://www.buymeacoffee.com/rahimmishu"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleCoffeeClick}
+                className="gold-glow relative flex items-center justify-center w-full sm:w-auto gap-3 px-8 py-4 overflow-hidden font-bold rounded-full transition-all duration-300 hover:-translate-y-[6px] hover:scale-[1.05] active:scale-95 select-none group"
+                style={{
+                  background: 'linear-gradient(135deg, #f59e0b, #fbbf24, #fb923c, #f59e0b)',
+                  color: '#1a0a00',
+                  border: '2px solid rgba(251,191,36,0.7)',
+                }}
+              >
+
+                {/* 🌀 Rotating Border Ring */}
+                <span className="pointer-events-none absolute -inset-[2px] rounded-full overflow-hidden z-0">
+                  <span className="absolute rounded-full rotate-border -inset-4"
+                    style={{ background: 'conic-gradient(from 0deg, transparent 60%, rgba(255,220,80,0.9) 80%, transparent 100%)' }}
+                  />
+                </span>
+
+                {/* ✨ Shimmer sweep */}
+                <span className="coffee-shimmer pointer-events-none absolute inset-0 w-[40%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent z-10 rounded-full" />
+
+                {/* 💥 Ripples on click */}
+                {ripples.map(r => (
+                  <span
+                    key={r.id}
+                    className="absolute z-20 rounded-full pointer-events-none ripple-circle bg-white/40"
+                    style={{ width: 40, height: 40, left: r.x - 20, top: r.y - 20 }}
+                  />
+                ))}
+
+                {/* ✨ Floating sparkle stars */}
+                <span className="absolute inset-0 z-10 overflow-hidden rounded-full pointer-events-none">
+                  <span className="star-1 absolute left-[18%] bottom-3 text-yellow-200 text-[9px]">★</span>
+                  <span className="star-2 absolute left-[38%] bottom-2 text-white text-[7px]">✦</span>
+                  <span className="star-3 absolute left-[60%] bottom-3 text-yellow-100 text-[9px]">★</span>
+                  <span className="star-4 absolute left-[78%] bottom-2 text-white text-[7px]">✦</span>
+                </span>
+
+                {/* 🎯 Inner Content */}
+                <span className="relative z-30 flex items-center gap-3">
+
+                  {/* ☕ Cup + Steam */}
+                  <span className="relative flex items-end justify-center w-7">
+                    {/* Wavy Steam lines */}
+                    <span className="absolute -top-5 left-0 flex gap-[4px] items-end">
+                      <span className="steam-1 w-[3px] h-4 rounded-full bg-amber-950/50" />
+                      <span className="steam-2 w-[3px] h-5 rounded-full bg-amber-950/50" />
+                      <span className="steam-3 w-[3px] h-4 rounded-full bg-amber-950/50" />
+                    </span>
+                    {/* Bouncing cup icon */}
+                    <Coffee size={22} className="cup-bounce text-amber-950 drop-shadow-md" />
+                  </span>
+
+                  {/* Text Stack */}
+                  <span className="flex flex-col items-start leading-none gap-[2px]">
+                    <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-amber-950/60">
+                      Support My Work
+                    </span>
+                    <span className="text-[15px] font-black tracking-wide text-amber-950">
+                      Buy Me a Coffee
+                    </span>
+                  </span>
+
+                  {/* ☕ emoji badge */}
+                  <span className="text-lg leading-none group-hover:animate-bounce">☕</span>
+                </span>
+
               </a>
+
             </div>
 
             {/* Social Icons */}
@@ -135,19 +444,101 @@ const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* --- Right Content: Image --- */}
+          {/* --- Right Content: ULTRA PREMIUM Image --- */}
           <div className="relative z-10 flex justify-center w-full lg:w-1/2 lg:justify-end">
-             {/* Image Back Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur-[80px] opacity-40 dark:opacity-30 animate-pulse"></div>
 
-            <div className="relative z-20 animate-float">
-              <Tilt3D className="relative w-72 md:w-96 lg:w-[480px] xl:w-[550px] aspect-[4/5] rounded-[60px] md:rounded-[80px] rotate-3 hover:rotate-0 transition-all duration-700 ease-out group perspective-1000">
-                <div className="absolute -inset-1 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 rounded-[64px] md:rounded-[84px] opacity-75 blur-sm group-hover:opacity-100 transition duration-500"></div>
-                <div className="relative h-full w-full bg-slate-900 overflow-hidden border-[6px] border-white dark:border-slate-800 shadow-2xl rounded-[60px] md:rounded-[80px]">
-                  <img src="/1.jpg" alt="Rahim Saroar Mishu" className="object-cover w-full h-full transition-transform duration-700 transform scale-105 group-hover:scale-110" />
-                  <div className="absolute inset-0 transition-opacity duration-500 opacity-0 bg-gradient-to-t from-black/40 via-transparent to-transparent group-hover:opacity-100"></div>
+            {/* 🌟 Deep multi-layer background glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] h-[85%] rounded-full blur-[90px] opacity-50"
+              style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.7) 0%, rgba(59,130,246,0.5) 50%, transparent 70%)' }} />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] rounded-full blur-[60px] opacity-40 animate-pulse"
+              style={{ background: 'radial-gradient(circle, rgba(236,72,153,0.5) 0%, rgba(99,102,241,0.4) 60%, transparent 80%)' }} />
+
+            {/* 🔵 Pulsing rings */}
+            <div className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none top-1/2 left-1/2">
+              <div className="absolute w-64 h-64 -translate-x-1/2 -translate-y-1/2 border rounded-full ring-pulse-1 md:w-80 md:h-80 border-purple-400/40" />
+              <div className="absolute w-64 h-64 -translate-x-1/2 -translate-y-1/2 border rounded-full ring-pulse-2 md:w-80 md:h-80 border-blue-400/30" />
+              <div className="absolute w-64 h-64 -translate-x-1/2 -translate-y-1/2 border rounded-full ring-pulse-3 md:w-80 md:h-80 border-pink-400/20" />
+            </div>
+
+            {/* 🌀 Orbit dots */}
+            <div className="absolute hidden pointer-events-none top-1/2 left-1/2 md:block">
+              <span className="orbit-dot absolute w-3 h-3 -mt-1.5 -ml-1.5 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 shadow-[0_0_8px_rgba(139,92,246,0.9)]" />
+              <span className="orbit-dot-2 absolute w-2 h-2 -mt-1 -ml-1 rounded-full bg-gradient-to-br from-pink-400 to-fuchsia-500 shadow-[0_0_6px_rgba(236,72,153,0.9)]" />
+              <span className="orbit-dot-r absolute w-2.5 h-2.5 -mt-1.5 -ml-1.5 rounded-full bg-gradient-to-br from-cyan-400 to-blue-400 shadow-[0_0_6px_rgba(34,211,238,0.9)]" />
+            </div>
+
+            {/* 📸 Main photo wrapper */}
+            <div className="relative z-20 photo-float">
+              <Tilt3D className="relative w-64 md:w-80 lg:w-[400px] xl:w-[450px] aspect-[4/5] group">
+
+                {/* Dual spinning conic borders */}
+                <span className="pointer-events-none absolute -inset-[3px] rounded-[64px] overflow-hidden z-0">
+                  <span className="absolute rounded-full spin-border -inset-5"
+                    style={{ background: 'conic-gradient(from 0deg, transparent 40%, rgba(139,92,246,1) 55%, rgba(59,130,246,1) 65%, transparent 80%)' }} />
+                </span>
+                <span className="pointer-events-none absolute -inset-[3px] rounded-[64px] overflow-hidden z-0">
+                  <span className="absolute rounded-full spin-border-reverse -inset-5"
+                    style={{ background: 'conic-gradient(from 90deg, transparent 50%, rgba(236,72,153,0.8) 65%, rgba(251,191,36,0.6) 75%, transparent 85%)' }} />
+                </span>
+
+                {/* Photo frame */}
+                <div className="relative h-full w-full rounded-[60px] overflow-hidden border-[5px] border-white/10 shadow-[0_0_60px_rgba(139,92,246,0.4),0_30px_60px_rgba(0,0,0,0.5)] z-10">
+                  
+                  {/* Shimmer on hover */}
+                  <span className="photo-shimmer pointer-events-none absolute inset-0 w-[30%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent z-20" />
+
+                  <img
+                    src="/1.jpg"
+                    alt="Rahim Saroar Mishu"
+                    loading="lazy"
+                    className="object-cover w-full h-full transition-transform duration-700 scale-105 group-hover:scale-110"
+                  />
+
+                  {/* Gradient overlay bottom */}
+                  <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+                  {/* 📛 Name label at bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 z-20 px-5 py-4">
+                    <p className="text-lg font-black tracking-wide text-white drop-shadow-lg">Rahim Saroar Mishu</p>
+                    <p className="text-xs font-medium tracking-widest uppercase text-white/70">Full Stack Developer & AI Enthusiast</p>
+                  </div>
+
+                  {/* ✨ Top-right sparkle corner */}
+                  <span className="absolute z-20 text-xl text-yellow-300 corner-spark top-4 right-5 drop-shadow-lg">✦</span>
+                  <span className="absolute z-20 text-xs text-blue-300 corner-spark top-8 right-10 drop-shadow" style={{ animationDelay: '0.7s' }}>★</span>
                 </div>
               </Tilt3D>
+
+              {/* 🏷️ Floating Badge 1 — Top Left */}
+              <div className="absolute z-30 flex items-center gap-2 px-3 py-2 border shadow-xl badge-float-1 -top-4 -left-6 rounded-2xl backdrop-blur-md border-white/20"
+                style={{ background: 'linear-gradient(135deg, rgba(30,30,60,0.85), rgba(60,20,90,0.85))' }}>
+                <span className="text-base">💻</span>
+                <span className="flex flex-col leading-none">
+                  <span className="text-[9px] text-white/50 font-semibold uppercase tracking-widest">Role</span>
+                  <span className="text-[12px] text-white font-bold">Full Stack Dev</span>
+                </span>
+              </div>
+
+              {/* 🏷️ Floating Badge 2 — Bottom Left */}
+              <div className="absolute z-30 flex items-center gap-2 px-3 py-2 border shadow-xl badge-float-2 -bottom-4 -left-4 rounded-2xl backdrop-blur-md border-white/20"
+                style={{ background: 'linear-gradient(135deg, rgba(20,40,30,0.85), rgba(10,80,50,0.85))' }}>
+                <span className="text-base">🇧🇩</span>
+                <span className="flex flex-col leading-none">
+                  <span className="text-[9px] text-white/50 font-semibold uppercase tracking-widest">Based in</span>
+                  <span className="text-[12px] text-white font-bold">Bangladesh</span>
+                </span>
+              </div>
+
+              {/* 🏷️ Floating Badge 3 — Right side */}
+              <div className="absolute z-30 flex items-center gap-2 px-3 py-2 -translate-y-1/2 border shadow-xl badge-float-3 top-1/2 -right-6 rounded-2xl backdrop-blur-md border-white/20"
+                style={{ background: 'linear-gradient(135deg, rgba(40,20,10,0.85), rgba(90,50,10,0.85))' }}>
+                <span className="text-base">🤖</span>
+                <span className="flex flex-col leading-none">
+                  <span className="text-[9px] text-white/50 font-semibold uppercase tracking-widest">Loves</span>
+                  <span className="text-[12px] text-white font-bold">AI & Python</span>
+                </span>
+              </div>
+
             </div>
           </div>
 
