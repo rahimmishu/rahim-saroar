@@ -5,20 +5,6 @@
     
     <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <script>
-        (function() {
-            var viewport = document.getElementById('viewport');
-            var screenWidth = window.screen.width;
-
-            // যদি স্ক্রিন সাইজ ১০২৪ এর নিচে হয় (মানে মোবাইল বা ট্যাব)
-            if (screenWidth < 1024) {
-                // width=1100: ডেস্কটপ সাইজ ফোর্স করবে
-                // initial-scale=0.6: একটু জুম হয়ে থাকবে (যাতে লেখা একদম ছোট না দেখায়)
-                viewport.setAttribute('content', 'width=1100, initial-scale=0.6, user-scalable=yes');
-            }
-        })();
-    </script>
-
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
@@ -89,7 +75,7 @@
               primary: '#2563EB', 
               secondary: '#1E293B',
               accent: '#3B82F6', 
-              dark: '#000000', /* পরিবর্তন করা হয়েছে: আগে ছিল #0f172a */
+              dark: '#000000',
             },
             animation: {
               marquee: 'marquee 25s linear infinite',
@@ -118,12 +104,11 @@
       }
       body {
         font-family: 'Poppins', sans-serif;
-        background-color: #000000; /* পরিবর্তন করা হয়েছে: আগে ছিল #0f172a */
+        background-color: #000000;
         margin: 0;
         overflow-x: hidden;
       }
       
-      /* ফন্ট সেটিংস */
       .font-bengali { font-family: 'Hind Siliguri', sans-serif; }
       .font-signature { font-family: 'Dancing Script', cursive; }
       .no-scrollbar::-webkit-scrollbar { display: none; }

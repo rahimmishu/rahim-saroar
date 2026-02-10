@@ -497,12 +497,6 @@ const Hero: React.FC = () => {
                   {/* Gradient overlay bottom */}
                   <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
-                  {/* 📛 Name label at bottom */}
-                  <div className="absolute bottom-0 left-0 right-0 z-20 px-5 py-4">
-                    <p className="text-lg font-black tracking-wide text-white drop-shadow-lg">Rahim Saroar Mishu</p>
-                    <p className="text-xs font-medium tracking-widest uppercase text-white/70">Full Stack Developer & AI Enthusiast</p>
-                  </div>
-
                   {/* ✨ Top-right sparkle corner */}
                   <span className="absolute z-20 text-xl text-yellow-300 corner-spark top-4 right-5 drop-shadow-lg">✦</span>
                   <span className="absolute z-20 text-xs text-blue-300 corner-spark top-8 right-10 drop-shadow" style={{ animationDelay: '0.7s' }}>★</span>

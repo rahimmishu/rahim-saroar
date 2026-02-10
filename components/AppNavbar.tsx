@@ -105,7 +105,7 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
 
   // 🔥 টুলস পেজে যাওয়ার ফাংশন
   const goToTools = () => {
-    navigate('/tools');
+    onOpenTools();
     setIsOpen(false);
   };
 
@@ -226,7 +226,9 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                   {/* Hover glow */}
                   <div className="absolute inset-0 transition-all duration-300 rounded-2xl bg-gradient-to-br from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/10 group-hover:to-pink-500/10"></div>
                 </button>
-
+            </div>
+            {/* ✅ এই নতুন div টি মোবাইলেও দেখা যাবে */}
+              <div className="flex items-center gap-2">
                 {/* 🎨 Theme Toggle */}
                 <div className="relative ml-1 group">
                   {/* Glow effect */}
