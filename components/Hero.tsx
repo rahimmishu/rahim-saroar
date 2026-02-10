@@ -363,7 +363,7 @@ const Hero: React.FC = () => {
               {/* ☕ ULTRA PREMIUM Buy Me a Coffee Button */}
               <a
                 ref={coffeeRef}
-                href="https://www.buymeacoffee.com/rahimmishu"
+                href="https://www.buymeacoffee.com/rahimsaroar"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleCoffeeClick}
