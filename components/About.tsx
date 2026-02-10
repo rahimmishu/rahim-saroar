@@ -138,14 +138,14 @@ const About: React.FC = () => {
                 {/* Image */}
                 <div className="w-60 h-60 md:w-72 md:h-72 rounded-[1.75rem] overflow-hidden border-2 border-white/80 dark:border-zinc-800 shadow-2xl relative z-10 transition-all duration-500 group-hover:scale-[1.03] group-hover:rotate-1">
                   <img
-                    src="./1.jpg"
+                    src="./rahim-saroar-pic.png"
                     alt="Rahim Saroar Mishu"
                     className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
                   />
                   {/* Hover overlay */}
                   <div className="absolute inset-0 flex flex-col items-start justify-end p-5 transition-opacity duration-500 opacity-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent group-hover:opacity-100">
                     <span className="text-[10px] font-bold tracking-[0.25em] text-blue-300 uppercase">Innovator</span>
-                    <span className="text-base font-black leading-tight text-white">Rahim S. Mishu</span>
+                    <span className="text-base font-black leading-tight text-white">Rahim Saroar</span>
                   </div>
                 </div>
 
