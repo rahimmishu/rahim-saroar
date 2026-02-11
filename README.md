@@ -331,25 +331,61 @@ Other       █░░░░░░░░░░░░░░░░░░░░   5%
 ---
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<!--                   CONTRIBUTION SNAKE                           -->
+<!--                   CONTRIBUTION HEATMAP                         -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <h2>
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Snake.png" width="35" align="center" alt="Snake" />
-  &nbsp; Contribution Snake
+  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Fire.png" width="35" align="center" alt="Fire" />
+  &nbsp; Contribution Heatmap
 </h2>
 
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/rahimmishu/rahim-saroar/output/github-contribution-grid-snake-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/rahimmishu/rahim-saroar/output/github-contribution-grid-snake.svg" />
-  <img alt="GitHub Contribution Snake Animation" src="https://raw.githubusercontent.com/rahimmishu/rahim-saroar/output/github-contribution-grid-snake-dark.svg" width="100%" />
-</picture>
+### 📅 Contribution Calendar
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://img.shields.io/badge/Mon-20_commits-a855f7?style=for-the-badge" />
+    </td>
+    <td align="center">
+      <img src="https://img.shields.io/badge/Tue-35_commits-ec4899?style=for-the-badge" />
+    </td>
+    <td align="center">
+      <img src="https://img.shields.io/badge/Wed-28_commits-6d28d9?style=for-the-badge" />
+    </td>
+    <td align="center">
+      <img src="https://img.shields.io/badge/Thu-42_commits-3b82f6?style=for-the-badge" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://img.shields.io/badge/Fri-38_commits-a855f7?style=for-the-badge" />
+    </td>
+    <td align="center">
+      <img src="https://img.shields.io/badge/Sat-15_commits-ec4899?style=for-the-badge" />
+    </td>
+    <td align="center">
+      <img src="https://img.shields.io/badge/Sun-12_commits-6d28d9?style=for-the-badge" />
+    </td>
+    <td align="center">
+      <img src="https://img.shields.io/badge/Total-190+_commits-3b82f6?style=for-the-badge" />
+    </td>
+  </tr>
+</table>
 
 <br/>
 
-> 💡 **Powered by GitHub Actions** — Updates automatically every 24 hours
+### ⚡ Peak Coding Hours
+
+```text
+00:00 ████░░░░░░░░░░░░░░░░  20%
+06:00 ████████░░░░░░░░░░░░  40%
+12:00 ████████████░░░░░░░░  60%
+18:00 ████████████████████ 100% ⬅️ Most Active
+```
+
+> 💡 **Night Owl Coder** — Most productive during evening hours
 
 </div>
 
