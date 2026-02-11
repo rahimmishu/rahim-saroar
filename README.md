@@ -16,27 +16,27 @@
 <!-- Social Badges Row -->
 <p>
   <a href="https://rahim-saroar.vercel.app" target="_blank">
-    <img src="https://img.shields.io/badge/%F0%9F%8C%90_Portfolio-Visit_Site-6d28d9?style=for-the-badge&logoColor=white" />
+    <img src="https://img.shields.io/badge/%F0%9F%8C%90_Portfolio-Visit_Site-6d28d9?style=for-the-badge&logoColor=white" alt="Portfolio" />
   </a>&nbsp;
   <a href="https://linkedin.com/in/rahim-saroar" target="_blank">
-    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" />
+    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
   </a>&nbsp;
   <a href="https://github.com/rahimmishu" target="_blank">
-    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" />
+    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
   </a>&nbsp;
   <a href="https://www.facebook.com/rahimsaroar" target="_blank">
-    <img src="https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white" />
+    <img src="https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white" alt="Facebook" />
   </a>&nbsp;
   <a href="mailto:rahimsaroarmishu@gmail.com">
-    <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" />
+    <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
   </a>
 </p>
 
 <!-- Profile Views + Followers -->
 <p>
-  <img src="https://komarev.com/ghpvc/?username=rahimmishu&style=for-the-badge&color=6d28d9&label=PROFILE+VIEWS" />
+  <img src="https://komarev.com/ghpvc/?username=rahimmishu&style=for-the-badge&color=6d28d9&label=PROFILE+VIEWS" alt="Profile Views" />
   &nbsp;
-  <img src="https://img.shields.io/github/followers/rahimmishu?style=for-the-badge&color=3b82f6&labelColor=1e1e2e&label=FOLLOWERS" />
+  <img src="https://img.shields.io/github/followers/rahimmishu?style=for-the-badge&color=3b82f6&labelColor=1e1e2e&label=FOLLOWERS" alt="Followers" />
 </p>
 
 </div>
@@ -50,7 +50,7 @@
 <img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=12,20,30&height=3&section=header" width="100%" />
 
 <h2>
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People%20with%20professions/Man%20Technologist%20Medium-Light%20Skin%20Tone.png" width="35" align="center" />
+  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People%20with%20professions/Man%20Technologist%20Medium-Light%20Skin%20Tone.png" width="35" align="center" alt="Developer" />
   &nbsp; About Me
 </h2>
 
@@ -85,11 +85,11 @@ currently:  Building personal ecosystem
 </td>
 <td width="45%" valign="top" align="center">
 
-<img src="https://github-readme-stats.vercel.app/api?username=rahimmishu&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=a855f7&icon_color=3b82f6&text_color=94a3b8&ring_color=6d28d9" width="100%" />
+<img src="https://github-readme-stats.vercel.app/api?username=rahimmishu&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=a855f7&icon_color=3b82f6&text_color=94a3b8&ring_color=6d28d9" width="100%" alt="GitHub Stats" />
 
 <br/>
 
-<img src="https://github-readme-stats.vercel.app/api/top-langs?username=rahimmishu&layout=compact&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=a855f7&text_color=94a3b8&langs_count=6" width="100%" />
+<img src="https://github-readme-stats.vercel.app/api/top-langs?username=rahimmishu&layout=compact&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=a855f7&text_color=94a3b8&langs_count=6" width="100%" alt="Top Languages" />
 
 </td>
 </tr>
@@ -102,7 +102,7 @@ currently:  Building personal ecosystem
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <h2>
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Hammer%20and%20Wrench.png" width="35" align="center" />
+  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Hammer%20and%20Wrench.png" width="35" align="center" alt="Tools" />
   &nbsp; Tech Stack Arsenal
 </h2>
 
@@ -164,7 +164,7 @@ currently:  Building personal ecosystem
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <h2>
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Rocket.png" width="35" align="center" />
+  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Rocket.png" width="35" align="center" alt="Rocket" />
   &nbsp; Featured Masterpieces
 </h2>
 
@@ -213,19 +213,19 @@ Full-featured EdTech platform for SSC/HSC students in Bangladesh. Includes live 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <h2>
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Bar%20Chart.png" width="35" align="center" />
+  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Bar%20Chart.png" width="35" align="center" alt="Chart" />
   &nbsp; GitHub Analytics
 </h2>
 
-<!-- Streak Stats -->
+<!-- Contribution Graph -->
 <div align="center">
 
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=rahimmishu&theme=tokyonight&hide_border=true&background=0d1117&ring=a855f7&fire=ec4899&currStreakLabel=6d28d9&sideLabels=94a3b8&dates=64748b&stroke=1e1e2e&currStreakNum=ffffff&sideNums=ffffff" width="70%" />
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=rahimmishu&bg_color=0d1117&color=a855f7&line=6d28d9&point=ec4899&area=true&area_color=6d28d922&hide_border=true&custom_title=Rahim%20Saroar's%20Contribution%20Graph" width="95%" alt="Contribution Graph" />
 
 <br/><br/>
 
-<!-- Activity Graph -->
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=rahimmishu&bg_color=0d1117&color=a855f7&line=6d28d9&point=ec4899&area=true&area_color=6d28d922&hide_border=true&theme=tokyo-night" width="95%" />
+<!-- Streak Stats -->
+<img src="https://github-readme-streak-stats.herokuapp.com/?user=rahimmishu&theme=tokyonight&hide_border=true&background=0d1117&ring=a855f7&fire=ec4899&currStreakLabel=6d28d9&sideLabels=94a3b8&dates=64748b&stroke=1e1e2e&currStreakNum=ffffff&sideNums=ffffff" width="70%" alt="GitHub Streak" />
 
 </div>
 
@@ -236,12 +236,14 @@ Full-featured EdTech platform for SSC/HSC students in Bangladesh. Includes live 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <h2>
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Trophy.png" width="35" align="center" />
+  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Trophy.png" width="35" align="center" alt="Trophy" />
   &nbsp; GitHub Trophies
 </h2>
 
 <div align="center">
-<img src="https://github-profile-trophy.vercel.app/?username=rahimmishu&theme=tokyonight&no-frame=true&no-bg=true&column=7&margin-w=4&margin-h=4" width="100%" />
+  
+<img src="https://github-profile-trophy.vercel.app/?username=rahimmishu&theme=tokyonight&no-frame=true&no-bg=true&column=7&margin-w=8&margin-h=8&rank=SSS,SS,S,AAA,AA,A,B" width="100%" alt="GitHub Trophies" />
+
 </div>
 
 ---
@@ -251,7 +253,7 @@ Full-featured EdTech platform for SSC/HSC students in Bangladesh. Includes live 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <h2>
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Snake.png" width="35" align="center" />
+  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Snake.png" width="35" align="center" alt="Snake" />
   &nbsp; Contribution Snake
 </h2>
 
@@ -260,27 +262,12 @@ Full-featured EdTech platform for SSC/HSC students in Bangladesh. Includes live 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/rahimmishu/rahim-saroar/output/github-contribution-grid-snake-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/rahimmishu/rahim-saroar/output/github-contribution-grid-snake.svg" />
-  <img alt="Contribution Snake" src="https://raw.githubusercontent.com/rahimmishu/rahim-saroar/output/github-contribution-grid-snake-dark.svg" width="90%" />
+  <img alt="GitHub Contribution Snake Animation" src="https://raw.githubusercontent.com/rahimmishu/rahim-saroar/output/github-contribution-grid-snake-dark.svg" width="100%" />
 </picture>
 
-> 💡 *To enable the snake animation, add [this GitHub Action](https://github.com/Platane/snk) to your profile repo.*
+<br/>
 
-</div>
-
----
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!--                    CURRENTLY LISTENING                         -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-
-<h2>
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Musical%20Notes.png" width="35" align="center" />
-  &nbsp; When I Code, I Listen To
-</h2>
-
-<div align="center">
-
-[![Spotify](https://novatorem.vercel.app/api/spotify?background_color=0d1117&border_color=1e1e2e)](https://open.spotify.com/user/31pfzfmcifdglwzprlsr2krs7j5i)
+> 💡 **Powered by GitHub Actions** — Updates automatically every 24 hours
 
 </div>
 
@@ -291,24 +278,24 @@ Full-featured EdTech platform for SSC/HSC students in Bangladesh. Includes live 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <h2>
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Waving%20Hand.png" width="35" align="center" />
+  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Waving%20Hand.png" width="35" align="center" alt="Wave" />
   &nbsp; Let's Connect & Build Together
 </h2>
 
 <div align="center">
 
 <a href="https://rahim-saroar.vercel.app" target="_blank">
-  <img src="https://img.shields.io/badge/%F0%9F%8C%90_Portfolio-rahim--saroar.vercel.app-6d28d9?style=for-the-badge&logoColor=white" />
+  <img src="https://img.shields.io/badge/%F0%9F%8C%90_Portfolio-rahim--saroar.vercel.app-6d28d9?style=for-the-badge&logoColor=white" alt="Portfolio" />
 </a>
 &nbsp;
 <a href="https://www.facebook.com/rhythm2OfPeace" target="_blank">
-  <img src="https://img.shields.io/badge/%F0%9F%8E%B5_Rhythm_of_Peace-Facebook_Page-1877F2?style=for-the-badge&logo=facebook&logoColor=white" />
+  <img src="https://img.shields.io/badge/%F0%9F%8E%B5_Rhythm_of_Peace-Facebook_Page-1877F2?style=for-the-badge&logo=facebook&logoColor=white" alt="Facebook Page" />
 </a>
 
 <br/><br/>
 
 <a href="https://www.buymeacoffee.com/rahimsaroar" target="_blank">
-  <img src="https://img.shields.io/badge/☕_Buy_Me_a_Coffee-Support_My_Work-FFDD00?style=for-the-badge&logoColor=black" />
+  <img src="https://img.shields.io/badge/☕_Buy_Me_a_Coffee-Support_My_Work-FFDD00?style=for-the-badge&logoColor=black" alt="Buy Me a Coffee" />
 </a>
 
 <br/><br/>
