@@ -1,0 +1,175 @@
+/* ============================================================
+   📱 lite-mobile.css
+   Mobile Lite Mode — Performance Optimizations
+   শুধু touch device এ apply হবে
+   ============================================================ */
+
+/* ✅ Touch-only devices এ heavy transitions কমানো */
+@media (hover: none) and (pointer: coarse) {
+
+  /* 🚫 Backdrop blur সরানো — GPU এর সবচেয়ে বড় load */
+  .backdrop-blur-sm,
+  .backdrop-blur,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .backdrop-blur-3xl {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* 🚫 Heavy box shadows কমানো */
+  .shadow-2xl {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  /* ✅ Transitions আরও fast করা (snappy feel) */
+  * {
+    transition-duration: 0.15s !important;
+  }
+
+  /* কিন্তু typing effect এর timer এ effect নেই কারণ ওটা setTimeout */
+
+  /* 🚫 Continuous animations pause করা যেগুলো content এর অংশ নয় */
+  .animate-blob,
+  .orbit-dot,
+  .orbit-dot-2,
+  .orbit-dot-r,
+  .spin-border,
+  .spin-border-reverse,
+  .ring-pulse-1,
+  .ring-pulse-2,
+  .ring-pulse-3,
+  .badge-float-1,
+  .badge-float-2,
+  .badge-float-3,
+  .corner-spark,
+  .photo-float,
+  .photo-shimmer {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* ✅ Marquee রাখা — visually important */
+  .animate-marquee {
+    animation-duration: 35s !important; /* একটু slow করা mobile এ */
+  }
+
+  /* 🚫 Gradient rotation animations বন্ধ */
+  .animate-gradient-x,
+  .animate-spin-slow,
+  .rotate-border {
+    animation: none !important;
+  }
+
+  /* ✅ Pulse animations — হালকা রাখা */
+  .animate-pulse {
+    animation-duration: 3s !important; /* default 2s থেকে slow */
+  }
+
+  /* 🚫 Drop shadows on text — GPU intensive */
+  [class*="drop-shadow"] {
+    filter: none !important;
+  }
+
+  /* ✅ Hover effects remove — touch এ hover নেই */
+  [class*="hover:scale"],
+  [class*="hover:rotate"],
+  [class*="hover:translate"],
+  [class*="group-hover:scale"],
+  [class*="group-hover:rotate"] {
+    transform: none !important;
+  }
+
+  /* ✅ Active feedback রাখা (important for UX) */
+  .active\:scale-95:active {
+    transform: scale(0.95) !important;
+  }
+  .active\:scale-90:active {
+    transform: scale(0.90) !important;
+  }
+
+  /* 🚫 Blur filters on decorative elements */
+  .blur-\[90px\],
+  .blur-\[60px\],
+  .blur-\[80px\] {
+    filter: blur(30px) !important; /* heavy blur কমানো */
+  }
+
+  /* ✅ will-change remove — memory চাপ কমায় */
+  * {
+    will-change: auto !important;
+  }
+
+  /* ✅ Smooth scrolling রাখা */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* ✅ Image rendering optimize */
+  img {
+    image-rendering: auto;
+  }
+
+  /* 🚫 Complex pseudo-element animations */
+  *::before,
+  *::after {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+
+  /* ✅ কিন্তু lite-fade animations রাখা (content appearance) */
+  .lite-fade-1,
+  .lite-fade-2,
+  .lite-fade-3,
+  .lite-fade-4 {
+    animation-duration: 0.6s !important;
+  }
+
+  /* ✅ Typing cursor রাখা */
+  .lite-cursor {
+    animation-duration: 0.75s !important;
+    animation-name: lite-cursor !important;
+  }
+
+  /* 🚫 Text glow effects — expensive filter */
+  .animate-text-flow {
+    animation: none !important;
+    background-position: 0% 50% !important;
+    filter: none !important;
+  }
+
+  /* ✅ Overflow hidden on animated containers — prevent layout recalculation */
+  [class*="overflow-hidden"] {
+    contain: layout style;
+  }
+}
+
+/* ============================================================
+   📱 Lite Hero specific tweaks
+   ============================================================ */
+
+/* Static glow for lite hero — pure CSS, no JS needed */
+.lite-photo-wrap {
+  position: relative;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .lite-photo {
+    /* Remove scale transform on mobile — saves compositing layer */
+    transition: none !important;
+  }
+}
+
+/* ============================================================
+   📱 Lite Navbar specific tweaks
+   ============================================================ */
+
+@media (hover: none) and (pointer: coarse) {
+  /* Navbar border — static gradient, no animation */
+  nav [class*="animate-gradient"] {
+    animation: none !important;
+    background-position: 0% 0% !important;
+  }
+}

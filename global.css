@@ -4,6 +4,9 @@
 
 @import './premium-navbar-animations.css';
 
+/* 📱 Mobile Lite Mode Performance CSS */
+@import './lite-mobile.css';
+
 /* 🔥 CSS Variables for Rainbow Button */
 :root {
   --color-1: 0 100% 63%;
@@ -15,20 +18,20 @@
 
 /* 🔥 Custom Scrollbar Design */
 ::-webkit-scrollbar {
-  width: 6px; /* আরও চিকন এবং প্রিমিয়াম */
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent; 
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15); /* গ্লাস ইফেক্ট */
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ec4899; /* Pink-500 Hover Effect */
+  background: #ec4899;
 }
 
 /* Firefox Support */
@@ -45,7 +48,7 @@ html {
   text-shadow: 0 0 5px rgba(236, 72, 153, 0.5);
 }
 
-/* 🎞️ Cinematic Grain Effect (Optional Global Style) */
+/* 🎞️ Cinematic Grain Effect */
 .grain-overlay {
   position: fixed;
   top: 0;
@@ -71,18 +74,17 @@ html {
 /* Levitation / Floating Animation */
 @keyframes float {
   0% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); } /* ২০ পিক্সেল উপরে উঠবে */
+  50% { transform: translateY(-20px); }
   100% { transform: translateY(0px); }
 }
 
 .animate-float {
-  animation: float 6s ease-in-out infinite; /* ৬ সেকেন্ডে একবার লুপ হবে */
+  animation: float 6s ease-in-out infinite;
 }
 
-/* --- 🧪 Body Styles (Updated for Pure Black Dark Mode) --- */
+/* Body Styles */
 body {
-  /* ডিফল্ট (Light Mode) preloader er ager screen */
-  background-color: #000000; 
+  background-color: #000000;
   color: #0f172a;
   margin: 0;
   padding: 0;
@@ -90,9 +92,8 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 🔥 Dark Mode এর জন্য Pure Black */
 .dark body {
-  background-color: #000000 !important; 
+  background-color: #000000 !important;
   color: #ffffff;
 }
 
@@ -102,18 +103,18 @@ canvas#canvas {
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; 
-  z-index: 0; 
+  pointer-events: none;
+  z-index: 0;
   opacity: 0.8;
 }
 
 #root {
   position: relative;
-  z-index: 10; 
+  z-index: 10;
 }
 
 /* ---------------------------------------------------- */
-/* 🔥 FEEDBACK SLIDER STYLES                           */
+/* 🔥 FEEDBACK SLIDER STYLES                            */
 /* ---------------------------------------------------- */
 
 .feedback-card {
@@ -121,19 +122,17 @@ canvas#canvas {
   max-width: 400px;
   padding: 40px 30px;
   border-radius: 32px;
-  background: white; 
+  background: white;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
   text-align: center;
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
-  margin: 0 auto; /* সেন্টার করার জন্য */
+  margin: 0 auto;
 }
 
-/* Dark Mode Support for Feedback Card */
 .dark .feedback-card {
-  /* ব্যাকগ্রাউন্ড কালো হওয়ায় কার্ডটি একটু আলাদা রাখার জন্য Slate-900 রাখা হলো */
-  background: #111827; 
+  background: #111827;
   box-shadow: 0 20px 60px rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -171,7 +170,6 @@ canvas#canvas {
   justify-content: center;
 }
 
-/* Animation: Pop In */
 .pop-anim {
   animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -185,6 +183,7 @@ canvas#canvas {
 .fade-in {
   animation: fadeIn 0.5s ease-out;
 }
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -201,7 +200,6 @@ canvas#canvas {
   transition: color 0.3s ease;
 }
 
-/* Slider Input Styling */
 .slider-container {
   margin-bottom: 45px;
   width: 100%;
@@ -216,16 +214,14 @@ canvas#canvas {
   background: #f1f2f6;
   outline: none;
   cursor: grab;
-  /* Dynamic gradient handled by React inline style */
   background-image: linear-gradient(var(--theme-color), var(--theme-color));
   background-repeat: no-repeat;
 }
 
 .dark .slider-container input[type=range] {
-  background: #334155; /* Slate-700 */
+  background: #334155;
 }
 
-/* Chrome/Safari Thumb */
 .slider-container input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   height: 32px;
@@ -237,7 +233,6 @@ canvas#canvas {
   transition: border-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Button Styling */
 .submit-btn {
   width: 100%;
   padding: 18px;
@@ -252,7 +247,7 @@ canvas#canvas {
 }
 
 .dark .submit-btn {
-  background: #475569; /* Slate-600 */
+  background: #475569;
 }
 
 .submit-btn:hover {
@@ -264,7 +259,6 @@ canvas#canvas {
   transform: translateY(1px);
 }
 
-/* Success Overlay */
 .success-overlay {
   position: absolute;
   top: 0;
@@ -280,5 +274,5 @@ canvas#canvas {
 }
 
 .dark .success-overlay {
-  background: #111827; /* Darker background for success overlay in dark mode */
+  background: #111827;
 }
