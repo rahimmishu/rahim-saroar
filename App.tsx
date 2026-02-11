@@ -9,6 +9,7 @@ import { Toaster } from 'react-hot-toast';
 import useMobileDetect from './hooks/useMobileDetect';
 import LiteHero from './components/LiteHero';
 import LiteNavbar from './components/LiteNavbar';
+import LiteAbout from './components/LiteAbout'; // ✅ নতুন
 
 // ============================================================
 // Full Version Components
@@ -42,7 +43,7 @@ import SecretVault from './components/SecretVault';
 import MobilePremiumFeatures from './components/MobilePremiumFeatures';
 import BatteryOptimizer from './components/BatteryOptimizer';
 
-// ✅ Heavy effects — শুধু desktop এ দেখাবে
+// ✅ Heavy effects — শুধু desktop এ দেখাবে (mobile lite তে skip)
 import { SunlightSpotlight } from './components/ui/sunlight-spotlight';
 import DynamicIsland from './components/DynamicIsland';
 
@@ -171,7 +172,7 @@ const AppContent: React.FC = () => {
       <SecretVault />
       <DynamicTitle />
       <NetworkStatus />
-      
+
       {/* ContextMenu — শুধু desktop এ (mobile তে right-click নেই) */}
       {!isMobileLite && <ContextMenu />}
 
@@ -216,7 +217,13 @@ const AppContent: React.FC = () => {
 
                 <TechMarquee />
 
-                <Reveal delay={0.1}><section id="about"><About /></section></Reveal>
+                {/* ===== ABOUT — Lite vs Full ===== */}
+                <Reveal delay={0.1}>
+                  <section id="about">
+                    {isMobileLite ? <LiteAbout /> : <About />}
+                  </section>
+                </Reveal>
+
                 <Reveal delay={0.1}><section id="projects"><Projects /></section></Reveal>
                 <Reveal><section id="resources"><Resources /></section></Reveal>
                 <Reveal><FacebookFeed /></Reveal>
