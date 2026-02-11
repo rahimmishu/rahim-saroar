@@ -9,16 +9,11 @@ import PokemonGame from './PokemonGame';
 import LuckRoyale from './LuckRoyale';
 import SpeedTest from './SpeedTest';
 import WeatherApp from './WeatherApp';
-import CalculatorApp from './Calculator';
-import BirthdayCake from './BirthdayCake';
-import FlappyBird from './FlappyBird';
-import CryptoTrader from './CryptoTrader';
 import FocusTimer from './FocusTimer';
 import TicTacToe from './TicTacToe';
 import MemoryGame from './MemoryGame';
 import GpaCalculator from './GpaCalculator'; 
-import { Terminal } from 'lucide-react'; 
-import TerminalApp from './TerminalApp';
+
 
 // ==========================================
 // GLOBAL PREMIUM STYLES
@@ -314,30 +309,6 @@ const Tools: React.FC = () => {
       description: 'Spin & Win Rewards'
     },
     {
-      id: 'crypto',
-      name: 'Crypto Sim',
-      icon: <TrendingUp className="text-white drop-shadow-md" size={30} />,
-      color: 'bg-gradient-to-br from-slate-600 via-gray-700 to-neutral-800',
-      glow: 'rgba(100,116,139,0.35)',
-      description: 'Trade Virtual Assets'
-    },
-    {
-      id: 'flappy',
-      name: 'Neon Flap',
-      icon: <Bird className="text-white drop-shadow-md" size={30} />,
-      color: 'bg-gradient-to-br from-fuchsia-500 via-purple-600 to-indigo-600',
-      glow: 'rgba(192,38,211,0.35)',
-      description: 'Endless Runner'
-    },
-    {
-      id: 'cake',
-      name: '3D Cake',
-      icon: <Cake className="text-white drop-shadow-md" size={30} />,
-      color: 'bg-gradient-to-br from-rose-400 via-pink-500 to-fuchsia-500',
-      glow: 'rgba(244,114,182,0.35)',
-      description: 'Blow the Candle!'
-    },
-    {
       id: 'speed-test',
       name: 'SpeedFlow',
       icon: <Wifi className="text-white drop-shadow-md" size={30} />,
@@ -354,28 +325,12 @@ const Tools: React.FC = () => {
       description: 'Live Forecast'
     },
     {
-      id: 'calculator',
-      name: 'Calculator',
-      icon: <Calculator className="text-white drop-shadow-md" size={30} />,
-      color: 'bg-gradient-to-br from-orange-400 via-red-500 to-rose-600',
-      glow: 'rgba(249,115,22,0.35)',
-      description: 'Neumorphic Dual-Theme'
-    },
-    {
       id: 'focus',
       name: 'Focus Timer',
       icon: <Zap className="text-white drop-shadow-md" size={30} />,
       color: 'bg-gradient-to-br from-blue-400 via-cyan-500 to-teal-500',
       glow: 'rgba(59,130,246,0.35)',
       description: 'Pomodoro Clock'
-    },
-    {
-      id: 'terminal',
-      name: 'Hacker Terminal',
-      icon: <Terminal className="text-white drop-shadow-md" size={30} />,
-      color: 'bg-gradient-to-br from-gray-800 via-gray-900 to-black',
-      glow: 'rgba(120,120,120,0.25)',
-      description: 'Command Line Interface'
     },
     {
       id: 'tictactoe',
@@ -401,14 +356,9 @@ const Tools: React.FC = () => {
       case 'gpa-calc':   return <GpaCalculator />;
       case 'pokemon':    return <PokemonGame />;
       case 'luck-royale':return <LuckRoyale onClose={() => setActiveApp(null)} />;
-      case 'flappy':     return <FlappyBird onClose={() => setActiveApp(null)} />;
       case 'speed-test': return <SpeedTest onClose={() => setActiveApp(null)} />;
       case 'weather':    return <WeatherApp onClose={() => setActiveApp(null)} />;
-      case 'calculator': return <CalculatorApp onClose={() => setActiveApp(null)} />;
-      case 'cake':       return <BirthdayCake onClose={() => setActiveApp(null)} />;
-      case 'crypto':     return <CryptoTrader onClose={() => setActiveApp(null)} />;
       case 'focus':      return <FocusTimer onClose={() => setActiveApp(null)} />;
-      case 'terminal':   return <TerminalApp onClose={() => setActiveApp(null)} />;
       case 'tictactoe':  return <TicTacToe onClose={() => setActiveApp(null)} />;
       case 'memory':     return <MemoryGame onClose={() => setActiveApp(null)} />;
       default:           return null;
