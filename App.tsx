@@ -4,12 +4,12 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { Toaster } from 'react-hot-toast';
 
 // ============================================================
-// 📱 Mobile Lite Version Detection
+// ðŸ“± Mobile Lite Version Detection
 // ============================================================
 import useMobileDetect from './hooks/useMobileDetect';
 import LiteHero from './components/LiteHero';
 import LiteNavbar from './components/LiteNavbar';
-import LiteAbout from './components/LiteAbout'; // ✅ নতুন
+import LiteAbout from './components/LiteAbout'; // âœ… à¦¨à¦¤à§à¦¨
 
 // ============================================================
 // Full Version Components
@@ -43,7 +43,7 @@ import SecretVault from './components/SecretVault';
 import MobilePremiumFeatures from './components/MobilePremiumFeatures';
 import BatteryOptimizer from './components/BatteryOptimizer';
 
-// ✅ Heavy effects — শুধু desktop এ দেখাবে (mobile lite তে skip)
+// âœ… Heavy effects â€” à¦¶à§à¦§à§ desktop à¦ à¦¦à§‡à¦–à¦¾à¦¬à§‡ (mobile lite à¦¤à§‡ skip)
 import { SunlightSpotlight } from './components/ui/sunlight-spotlight';
 import DynamicIsland from './components/DynamicIsland';
 
@@ -57,7 +57,7 @@ const ScrollToTop = () => {
 };
 
 // ============================================================
-// 📱 Lite Mobile RevealOnScroll — simpler, no heavy spring
+// ðŸ“± Lite Mobile RevealOnScroll â€” simpler, no heavy spring
 // ============================================================
 const LiteReveal: React.FC<{ children: React.ReactNode; delay?: number }> = ({ children, delay = 0 }) => {
   const [visible, setVisible] = useState(false);
@@ -96,7 +96,7 @@ const AppContent: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
 
-  // 📱 Mobile lite mode detection
+  // ðŸ“± Mobile lite mode detection
   const isMobileLite = useMobileDetect();
 
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -112,7 +112,7 @@ const AppContent: React.FC = () => {
     isDarkMode ? html.classList.add('dark') : html.classList.remove('dark');
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
 
-    // Click vibration — only on desktop (not needed on mobile lite, saves CPU cycles)
+    // Click vibration â€” only on desktop (not needed on mobile lite, saves CPU cycles)
     if (!isMobileLite) {
       const handleClick = () => navigator.vibrate?.(5);
       document.addEventListener('click', handleClick);
@@ -126,7 +126,7 @@ const AppContent: React.FC = () => {
     console.log('New Feedback Submitted:', data);
   };
 
-  // Keyboard shortcuts — only desktop
+  // Keyboard shortcuts â€” only desktop
   useEffect(() => {
     if (isMobileLite) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -147,7 +147,7 @@ const AppContent: React.FC = () => {
 
   const location = useLocation();
 
-  // 📱 Reveal wrapper — lite vs full
+  // ðŸ“± Reveal wrapper â€” lite vs full
   const Reveal = isMobileLite ? LiteReveal : RevealOnScroll;
 
   return (
@@ -162,27 +162,27 @@ const AppContent: React.FC = () => {
         }}
       />
 
-      {/* ✅ Heavy effects — শুধু desktop এ render হবে (mobile lite তে skip) */}
+      {/* âœ… Heavy effects â€” à¦¶à§à¦§à§ desktop à¦ render à¦¹à¦¬à§‡ (mobile lite à¦¤à§‡ skip) */}
       {!isMobileLite && <SunlightSpotlight className="z-[50]" />}
       {!isMobileLite && <DynamicIsland />}
 
       <ScrollToTop />
 
-      {/* ✅ সব device এ থাকবে এগুলো (lightweight) */}
+      {/* âœ… à¦¸à¦¬ device à¦ à¦¥à¦¾à¦•à¦¬à§‡ à¦à¦—à§à¦²à§‹ (lightweight) */}
       <SecretVault />
       <DynamicTitle />
       <NetworkStatus />
 
-      {/* ContextMenu — শুধু desktop এ (mobile তে right-click নেই) */}
+      {/* ContextMenu â€” à¦¶à§à¦§à§ desktop à¦ (mobile à¦¤à§‡ right-click à¦¨à§‡à¦‡) */}
       {!isMobileLite && <ContextMenu />}
 
-      {/* BatteryOptimizer — শুধু desktop এ */}
+      {/* BatteryOptimizer â€” à¦¶à§à¦§à§ desktop à¦ */}
       {!isMobileLite && <BatteryOptimizer isDarkMode={isDarkMode} toggleTheme={toggleTheme} />}
 
-      {/* MobilePremiumFeatures — শুধু mobile এ (কিন্তু lite mode handle করে) */}
+      {/* MobilePremiumFeatures â€” à¦¶à§à¦§à§ mobile à¦ (à¦•à¦¿à¦¨à§à¦¤à§ lite mode handle à¦•à¦°à§‡) */}
       <MobilePremiumFeatures />
 
-      {/* Preloader — শুধু home page এ */}
+      {/* Preloader â€” à¦¶à§à¦§à§ home page à¦ */}
       {isLoading && location.pathname === '/' && <Preloader onFinish={() => setIsLoading(false)} />}
 
       <div
@@ -190,7 +190,7 @@ const AppContent: React.FC = () => {
         style={{ position: 'relative', zIndex: 10 }}
       >
 
-        {/* ===== NAVBAR — Lite vs Full ===== */}
+        {/* ===== NAVBAR â€” Lite vs Full ===== */}
         {isMobileLite ? (
           <LiteNavbar
             isDarkMode={isDarkMode}
@@ -212,12 +212,12 @@ const AppContent: React.FC = () => {
             path="/"
             element={
               <>
-                {/* ===== HERO — Lite vs Full ===== */}
+                {/* ===== HERO â€” Lite vs Full ===== */}
                 {isMobileLite ? <LiteHero /> : <Hero />}
 
                 <TechMarquee />
 
-                {/* ===== ABOUT — Lite vs Full ===== */}
+                {/* ===== ABOUT â€” Lite vs Full ===== */}
                 <Reveal delay={0.1}>
                   <section id="about">
                     {isMobileLite ? <LiteAbout /> : <About />}
