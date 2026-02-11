@@ -1,0 +1,47 @@
+name: Generate Snake Animation
+
+on:
+  # প্রতিদিন রাত ১২টায় অটোমেটিক রান করবে
+  schedule:
+    - cron: "0 0 * * *" 
+  
+  # আপনি চাইলে ম্যানুয়ালিও রান করতে পারবেন
+  workflow_dispatch:
+  
+  # মেইন ব্রাঞ্চে পুশ করলে রান করবে
+  push:
+    branches:
+    - main
+
+jobs:
+  generate:
+    permissions: 
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Generate github-contribution-grid-snake.svg
+        uses: Platane/snk@v3
+        with:
+          # আপনার গিটহাব ইউজারনেম
+          github_user_name: ${{ github.repository_owner }}
+          
+          # ফাইলগুলো dist ফোল্ডারে জেনারেট হবে
+          outputs: |
+            dist/github-contribution-grid-snake.svg
+            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Push to output branch
+        uses: crazy-max/ghaction-github-pages@v3.1.0
+        with:
+          # ফাইলগুলো output ব্রাঞ্চে পুশ হবে
+          target_branch: output
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
