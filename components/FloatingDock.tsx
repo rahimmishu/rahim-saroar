@@ -94,12 +94,12 @@ const FloatingDock: React.FC<FloatingDockProps> = ({ toggleChat, toggleMusic, to
       }}
       transition={{ duration: 0.5, type: "spring", stiffness: 100 }}
       
-      // 🔥 ফিক্স: মোবাইলের জন্য scale-[0.85] এবং bottom-4
-      // ডেস্কটপে sm:scale-100 এবং bottom-6 থাকবে
+      // ðŸ”¥ à¦«à¦¿à¦•à§à¦¸: à¦®à§‹à¦¬à¦¾à¦‡à¦²à§‡à¦° à¦œà¦¨à§à¦¯ scale-[0.85] à¦à¦¬à¦‚ bottom-4
+      // à¦¡à§‡à¦¸à§à¦•à¦Ÿà¦ªà§‡ sm:scale-100 à¦à¦¬à¦‚ bottom-6 à¦¥à¦¾à¦•à¦¬à§‡
       className="fixed bottom-4 left-1/2 z-[9999] touch-none scale-[0.85] sm:scale-100 origin-bottom"
     >
       {/* Glass Container */}
-      {/* মোবাইলে প্যাডিং কমানো হয়েছে (p-2) */}
+      {/* à¦®à§‹à¦¬à¦¾à¦‡à¦²à§‡ à¦ªà§à¦¯à¦¾à¦¡à¦¿à¦‚ à¦•à¦®à¦¾à¦¨à§‹ à¦¹à§Ÿà§‡à¦›à§‡ (p-2) */}
       <div className="flex items-center gap-1 px-3 py-2 border shadow-2xl sm:px-4 sm:py-3 sm:gap-2 bg-slate-900/80 dark:bg-black/80 backdrop-blur-2xl border-white/10 rounded-2xl shadow-black/50 ring-1 ring-white/5 cursor-grab active:cursor-grabbing">
         
         {/* Drag Handle */}
