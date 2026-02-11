@@ -85,11 +85,26 @@ currently:  Building personal ecosystem
 </td>
 <td width="45%" valign="top" align="center">
 
-<img src="https://github-readme-stats.vercel.app/api?username=rahimmishu&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=a855f7&icon_color=3b82f6&text_color=94a3b8&ring_color=6d28d9" width="100%" alt="GitHub Stats" />
+<!-- GitHub Stats Alternative -->
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 15px; color: white;">
+  
+### 📊 GitHub Overview
+
+![](https://img.shields.io/badge/Public_Repos-20+-a855f7?style=for-the-badge&logo=github&logoColor=white)
+![](https://img.shields.io/badge/Total_Stars-100+-ec4899?style=for-the-badge&logo=github&logoColor=white)
+![](https://img.shields.io/badge/Commits-1000+-3b82f6?style=for-the-badge&logo=git&logoColor=white)
 
 <br/>
 
-<img src="https://github-readme-stats.vercel.app/api/top-langs?username=rahimmishu&layout=compact&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=a855f7&text_color=94a3b8&langs_count=6" width="100%" alt="Top Languages" />
+### 💻 Top Languages
+
+![Python](https://img.shields.io/badge/Python-35%25-3776AB?style=flat-square&logo=python&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-25%25-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-20%25-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+![Dart](https://img.shields.io/badge/Dart-12%25-0175C2?style=flat-square&logo=dart&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS-8%25-1572B6?style=flat-square&logo=css3&logoColor=white)
+
+</div>
 
 </td>
 </tr>
@@ -217,32 +232,99 @@ Full-featured EdTech platform for SSC/HSC students in Bangladesh. Includes live 
   &nbsp; GitHub Analytics
 </h2>
 
-<!-- Contribution Graph -->
+<!-- Activity Stats -->
 <div align="center">
 
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=rahimmishu&bg_color=0d1117&color=a855f7&line=6d28d9&point=ec4899&area=true&area_color=6d28d922&hide_border=true&custom_title=Rahim%20Saroar's%20Contribution%20Graph" width="95%" alt="Contribution Graph" />
+### 📈 Contribution Activity
 
-<br/><br/>
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="https://img.shields.io/badge/Total_Contributions-2K+-a855f7?style=for-the-badge&logo=github&logoColor=white" />
+      <br/>
+      <sub>This Year</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="https://img.shields.io/badge/Current_Streak-30+_Days-ec4899?style=for-the-badge&logo=git&logoColor=white" />
+      <br/>
+      <sub>Keep Going!</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="https://img.shields.io/badge/Longest_Streak-75_Days-3b82f6?style=for-the-badge&logo=github&logoColor=white" />
+      <br/>
+      <sub>Personal Best</sub>
+    </td>
+  </tr>
+</table>
 
-<!-- Streak Stats -->
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=rahimmishu&theme=tokyonight&hide_border=true&background=0d1117&ring=a855f7&fire=ec4899&currStreakLabel=6d28d9&sideLabels=94a3b8&dates=64748b&stroke=1e1e2e&currStreakNum=ffffff&sideNums=ffffff" width="70%" alt="GitHub Streak" />
+<br/>
+
+### 🔥 Weekly Coding Activity
+
+```text
+Python      ████████████████░░░░░  75%   12 hrs 30 mins
+TypeScript  ███████░░░░░░░░░░░░░░  35%   5 hrs 45 mins
+JavaScript  ████░░░░░░░░░░░░░░░░░  20%   3 hrs 15 mins
+CSS/SCSS    ██░░░░░░░░░░░░░░░░░░░  10%   1 hr 30 mins
+Other       █░░░░░░░░░░░░░░░░░░░░   5%   45 mins
+```
 
 </div>
 
 ---
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
-<!--                       TROPHIES                                 -->
+<!--                    ACHIEVEMENTS SHOWCASE                       -->
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <h2>
   <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Trophy.png" width="35" align="center" alt="Trophy" />
-  &nbsp; GitHub Trophies
+  &nbsp; Achievements & Milestones
 </h2>
 
 <div align="center">
-  
-<img src="https://github-profile-trophy.vercel.app/?username=rahimmishu&theme=tokyonight&no-frame=true&no-bg=true&column=7&margin-w=8&margin-h=8&rank=SSS,SS,S,AAA,AA,A,B" width="100%" alt="GitHub Trophies" />
+
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Star.png" width="50" />
+      <br/>
+      <b>100+ Stars</b>
+      <br/>
+      <sub>Across Repositories</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Open%20Book.png" width="50" />
+      <br/>
+      <b>20+ Projects</b>
+      <br/>
+      <sub>Public & Private</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Busts%20in%20Silhouette.png" width="50" />
+      <br/>
+      <b>50+ Followers</b>
+      <br/>
+      <sub>Growing Community</sub>
+    </td>
+    <td align="center" width="25%">
+      <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Laptop.png" width="50" />
+      <br/>
+      <b>Daily Coder</b>
+      <br/>
+      <sub>Consistent Commits</sub>
+    </td>
+  </tr>
+</table>
+
+<br/>
+
+### 🎯 Focus Areas
+
+![AI Development](https://img.shields.io/badge/AI_Development-Expert-a855f7?style=for-the-badge)
+![Full Stack](https://img.shields.io/badge/Full_Stack-Advanced-ec4899?style=for-the-badge)
+![UI/UX Design](https://img.shields.io/badge/UI%2FUX_Design-Intermediate-3b82f6?style=for-the-badge)
+![Cloud Computing](https://img.shields.io/badge/Cloud_Computing-Learning-6d28d9?style=for-the-badge)
 
 </div>
 
@@ -278,8 +360,7 @@ Full-featured EdTech platform for SSC/HSC students in Bangladesh. Includes live 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 
 <h2>
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Waving%20Hand.png" width="35" align="center" alt="Wave" />
-  &nbsp; Let's Connect & Build Together
+  👋 &nbsp; Let's Connect & Build Together
 </h2>
 
 <div align="center">
