@@ -258,9 +258,9 @@ Full-featured EdTech platform for SSC/HSC students in Bangladesh. Includes live 
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/rahimmishu/rahimmishu/output/github-contribution-grid-snake-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/rahimmishu/rahimmishu/output/github-contribution-grid-snake.svg" />
-  <img alt="Contribution Snake" src="https://raw.githubusercontent.com/rahimmishu/rahimmishu/output/github-contribution-grid-snake-dark.svg" width="90%" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/rahimmishu/rahim-saroar/output/github-contribution-grid-snake-dark.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/rahimmishu/rahim-saroar/output/github-contribution-grid-snake.svg" />
+  <img alt="Contribution Snake" src="https://raw.githubusercontent.com/rahimmishu/rahim-saroar/output/github-contribution-grid-snake-dark.svg" width="90%" />
 </picture>
 
 > 💡 *To enable the snake animation, add [this GitHub Action](https://github.com/Platane/snk) to your profile repo.*
@@ -280,7 +280,7 @@ Full-featured EdTech platform for SSC/HSC students in Bangladesh. Includes live 
 
 <div align="center">
 
-[![Spotify](https://novatorem.vercel.app/api/spotify?background_color=0d1117&border_color=1e1e2e)](https://open.spotify.com/user/rahimmishu)
+[![Spotify](https://novatorem.vercel.app/api/spotify?background_color=0d1117&border_color=1e1e2e)](https://open.spotify.com/user/31pfzfmcifdglwzprlsr2krs7j5i)
 
 </div>
 
