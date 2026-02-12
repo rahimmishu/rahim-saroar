@@ -9,6 +9,16 @@ interface MusicPlayerProps {
   togglePlay: () => void;
 }
 
+// 🎵 Track Type - Local বা YouTube
+interface Track {
+  title: string;
+  artist: string;
+  cover: string;
+  type: 'local' | 'youtube';
+  src?: string; // Local audio file path
+  youtubeId?: string; // YouTube video ID
+}
+
 const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -17,86 +27,274 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
   const [duration, setDuration] = useState("00:00");
   const [barWidth, setBarWidth] = useState("0%");
   const [isFavorite, setIsFavorite] = useState(false);
+  const [youtubeReady, setYoutubeReady] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
+  const youtubePlayerRef = useRef<any>(null);
+  const playerContainerRef = useRef<HTMLDivElement>(null);
 
-  // 🔥 প্লেলিস্ট
-  const playlist = [
-    { title: "Airtel X Bhoot FM", artist: "Rahim Saroar", src: "/music/airlel-bhootfm.mp3", cover: "/music/airlel-bhootfm.jpg" },
-    { title: "Airtel Phonk 3D", artist: "Rahim Saroar", src: "/music/phonk.mp3", cover: "/music/phonk.jpg" },
-    { title: "Barbaad", artist: "Jubin Nautiyal", src: "/music/barbaad.mp3", cover: "/music/barbaad.jpg" },
-    { title: "Saiyaara", artist: "Faheem Abdullah", src: "/music/saiyaara.mp3", cover: "/music/saiyaara.jpg" },
-    { title: "Chale Aana", artist: "Arman Malik", src: "/music/chale-aana.mp3", cover: "/music/chale-aana.jpg" },
-    { title: "Ek Mulaqat", artist: "Altamash Faridi", src: "/music/ek-mulaqat.mp3", cover: "/music/ek-mulaqat.jpg" },
-    { title: "Fakira", artist: "Timir Biswas", src: "/music/fakira.mp3", cover: "/music/fakira.jpg" },
-    { title: "Salamat", artist: "Arijit Singh", src: "/music/salamat.mp3", cover: "/music/salamat.jpg" },
-    { title: "Sanam Re", artist: "Arijit Singh", src: "/music/sanam-re.mp3", cover: "/music/sanam-re.jpg" },
-    { title: "Ishq", artist: "Faheem Abdullah", src: "/music/ishq.mp3", cover: "/music/ishq.jpg" },
-    { title: "Jisko Jovi Milta Hai", artist: "Manisha Sharma", src: "/music/jisko.mp3", cover: "/music/jisko.jpg" },
-    { title: "Teri Nazron Ka Dil", artist: "Faheem Abdullah", src: "/music/teri-nazar.mp3", cover: "/music/teri-nazar.jpg" },
-    { title: "Dhun", artist: "Arijit Singh", src: "/music/dhun.mp3", cover: "/music/dhun.jpg" },
-    { title: "Khola Janala", artist: "Faheem Abdullah", src: "/music/khola-janala.mp3", cover: "/music/khola-janala.jpg" },
-    { title: "Pal Pal", artist: "Rahim Saroar", src: "/music/pal-pal.mp3", cover: "/music/pal-pal.jpg" },
-    { title: "Pal Pal X Talwinder", artist: "Rahim Saroar", src: "/music/pal.mp3", cover: "/music/pal.jpg" },
-    { title: "Tomar Chokhe Alash Amar", artist: "Arfin Rumey", src: "/music/priyotoma.mp3", cover: "/music/priyotoma.jpg" },
-    { title: "Sahiba", artist: "Adrita Rikhari", src: "/music/sahiba.mp3", cover: "/music/sahiba.jpg" },
-    { title: "Shunno", artist: "Tanveer Evan", src: "/music/shunno.mp3", cover: "/music/shunno.jpg" },
-    { title: "Sun Saathiya", artist: "Priya Saraiya", src: "/music/sun.mp3", cover: "/music/sun.jpg" },
-    { title: "Zaalima", artist: "Shah Rukh Khan", src: "/music/zaalima.mp3", cover: "/music/zaalima.jpg" },
-    { title: "Dharia", artist: "Sugar", src: "/music/dharia.mp3", cover: "/music/dharia.jpg" },
-    { title: "Jhol", artist: "Annural Khalid", src: "/music/jhol.mp3", cover: "/music/jhol.jpg" },
-    { title: "Lo Safar", artist: "Rahim Saroar", src: "/music/lo-safar.mp3", cover: "/music/lo-safar.jpg" },
-    { title: "Tum Hi Aana", artist: "Jubin Nautiyal", src: "/music/tum-hi-aana.mp3", cover: "/music/tum-hi-aana.jpg" }
+  // 🔥 হাইব্রিড প্লেলিস্ট (Local + YouTube)
+  const playlist: Track[] = [
+    // Local Songs (কিছু গান public folder এ রাখুন - হালকা রাখার জন্য ৩-৫টা)
+    { title: "Airtel X Bhoot FM", artist: "Rahim Saroar", type: 'local', src: "/music/airlel-bhootfm.mp3", cover: "/music/airlel-bhootfm.jpg" },
+    { title: "Airtel Phonk 3D", artist: "Rahim Saroar", type: 'local', src: "/music/phonk.mp3", cover: "/music/phonk.jpg" },
+    { title: "Barbaad", artist: "Jubin Nautiyal",type: 'local', src: "/music/barbaad.mp3", cover: "/music/barbaad.jpg" },
+    { title: "Saiyaara", artist: "Faheem Abdullah", type: 'local',src: "/music/saiyaara.mp3", cover: "/music/saiyaara.jpg" },
+    { title: "Chale Aana", artist: "Arman Malik", type: 'local',src: "/music/chale-aana.mp3", cover: "/music/chale-aana.jpg" },
+    { title: "Ek Mulaqat", artist: "Altamash Faridi", type: 'local',src: "/music/ek-mulaqat.mp3", cover: "/music/ek-mulaqat.jpg" },
+    { title: "Fakira", artist: "Timir Biswas", type: 'local',src: "/music/fakira.mp3", cover: "/music/fakira.jpg" },
+    { title: "Salamat", artist: "Arijit Singh", type: 'local',src: "/music/salamat.mp3", cover: "/music/salamat.jpg" },
+    { title: "Sanam Re", artist: "Arijit Singh", type: 'local',src: "/music/sanam-re.mp3", cover: "/music/sanam-re.jpg" },
+    { title: "Ishq", artist: "Faheem Abdullah", type: 'local',src: "/music/ishq.mp3", cover: "/music/ishq.jpg" },
+    { title: "Jisko Jovi Milta Hai", artist: "Manisha Sharma", type: 'local', src: "/music/jisko.mp3", cover: "/music/jisko.jpg" },
+    { title: "Teri Nazron Ka Dil", artist: "Faheem Abdullah", type: 'local', src: "/music/teri-nazar.mp3", cover: "/music/teri-nazar.jpg" },
+    { title: "Dhun", artist: "Arijit Singh", type: 'local', src: "/music/dhun.mp3", cover: "/music/dhun.jpg" },
+    { title: "Khola Janala", artist: "Faheem Abdullah", type: 'local', src: "/music/khola-janala.mp3", cover: "/music/khola-janala.jpg" },
+    { title: "Pal Pal", artist: "Rahim Saroar", type: 'local', src: "/music/pal-pal.mp3", cover: "/music/pal-pal.jpg" },
+    { title: "Pal Pal X Talwinder", artist: "Rahim Saroar", type: 'local', src: "/music/pal.mp3", cover: "/music/pal.jpg" },
+    { title: "Tomar Chokhe Alash Amar", artist: "Arfin Rumey", type: 'local', src: "/music/priyotoma.mp3", cover: "/music/priyotoma.jpg" },
+    { title: "Sahiba", artist: "Adrita Rikhari", type:'local', src: "/music/sahiba.mp3", cover: "/music/sahiba.jpg" },
+    { title: "Shunno", artist:"Tanveer Evan", type:'local', src:"/music/shunno.mp3", cover:"/music/shunno.jpg"},
+    { title:"Sun Saathiya", artist:"Priya Saraiya", type:'local', src:"/music/sun.mp3", cover:"/music/sun.jpg"},
+    { title: "Zaalima", artist: "Shah Rukh Khan", type: 'local', src: "/music/zaalima.mp3", cover: "/music/zaalima.jpg" },
+    { title: "Dharia", artist: "Sugar", type: 'local', src: "/music/dharia.mp3", cover: "/music/dharia.jpg" },
+    { title: "Jhol", artist: "Annural Khalid", type: 'local', src: "/music/jhol.mp3", cover: "/music/jhol.jpg" },
+    { title: "Lo Safar", artist: "Rahim Saroar", type: 'local', src: "/music/lo-safar.mp3", cover: "/music/lo-safar.jpg" },
+    { title: "Tum Hi Aana", artist: "Jubin Nautiyal", type:'local', src:"/music/tum-hi-aana.mp3", cover:"/music/tum-hi-aana.jpg"},
+
+    // ✨ YouTube Songs (YouTube Video ID দিয়ে - website heavy হবে না!)
+    { 
+      title: "Gulabi Aankhon", 
+      artist: "Sanam Pur", 
+      type: 'youtube',
+      youtubeId: "hgi2MYAFgE8?si", // YouTube video ID
+      cover: "https://img.youtube.com/vi/hgi2MYAFgE8/maxresdefault.jpg" 
+    },
+    { 
+      title: "ain Agar Kahoon", 
+      artist: "Shahrukh Khan", 
+      type: 'youtube',
+      youtubeId: "DAYszemgPxc?si",
+      cover: "https://img.youtube.com/vi/DAYszemgPxc/maxresdefault.jpg" 
+    },
+    { 
+      title: "Hamqadam", 
+      artist: "Shrey Singhal", 
+      type: 'youtube',
+      youtubeId: "rS3dghN1P3I?si",
+      cover: "https://img.youtube.com/vi/rS3dghN1P3I/maxresdefault.jpg" 
+    },
+    { 
+      title: "KHAIRIYAT", 
+      artist: "Arijit Singh", 
+      type: 'youtube',
+      youtubeId: "hoNb6HuNmU0?si",
+      cover: "https://img.youtube.com/vi/hoNb6HuNmU0/maxresdefault.jpg" 
+    },
+    { 
+      title: "Mere Mehboob Qayamat Hogi", 
+      artist: "Kishore Kumar", 
+      type: 'youtube',
+      youtubeId: "M6Ul3ASaFLU?si",
+      cover: "https://img.youtube.com/vi/M6Ul3ASaFLU/maxresdefault.jpg" 
+    },
+    { 
+      title: "Zara Zara Bahekta Ha", 
+      artist: "JalRaj (Jalaj)", 
+      type: 'youtube',
+      youtubeId: "NeXbmEnpSz0?si",
+      cover: "https://img.youtube.com/vi/NeXbmEnpSz0/maxresdefault.jpg" 
+    },
+    { 
+      title: "EK MULAQAT", 
+      artist: "Jubin Nautiyal", 
+      type: 'youtube',
+      youtubeId: "_qrxVjvVp4M?si",
+      cover: "https://img.youtube.com/vi/_qrxVjvVp4M/maxresdefault.jpg" 
+    },
+    { 
+      title: "Tujhe Sochta Hoon", 
+      artist: "K K", 
+      type: 'youtube',
+      youtubeId: "ZhYf7dlAwFw?si",
+      cover: "https://img.youtube.com/vi/ZhYf7dlAwFw?si/maxresdefault.jpg" 
+    },
+    { 
+      title: "Kesariya", 
+      artist: "Arijit Singh", 
+      type: 'youtube',
+      youtubeId: "Dkk9gvTmCXY",
+      cover: "https://img.youtube.com/vi/Dkk9gvTmCXY/maxresdefault.jpg" 
+    },
+    { 
+      title: "Heeriye", 
+      artist: "Arijit Singh", 
+      type: 'youtube',
+      youtubeId: "BvSB4kjNSmw",
+      cover: "https://img.youtube.com/vi/BvSB4kjNSmw/maxresdefault.jpg" 
+    },
+    { 
+      title: "Apna Bana Le", 
+      artist: "Arijit Singh", 
+      type: 'youtube',
+      youtubeId: "qri-tha2pJQ",
+      cover: "https://img.youtube.com/vi/qri-tha2pJQ/maxresdefault.jpg" 
+    },
   ];
 
   const currentTrack = playlist[currentTrackIndex];
+  const isYoutube = currentTrack?.type === 'youtube';
 
-  // --- AUDIO LOGIC ---
+  // 🎬 Load YouTube IFrame API
   useEffect(() => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.play().catch(e => console.log("Autoplay blocked", e));
-        setIsOpen(true); // গান প্লে হলে প্লেয়ার ওপেন হবে
-      } else {
-        audioRef.current.pause();
-      }
+    // Check if API already loaded
+    if (window.YT && window.YT.Player) {
+      setYoutubeReady(true);
+      return;
     }
-  }, [isPlaying, currentTrackIndex]);
 
+    // Load YouTube IFrame API
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+
+    // API ready callback
+    (window as any).onYouTubeIframeAPIReady = () => {
+      setYoutubeReady(true);
+    };
+  }, []);
+
+  // 🎵 Initialize YouTube Player
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
+    if (!youtubeReady || !isYoutube || !currentTrack.youtubeId) return;
 
-    const updateTime = () => {
-      if (audio.duration) {
-        const width = (100 / audio.duration) * audio.currentTime;
-        setBarWidth(`${width}%`);
-        
-        const curmin = Math.floor(audio.currentTime / 60);
-        const cursec = Math.floor(audio.currentTime - curmin * 60);
-        const durmin = Math.floor(audio.duration / 60);
-        const dursec = Math.floor(audio.duration - durmin * 60);
-        
-        setCurrentTime(`${curmin < 10 ? '0' + curmin : curmin}:${cursec < 10 ? '0' + cursec : cursec}`);
-        setDuration(`${durmin < 10 ? '0' + durmin : durmin}:${dursec < 10 ? '0' + dursec : dursec}`);
+    // Destroy previous player if exists
+    if (youtubePlayerRef.current) {
+      youtubePlayerRef.current.destroy();
+    }
+
+    // Create new player
+    youtubePlayerRef.current = new window.YT.Player('youtube-player', {
+      height: '0',
+      width: '0',
+      videoId: currentTrack.youtubeId,
+      playerVars: {
+        autoplay: 0,
+        controls: 0,
+      },
+      events: {
+        onReady: (event: any) => {
+          if (isPlaying) {
+            event.target.playVideo();
+          }
+        },
+        onStateChange: (event: any) => {
+          // Auto play next when video ends
+          if (event.data === window.YT.PlayerState.ENDED) {
+            handleNext();
+          }
+        },
+      },
+    });
+
+    return () => {
+      if (youtubePlayerRef.current) {
+        youtubePlayerRef.current.destroy();
       }
     };
+  }, [currentTrackIndex, youtubeReady]);
+
+  // 🎵 Play/Pause Control
+  useEffect(() => {
+    if (isYoutube) {
+      // YouTube player control
+      if (youtubePlayerRef.current && youtubePlayerRef.current.playVideo) {
+        if (isPlaying) {
+          youtubePlayerRef.current.playVideo();
+          setIsOpen(true);
+        } else {
+          youtubePlayerRef.current.pauseVideo();
+        }
+      }
+    } else {
+      // Local audio control
+      if (audioRef.current) {
+        if (isPlaying) {
+          audioRef.current.play().catch(e => console.log("Autoplay blocked", e));
+          setIsOpen(true);
+        } else {
+          audioRef.current.pause();
+        }
+      }
+    }
+  }, [isPlaying, currentTrackIndex, isYoutube]);
+
+  // ⏱️ Update Progress Bar
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    const updateProgress = () => {
+      if (isYoutube && youtubePlayerRef.current && youtubePlayerRef.current.getCurrentTime) {
+        const currentTime = youtubePlayerRef.current.getCurrentTime();
+        const duration = youtubePlayerRef.current.getDuration();
+
+        if (duration) {
+          const width = (100 / duration) * currentTime;
+          setBarWidth(`${width}%`);
+          
+          const curmin = Math.floor(currentTime / 60);
+          const cursec = Math.floor(currentTime - curmin * 60);
+          const durmin = Math.floor(duration / 60);
+          const dursec = Math.floor(duration - durmin * 60);
+          
+          setCurrentTime(`${curmin < 10 ? '0' + curmin : curmin}:${cursec < 10 ? '0' + cursec : cursec}`);
+          setDuration(`${durmin < 10 ? '0' + durmin : durmin}:${dursec < 10 ? '0' + dursec : dursec}`);
+        }
+      } else if (!isYoutube && audioRef.current) {
+        const audio = audioRef.current;
+        if (audio.duration) {
+          const width = (100 / audio.duration) * audio.currentTime;
+          setBarWidth(`${width}%`);
+          
+          const curmin = Math.floor(audio.currentTime / 60);
+          const cursec = Math.floor(audio.currentTime - curmin * 60);
+          const durmin = Math.floor(audio.duration / 60);
+          const dursec = Math.floor(audio.duration - durmin * 60);
+          
+          setCurrentTime(`${curmin < 10 ? '0' + curmin : curmin}:${cursec < 10 ? '0' + cursec : cursec}`);
+          setDuration(`${durmin < 10 ? '0' + durmin : durmin}:${dursec < 10 ? '0' + dursec : dursec}`);
+        }
+      }
+    };
+
+    if (isPlaying) {
+      interval = setInterval(updateProgress, 100);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isPlaying, isYoutube, currentTrackIndex]);
+
+  // 🔄 Local Audio Events
+  useEffect(() => {
+    if (isYoutube) return;
+
+    const audio = audioRef.current;
+    if (!audio) return;
 
     const handleEnded = () => {
       handleNext();
     };
 
-    audio.addEventListener('timeupdate', updateTime);
-    audio.addEventListener('loadedmetadata', updateTime);
     audio.addEventListener('ended', handleEnded);
 
     return () => {
-      audio.removeEventListener('timeupdate', updateTime);
-      audio.removeEventListener('loadedmetadata', updateTime);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, [currentTrackIndex]);
+  }, [currentTrackIndex, isYoutube]);
 
   const handleNext = () => {
     setCurrentTrackIndex((prev) => (prev + 1) % playlist.length);
@@ -115,24 +313,33 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
   };
 
   const clickProgress = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (audioRef.current && progressRef.current) {
+    if (progressRef.current) {
       const progress = progressRef.current;
       const position = e.pageX - progress.getBoundingClientRect().left;
       let percentage = (100 * position) / progress.offsetWidth;
       if (percentage > 100) percentage = 100;
       if (percentage < 0) percentage = 0;
-      
-      audioRef.current.currentTime = (audioRef.current.duration * percentage) / 100;
+
+      if (isYoutube && youtubePlayerRef.current && youtubePlayerRef.current.getDuration) {
+        const duration = youtubePlayerRef.current.getDuration();
+        const seekTime = (duration * percentage) / 100;
+        youtubePlayerRef.current.seekTo(seekTime, true);
+      } else if (audioRef.current) {
+        audioRef.current.currentTime = (audioRef.current.duration * percentage) / 100;
+      }
+
       if (!isPlaying) togglePlay();
     }
   };
 
   return (
     <>
-      <audio ref={audioRef} src={currentTrack?.src} />
-
-      {/* ⚠️ Floating Button Removed - Controlled via FloatingDock Only */}
+      {/* Local Audio Player */}
+      {!isYoutube && <audio ref={audioRef} src={currentTrack?.src} />}
       
+      {/* YouTube Player (Hidden) */}
+      <div id="youtube-player" style={{ display: 'none' }}></div>
+
       {/* Main Player Widget */}
       {isOpen && (
         <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 md:left-10 md:transform-none z-[100] animate-in slide-in-from-bottom-10 fade-in duration-500 w-full flex justify-center md:block pointer-events-none md:pointer-events-auto">
@@ -183,10 +390,10 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
                 width: 100%;
                 height: 100%;
                 border-radius: 15px;
-                position: absolute;
-                left: 0;
-                top: 0;
-                box-shadow: 0px 10px 40px 0px rgba(76, 70, 124, 0.5);
+                box-shadow: 0px 10px 24px 0px rgba(50, 88, 130, 0.40);
+            }
+            .dark .player-cover__item {
+                box-shadow: 0px 10px 24px 0px rgba(0, 0, 0, 0.6);
             }
 
             .player-controls {
@@ -209,61 +416,83 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
                 align-items: center;
                 justify-content: center;
                 position: relative;
-                transition: all 0.3s ease-in-out;
+                transition: all .3s ease-in-out;
             }
-
-            .player-controls__item:hover { color: #532ab9; }
-            .dark .player-controls__item:hover { color: #818cf8; }
-
-            .player-controls__item.-xl {
-                margin-bottom: 0;
-                width: auto;
-                height: auto;
-                color: #fff;
-                background: #fff;
-                border-radius: 50%;
-                box-shadow: 0 10px 20px rgba(172, 184, 204, 0.3);
-            }
-            .dark .player-controls__item.-xl { background: #334155; box-shadow: none; }
-
-            .player-controls__item.-favorite.active { color: red; }
-
-            .progress {
+            .player-controls__item::before {
+                content: '';
+                position: absolute;
                 width: 100%;
-                margin-top: 15px;
-                user-select: none;
+                height: 100%;
+                border-radius: 50%;
+                background: #fff;
+                transform: scale(0.5);
+                opacity: 0;
+                box-shadow: 0px 5px 10px 0px rgba(50, 88, 130, 0.20);
+                transition: all .3s ease-in-out;
+                transition: all .3s ease-in-out;
             }
-
-            .progress__top {
+            .player-controls__item:hover {
+                color: #532ab9;
+            }
+            .dark .player-controls__item:hover {
+                color: #818cf8;
+            }
+            .player-controls__item:hover::before {
+                opacity: 1;
+                transform: scale(1.3);
+            }
+            .player-controls__item.-xl {
+                margin-top: 0px;
+                font-size: 95px;
+                filter: drop-shadow(0 2px 8px rgba(83, 42, 185, 0.3));
+                color: #532ab9;
+                width: 65px;
+                height: 65px;
                 display: flex;
-                align-items: flex-end;
-                justify-content: space-between;
+                align-items: center;
+                justify-content: center;
+            }
+            .dark .player-controls__item.-xl {
+                color: #818cf8;
+                filter: drop-shadow(0 2px 8px rgba(129, 140, 248, 0.4));
+            }
+            .player-controls__item.-favorite.active {
+                color: #ff5e79;
             }
 
             .album-info {
                 color: #71829e;
                 flex: 1;
-                padding-right: 20px;
-                user-select: none;
+                padding-right: 60px;
             }
             .dark .album-info { color: #94a3b8; }
 
             .album-info__name {
                 font-size: 20px;
                 font-weight: bold;
-                margin-bottom: 6px;
-                line-height: 1.2em;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                margin-bottom: 12px;
+                line-height: 1.3em;
+                color: #4a537f;
             }
-            .dark .album-info__name { color: white; }
+            .dark .album-info__name { color: #e2e8f0; }
 
             .album-info__track {
                 font-weight: 400;
                 font-size: 14px;
-                opacity: 0.7;
+                opacity: .7;
                 line-height: 1.3em;
+                min-height: 52px;
+            }
+
+            .progress {
+                width: 100%;
+                margin-top: 15px;
+            }
+
+            .progress__top {
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
             }
 
             .progress__duration {
@@ -332,7 +561,16 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
             .playlist-item.active { background: rgba(83, 42, 185, 0.1); }
             .dark .playlist-item.active { background: rgba(99, 102, 241, 0.2); }
 
-            /* 🔥 MOBILE RESPONSIVE FIXES (Updated) */
+            .youtube-badge {
+                background: #ff0000;
+                color: white;
+                font-size: 9px;
+                padding: 2px 6px;
+                border-radius: 4px;
+                font-weight: bold;
+            }
+
+            /* 🔥 MOBILE RESPONSIVE FIXES */
             @media screen and (max-width: 640px) {
                 .player-card {
                     width: 350px;
@@ -361,7 +599,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
             }
           `}</style>
 
-          <div className="player-card">
+          <div className="player-card" ref={playerContainerRef}>
             {/* Close Button */}
             <div className="close-btn" onClick={() => setIsOpen(false)}>
                 <X size={20} />
@@ -389,6 +627,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
                                 <div className="text-sm font-bold truncate text-slate-800 dark:text-white">{track.title}</div>
                                 <div className="text-xs truncate text-slate-500 dark:text-slate-400">{track.artist}</div>
                             </div>
+                            {track.type === 'youtube' && (
+                                <span className="youtube-badge">YT</span>
+                            )}
                             {currentTrackIndex === idx && isPlaying && (
                                 <div className="w-2 h-2 bg-[#532ab9] rounded-full animate-pulse"></div>
                             )}
@@ -413,7 +654,12 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
                                 <Heart size={20} fill={isFavorite ? "currentColor" : "none"} />
                             </div>
                             
-                            <a href="#" className="player-controls__item">
+                            <a 
+                                href={isYoutube ? `https://www.youtube.com/watch?v=${currentTrack.youtubeId}` : '#'} 
+                                target={isYoutube ? "_blank" : "_self"}
+                                className="player-controls__item"
+                                rel="noopener noreferrer"
+                            >
                                 <ExternalLink size={20} />
                             </a>
                             
@@ -458,5 +704,13 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
     </>
   );
 };
+
+// Declare YouTube API types
+declare global {
+  interface Window {
+    YT: any;
+    onYouTubeIframeAPIReady: () => void;
+  }
+}
 
 export default MusicPlayer;
