@@ -37,7 +37,6 @@ import FloatingDock from './components/FloatingDock';
 import Chatbot from './components/Chatbot';
 import MusicPlayer from './components/MusicPlayer';
 import DynamicTitle from './components/DynamicTitle';
-import ScrollProgressBtn from './components/ScrollProgressBtn';
 import NetworkStatus from './components/NetworkStatus';
 import SecretVault from './components/SecretVault';
 import MobilePremiumFeatures from './components/MobilePremiumFeatures';
@@ -242,7 +241,6 @@ const AppContent: React.FC = () => {
         {/* ===== Global Widgets ===== */}
         <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
         <MusicPlayer isPlaying={isMusicPlaying} togglePlay={() => setIsMusicPlaying(!isMusicPlaying)} />
-        <ScrollProgressBtn />
 
         <FloatingDock
           toggleChat={() => setIsChatOpen(!isChatOpen)}
