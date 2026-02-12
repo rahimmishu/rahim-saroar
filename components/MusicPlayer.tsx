@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Play, Pause, SkipForward, SkipBack, Heart, 
-  ExternalLink, X, ListMusic 
+  ExternalLink, X, ListMusic, Volume2, VolumeX,
+  Shuffle, Repeat, Repeat1
 } from 'lucide-react';
 
 interface MusicPlayerProps {
@@ -9,15 +10,17 @@ interface MusicPlayerProps {
   togglePlay: () => void;
 }
 
-// 🎵 Track Type - Local বা YouTube
+// 🎵 Track Type - Local or YouTube
 interface Track {
   title: string;
   artist: string;
   cover: string;
   type: 'local' | 'youtube';
-  src?: string; // Local audio file path
-  youtubeId?: string; // YouTube video ID
+  src?: string;
+  youtubeId?: string;
 }
+
+type RepeatMode = 'off' | 'all' | 'one';
 
 const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,15 +32,22 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [youtubeReady, setYoutubeReady] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
+  const [volume, setVolume] = useState(70);
+  const [isMuted, setIsMuted] = useState(false);
+  const [shuffleMode, setShuffleMode] = useState(false);
+  const [repeatMode, setRepeatMode] = useState<RepeatMode>('off');
+  const [playHistory, setPlayHistory] = useState<number[]>([]);
+  const [shouldAutoPlay, setShouldAutoPlay] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const youtubePlayerRef = useRef<any>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const volumeRef = useRef<HTMLDivElement>(null);
 
-  // 🔥 হাইব্রিড প্লেলিস্ট (Local + YouTube)
+  // 🔥 Complete Playlist
   const playlist: Track[] = [
-    // Local Songs (কিছু গান public folder এ রাখুন - হালকা রাখার জন্য ৩-৫টা)
+    // Local Songs
     { title: "Airtel X Bhoot FM", artist: "Rahim Saroar", type: 'local', src: "/music/airlel-bhootfm.mp3", cover: "/music/airlel-bhootfm.jpg" },
     { title: "Airtel Phonk 3D", artist: "Rahim Saroar", type: 'local', src: "/music/phonk.mp3", cover: "/music/phonk.jpg" },
     { title: "Barbaad", artist: "Jubin Nautiyal", type: 'local', src: "/music/barbaad.mp3", cover: "/music/barbaad.jpg" },
@@ -64,302 +74,49 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
     { title: "Lo Safar", artist: "Rahim Saroar", type: 'local', src: "/music/lo-safar.mp3", cover: "/music/lo-safar.jpg" },
     { title: "Tum Hi Aana", artist: "Jubin Nautiyal", type: 'local', src: "/music/tum-hi-aana.mp3", cover: "/music/tum-hi-aana.jpg" },
 
-    // ✨ YouTube Songs - FIXED: Removed ?si parameters!
-    { 
-      title: "Gulabi Aankhon", 
-      artist: "Sanam Pur", 
-      type: 'youtube',
-      youtubeId: "hgi2MYAFgE8", // ✅ Fixed: Removed ?si
-      cover: "https://img.youtube.com/vi/hgi2MYAFgE8/maxresdefault.jpg" 
-    },
-    { 
-      title: "Main Agar Kahoon", 
-      artist: "Shahrukh Khan", 
-      type: 'youtube',
-      youtubeId: "DAYszemgPxc", // ✅ Fixed
-      cover: "https://img.youtube.com/vi/DAYszemgPxc/maxresdefault.jpg" 
-    },
-    { 
-      title: "Hamqadam", 
-      artist: "Shrey Singhal", 
-      type: 'youtube',
-      youtubeId: "rS3dghN1P3I", // ✅ Fixed
-      cover: "https://img.youtube.com/vi/rS3dghN1P3I/maxresdefault.jpg" 
-    },
-    { 
-      title: "Khairiyat", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "hoNb6HuNmU0", // ✅ Fixed
-      cover: "https://img.youtube.com/vi/hoNb6HuNmU0/maxresdefault.jpg" 
-    },
-    { 
-      title: "Mere Mehboob Qayamat Hogi", 
-      artist: "Kishore Kumar", 
-      type: 'youtube',
-      youtubeId: "M6Ul3ASaFLU", // ✅ Fixed
-      cover: "https://img.youtube.com/vi/M6Ul3ASaFLU/maxresdefault.jpg" 
-    },
-    { 
-      title: "Zara Zara Bahekta Hai", 
-      artist: "JalRaj (Jalaj)", 
-      type: 'youtube',
-      youtubeId: "NeXbmEnpSz0", // ✅ Fixed
-      cover: "https://img.youtube.com/vi/NeXbmEnpSz0/maxresdefault.jpg" 
-    },
-    { 
-      title: "Ek Mulaqat", 
-      artist: "Jubin Nautiyal", 
-      type: 'youtube',
-      youtubeId: "_qrxVjvVp4M", // ✅ Fixed
-      cover: "https://img.youtube.com/vi/_qrxVjvVp4M/maxresdefault.jpg" 
-    },
-    { 
-      title: "Sanam ree", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "rRKAJ6tLBSw", // ✅ Fixed
-      cover: "https://img.youtube.com/vi/rRKAJ6tLBSw/maxresdefault.jpg" 
-    },
-    { 
-      title: "Kesariya", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "Dkk9gvTmCXY",
-      cover: "https://img.youtube.com/vi/Dkk9gvTmCXY/maxresdefault.jpg" 
-    },
-    { 
-      title: "Dil Sambhal Jaa Zara", 
-      artist: "Parwan Khan", 
-      type: 'youtube',
-      youtubeId: "uHbKAnli9DE",
-      cover: "https://img.youtube.com/vi/uHbKAnli9DE/maxresdefault.jpg" 
-    },
-    { 
-      title: "Dil Ka Jo Haal Hai", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "udgrClXV26Y",
-      cover: "https://img.youtube.com/vi/udgrClXV26Y/maxresdefault.jpg" 
-    },
-    { 
-      title: "Mann Meera", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "HP2zqQsrsyg",
-      cover: "https://img.youtube.com/vi/HP2zqQsrsyg/maxresdefault.jpg" 
-    },
-    { 
-      title: "Falak Tak Chal Sath Mere", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "0pOq8ag0Z0Y",
-      cover: "https://img.youtube.com/vi/0pOq8ag0Z0Y/maxresdefault.jpg" 
-    },
-    { 
-      title: "Haule Haule", 
-      artist: "Sharukh Khan", 
-      type: 'youtube',
-      youtubeId: "XgdY_s1LsZc",
-      cover: "https://img.youtube.com/vi/XgdY_s1LsZc/maxresdefault.jpg" 
-    },
-    { 
-      title: "Dekhte Dekhte", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "eZHaumDApl0",
-      cover: "https://img.youtube.com/vi/eZHaumDApl0/maxresdefault.jpg" 
-    },{ 
-      title: "Wajah Tum Ho", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "hk5IqAhOrnY",
-      cover: "https://img.youtube.com/vi/hk5IqAhOrnY/maxresdefault.jpg" 
-    },
-    { 
-      title: "Uska Hi Banana", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "q-RP99S_qK0",
-      cover: "https://img.youtube.com/vi/q-RP99S_qK0/maxresdefault.jpg" 
-    },
-    { 
-      title: "Banjaara", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "0NFxcNheoLc",
-      cover: "https://img.youtube.com/vi/0NFxcNheoLc/maxresdefault.jpg" 
-    },
-    { 
-      title: "Pehle Bhi Main", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "kZGpkkfk2lA",
-      cover: "https://img.youtube.com/vi/kZGpkkfk2lA/maxresdefault.jpg" 
-    },
-    { 
-      title: "Tu Hi Hai Aashiqui Male Version", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "GDyiNKZuQYs",
-      cover: "https://img.youtube.com/vi/GDyiNKZuQYs/maxresdefault.jpg" 
-    },
-    { 
-      title: "Tere liye", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "G3fsvJ95wHg",
-      cover: "https://img.youtube.com/vi/G3fsvJ95wHg/maxresdefault.jpg" 
-    },
-
-    { 
-      title: "Labon Ko", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "3OYrJWVx7F0",
-      cover: "https://img.youtube.com/vi/3OYrJWVx7F0/maxresdefault.jpg" 
-    },
-    { 
-      title: "Fallin for you", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "/sVzKavzIKDI",
-      cover: "https://img.youtube.com/vi/sVzKavzIKDI/maxresdefault.jpg" 
-    },
-    { 
-      title: "Pasoori", 
-      artist: "Cock studio", 
-      type: 'youtube',
-      youtubeId: "5Eqb_-j3FDA",
-      cover: "https://img.youtube.com/vi/5Eqb_-j3FDA/maxresdefault.jpg" 
-    },
-    { 
-      title: "Teri Meri Kahaani", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "cB_waHMBtn0",
-      cover: "https://img.youtube.com/vi/cB_waHMBtn0/maxresdefault.jpg" 
-    },
-    { 
-      title: "Aye khuda", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "HGfc06RZyjQ",
-      cover: "https://img.youtube.com/vi/HGfc06RZyjQ/maxresdefault.jpg" 
-    },
-    { 
-      title: "Ae Dil Hai Mushki", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "vrqFJ-yjkRw",
-      cover: "https://img.youtube.com/vi/vrqFJ-yjkRw/maxresdefault.jpg" 
-    },
-    { 
-      title: "Dil Mein Chhupa Loonga", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "qUvPzjSWMSM",
-      cover: "https://img.youtube.com/vi/qUvPzjSWMSM/maxresdefault.jpg" 
-    },
-    { 
-      title: "Dhun X Baarish - Mashup", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "kvLKeqOswEg",
-      cover: "https://img.youtube.com/vi/kvLKeqOswEg/maxresdefault.jpg" 
-    },
-    { 
-      title: "Hale Dil", 
-      artist: "Emran Hashmi", 
-      type: 'youtube',
-      youtubeId: "acdKE2hja7w",
-      cover: "https://img.youtube.com/vi/acdKE2hja7w/maxresdefault.jpg" 
-    },
-    { 
-      title: "Chand Sifarish", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "zWEOx7TSM6I",
-      cover: "https://img.youtube.com/vi/zWEOx7TSM6I/maxresdefault.jpg" 
-    },
-    { 
-      title: "Ki Nesha", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "ArpxYeFTnws",
-      cover: "https://img.youtube.com/vi/ArpxYeFTnws/maxresdefault.jpg" 
-    },
-    { 
-      title: "Milne Hai Mujhse Aayi - Lofi", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "rTvVuLoOq0I",
-      cover: "https://img.youtube.com/vi/rTvVuLoOq0I/maxresdefault.jpg" 
-    },
-    { 
-      title: "Jo Tum Mere Ho (Slowed + Reverb)", 
-      artist: "Anuv Jain", 
-      type: 'youtube',
-      youtubeId: "uK7Ovgs44Uk",
-      cover: "https://img.youtube.com/vi/uK7Ovgs44Uk/maxresdefault.jpg" 
-    },
-    { 
-      title: "O Mere Dil Ke Chain", 
-      artist: "Sanam", 
-      type: 'youtube',
-      youtubeId: "o9F7oUgmyg0",
-      cover: "https://img.youtube.com/vi/o9F7oUgmyg0/maxresdefault.jpg"
-    },
-    { 
-      title: "Bekhayali", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "Ps4aVpIESkc",
-      cover: "https://img.youtube.com/vi/Ps4aVpIESkc/maxresdefault.jpg" 
-    },
-    { 
-      title: "Lut Gaye", 
-      artist: "Emran Hashmi", 
-      type: 'youtube',
-      youtubeId: "sCbbMZ-q4-I",
-      cover: "https://img.youtube.com/vi/sCbbMZ-q4-I/maxresdefault.jpg" 
-    },
-    { 
-      title: "Jeene Laga Hoon", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "qpIdoaaPa6U",
-      cover: "https://img.youtube.com/vi/qpIdoaaPa6U/maxresdefault.jpg" 
-    },
-    { 
-      title: "Janam Janam", 
-      artist: "Shahrukh Khan", 
-      type: 'youtube',
-      youtubeId: "pIBoAh4OXhQ",
-      cover: "https://img.youtube.com/vi/pIBoAh4OXhQ/maxresdefault.jpg" 
-    },
-    { 
-      title: "Yeh Raaten Yeh Mausam", 
-      artist: "Arijit Singh", 
-      type: 'youtube',
-      youtubeId: "4HRC6c5-2lQ",
-      cover: "https://img.youtube.com/vi/4HRC6c5-2lQ/maxresdefault.jpg" 
-    },
-    { 
-      title: "Bom Diggy Diggy", 
-      artist: "Sunny", 
-      type: 'youtube',
-      youtubeId: "U4K9guxEix4",
-      cover: "https://img.youtube.com/vi/U4K9guxEix4/maxresdefault.jpg" 
-    },
-    { 
-      title: "Nashe Si Chadh Gayi", 
-      artist: "ARanveer Singh", 
-      type: 'youtube',
-      youtubeId: "Wd2B8OAotU8",
-      cover: "https://img.youtube.com/vi/Wd2B8OAotU8/maxresdefault.jpg" 
-    },
-    
+    // YouTube Songs
+    { title: "Gulabi Aankhon", artist: "Sanam Pur", type: 'youtube', youtubeId: "hgi2MYAFgE8", cover: "https://img.youtube.com/vi/hgi2MYAFgE8/maxresdefault.jpg" },
+    { title: "Main Agar Kahoon", artist: "Shahrukh Khan", type: 'youtube', youtubeId: "DAYszemgPxc", cover: "https://img.youtube.com/vi/DAYszemgPxc/maxresdefault.jpg" },
+    { title: "Hamqadam", artist: "Shrey Singhal", type: 'youtube', youtubeId: "rS3dghN1P3I", cover: "https://img.youtube.com/vi/rS3dghN1P3I/maxresdefault.jpg" },
+    { title: "Khairiyat", artist: "Arijit Singh", type: 'youtube', youtubeId: "hoNb6HuNmU0", cover: "https://img.youtube.com/vi/hoNb6HuNmU0/maxresdefault.jpg" },
+    { title: "Mere Mehboob Qayamat Hogi", artist: "Kishore Kumar", type: 'youtube', youtubeId: "M6Ul3ASaFLU", cover: "https://img.youtube.com/vi/M6Ul3ASaFLU/maxresdefault.jpg" },
+    { title: "Zara Zara Bahekta Hai", artist: "JalRaj (Jalaj)", type: 'youtube', youtubeId: "NeXbmEnpSz0", cover: "https://img.youtube.com/vi/NeXbmEnpSz0/maxresdefault.jpg" },
+    { title: "Ek Mulaqat", artist: "Jubin Nautiyal", type: 'youtube', youtubeId: "_qrxVjvVp4M", cover: "https://img.youtube.com/vi/_qrxVjvVp4M/maxresdefault.jpg" },
+    { title: "Sanam ree", artist: "Arijit Singh", type: 'youtube', youtubeId: "rRKAJ6tLBSw", cover: "https://img.youtube.com/vi/rRKAJ6tLBSw/maxresdefault.jpg" },
+    { title: "Kesariya", artist: "Arijit Singh", type: 'youtube', youtubeId: "Dkk9gvTmCXY", cover: "https://img.youtube.com/vi/Dkk9gvTmCXY/maxresdefault.jpg" },
+    { title: "Dil Sambhal Jaa Zara", artist: "Parwan Khan", type: 'youtube', youtubeId: "uHbKAnli9DE", cover: "https://img.youtube.com/vi/uHbKAnli9DE/maxresdefault.jpg" },
+    { title: "Dil Ka Jo Haal Hai", artist: "Arijit Singh", type: 'youtube', youtubeId: "udgrClXV26Y", cover: "https://img.youtube.com/vi/udgrClXV26Y/maxresdefault.jpg" },
+    { title: "Mann Meera", artist: "Arijit Singh", type: 'youtube', youtubeId: "HP2zqQsrsyg", cover: "https://img.youtube.com/vi/HP2zqQsrsyg/maxresdefault.jpg" },
+    { title: "Falak Tak Chal Sath Mere", artist: "Arijit Singh", type: 'youtube', youtubeId: "0pOq8ag0Z0Y", cover: "https://img.youtube.com/vi/0pOq8ag0Z0Y/maxresdefault.jpg" },
+    { title: "Haule Haule", artist: "Sharukh Khan", type: 'youtube', youtubeId: "XgdY_s1LsZc", cover: "https://img.youtube.com/vi/XgdY_s1LsZc/maxresdefault.jpg" },
+    { title: "Dekhte Dekhte", artist: "Arijit Singh", type: 'youtube', youtubeId: "eZHaumDApl0", cover: "https://img.youtube.com/vi/eZHaumDApl0/maxresdefault.jpg" },
+    { title: "Wajah Tum Ho", artist: "Arijit Singh", type: 'youtube', youtubeId: "hk5IqAhOrnY", cover: "https://img.youtube.com/vi/hk5IqAhOrnY/maxresdefault.jpg" },
+    { title: "Uska Hi Banana", artist: "Arijit Singh", type: 'youtube', youtubeId: "q-RP99S_qK0", cover: "https://img.youtube.com/vi/q-RP99S_qK0/maxresdefault.jpg" },
+    { title: "Banjaara", artist: "Arijit Singh", type: 'youtube', youtubeId: "0NFxcNheoLc", cover: "https://img.youtube.com/vi/0NFxcNheoLc/maxresdefault.jpg" },
+    { title: "Pehle Bhi Main", artist: "Arijit Singh", type: 'youtube', youtubeId: "kZGpkkfk2lA", cover: "https://img.youtube.com/vi/kZGpkkfk2lA/maxresdefault.jpg" },
+    { title: "Tu Hi Hai Aashiqui Male Version", artist: "Arijit Singh", type: 'youtube', youtubeId: "GDyiNKZuQYs", cover: "https://img.youtube.com/vi/GDyiNKZuQYs/maxresdefault.jpg" },
+    { title: "Tere liye", artist: "Arijit Singh", type: 'youtube', youtubeId: "G3fsvJ95wHg", cover: "https://img.youtube.com/vi/G3fsvJ95wHg/maxresdefault.jpg" },
+    { title: "Labon Ko", artist: "Arijit Singh", type: 'youtube', youtubeId: "3OYrJWVx7F0", cover: "https://img.youtube.com/vi/3OYrJWVx7F0/maxresdefault.jpg" },
+    { title: "Fallin for you", artist: "Arijit Singh", type: 'youtube', youtubeId: "sVzKavzIKDI", cover: "https://img.youtube.com/vi/sVzKavzIKDI/maxresdefault.jpg" },
+    { title: "Pasoori", artist: "Coke Studio", type: 'youtube', youtubeId: "5Eqb_-j3FDA", cover: "https://img.youtube.com/vi/5Eqb_-j3FDA/maxresdefault.jpg" },
+    { title: "Teri Meri Kahaani", artist: "Arijit Singh", type: 'youtube', youtubeId: "cB_waHMBtn0", cover: "https://img.youtube.com/vi/cB_waHMBtn0/maxresdefault.jpg" },
+    { title: "Aye khuda", artist: "Arijit Singh", type: 'youtube', youtubeId: "HGfc06RZyjQ", cover: "https://img.youtube.com/vi/HGfc06RZyjQ/maxresdefault.jpg" },
+    { title: "Ae Dil Hai Mushki", artist: "Arijit Singh", type: 'youtube', youtubeId: "vrqFJ-yjkRw", cover: "https://img.youtube.com/vi/vrqFJ-yjkRw/maxresdefault.jpg" },
+    { title: "Dil Mein Chhupa Loonga", artist: "Arijit Singh", type: 'youtube', youtubeId: "qUvPzjSWMSM", cover: "https://img.youtube.com/vi/qUvPzjSWMSM/maxresdefault.jpg" },
+    { title: "Dhun X Baarish - Mashup", artist: "Arijit Singh", type: 'youtube', youtubeId: "kvLKeqOswEg", cover: "https://img.youtube.com/vi/kvLKeqOswEg/maxresdefault.jpg" },
+    { title: "Hale Dil", artist: "Emran Hashmi", type: 'youtube', youtubeId: "acdKE2hja7w", cover: "https://img.youtube.com/vi/acdKE2hja7w/maxresdefault.jpg" },
+    { title: "Chand Sifarish", artist: "Arijit Singh", type: 'youtube', youtubeId: "zWEOx7TSM6I", cover: "https://img.youtube.com/vi/zWEOx7TSM6I/maxresdefault.jpg" },
+    { title: "Ki Nesha", artist: "Arijit Singh", type: 'youtube', youtubeId: "ArpxYeFTnws", cover: "https://img.youtube.com/vi/ArpxYeFTnws/maxresdefault.jpg" },
+    { title: "Milne Hai Mujhse Aayi - Lofi", artist: "Arijit Singh", type: 'youtube', youtubeId: "rTvVuLoOq0I", cover: "https://img.youtube.com/vi/rTvVuLoOq0I/maxresdefault.jpg" },
+    { title: "Jo Tum Mere Ho (Slowed + Reverb)", artist: "Anuv Jain", type: 'youtube', youtubeId: "uK7Ovgs44Uk", cover: "https://img.youtube.com/vi/uK7Ovgs44Uk/maxresdefault.jpg" },
+    { title: "O Mere Dil Ke Chain", artist: "Sanam", type: 'youtube', youtubeId: "o9F7oUgmyg0", cover: "https://img.youtube.com/vi/o9F7oUgmyg0/maxresdefault.jpg" },
+    { title: "Bekhayali", artist: "Arijit Singh", type: 'youtube', youtubeId: "Ps4aVpIESkc", cover: "https://img.youtube.com/vi/Ps4aVpIESkc/maxresdefault.jpg" },
+    { title: "Lut Gaye", artist: "Emran Hashmi", type: 'youtube', youtubeId: "sCbbMZ-q4-I", cover: "https://img.youtube.com/vi/sCbbMZ-q4-I/maxresdefault.jpg" },
+    { title: "Jeene Laga Hoon", artist: "Arijit Singh", type: 'youtube', youtubeId: "qpIdoaaPa6U", cover: "https://img.youtube.com/vi/qpIdoaaPa6U/maxresdefault.jpg" },
+    { title: "Janam Janam", artist: "Shahrukh Khan", type: 'youtube', youtubeId: "pIBoAh4OXhQ", cover: "https://img.youtube.com/vi/pIBoAh4OXhQ/maxresdefault.jpg" },
+    { title: "Yeh Raaten Yeh Mausam", artist: "Arijit Singh", type: 'youtube', youtubeId: "4HRC6c5-2lQ", cover: "https://img.youtube.com/vi/4HRC6c5-2lQ/maxresdefault.jpg" },
+    { title: "Bom Diggy Diggy", artist: "Sunny", type: 'youtube', youtubeId: "U4K9guxEix4", cover: "https://img.youtube.com/vi/U4K9guxEix4/maxresdefault.jpg" },
+    { title: "Nashe Si Chadh Gayi", artist: "Ranveer Singh", type: 'youtube', youtubeId: "Wd2B8OAotU8", cover: "https://img.youtube.com/vi/Wd2B8OAotU8/maxresdefault.jpg" },
   ];
 
   const currentTrack = playlist[currentTrackIndex];
@@ -367,58 +124,40 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
 
   // 🎬 Load YouTube IFrame API
   useEffect(() => {
-    // Check if API already loaded
     if (window.YT && window.YT.Player) {
-      console.log('✅ YouTube API already loaded');
       setYoutubeReady(true);
       return;
     }
 
-    // Check if script already exists
     const existingScript = document.querySelector('script[src="https://www.youtube.com/iframe_api"]');
-    if (existingScript) {
-      console.log('⏳ YouTube API script already exists, waiting...');
-      return;
-    }
+    if (existingScript) return;
 
-    console.log('📥 Loading YouTube IFrame API...');
-    
-    // Load YouTube IFrame API
     const tag = document.createElement('script');
     tag.src = 'https://www.youtube.com/iframe_api';
     tag.async = true;
     const firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
 
-    // API ready callback
     (window as any).onYouTubeIframeAPIReady = () => {
-      console.log('✅ YouTube API Ready!');
       setYoutubeReady(true);
     };
   }, []);
 
-  // 🎵 Initialize YouTube Player
+  // 🎵 Initialize YouTube Player - FIXED VERSION
   useEffect(() => {
-    if (!youtubeReady || !isYoutube || !currentTrack.youtubeId) {
-      console.log('⏸️ Skipping YouTube player init:', { youtubeReady, isYoutube, hasId: !!currentTrack.youtubeId });
-      return;
-    }
+    if (!youtubeReady || !isYoutube || !currentTrack.youtubeId) return;
 
-    console.log('🎬 Initializing YouTube player for:', currentTrack.title, 'ID:', currentTrack.youtubeId);
-
-    // Small delay to ensure DOM is ready
     const initTimeout = setTimeout(() => {
       try {
-        // Destroy previous player if exists
         if (youtubePlayerRef.current) {
-          console.log('🗑️ Destroying previous player');
           youtubePlayerRef.current.destroy();
           youtubePlayerRef.current = null;
         }
 
         setPlayerReady(false);
+        setBarWidth("0%");
+        setCurrentTime("00:00");
 
-        // Create new player
         youtubePlayerRef.current = new window.YT.Player('youtube-player', {
           height: '0',
           width: '0',
@@ -433,76 +172,77 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
           },
           events: {
             onReady: (event: any) => {
-              console.log('✅ YouTube Player Ready!');
               setPlayerReady(true);
-              if (isPlaying) {
-                console.log('▶️ Auto-playing...');
-                event.target.playVideo();
+              event.target.setVolume(isMuted ? 0 : volume);
+              
+              // Auto-play if isPlaying OR shouldAutoPlay is true
+              if (isPlaying || shouldAutoPlay) {
+                setTimeout(() => {
+                  event.target.playVideo();
+                  if (shouldAutoPlay && !isPlaying) {
+                    togglePlay(); // Sync the play state
+                  }
+                  setShouldAutoPlay(false);
+                }, 100);
               }
             },
             onStateChange: (event: any) => {
-              console.log('🔄 Player state changed:', event.data);
-              // Auto play next when video ends (state 0 = ended)
+              // Auto play next when video ends
               if (event.data === 0) {
-                console.log('⏭️ Video ended, playing next');
-                handleNext();
+                handleTrackEnd();
               }
             },
             onError: (event: any) => {
-              console.error('❌ YouTube Player Error:', event.data);
-              // Skip to next on error
-              handleNext();
+              console.error('YouTube Error:', event.data);
+              handleNext(true);
             },
           },
         });
       } catch (error) {
-        console.error('❌ Error creating YouTube player:', error);
+        console.error('Error creating YouTube player:', error);
       }
     }, 100);
 
-    return () => {
-      clearTimeout(initTimeout);
-    };
+    return () => clearTimeout(initTimeout);
   }, [currentTrackIndex, youtubeReady]);
 
-  // 🎵 Play/Pause Control
+  // 🎵 Play/Pause Control - IMPROVED
   useEffect(() => {
-    if (isYoutube) {
-      // YouTube player control
-      if (youtubePlayerRef.current && playerReady) {
-        try {
-          if (isPlaying) {
-            console.log('▶️ Playing YouTube video');
-            youtubePlayerRef.current.playVideo();
-            setIsOpen(true);
-          } else {
-            console.log('⏸️ Pausing YouTube video');
-            youtubePlayerRef.current.pauseVideo();
+    const attemptPlay = async () => {
+      if (isYoutube) {
+        if (youtubePlayerRef.current && playerReady) {
+          try {
+            if (isPlaying) {
+              youtubePlayerRef.current.playVideo();
+              setIsOpen(true);
+            } else {
+              youtubePlayerRef.current.pauseVideo();
+            }
+          } catch (error) {
+            console.error('YouTube control error:', error);
           }
-        } catch (error) {
-          console.error('❌ Error controlling YouTube player:', error);
+        }
+      } else {
+        if (audioRef.current) {
+          try {
+            if (isPlaying) {
+              await audioRef.current.play();
+              setIsOpen(true);
+            } else {
+              audioRef.current.pause();
+            }
+          } catch (error) {
+            console.error('Audio play error:', error);
+          }
         }
       }
-    } else {
-      // Local audio control
-      if (audioRef.current) {
-        if (isPlaying) {
-          console.log('▶️ Playing local audio');
-          audioRef.current.play().catch(e => {
-            console.log("⚠️ Autoplay blocked:", e);
-          });
-          setIsOpen(true);
-        } else {
-          console.log('⏸️ Pausing local audio');
-          audioRef.current.pause();
-        }
-      }
-    }
+    };
+
+    attemptPlay();
   }, [isPlaying, playerReady, isYoutube]);
 
   // ⏱️ Update Progress Bar
   useEffect(() => {
-    // Clear existing interval
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
@@ -526,7 +266,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
             setDuration(`${durmin < 10 ? '0' + durmin : durmin}:${dursec < 10 ? '0' + dursec : dursec}`);
           }
         } catch (error) {
-          // Silently ignore errors
+          // Silently ignore
         }
       } else if (!isYoutube && audioRef.current) {
         const audio = audioRef.current;
@@ -546,57 +286,126 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
     };
 
     if (isPlaying) {
-      // Update immediately
       updateProgress();
-      // Then update every 100ms
       intervalRef.current = setInterval(updateProgress, 100);
     }
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [isPlaying, isYoutube, playerReady, currentTrackIndex]);
 
   // 🔄 Local Audio Events
   useEffect(() => {
-    if (isYoutube) return;
+    if (isYoutube || !audioRef.current) return;
 
-    const audio = audioRef.current;
-    if (!audio) return;
+    const handleEnded = () => handleTrackEnd();
+    audioRef.current.addEventListener('ended', handleEnded);
 
-    const handleEnded = () => {
-      console.log('⏭️ Local audio ended, playing next');
-      handleNext();
-    };
-
-    audio.addEventListener('ended', handleEnded);
+    // Auto-play local audio if shouldAutoPlay is set
+    if (shouldAutoPlay && audioRef.current) {
+      audioRef.current.play().then(() => {
+        if (!isPlaying) togglePlay();
+        setShouldAutoPlay(false);
+      }).catch(err => {
+        console.error('Auto-play error:', err);
+        setShouldAutoPlay(false);
+      });
+    }
 
     return () => {
-      audio.removeEventListener('ended', handleEnded);
+      audioRef.current?.removeEventListener('ended', handleEnded);
     };
-  }, [currentTrackIndex, isYoutube]);
+  }, [currentTrackIndex, isYoutube, repeatMode, shouldAutoPlay]);
 
-  const handleNext = () => {
-    console.log('⏭️ Next track');
-    setCurrentTrackIndex((prev) => (prev + 1) % playlist.length);
-    if (!isPlaying) togglePlay();
+  // 🔊 Volume Control
+  useEffect(() => {
+    if (isYoutube && youtubePlayerRef.current && playerReady) {
+      youtubePlayerRef.current.setVolume(isMuted ? 0 : volume);
+    } else if (audioRef.current) {
+      audioRef.current.volume = isMuted ? 0 : volume / 100;
+    }
+  }, [volume, isMuted, isYoutube, playerReady]);
+
+  // 🔀 Shuffle helper
+  const getNextShuffleIndex = (): number => {
+    const availableIndices = playlist.map((_, i) => i).filter(i => i !== currentTrackIndex);
+    return availableIndices[Math.floor(Math.random() * availableIndices.length)];
   };
 
+  // 🔚 Handle track end
+  const handleTrackEnd = () => {
+    if (repeatMode === 'one') {
+      // Replay current track
+      if (isYoutube && youtubePlayerRef.current) {
+        youtubePlayerRef.current.seekTo(0);
+        youtubePlayerRef.current.playVideo();
+      } else if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play();
+      }
+    } else if (repeatMode === 'all' || currentTrackIndex < playlist.length - 1) {
+      handleNext(true);
+    } else {
+      // End of playlist, stop
+      if (!isPlaying) togglePlay();
+    }
+  };
+
+  // ⏭️ FIXED Next handler
+  const handleNext = (autoPlay: boolean = false) => {
+    let nextIndex: number;
+    
+    if (shuffleMode) {
+      nextIndex = getNextShuffleIndex();
+    } else {
+      nextIndex = (currentTrackIndex + 1) % playlist.length;
+    }
+
+    setPlayHistory(prev => [...prev, currentTrackIndex]);
+    
+    // If currently playing, mark that we should continue playing
+    if (isPlaying) {
+      setShouldAutoPlay(true);
+    }
+    
+    setCurrentTrackIndex(nextIndex);
+    
+    // If not playing and autoPlay requested, start playback
+    if (!isPlaying && autoPlay) {
+      setShouldAutoPlay(true);
+    }
+  };
+
+  // ⏮️ FIXED Previous handler
   const handlePrev = () => {
-    console.log('⏮️ Previous track');
-    setCurrentTrackIndex((prev) => (prev - 1 + playlist.length) % playlist.length);
-    if (!isPlaying) togglePlay();
+    let prevIndex: number;
+    
+    // Go to previous track in history if available
+    if (playHistory.length > 0) {
+      prevIndex = playHistory[playHistory.length - 1];
+      setPlayHistory(prev => prev.slice(0, -1));
+    } else {
+      prevIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+    }
+
+    // If currently playing, mark that we should continue playing
+    if (isPlaying) {
+      setShouldAutoPlay(true);
+    }
+    
+    setCurrentTrackIndex(prevIndex);
   };
 
+  // 🎯 Select track from playlist
   const selectTrack = (index: number) => {
-    console.log('🎵 Selected track:', index);
+    setPlayHistory(prev => [...prev, currentTrackIndex]);
+    setShouldAutoPlay(true); // Always auto-play when selecting from playlist
     setCurrentTrackIndex(index);
-    if (!isPlaying) togglePlay();
     setShowPlaylist(false);
   };
 
+  // 📍 Progress bar click
   const clickProgress = (e: React.MouseEvent<HTMLDivElement>) => {
     if (progressRef.current) {
       const progress = progressRef.current;
@@ -609,10 +418,9 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
         try {
           const duration = youtubePlayerRef.current.getDuration();
           const seekTime = (duration * percentage) / 100;
-          console.log('⏩ Seeking to:', seekTime);
           youtubePlayerRef.current.seekTo(seekTime, true);
         } catch (error) {
-          console.error('❌ Error seeking:', error);
+          console.error('Seek error:', error);
         }
       } else if (audioRef.current) {
         audioRef.current.currentTime = (audioRef.current.duration * percentage) / 100;
@@ -620,6 +428,28 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
 
       if (!isPlaying) togglePlay();
     }
+  };
+
+  // 🔊 Volume control
+  const handleVolumeChange = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (volumeRef.current) {
+      const volumeBar = volumeRef.current;
+      const position = e.pageX - volumeBar.getBoundingClientRect().left;
+      let percentage = (100 * position) / volumeBar.offsetWidth;
+      if (percentage > 100) percentage = 100;
+      if (percentage < 0) percentage = 0;
+      setVolume(Math.round(percentage));
+      if (isMuted && percentage > 0) setIsMuted(false);
+    }
+  };
+
+  // 🔁 Toggle repeat mode
+  const toggleRepeat = () => {
+    setRepeatMode(prev => {
+      if (prev === 'off') return 'all';
+      if (prev === 'all') return 'one';
+      return 'off';
+    });
   };
 
   return (
@@ -635,42 +465,121 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
         <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 md:left-10 md:transform-none z-[100] animate-in slide-in-from-bottom-10 fade-in duration-500 w-full flex justify-center md:block pointer-events-none md:pointer-events-auto">
           
           <style>{`
-            @import url('https://fonts.googleapis.com/css?family=Bitter:400,700&display=swap&subset=latin-ext');
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
             
+            /* Base player card - Mobile first (compact) */
             .player-card {
-                background: #eef3f7;
-                width: 380px; 
-                min-height: 430px;
-                box-shadow: 0px 15px 35px -5px rgba(50, 88, 130, 0.32);
-                border-radius: 15px;
-                padding: 30px;
-                font-family: "Bitter", serif;
+                background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                width: 340px; 
+                min-height: 400px;
+                box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.2);
+                border-radius: 20px;
+                padding: 20px;
+                font-family: "Inter", sans-serif;
                 position: relative;
-                transition: all 0.3s ease;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                 pointer-events: auto;
+                backdrop-filter: blur(10px);
             }
             .dark .player-card {
-                background: #1e293b;
-                box-shadow: 0px 15px 35px -5px rgba(0, 0, 0, 0.5);
+                background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+                box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5);
+            }
+            
+            /* Desktop animations and effects */
+            @media screen and (min-width: 768px) {
+                .player-card {
+                    width: 420px;
+                    min-height: 500px;
+                    padding: 32px;
+                    border-radius: 24px;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                }
+                .dark .player-card {
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+                }
+                
+                /* Hover effects - Desktop only */
+                .player-card:hover {
+                    transform: translateY(-4px);
+                    box-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.4);
+                }
+                .dark .player-card:hover {
+                    box-shadow: 0 35px 70px -15px rgba(99, 102, 241, 0.3);
+                }
+                
+                /* Playing glow effect - Desktop only */
+                .player-card.is-playing {
+                    animation: playerGlow 3s ease-in-out infinite;
+                }
+                @keyframes playerGlow {
+                    0%, 100% {
+                        box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.2);
+                    }
+                    50% {
+                        box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.4), 
+                                    0 0 80px -20px rgba(99, 102, 241, 0.3);
+                    }
+                }
+                .dark .player-card.is-playing {
+                    animation: playerGlowDark 3s ease-in-out infinite;
+                }
+                @keyframes playerGlowDark {
+                    0%, 100% {
+                        box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.3);
+                    }
+                    50% {
+                        box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.5), 
+                                    0 0 100px -20px rgba(99, 102, 241, 0.4);
+                    }
+                }
             }
 
             .player__top {
                 display: flex;
-                align-items: flex-start;
+                flex-direction: column;
+                align-items: center;
+                gap: 16px;
                 position: relative;
                 z-index: 4;
             }
+            
+            @media screen and (min-width: 768px) {
+                .player__top {
+                    gap: 24px;
+                }
+            }
 
+            /* Cover - Mobile (compact) */
             .player-cover {
-                width: 250px;
-                height: 250px;
-                margin-left: -50px;
+                width: 200px;
+                height: 200px;
                 flex-shrink: 0;
                 position: relative;
-                z-index: 2;
-                border-radius: 15px;
-                z-index: 1;
-                transition: all 0.3s ease;
+                border-radius: 16px;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            /* Cover - Desktop (larger with effects) */
+            @media screen and (min-width: 768px) {
+                .player-cover {
+                    width: 280px;
+                    height: 280px;
+                    border-radius: 20px;
+                }
+                
+                /* Playing pulse effect - Desktop only */
+                .player-cover.is-playing {
+                    animation: coverPulse 2s ease-in-out infinite;
+                }
+                @keyframes coverPulse {
+                    0%, 100% {
+                        transform: scale(1);
+                    }
+                    50% {
+                        transform: scale(1.02);
+                    }
+                }
             }
 
             .player-cover__item {
@@ -679,235 +588,635 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
                 background-size: cover;
                 width: 100%;
                 height: 100%;
-                border-radius: 15px;
-                box-shadow: 0px 10px 24px 0px rgba(50, 88, 130, 0.40);
-            }
-            .dark .player-cover__item {
-                box-shadow: 0px 10px 24px 0px rgba(0, 0, 0, 0.6);
-            }
-
-            .player-controls {
-                flex: 1;
-                padding-left: 20px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .player-controls__item {
-                display: inline-flex;
-                font-size: 30px;
-                padding: 5px;
-                margin-bottom: 10px;
-                color: #acb8cc;
-                cursor: pointer;
-                width: 50px;
-                height: 50px;
-                align-items: center;
-                justify-content: center;
+                border-radius: 16px;
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
                 position: relative;
-                transition: all .3s ease-in-out;
+                overflow: hidden;
+                transition: all 0.3s ease;
             }
-            .player-controls__item::before {
+            
+            @media screen and (min-width: 768px) {
+                .player-cover__item {
+                    border-radius: 20px;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+                }
+            }
+            
+            .player-cover__item::before {
                 content: '';
                 position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
+                border-radius: inherit;
+            }
+            
+            .dark .player-cover__item {
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            }
+            
+            @media screen and (min-width: 768px) {
+                .dark .player-cover__item {
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+                }
+                
+                /* Desktop hover effect */
+                .player-cover:hover .player-cover__item {
+                    transform: scale(1.03);
+                    box-shadow: 0 25px 50px rgba(99, 102, 241, 0.4);
+                }
+            }
+
+            /* Removed rotating animation */
+
+            .player-controls {
                 width: 100%;
-                height: 100%;
-                border-radius: 50%;
-                background: #fff;
-                transform: scale(0.5);
-                opacity: 0;
-                box-shadow: 0px 5px 10px 0px rgba(50, 88, 130, 0.20);
-                transition: all .3s ease-in-out;
-            }
-            .player-controls__item:hover {
-                color: #532ab9;
-            }
-            .dark .player-controls__item:hover {
-                color: #818cf8;
-            }
-            .player-controls__item:hover::before {
-                opacity: 1;
-                transform: scale(1.3);
-            }
-            .player-controls__item.-xl {
-                margin-top: 0px;
-                font-size: 95px;
-                filter: drop-shadow(0 2px 8px rgba(83, 42, 185, 0.3));
-                color: #532ab9;
-                width: 65px;
-                height: 65px;
                 display: flex;
-                align-items: center;
                 justify-content: center;
+                align-items: center;
+                gap: 10px;
+                margin-top: 4px;
             }
-            .dark .player-controls__item.-xl {
-                color: #818cf8;
-                filter: drop-shadow(0 2px 8px rgba(129, 140, 248, 0.4));
+            
+            @media screen and (min-width: 768px) {
+                .player-controls {
+                    gap: 16px;
+                    margin-top: 8px;
+                }
             }
+
+            /* Mobile compact buttons */
+            .player-controls__item {
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                color: #64748b;
+                background: rgba(255, 255, 255, 0.5);
+            }
+            
+            /* Desktop larger buttons with animations */
+            @media screen and (min-width: 768px) {
+                .player-controls__item {
+                    width: 48px;
+                    height: 48px;
+                }
+                
+                /* Desktop hover animations */
+                .player-controls__item:hover {
+                    background: rgba(99, 102, 241, 0.15);
+                    color: #6366f1;
+                    transform: scale(1.15) translateY(-2px);
+                    box-shadow: 0 8px 16px rgba(99, 102, 241, 0.2);
+                }
+                
+                /* Active state animation */
+                .player-controls__item:active {
+                    transform: scale(0.95);
+                }
+            }
+            
+            .dark .player-controls__item {
+                background: rgba(255, 255, 255, 0.05);
+                color: #94a3b8;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .dark .player-controls__item:hover {
+                    background: rgba(99, 102, 241, 0.2);
+                    color: #818cf8;
+                }
+            }
+
+            /* Play button - Mobile */
+            .player-controls__item.-xl {
+                width: 54px;
+                height: 54px;
+                background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+                color: white;
+                box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+            }
+            
+            /* Play button - Desktop with glow */
+            @media screen and (min-width: 768px) {
+                .player-controls__item.-xl {
+                    width: 64px;
+                    height: 64px;
+                    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+                }
+                
+                .player-controls__item.-xl:hover {
+                    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+                    transform: scale(1.2) translateY(-3px);
+                    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.5);
+                }
+                
+                /* Playing pulse effect */
+                .player-controls__item.-xl.is-playing {
+                    animation: playButtonPulse 1.5s ease-in-out infinite;
+                }
+                @keyframes playButtonPulse {
+                    0%, 100% {
+                        box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+                    }
+                    50% {
+                        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.5), 
+                                    0 0 30px rgba(99, 102, 241, 0.3);
+                    }
+                }
+            }
+
             .player-controls__item.-favorite.active {
-                color: #ff5e79;
+                color: #ef4444;
             }
-
-            .album-info {
-                color: #71829e;
-                flex: 1;
-                padding-right: 60px;
+            .player-controls__item.-shuffle.active,
+            .player-controls__item.-repeat.active {
+                color: #6366f1;
+                background: rgba(99, 102, 241, 0.15);
             }
-            .dark .album-info { color: #94a3b8; }
-
-            .album-info__name {
-                font-size: 20px;
-                font-weight: bold;
-                margin-bottom: 12px;
-                line-height: 1.3em;
-                color: #4a537f;
-            }
-            .dark .album-info__name { color: #e2e8f0; }
-
-            .album-info__track {
-                font-weight: 400;
-                font-size: 14px;
-                opacity: .7;
-                line-height: 1.3em;
-                min-height: 52px;
+            .dark .player-controls__item.-shuffle.active,
+            .dark .player-controls__item.-repeat.active {
+                color: #818cf8;
+                background: rgba(99, 102, 241, 0.25);
             }
 
             .progress {
-                width: 100%;
-                margin-top: 15px;
+                margin-top: 16px;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .progress {
+                    margin-top: 24px;
+                }
             }
 
             .progress__top {
                 display: flex;
-                align-items: flex-end;
+                align-items: center;
                 justify-content: space-between;
+                margin-bottom: 8px;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .progress__top {
+                    margin-bottom: 12px;
+                }
+            }
+
+            .album-info {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .album-info__name {
+                font-size: 15px;
+                font-weight: 700;
+                color: #1e293b;
+                margin-bottom: 2px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .album-info__name {
+                    font-size: 18px;
+                    margin-bottom: 4px;
+                }
+            }
+            
+            .dark .album-info__name {
+                color: #f1f5f9;
+            }
+
+            .album-info__track {
+                font-size: 12px;
+                color: #64748b;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .album-info__track {
+                    font-size: 14px;
+                }
+            }
+            
+            .dark .album-info__track {
+                color: #94a3b8;
             }
 
             .progress__duration {
-                color: #71829e;
-                font-weight: 700;
-                font-size: 20px;
-                opacity: 0.5;
+                font-size: 12px;
+                font-weight: 600;
+                color: #475569;
+                margin-left: 12px;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .progress__duration {
+                    font-size: 14px;
+                    margin-left: 16px;
+                }
+            }
+            
+            .dark .progress__duration {
+                color: #cbd5e1;
             }
 
             .progress__bar {
-                height: 6px;
-                width: 100%;
+                height: 5px;
+                background: rgba(100, 116, 139, 0.2);
+                border-radius: 3px;
                 cursor: pointer;
-                background-color: #d0d8e6;
-                display: inline-block;
-                border-radius: 10px;
-                margin-top: 10px;
+                position: relative;
+                overflow: hidden;
+                transition: height 0.2s;
             }
-            .dark .progress__bar { background-color: #334155; }
+            
+            @media screen and (min-width: 768px) {
+                .progress__bar {
+                    height: 6px;
+                    border-radius: 4px;
+                }
+                
+                .progress__bar:hover {
+                    height: 8px;
+                }
+            }
+            
+            .dark .progress__bar {
+                background: rgba(148, 163, 184, 0.1);
+            }
 
             .progress__current {
-                height: inherit;
-                width: 0%;
-                background-color: #a3b3ce;
-                border-radius: 10px;
+                height: 100%;
+                background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+                border-radius: 3px;
+                position: relative;
                 transition: width 0.1s linear;
             }
-            .dark .progress__current { background-color: #6366f1; }
+            
+            @media screen and (min-width: 768px) {
+                .progress__current {
+                    border-radius: 4px;
+                }
+                
+                /* Desktop glow effect when playing */
+                .is-playing .progress__current {
+                    animation: progressGlow 2s ease-in-out infinite;
+                }
+                @keyframes progressGlow {
+                    0%, 100% {
+                        box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+                    }
+                    50% {
+                        box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+                    }
+                }
+            }
+            
+            .progress__current::after {
+                content: '';
+                position: absolute;
+                right: -2px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 12px;
+                height: 12px;
+                background: white;
+                border-radius: 50%;
+                box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .progress__current::after {
+                    width: 14px;
+                    height: 14px;
+                }
+                
+                .progress__bar:hover .progress__current::after {
+                    opacity: 1;
+                }
+            }
 
             .progress__time {
-                margin-top: 2px;
-                color: #71829e;
-                font-weight: 700;
-                font-size: 16px;
-                opacity: 0.7;
+                font-size: 11px;
+                color: #64748b;
+                margin-top: 6px;
+                font-weight: 500;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .progress__time {
+                    font-size: 13px;
+                    margin-top: 8px;
+                }
+            }
+            
+            .dark .progress__time {
+                color: #94a3b8;
+            }
+
+            /* Volume Control - Mobile compact */
+            .volume-control {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-top: 12px;
+                padding: 8px 12px;
+                background: rgba(255, 255, 255, 0.5);
+                border-radius: 10px;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .volume-control {
+                    gap: 12px;
+                    margin-top: 16px;
+                    padding: 12px 16px;
+                    border-radius: 12px;
+                }
+            }
+            
+            .dark .volume-control {
+                background: rgba(255, 255, 255, 0.05);
+            }
+
+            .volume-icon {
+                cursor: pointer;
+                color: #64748b;
+                transition: all 0.3s;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .volume-icon:hover {
+                    color: #6366f1;
+                    transform: scale(1.1);
+                }
+            }
+            
+            .dark .volume-icon {
+                color: #94a3b8;
+            }
+            .dark .volume-icon:hover {
+                color: #818cf8;
+            }
+
+            .volume-bar {
+                flex: 1;
+                height: 4px;
+                background: rgba(100, 116, 139, 0.2);
+                border-radius: 2px;
+                cursor: pointer;
+                position: relative;
+            }
+            .dark .volume-bar {
+                background: rgba(148, 163, 184, 0.1);
+            }
+
+            .volume-current {
+                height: 100%;
+                background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+                border-radius: 2px;
+                transition: width 0.1s;
+            }
+            
+            @media screen and (min-width: 768px) {
+                /* Desktop volume glow */
+                .volume-current {
+                    box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
+                }
+            }
+
+            .volume-percent {
+                font-size: 11px;
+                font-weight: 600;
+                color: #64748b;
+                min-width: 32px;
+                text-align: right;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .volume-percent {
+                    font-size: 12px;
+                    min-width: 35px;
+                }
+            }
+            
+            .dark .volume-percent {
+                color: #94a3b8;
             }
 
             .close-btn {
                 position: absolute;
-                top: 10px;
-                right: 15px;
-                color: #acb8cc;
+                top: 12px;
+                right: 12px;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 cursor: pointer;
+                transition: all 0.3s;
                 z-index: 10;
-                transition: color 0.2s;
+                color: #64748b;
             }
-            .close-btn:hover { color: #ef4444; }
+            
+            @media screen and (min-width: 768px) {
+                .close-btn {
+                    top: 16px;
+                    right: 16px;
+                    width: 36px;
+                    height: 36px;
+                }
+                
+                .close-btn:hover {
+                    background: rgba(239, 68, 68, 0.1);
+                    color: #ef4444;
+                    transform: rotate(90deg) scale(1.1);
+                }
+            }
+            
+            .dark .close-btn {
+                background: rgba(255, 255, 255, 0.1);
+                color: #94a3b8;
+            }
+
+            .playlist-toggle {
+                position: absolute;
+                top: 12px;
+                left: 12px;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s;
+                z-index: 10;
+                color: #64748b;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .playlist-toggle {
+                    top: 16px;
+                    left: 16px;
+                    width: 36px;
+                    height: 36px;
+                }
+                
+                .playlist-toggle:hover {
+                    background: rgba(99, 102, 241, 0.15);
+                    color: #6366f1;
+                    transform: scale(1.1);
+                }
+            }
+            
+            .dark .playlist-toggle {
+                background: rgba(255, 255, 255, 0.1);
+                color: #94a3b8;
+            }
+            .dark .playlist-toggle:hover {
+                background: rgba(99, 102, 241, 0.2);
+                color: #818cf8;
+            }
 
             .playlist-overlay {
                 position: absolute;
-                inset: 0;
-                background: inherit;
-                border-radius: 15px;
-                z-index: 20;
-                padding: 20px;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(20px);
+                border-radius: 20px;
+                padding: 50px 16px 16px;
                 overflow-y: auto;
+                z-index: 5;
+                animation: slideIn 0.3s ease-out;
             }
+            
+            @media screen and (min-width: 768px) {
+                .playlist-overlay {
+                    border-radius: 24px;
+                    padding: 60px 24px 24px;
+                }
+            }
+            
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .dark .playlist-overlay {
+                background: rgba(15, 23, 42, 0.98);
+            }
+
             .playlist-item {
                 display: flex;
                 align-items: center;
                 gap: 10px;
                 padding: 10px;
-                border-radius: 8px;
+                border-radius: 10px;
                 cursor: pointer;
-                border-bottom: 1px solid rgba(0,0,0,0.05);
-                transition: background 0.2s;
+                transition: all 0.2s;
+                border: 1px solid transparent;
             }
-            .playlist-item:hover { background: rgba(0,0,0,0.05); }
-            .playlist-item.active { background: rgba(83, 42, 185, 0.1); }
-            .dark .playlist-item.active { background: rgba(99, 102, 241, 0.2); }
+            
+            @media screen and (min-width: 768px) {
+                .playlist-item {
+                    gap: 12px;
+                    padding: 12px;
+                    border-radius: 12px;
+                }
+                
+                .playlist-item:hover {
+                    background: rgba(99, 102, 241, 0.05);
+                    border-color: rgba(99, 102, 241, 0.1);
+                    transform: translateX(4px);
+                }
+            }
+            
+            .playlist-item.active {
+                background: rgba(99, 102, 241, 0.1);
+                border-color: rgba(99, 102, 241, 0.2);
+            }
+            .dark .playlist-item:hover {
+                background: rgba(99, 102, 241, 0.1);
+            }
+            .dark .playlist-item.active {
+                background: rgba(99, 102, 241, 0.15);
+                border-color: rgba(99, 102, 241, 0.3);
+            }
 
             .youtube-badge {
                 background: #ff0000;
                 color: white;
                 font-size: 9px;
-                padding: 2px 6px;
-                border-radius: 4px;
-                font-weight: bold;
+                padding: 3px 6px;
+                border-radius: 6px;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .youtube-badge {
+                    padding: 3px 7px;
+                }
             }
 
-            /* 🔥 MOBILE RESPONSIVE FIXES */
-            @media screen and (max-width: 640px) {
-                .player-card {
-                    width: 350px;
-                    padding: 20px;
-                    padding-top: 50px;
+            /* Scrollbar styling */
+            .playlist-overlay::-webkit-scrollbar {
+                width: 6px;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .playlist-overlay::-webkit-scrollbar {
+                    width: 8px;
                 }
-                .player-cover {
-                    width: 140px; 
-                    height: 190px;
-                    margin-left: -20px; 
-                    margin-top: -10px;
-                }
-                .player-controls__item {
-                    font-size: 26px;
-                    width: 45px;
-                    height: 45px;
-                    margin-bottom: 8px;
-                }
-                .player-controls {
-                    padding-left: 10px;
-                }
-                .playlist-toggle {
-                    top: 15px;
-                    left: 20px;
-                }
+            }
+            
+            .playlist-overlay::-webkit-scrollbar-track {
+                background: rgba(0,0,0,0.05);
+                border-radius: 4px;
+            }
+            .playlist-overlay::-webkit-scrollbar-thumb {
+                background: rgba(99, 102, 241, 0.3);
+                border-radius: 4px;
+            }
+            .playlist-overlay::-webkit-scrollbar-thumb:hover {
+                background: rgba(99, 102, 241, 0.5);
             }
           `}</style>
 
-          <div className="player-card">
+          <div className={`player-card ${isPlaying ? 'is-playing' : ''}`}>
             {/* Close Button */}
             <div className="close-btn" onClick={() => setIsOpen(false)}>
-                <X size={20} />
+                <X size={18} />
             </div>
 
             {/* Playlist Toggle */}
-            <div 
-                className="absolute top-[15px] left-[20px] text-[#acb8cc] hover:text-[#532ab9] dark:hover:text-[#818cf8] cursor-pointer z-10 playlist-toggle transition-colors" 
-                onClick={() => setShowPlaylist(!showPlaylist)}
-            >
-                <ListMusic size={22} />
+            <div className="playlist-toggle" onClick={() => setShowPlaylist(!showPlaylist)}>
+                <ListMusic size={18} />
             </div>
 
             {showPlaylist ? (
-                <div className="playlist-overlay scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
-                    <h3 className="mb-4 text-lg font-bold text-slate-700 dark:text-white">Playlist ({playlist.length} songs)</h3>
+                <div className="playlist-overlay">
+                    <h3 className="mb-3 text-lg font-bold text-slate-700 dark:text-white md:mb-4 md:text-xl">
+                      Playlist ({playlist.length} songs)
+                    </h3>
                     {playlist.map((track, idx) => (
                         <div 
                             key={idx} 
@@ -916,19 +1225,27 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
                         >
                             <img 
                               src={track.cover} 
-                              className="object-cover w-10 h-10 rounded" 
+                              className="object-cover w-10 h-10 rounded-lg shadow-sm md:w-12 md:h-12" 
                               alt={track.title}
                               loading="lazy"
                             />
                             <div className="flex-1 min-w-0">
-                                <div className="text-sm font-bold truncate text-slate-800 dark:text-white">{track.title}</div>
-                                <div className="text-xs truncate text-slate-500 dark:text-slate-400">{track.artist}</div>
+                                <div className="text-sm font-bold truncate text-slate-800 dark:text-white">
+                                  {track.title}
+                                </div>
+                                <div className="text-xs truncate text-slate-500 dark:text-slate-400">
+                                  {track.artist}
+                                </div>
                             </div>
                             {track.type === 'youtube' && (
                                 <span className="youtube-badge">YT</span>
                             )}
                             {currentTrackIndex === idx && isPlaying && (
-                                <div className="w-2 h-2 bg-[#532ab9] dark:bg-[#818cf8] rounded-full animate-pulse"></div>
+                                <div className="flex gap-0.5">
+                                  <div className="w-1 h-3 bg-[#6366f1] dark:bg-[#818cf8] rounded-full animate-pulse"></div>
+                                  <div className="w-1 h-4 bg-[#6366f1] dark:bg-[#818cf8] rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                                  <div className="w-1 h-3 bg-[#6366f1] dark:bg-[#818cf8] rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                                </div>
                             )}
                         </div>
                     ))}
@@ -936,7 +1253,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
             ) : (
                 <>
                     <div className="player__top">
-                        <div className="player-cover">
+                        <div className={`player-cover ${isPlaying ? 'is-playing' : ''}`}>
                             <div 
                                 className="player-cover__item" 
                                 style={{ backgroundImage: `url(${currentTrack.cover})` }}
@@ -945,40 +1262,40 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
                         
                         <div className="player-controls">
                             <div 
-                                className={`player-controls__item -favorite ${isFavorite ? 'active' : ''}`} 
-                                onClick={() => setIsFavorite(!isFavorite)}
+                                className={`player-controls__item -shuffle ${shuffleMode ? 'active' : ''}`}
+                                onClick={() => setShuffleMode(!shuffleMode)}
+                                title="Shuffle"
                             >
-                                <Heart size={20} fill={isFavorite ? "currentColor" : "none"} />
+                                <Shuffle size={18} />
                             </div>
                             
-                            <a 
-                                href={isYoutube ? `https://www.youtube.com/watch?v=${currentTrack.youtubeId}` : '#'} 
-                                target={isYoutube ? "_blank" : "_self"}
-                                className="player-controls__item"
-                                rel="noopener noreferrer"
-                            >
-                                <ExternalLink size={20} />
-                            </a>
-                            
-                            <div className="player-controls__item" onClick={handlePrev}>
-                                <SkipBack size={20} fill="currentColor" />
+                            <div className="player-controls__item" onClick={handlePrev} title="Previous">
+                                <SkipBack size={20} />
                             </div>
                             
-                            <div className="player-controls__item" onClick={handleNext}>
-                                <SkipForward size={20} fill="currentColor" />
-                            </div>
-                            
-                            <div className="player-controls__item -xl" onClick={togglePlay}>
+                            <div className={`player-controls__item -xl ${isPlaying ? 'is-playing' : ''}`} onClick={togglePlay} title={isPlaying ? "Pause" : "Play"}>
                                 {isPlaying ? (
-                                    <Pause size={30} fill="#532ab9" className="text-[#532ab9] dark:text-[#818cf8]" />
+                                    <Pause size={28} />
                                 ) : (
-                                    <Play size={30} fill="#532ab9" className="text-[#532ab9] dark:text-[#818cf8] ml-1" />
+                                    <Play size={28} style={{marginLeft: '2px'}} />
                                 )}
+                            </div>
+                            
+                            <div className="player-controls__item" onClick={() => handleNext()} title="Next">
+                                <SkipForward size={20} />
+                            </div>
+                            
+                            <div 
+                                className={`player-controls__item -repeat ${repeatMode !== 'off' ? 'active' : ''}`}
+                                onClick={toggleRepeat}
+                                title={`Repeat: ${repeatMode}`}
+                            >
+                                {repeatMode === 'one' ? <Repeat1 size={18} /> : <Repeat size={18} />}
                             </div>
                         </div>
                     </div>
 
-                    <div className="progress" ref={progressRef}>
+                    <div className="progress">
                         <div className="progress__top">
                             <div className="album-info">
                                 <div className="album-info__name">{currentTrack.title}</div>
@@ -991,11 +1308,43 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
                             <div className="progress__duration">{duration}</div>
                         </div>
                         
-                        <div className="progress__bar" onClick={clickProgress}>
+                        <div className="progress__bar" ref={progressRef} onClick={clickProgress}>
                             <div className="progress__current" style={{ width: barWidth }}></div>
                         </div>
                         
                         <div className="progress__time">{currentTime}</div>
+                    </div>
+
+                    {/* Volume Control */}
+                    <div className="volume-control">
+                        <div className="volume-icon" onClick={() => setIsMuted(!isMuted)}>
+                            {isMuted || volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                        </div>
+                        <div className="volume-bar" ref={volumeRef} onClick={handleVolumeChange}>
+                            <div className="volume-current" style={{ width: `${isMuted ? 0 : volume}%` }}></div>
+                        </div>
+                        <div className="volume-percent">{isMuted ? 0 : volume}%</div>
+                    </div>
+
+                    {/* Secondary Controls */}
+                    <div className="flex justify-center gap-2 mt-3 md:gap-3 md:mt-4">
+                        <div 
+                            className={`player-controls__item -favorite ${isFavorite ? 'active' : ''}`}
+                            onClick={() => setIsFavorite(!isFavorite)}
+                            title="Add to favorites"
+                        >
+                            <Heart size={18} fill={isFavorite ? "currentColor" : "none"} />
+                        </div>
+                        
+                        <a 
+                            href={isYoutube ? `https://www.youtube.com/watch?v=${currentTrack.youtubeId}` : '#'} 
+                            target={isYoutube ? "_blank" : "_self"}
+                            className="player-controls__item"
+                            rel="noopener noreferrer"
+                            title="Open in YouTube"
+                        >
+                            <ExternalLink size={18} />
+                        </a>
                     </div>
                 </>
             )}
