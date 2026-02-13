@@ -25,7 +25,7 @@ const customFeedbacks = [
     ratingText: "UI/UX Designer",
     color: "from-purple-500 to-pink-500",
     accent: "#a855f7",
-    photoURL: "/users/2.jpg",
+    photoURL: "/users/2.png",
     verified: true,
     date: "5 days ago"
   },
@@ -61,7 +61,7 @@ const customFeedbacks = [
     ratingText: "Digital Marketer",
     color: "from-pink-500 to-rose-500",
     accent: "#ec4899",
-    photoURL: "/users/5.jpg",
+    photoURL: "/users/5.png",
     verified: true,
     date: "Yesterday"
   },
@@ -73,7 +73,7 @@ const customFeedbacks = [
     ratingText: "Backend Developer",
     color: "from-indigo-500 to-blue-500",
     accent: "#6366f1",
-    photoURL: "/users/6.jpg",
+    photoURL: "/users/6.png",
     verified: true,
     date: "4 days ago"
   },
