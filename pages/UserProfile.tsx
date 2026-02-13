@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { useAuth } from '../context/AuthContext';
 
 /* ─── Avatar list ─────────────────────────────── */
 const AVATAR_LIST = [
@@ -42,6 +43,7 @@ const UserProfile = () => {
   const [activeTab, setActiveTab] = useState<TabType>('profile');
   const [saved, setSaved] = useState(false);
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
 
   /* ── Reactive auth listener ─────────────────────── */
   useEffect(() => {
@@ -110,7 +112,11 @@ const UserProfile = () => {
       // 3. Reload the auth user so auth.currentUser reflects changes
       await currentUser.reload();
 
-      // 4. Re-sync component state from fresh auth object
+      // 4. ✅ KEY FIX: Force AuthContext to re-read the fresh user object
+      //    This makes AppNavbar / LiteNavbar re-render with new photoURL immediately
+      await refreshUser();
+
+      // 5. Re-sync component state from fresh auth object
       setUser(auth.currentUser);
 
       setSaved(true);

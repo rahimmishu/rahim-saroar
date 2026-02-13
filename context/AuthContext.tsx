@@ -1,39 +1,70 @@
-// src/context/AuthContext.tsx
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, User, signOut } from "firebase/auth";
-import { auth } from "../firebase";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { User, onIdTokenChanged, signOut } from 'firebase/auth';
+import { auth } from '../firebase';
 
+// ─── Types ────────────────────────────────────────────────
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   logout: () => Promise<void>;
+  // Helper: force a manual refresh of the current user object
+  // (call this after updateProfile so navbar re-renders with new photoURL/displayName)
+  refreshUser: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+// ─── Context ──────────────────────────────────────────────
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  loading: true,
+  logout: async () => {},
+  refreshUser: async () => {},
+});
 
+// ─── Provider ─────────────────────────────────────────────
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    /**
+     * ✅ KEY FIX: Use onIdTokenChanged instead of onAuthStateChanged.
+     *
+     * onAuthStateChanged → fires only on sign-in / sign-out
+     * onIdTokenChanged   → fires on sign-in / sign-out AND whenever the
+     *                      ID token refreshes (which happens after
+     *                      currentUser.reload() is called).
+     *
+     * This means after updateProfile() + reload(), the navbar will
+     * automatically re-render with the new displayName / photoURL.
+     */
+    const unsubscribe = onIdTokenChanged(auth, (currentUser) => {
+      setUser(currentUser ? { ...currentUser } : null);
       setLoading(false);
     });
+
     return () => unsubscribe();
   }, []);
 
-  const logout = () => signOut(auth);
+  /** Call this after updateProfile to force an immediate context refresh */
+  const refreshUser = async () => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      await currentUser.reload();
+      // Spread into a new object so React detects the reference change
+      setUser({ ...auth.currentUser! });
+    }
+  };
+
+  const logout = async () => {
+    await signOut(auth);
+  };
 
   return (
-    <AuthContext.Provider value={{ user, loading, logout }}>
-      {!loading && children}
+    <AuthContext.Provider value={{ user, loading, logout, refreshUser }}>
+      {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
-  return context;
-};
+// ─── Hook ─────────────────────────────────────────────────
+export const useAuth = () => useContext(AuthContext);

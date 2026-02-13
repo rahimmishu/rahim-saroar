@@ -245,11 +245,21 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                       onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                       className="group relative flex items-center gap-2.5 px-4 py-2 bg-gradient-to-br from-slate-100/80 to-slate-50/80 dark:from-slate-800/80 dark:to-slate-900/80 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-300 backdrop-blur-sm active:scale-95"
                     >
-                      {/* ✨ Avatar with gradient ring */}
+                      {/* ✨ Avatar with gradient ring — shows photoURL image or initials fallback */}
                       <div className="relative">
                         <div className="absolute -inset-0.5 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full opacity-75 group-hover:opacity-100 blur-sm transition-opacity"></div>
-                        <div className="relative flex items-center justify-center text-xs font-bold text-white rounded-full shadow-lg w-7 h-7 bg-gradient-to-br from-purple-500 to-blue-500">
-                          {user.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}
+                        <div className="relative overflow-hidden bg-white rounded-full shadow-lg w-7 h-7">
+                          {user.photoURL ? (
+                            <img
+                              src={user.photoURL}
+                              alt={user.displayName || "User"}
+                              className="object-cover w-full h-full"
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center w-full h-full text-xs font-bold text-white bg-gradient-to-br from-purple-500 to-blue-500">
+                              {user.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}
+                            </div>
+                          )}
                         </div>
                       </div>
                       
@@ -361,10 +371,21 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                 <div className="relative flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     {/* Avatar with animated ring */}
+                    {/* Avatar with animated ring — shows photoURL image or initials fallback */}
                     <div className="relative">
                       <div className="absolute rounded-full -inset-1 bg-gradient-to-br from-purple-500 to-blue-500 animate-spin-slow"></div>
-                      <div className="relative flex items-center justify-center text-xl font-bold text-white rounded-full shadow-xl w-14 h-14 bg-gradient-to-tr from-purple-500 to-blue-500">
-                        {user.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}
+                      <div className="relative overflow-hidden bg-white rounded-full shadow-xl w-14 h-14">
+                        {user.photoURL ? (
+                          <img
+                            src={user.photoURL}
+                            alt={user.displayName || "User"}
+                            className="object-cover w-full h-full"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center w-full h-full text-xl font-bold text-white bg-gradient-to-tr from-purple-500 to-blue-500">
+                            {user.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}
+                          </div>
+                        )}
                       </div>
                     </div>
                     
