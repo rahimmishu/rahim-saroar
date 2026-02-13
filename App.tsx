@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import ScrollVideoIntro from "./components/ScrollVideoIntro";
 
 // ============================================================
-// 📱 Mobile Lite Version Detection
+// Ã°Å¸â€œÂ± Mobile Lite Version Detection
 // ============================================================
 import useMobileDetect from './hooks/useMobileDetect';
 import LiteHero from './components/LiteHero';
 import LiteNavbar from './components/LiteNavbar';
-import LiteAbout from './components/LiteAbout';
+import LiteAbout from './components/LiteAbout'; // Ã¢Å“â€¦ Ã Â¦Â¨Ã Â¦Â¤Ã Â§ÂÃ Â¦Â¨
 
 // ============================================================
 // Full Version Components
@@ -43,9 +42,9 @@ import SecretVault from './components/SecretVault';
 import MobilePremiumFeatures from './components/MobilePremiumFeatures';
 import BatteryOptimizer from './components/BatteryOptimizer';
 
+// Ã¢Å“â€¦ Heavy effects Ã¢â‚¬â€ Ã Â¦Â¶Ã Â§ÂÃ Â¦Â§Ã Â§Â desktop Ã Â¦Â Ã Â¦Â¦Ã Â§â€¡Ã Â¦â€“Ã Â¦Â¾Ã Â¦Â¬Ã Â§â€¡ (mobile lite Ã Â¦Â¤Ã Â§â€¡ skip)
 import { SunlightSpotlight } from './components/ui/sunlight-spotlight';
 import DynamicIsland from './components/DynamicIsland';
-import BackgroundEffects from './components/BackgroundEffects';
 
 import { AuthProvider } from './context/AuthContext';
 import UserProfile from './pages/UserProfile';
@@ -57,19 +56,15 @@ const ScrollToTop = () => {
 };
 
 // ============================================================
-// 📱 Lite Mobile RevealOnScroll
+// Ã°Å¸â€œÂ± Lite Mobile RevealOnScroll Ã¢â‚¬â€ simpler, no heavy spring
 // ============================================================
-const LiteReveal: React.FC<{ children: React.ReactNode; delay?: number }> = ({
-  children, delay = 0,
-}) => {
+const LiteReveal: React.FC<{ children: React.ReactNode; delay?: number }> = ({ children, delay = 0 }) => {
   const [visible, setVisible] = useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) { setVisible(true); observer.disconnect(); }
-      },
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
       { threshold: 0.1 }
     );
     if (ref.current) observer.observe(ref.current);
@@ -94,37 +89,15 @@ const LiteReveal: React.FC<{ children: React.ReactNode; delay?: number }> = ({
 // Main App Content
 // ============================================================
 const AppContent: React.FC = () => {
-  const [isLoading, setIsLoading]           = useState(true);
-  const [isToolsOpen, setIsToolsOpen]       = useState(false);
-  const [isGalleryOpen, setIsGalleryOpen]   = useState(false);
-  const [isChatOpen, setIsChatOpen]         = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isToolsOpen, setIsToolsOpen] = useState(false);
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
 
+  // Ã°Å¸â€œÂ± Mobile lite mode detection
   const isMobileLite = useMobileDetect();
 
-  // ============================================================
-  // 🎬 Intro State
-  // ============================================================
-  const [introComplete, setIntroComplete] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    return sessionStorage.getItem('introSeen') === 'true';
-  });
-
-  const handleIntroComplete = () => {
-    sessionStorage.setItem('introSeen', 'true');
-    setIntroComplete(true);
-  };
-
-  const [siteVisible, setSiteVisible] = useState(false);
-  useEffect(() => {
-    if (introComplete) {
-      requestAnimationFrame(() => setSiteVisible(true));
-    }
-  }, [introComplete]);
-
-  // ============================================================
-  // Theme
-  // ============================================================
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('theme');
@@ -138,6 +111,7 @@ const AppContent: React.FC = () => {
     isDarkMode ? html.classList.add('dark') : html.classList.remove('dark');
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
 
+    // Click vibration Ã¢â‚¬â€ only on desktop (not needed on mobile lite, saves CPU cycles)
     if (!isMobileLite) {
       const handleClick = () => navigator.vibrate?.(5);
       document.addEventListener('click', handleClick);
@@ -151,14 +125,11 @@ const AppContent: React.FC = () => {
     console.log('New Feedback Submitted:', data);
   };
 
+  // Keyboard shortcuts Ã¢â‚¬â€ only desktop
   useEffect(() => {
     if (isMobileLite) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement ||
-        (e.target as HTMLElement).isContentEditable
-      ) return;
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || (e.target as HTMLElement).isContentEditable) return;
       if (e.shiftKey) {
         switch (e.key.toLowerCase()) {
           case 'h': window.scrollTo({ top: 0, behavior: 'smooth' }); break;
@@ -174,9 +145,9 @@ const AppContent: React.FC = () => {
   }, [isMobileLite]);
 
   const location = useLocation();
-  const Reveal = isMobileLite ? LiteReveal : RevealOnScroll;
 
-  const isIntroRunning = !introComplete && !isMobileLite && location.pathname === '/';
+  // Ã°Å¸â€œÂ± Reveal wrapper Ã¢â‚¬â€ lite vs full
+  const Reveal = isMobileLite ? LiteReveal : RevealOnScroll;
 
   return (
     <main className="relative min-h-screen overflow-x-hidden font-sans transition-colors duration-300 bg-white dark:bg-[#000000] text-slate-900 dark:text-white">
@@ -190,159 +161,92 @@ const AppContent: React.FC = () => {
         }}
       />
 
+      {/* Ã¢Å“â€¦ Heavy effects Ã¢â‚¬â€ Ã Â¦Â¶Ã Â§ÂÃ Â¦Â§Ã Â§Â desktop Ã Â¦Â render Ã Â¦Â¹Ã Â¦Â¬Ã Â§â€¡ (mobile lite Ã Â¦Â¤Ã Â§â€¡ skip) */}
       {!isMobileLite && <SunlightSpotlight className="z-[50]" />}
       {!isMobileLite && <DynamicIsland />}
-      
-      {/* ── 🌟 BACKGROUND GLOW EFFECTS (AFTER INTRO) ── */}
-      {!isMobileLite && introComplete && <BackgroundEffects />}
 
       <ScrollToTop />
+
+      {/* Ã¢Å“â€¦ Ã Â¦Â¸Ã Â¦Â¬ device Ã Â¦Â Ã Â¦Â¥Ã Â¦Â¾Ã Â¦â€¢Ã Â¦Â¬Ã Â§â€¡ Ã Â¦ÂÃ Â¦â€”Ã Â§ÂÃ Â¦Â²Ã Â§â€¹ (lightweight) */}
       <SecretVault />
       <DynamicTitle />
       <NetworkStatus />
+
+      {/* ContextMenu Ã¢â‚¬â€ Ã Â¦Â¶Ã Â§ÂÃ Â¦Â§Ã Â§Â desktop Ã Â¦Â (mobile Ã Â¦Â¤Ã Â§â€¡ right-click Ã Â¦Â¨Ã Â§â€¡Ã Â¦â€¡) */}
       {!isMobileLite && <ContextMenu />}
+
+      {/* BatteryOptimizer Ã¢â‚¬â€ Ã Â¦Â¶Ã Â§ÂÃ Â¦Â§Ã Â§Â desktop Ã Â¦Â */}
       {!isMobileLite && <BatteryOptimizer isDarkMode={isDarkMode} toggleTheme={toggleTheme} />}
+
+      {/* MobilePremiumFeatures Ã¢â‚¬â€ Ã Â¦Â¶Ã Â§ÂÃ Â¦Â§Ã Â§Â mobile Ã Â¦Â (Ã Â¦â€¢Ã Â¦Â¿Ã Â¦Â¨Ã Â§ÂÃ Â¦Â¤Ã Â§Â lite mode handle Ã Â¦â€¢Ã Â¦Â°Ã Â§â€¡) */}
       <MobilePremiumFeatures />
 
-      {/* Preloader */}
-      {isLoading && location.pathname === '/' && (
-        <Preloader onFinish={() => setIsLoading(false)} />
-      )}
+      {/* Preloader Ã¢â‚¬â€ Ã Â¦Â¶Ã Â§ÂÃ Â¦Â§Ã Â§Â home page Ã Â¦Â */}
+      {isLoading && location.pathname === '/' && <Preloader onFinish={() => setIsLoading(false)} />}
 
-      {/* ============================================================
-          🎬 SCROLL VIDEO INTRO
-          ─────────────────────────────────────────────────────────
-          এটা <main> এর সরাসরি child, কোনো z-index wrapper নেই।
-          ভিডিও overlay z-index: 40।
-          Navbar ALSO এখন outside wrapper এ (নিচে দেখো) z-[50]।
-          তাই Navbar (50) > Video (40) → Navbar সবসময় উপরে।
-      ============================================================ */}
-      {isIntroRunning && (
-        <ScrollVideoIntro
-       onComplete={handleIntroComplete}
-       // frameFolder="/frames"  // ✅ যদি আপনার ফ্রেমগুলো 'public/frames' ফোল্ডারে থাকে তবে এই লাইনও লেখার দরকার নেই, ডিফল্ট কাজ করবে।
-      />
-      )}
-
-      {/* ============================================================
-          🔑 KEY FIX: NAVBAR — আগে এটা z-index:10 wrapper এর ভেতরে ছিল।
-          সেই wrapper একটা stacking context তৈরি করে, ফলে navbar এর
-          z-[50] video এর z-40 এর কাছে হেরে যাচ্ছিল।
-
-          এখন Navbar টা সরাসরি <main> এর child — কোনো stacking
-          context নেই — তাই z-[50] সরাসরি root level এ কাজ করে।
-          Video (40) < Navbar (50) ✅
-      ============================================================ */}
-      {isMobileLite ? (
-        <LiteNavbar
-          isDarkMode={isDarkMode}
-          toggleTheme={toggleTheme}
-          onOpenTools={() => setIsToolsOpen(true)}
-          onOpenGallery={() => setIsGalleryOpen(true)}
-        />
-      ) : (
-        <AppNavbar
-          isDarkMode={isDarkMode}
-          toggleTheme={toggleTheme}
-          onOpenTools={() => setIsToolsOpen(true)}
-          onOpenGallery={() => setIsGalleryOpen(true)}
-        />
-      )}
-
-      {/* ============================================================
-          MAIN CONTENT WRAPPER
-          ─────────────────────────────────────────────────────────
-          ⚠️ আগে এখানে zIndex: 10 ছিল — সেটা সরিয়ে দেওয়া হয়েছে।
-          zIndex শুধু তখন লাগে যখন overlapping element আছে।
-          Preloader এর opacity কাজ করার জন্য position:relative যথেষ্ট।
-      ============================================================ */}
       <div
-        className={`transition-opacity duration-700 ease-out ${
-          isLoading && location.pathname === '/' ? 'opacity-0' : 'opacity-100'
-        }`}
-        style={{ position: 'relative' /* zIndex সরিয়ে দেওয়া হয়েছে */ }}
+        className={`transition-opacity duration-700 ease-out ${isLoading && location.pathname === '/' ? 'opacity-0' : 'opacity-100'}`}
+        style={{ position: 'relative', zIndex: 10 }}
       >
+
+        {/* ===== NAVBAR Ã¢â‚¬â€ Lite vs Full ===== */}
+        {isMobileLite ? (
+          <LiteNavbar
+            isDarkMode={isDarkMode}
+            toggleTheme={toggleTheme}
+            onOpenTools={() => setIsToolsOpen(true)}
+            onOpenGallery={() => setIsGalleryOpen(true)}
+          />
+        ) : (
+          <AppNavbar
+            isDarkMode={isDarkMode}
+            toggleTheme={toggleTheme}
+            onOpenTools={() => setIsToolsOpen(true)}
+            onOpenGallery={() => setIsGalleryOpen(true)}
+          />
+        )}
 
         <Routes>
           <Route
             path="/"
             element={
               <>
-                {/* HERO */}
-                {isMobileLite ? (
-                  <LiteHero />
-                ) : introComplete ? (
-                  <div
-                    style={{
-                      opacity: siteVisible ? 1 : 0,
-                      transform: siteVisible ? 'translateY(0)' : 'translateY(14px)',
-                      transition: 'opacity 0.7s ease-out, transform 0.7s ease-out',
-                    }}
-                  >
-                    <Hero />
-                  </div>
-                ) : null}
+                {/* ===== HERO Ã¢â‚¬â€ Lite vs Full ===== */}
+                {isMobileLite ? <LiteHero /> : <Hero />}
 
-                {/* বাকি Sections */}
-                {(introComplete || isMobileLite) && (
-                  <div
-                    style={{
-                      opacity: siteVisible || isMobileLite ? 1 : 0,
-                      transition: 'opacity 0.5s ease-out 0.3s',
-                    }}
-                  >
-                    <TechMarquee />
+                <TechMarquee />
 
-                    <Reveal delay={0.1}>
-                      <section id="about">
-                        {isMobileLite ? <LiteAbout /> : <About />}
-                      </section>
-                    </Reveal>
+                {/* ===== ABOUT Ã¢â‚¬â€ Lite vs Full ===== */}
+                <Reveal delay={0.1}>
+                  <section id="about">
+                    {isMobileLite ? <LiteAbout /> : <About />}
+                  </section>
+                </Reveal>
 
-                    <Reveal delay={0.1}>
-                      <section id="projects"><Projects /></section>
-                    </Reveal>
-
-                    <Reveal>
-                      <section id="resources"><Resources /></section>
-                    </Reveal>
-
-                    <Reveal><FacebookFeed /></Reveal>
-
-                    <Reveal>
-                      <section id="journey"><Journey /></section>
-                    </Reveal>
-
-                    <div id="feedback"><FeedbackList /></div>
-
-                    <Reveal>
-                      <section id="contact"><Contact /></section>
-                    </Reveal>
-
-                    <FeedbackSlider onSubmit={handleNewFeedback} />
-                  </div>
-                )}
+                <Reveal delay={0.1}><section id="projects"><Projects /></section></Reveal>
+                <Reveal><section id="resources"><Resources /></section></Reveal>
+                <Reveal><FacebookFeed /></Reveal>
+                <Reveal><section id="journey"><Journey /></section></Reveal>
+                <div id="feedback"><FeedbackList /></div>
+                <Reveal><section id="contact"><Contact /></section></Reveal>
+                <FeedbackSlider onSubmit={handleNewFeedback} />
               </>
             }
           />
           <Route path="/profile" element={<UserProfile />} />
         </Routes>
 
-        {(introComplete || isMobileLite || location.pathname !== '/') && <Footer />}
+        <Footer />
 
+        {/* ===== Global Widgets ===== */}
         <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
-        <MusicPlayer
-          isPlaying={isMusicPlaying}
-          togglePlay={() => setIsMusicPlaying(!isMusicPlaying)}
-        />
+        <MusicPlayer isPlaying={isMusicPlaying} togglePlay={() => setIsMusicPlaying(!isMusicPlaying)} />
 
-        {!isIntroRunning && (
-          <FloatingDock
-            toggleChat={() => setIsChatOpen(!isChatOpen)}
-            toggleMusic={() => setIsMusicPlaying(!isMusicPlaying)}
-            toggleTheme={toggleTheme}
-          />
-        )}
+        <FloatingDock
+          toggleChat={() => setIsChatOpen(!isChatOpen)}
+          toggleMusic={() => setIsMusicPlaying(!isMusicPlaying)}
+          toggleTheme={toggleTheme}
+        />
 
         <PhotoGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} />
 
@@ -363,6 +267,9 @@ const AppContent: React.FC = () => {
   );
 };
 
+// ============================================================
+// Root App
+// ============================================================
 const App: React.FC = () => (
   <Router>
     <AuthProvider>
