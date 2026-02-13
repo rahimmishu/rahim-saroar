@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- Home Page -->
+  <url>
+    <loc>https://rahim-saroar.vercel.app/</loc>
+    <lastmod>2025-02-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- About Page -->
+  <url>
+    <loc>https://rahim-saroar.vercel.app/about</loc>
+    <lastmod>2025-02-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Projects Page -->
+  <url>
+    <loc>https://rahim-saroar.vercel.app/projects</loc>
+    <lastmod>2025-02-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Journey Page -->
+  <url>
+    <loc>https://rahim-saroar.vercel.app/journey</loc>
+    <lastmod>2025-02-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Achievements Page -->
+  <url>
+    <loc>https://rahim-saroar.vercel.app/achievements</loc>
+    <lastmod>2025-02-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Certifications Page -->
+  <url>
+    <loc>https://rahim-saroar.vercel.app/certifications</loc>
+    <lastmod>2025-02-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Contact Page -->
+  <url>
+    <loc>https://rahim-saroar.vercel.app/contact</loc>
+    <lastmod>2025-02-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Creative Work Page -->
+  <url>
+    <loc>https://rahim-saroar.vercel.app/creative-work</loc>
+    <lastmod>2025-02-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Resources Page -->
+  <url>
+    <loc>https://rahim-saroar.vercel.app/resources</loc>
+    <lastmod>2025-02-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Tech Stack Page -->
+  <url>
+    <loc>https://rahim-saroar.vercel.app/tech-stack</loc>
+    <lastmod>2025-02-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Tools Page -->
+  <url>
+    <loc>https://rahim-saroar.vercel.app/tools</loc>
+    <lastmod>2025-02-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- User Profile Page -->
+  <url>
+    <loc>https://rahim-saroar.vercel.app/profile</loc>
+    <lastmod>2025-02-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Photo Gallery -->
+  <url>
+    <loc>https://rahim-saroar.vercel.app/gallery</loc>
+    <lastmod>2025-02-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+</urlset>
