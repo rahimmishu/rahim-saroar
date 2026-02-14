@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { 
   Play, Pause, SkipForward, SkipBack, Heart, 
   ExternalLink, X, ListMusic, Volume2, VolumeX,
-  Shuffle, Repeat, Repeat1
+  Shuffle, Repeat, Repeat1, RotateCcw, RotateCw
 } from 'lucide-react';
 
 interface MusicPlayerProps {
@@ -18,7 +18,10 @@ interface Track {
   type: 'local' | 'youtube';
   src?: string;
   youtubeId?: string;
+  category: 'songs' | 'ghosts' | 'gojol';
 }
+
+type FolderType = 'songs' | 'ghosts' | 'gojol';
 
 type RepeatMode = 'off' | 'all' | 'one';
 
@@ -38,6 +41,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
   const [repeatMode, setRepeatMode] = useState<RepeatMode>('off');
   const [playHistory, setPlayHistory] = useState<number[]>([]);
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false);
+  const [activeFolder, setActiveFolder] = useState<FolderType>('songs');
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
@@ -47,80 +51,132 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
 
   // 🔥 Complete Playlist
   const playlist: Track[] = [
-    // Local Songs
-    { title: "Airtel X Bhoot FM", artist: "Rahim Saroar", type: 'local', src: "/music/airlel-bhootfm.mp3", cover: "/music/airlel-bhootfm.jpg" },
-    { title: "Airtel Phonk 3D", artist: "Rahim Saroar", type: 'local', src: "/music/phonk.mp3", cover: "/music/phonk.jpg" },
-    { title: "Barbaad", artist: "Jubin Nautiyal", type: 'local', src: "/music/barbaad.mp3", cover: "/music/barbaad.jpg" },
-    { title: "Saiyaara", artist: "Faheem Abdullah", type: 'local', src: "/music/saiyaara.mp3", cover: "/music/saiyaara.jpg" },
-    { title: "Chale Aana", artist: "Arman Malik", type: 'local', src: "/music/chale-aana.mp3", cover: "/music/chale-aana.jpg" },
-    { title: "Ek Mulaqat", artist: "Altamash Faridi", type: 'local', src: "/music/ek-mulaqat.mp3", cover: "/music/ek-mulaqat.jpg" },
-    { title: "Fakira", artist: "Timir Biswas", type: 'local', src: "/music/fakira.mp3", cover: "/music/fakira.jpg" },
-    { title: "Salamat", artist: "Arijit Singh", type: 'local', src: "/music/salamat.mp3", cover: "/music/salamat.jpg" },
-    { title: "Sanam Re", artist: "Arijit Singh", type: 'local', src: "/music/sanam-re.mp3", cover: "/music/sanam-re.jpg" },
-    { title: "Ishq", artist: "Faheem Abdullah", type: 'local', src: "/music/ishq.mp3", cover: "/music/ishq.jpg" },
-    { title: "Jisko Jovi Milta Hai", artist: "Manisha Sharma", type: 'local', src: "/music/jisko.mp3", cover: "/music/jisko.jpg" },
-    { title: "Teri Nazron Ka Dil", artist: "Faheem Abdullah", type: 'local', src: "/music/teri-nazar.mp3", cover: "/music/teri-nazar.jpg" },
-    { title: "Dhun", artist: "Arijit Singh", type: 'local', src: "/music/dhun.mp3", cover: "/music/dhun.jpg" },
-    { title: "Khola Janala", artist: "Faheem Abdullah", type: 'local', src: "/music/khola-janala.mp3", cover: "/music/khola-janala.jpg" },
-    { title: "Pal Pal", artist: "Rahim Saroar", type: 'local', src: "/music/pal-pal.mp3", cover: "/music/pal-pal.jpg" },
-    { title: "Pal Pal X Talwinder", artist: "Rahim Saroar", type: 'local', src: "/music/pal.mp3", cover: "/music/pal.jpg" },
-    { title: "Tomar Chokhe Alash Amar", artist: "Arfin Rumey", type: 'local', src: "/music/priyotoma.mp3", cover: "/music/priyotoma.jpg" },
-    { title: "Sahiba", artist: "Adrita Rikhari", type: 'local', src: "/music/sahiba.mp3", cover: "/music/sahiba.jpg" },
-    { title: "Shunno", artist: "Tanveer Evan", type: 'local', src: "/music/shunno.mp3", cover: "/music/shunno.jpg" },
-    { title: "Sun Saathiya", artist: "Priya Saraiya", type: 'local', src: "/music/sun.mp3", cover: "/music/sun.jpg" },
-    { title: "Zaalima", artist: "Shah Rukh Khan", type: 'local', src: "/music/zaalima.mp3", cover: "/music/zaalima.jpg" },
-    { title: "Dharia", artist: "Sugar", type: 'local', src: "/music/dharia.mp3", cover: "/music/dharia.jpg" },
-    { title: "Jhol", artist: "Annural Khalid", type: 'local', src: "/music/jhol.mp3", cover: "/music/jhol.jpg" },
-    { title: "Lo Safar", artist: "Rahim Saroar", type: 'local', src: "/music/lo-safar.mp3", cover: "/music/lo-safar.jpg" },
-    { title: "Tum Hi Aana", artist: "Jubin Nautiyal", type: 'local', src: "/music/tum-hi-aana.mp3", cover: "/music/tum-hi-aana.jpg" },
+    // ──────────────── 🎵 SONGS ────────────────
+    { title: "Airtel X Bhoot FM", artist: "Rahim Saroar", type: 'youtube',youtubeId: "-mrYeA_G9QA", cover: "https://img.youtube.com/vi/-mrYeA_G9QA/maxresdefault.jpg", category: 'songs' },
+    { title: "Airtel Phonk 3D", artist: "Rahim Saroar", type: 'youtube', youtubeId: "3pqQrvoj7DY", cover: "https://img.youtube.com/vi/3pqQrvoj7DY/maxresdefault.jpg", category: 'songs' },
+    { title: "Barbaad", artist: "Jubin Nautiyal", type: 'youtube', youtubeId: "k_L9ppnuNnY", cover: "https://img.youtube.com/vi/k_L9ppnuNnY/maxresdefault.jpg", category: 'songs' },
+    { title: "Saiyaara", artist: "Faheem Abdullah", type: 'youtube', youtubeId: "asG7cwxi1sA", cover: "https://img.youtube.com/vi/asG7cwxi1sA/maxresdefault.jpg", category: 'songs' },
+    { title: "Chale Aana", artist: "Arman Malik", type: 'youtube', youtubeId: "5AZld1nu5Yg", cover: "https://img.youtube.com/vi/5AZld1nu5Yg/maxresdefault.jpg", category: 'songs' },
+    { title: "Ek Mulaqat", artist: "Altamash Faridi", type: 'youtube', youtubeId: "guP-Ic_8C9w", cover: "https://img.youtube.com/vi/guP-Ic_8C9w/maxresdefault.jpg", category: 'songs' },
+    { title: "Fakira", artist: "Timir Biswas", type: 'youtube', youtubeId: "u7ausTLgMjY", cover: "https://img.youtube.com/vi/u7ausTLgMjY/maxresdefault.jpg", category: 'songs' },
+    { title: "Salamat", artist: "Arijit Singh", type: 'youtube', youtubeId: "xhczjhFxhDg", cover: "https://img.youtube.com/vi/xhczjhFxhDg/maxresdefault.jpg", category: 'songs' },
+    { title: "Sanam Re", artist: "Arijit Singh", type: 'youtube', youtubeId: "D7ZkekFRUmo", cover: "https://img.youtube.com/vi/D7ZkekFRUmo/maxresdefault.jpg", category: 'songs' },
+    { title: "Ishq", artist: "Faheem Abdullah", type: 'youtube', youtubeId: "gKD1AhmpOoU", cover: "https://img.youtube.com/vi/IJeSR-LJBnk/maxresdefault.jpg", category: 'songs' },
+    { title: "Jisko Jovi Milta Hai", artist: "Manisha Sharma", type: 'youtube', youtubeId: "q0wCFUH7WXU", cover: "https://img.youtube.com/vi/q0wCFUH7WXU/maxresdefault.jpg", category: 'songs' },
+    { title: "Teri Nazron Ka Dil", artist: "Faheem Abdullah", type: 'youtube', youtubeId: "C3njz8sf4aM", cover: "https://img.youtube.com/vi/C3njz8sf4aM/maxresdefault.jpg", category: 'songs' },
+    { title: "Dhun", artist: "Arijit Singh", type: 'youtube', youtubeId: "zprEnjrSD2E", cover: "https://img.youtube.com/vi/xH4daEJvaZY/maxresdefault.jpg", category: 'songs' },
+    { title: "Khola Janala", artist: "Faheem Abdullah", type: 'youtube', youtubeId: "bzsWmfFCqQk", cover: "https://img.youtube.com/vi/EsyEgt7riYE/maxresdefault.jpg", category: 'songs' },
+    { title: "Pal Pal", artist: "Rahim Saroar", type: 'youtube', youtubeId: "ZeWbaSXrHus", cover: "https://img.youtube.com/vi/ZeWbaSXrHus/maxresdefault.jpg", category: 'songs' },
+    { title: "Pal Pal X Talwinder", artist: "Rahim Saroar", type: 'youtube', youtubeId: "3_136AnE6YE", cover: "https://img.youtube.com/vi/3_136AnE6YE/maxresdefault.jpg", category: 'songs' },
+    { title: "Tomar Chokhe Alash Amar", artist: "Arfin Rumey", type: 'youtube', youtubeId: "XWt48T5mwXk", cover: "https://img.youtube.com/vi/XWt48T5mwXk/maxresdefault.jpg", category: 'songs' },
+    { title: "Sahiba", artist: "Adrita Rikhari", type: 'youtube',youtubeId: "_eTShi_wzQU", cover: "https://img.youtube.com/vi/_eTShi_wzQU/maxresdefault.jpg", category: 'songs' },
+    { title: "Shunno", artist: "Tanveer Evan", type: 'youtube', youtubeId: "xeMciJSSYf8", cover: "https://img.youtube.com/vi/xeMciJSSYf8/maxresdefault.jpg", category: 'songs' },
+    { title: "Sun Saathiya", artist:"Priya Saraiya ", type:'youtube', youtubeId:"WIjra2HHRFM", cover:"https://img.youtube.com/vi/WIjra2HHRFM/maxresdefault.jpg", category: 'songs'},
+    { title: "Zaalima", artist: "Shah Rukh Khan", type: 'youtube', youtubeId: "Gxvh8x_bHDs", cover: "https://img.youtube.com/vi/Gxvh8x_bHDs/maxresdefault.jpg", category: 'songs' },
+    { title: "Dharia", artist: "Sugar", type: 'youtube', youtubeId: "X-cQSTPie14", cover: "https://img.youtube.com/vi/S0Xn1Nlxue8/maxresdefault.jpg", category: 'songs' },
+    { title: "Jhol", artist: "Annural Khalid", type: 'youtube', youtubeId: "0fB0gr_M7Pw", cover: "https://img.youtube.com/vi/0fB0gr_M7Pw/maxresdefault.jpg", category: 'songs' },
+    { title: "Lo Safar", artist: "Rahim Saroar", type: 'youtube', youtubeId: "LCWrDvUr7mE", cover: "https://img.youtube.com/vi/jcV7i0WM9jU/maxresdefault.jpg", category: 'songs' },
+    { title: "Tum Hi Aana", artist: "Ranveer Singh", type: 'youtube', youtubeId: "_StxqkgwBiQ", cover: "https://img.youtube.com/vi/_StxqkgwBiQ/maxresdefault.jpg", category: 'songs' },
+    { title: "Gulabi Aankhon", artist: "Sanam Pur", type: 'youtube', youtubeId: "hgi2MYAFgE8", cover: "https://img.youtube.com/vi/hgi2MYAFgE8/maxresdefault.jpg", category: 'songs' },
+    { title: "Main Agar Kahoon", artist: "Shahrukh Khan", type: 'youtube', youtubeId: "DAYszemgPxc", cover: "https://img.youtube.com/vi/DAYszemgPxc/maxresdefault.jpg", category: 'songs' },
+    { title: "Hamqadam", artist: "Shrey Singhal", type: 'youtube', youtubeId: "rS3dghN1P3I", cover: "https://img.youtube.com/vi/rS3dghN1P3I/maxresdefault.jpg", category: 'songs' },
+    { title: "Khairiyat", artist: "Arijit Singh", type: 'youtube', youtubeId: "hoNb6HuNmU0", cover: "https://img.youtube.com/vi/hoNb6HuNmU0/maxresdefault.jpg", category: 'songs' },
+    { title: "Mere Mehboob Qayamat Hogi", artist: "Kishore Kumar", type: 'youtube', youtubeId: "M6Ul3ASaFLU", cover: "https://img.youtube.com/vi/M6Ul3ASaFLU/maxresdefault.jpg", category: 'songs' },
+    { title: "Zara Zara Bahekta Hai", artist: "JalRaj (Jalaj)", type: 'youtube', youtubeId: "NeXbmEnpSz0", cover: "https://img.youtube.com/vi/NeXbmEnpSz0/maxresdefault.jpg", category: 'songs' },
+    { title: "Ek Mulaqat", artist: "Jubin Nautiyal", type: 'youtube', youtubeId: "_qrxVjvVp4M", cover: "https://img.youtube.com/vi/_qrxVjvVp4M/maxresdefault.jpg", category: 'songs' },
+    { title: "Sanam ree", artist: "Arijit Singh", type: 'youtube', youtubeId: "rRKAJ6tLBSw", cover: "https://img.youtube.com/vi/rRKAJ6tLBSw/maxresdefault.jpg", category: 'songs' },
+    { title: "Kesariya", artist: "Arijit Singh", type: 'youtube', youtubeId: "Dkk9gvTmCXY", cover: "https://img.youtube.com/vi/Dkk9gvTmCXY/maxresdefault.jpg", category: 'songs' },
+    { title: "Dil Sambhal Jaa Zara", artist: "Parwan Khan", type: 'youtube', youtubeId: "uHbKAnli9DE", cover: "https://img.youtube.com/vi/uHbKAnli9DE/maxresdefault.jpg", category: 'songs' },
+    { title: "Dil Ka Jo Haal Hai", artist: "Arijit Singh", type: 'youtube', youtubeId: "udgrClXV26Y", cover: "https://img.youtube.com/vi/udgrClXV26Y/maxresdefault.jpg", category: 'songs' },
+    { title: "Mann Meera", artist: "Arijit Singh", type: 'youtube', youtubeId: "HP2zqQsrsyg", cover: "https://img.youtube.com/vi/HP2zqQsrsyg/maxresdefault.jpg", category: 'songs' },
+    { title: "Falak Tak Chal Sath Mere", artist: "Arijit Singh", type: 'youtube', youtubeId: "0pOq8ag0Z0Y", cover: "https://img.youtube.com/vi/0pOq8ag0Z0Y/maxresdefault.jpg", category: 'songs' },
+    { title: "Haule Haule", artist: "Sharukh Khan", type: 'youtube', youtubeId: "XgdY_s1LsZc", cover: "https://img.youtube.com/vi/XgdY_s1LsZc/maxresdefault.jpg", category: 'songs' },
+    { title: "Dekhte Dekhte", artist: "Arijit Singh", type: 'youtube', youtubeId: "eZHaumDApl0", cover: "https://img.youtube.com/vi/eZHaumDApl0/maxresdefault.jpg", category: 'songs' },
+    { title: "Wajah Tum Ho", artist: "Arijit Singh", type: 'youtube', youtubeId: "hk5IqAhOrnY", cover: "https://img.youtube.com/vi/hk5IqAhOrnY/maxresdefault.jpg", category: 'songs' },
+    { title: "Uska Hi Banana", artist: "Arijit Singh", type: 'youtube', youtubeId: "q-RP99S_qK0", cover: "https://img.youtube.com/vi/q-RP99S_qK0/maxresdefault.jpg", category: 'songs' },
+    { title: "Banjaara", artist: "Arijit Singh", type: 'youtube', youtubeId: "0NFxcNheoLc", cover: "https://img.youtube.com/vi/0NFxcNheoLc/maxresdefault.jpg", category: 'songs' },
+    { title: "Pehle Bhi Main", artist: "Arijit Singh", type: 'youtube', youtubeId: "kZGpkkfk2lA", cover: "https://img.youtube.com/vi/kZGpkkfk2lA/maxresdefault.jpg", category: 'songs' },
+    { title: "Tu Hi Hai Aashiqui Male Version", artist: "Arijit Singh", type: 'youtube', youtubeId: "GDyiNKZuQYs", cover: "https://img.youtube.com/vi/GDyiNKZuQYs/maxresdefault.jpg", category: 'songs' },
+    { title: "Tere liye", artist: "Arijit Singh", type: 'youtube', youtubeId: "G3fsvJ95wHg", cover: "https://img.youtube.com/vi/G3fsvJ95wHg/maxresdefault.jpg", category: 'songs' },
+    { title: "Labon Ko", artist: "Arijit Singh", type: 'youtube', youtubeId: "3OYrJWVx7F0", cover: "https://img.youtube.com/vi/3OYrJWVx7F0/maxresdefault.jpg", category: 'songs' },
+    { title: "Fallin for you", artist: "Arijit Singh", type: 'youtube', youtubeId: "sVzKavzIKDI", cover: "https://img.youtube.com/vi/sVzKavzIKDI/maxresdefault.jpg", category: 'songs' },
+    { title: "Pasoori", artist: "Coke Studio", type: 'youtube', youtubeId: "5Eqb_-j3FDA", cover: "https://img.youtube.com/vi/5Eqb_-j3FDA/maxresdefault.jpg", category: 'songs' },
+    { title: "Teri Meri Kahaani", artist: "Arijit Singh", type: 'youtube', youtubeId: "cB_waHMBtn0", cover: "https://img.youtube.com/vi/cB_waHMBtn0/maxresdefault.jpg", category: 'songs' },
+    { title: "Aye khuda", artist: "Arijit Singh", type: 'youtube', youtubeId: "HGfc06RZyjQ", cover: "https://img.youtube.com/vi/HGfc06RZyjQ/maxresdefault.jpg", category: 'songs' },
+    { title: "Ae Dil Hai Mushki", artist: "Arijit Singh", type: 'youtube', youtubeId: "vrqFJ-yjkRw", cover: "https://img.youtube.com/vi/vrqFJ-yjkRw/maxresdefault.jpg", category: 'songs' },
+    { title: "Dil Mein Chhupa Loonga", artist: "Arijit Singh", type: 'youtube', youtubeId: "qUvPzjSWMSM", cover: "https://img.youtube.com/vi/qUvPzjSWMSM/maxresdefault.jpg", category: 'songs' },
+    { title: "Dhun X Baarish - Mashup", artist: "Arijit Singh", type: 'youtube', youtubeId: "kvLKeqOswEg", cover: "https://img.youtube.com/vi/kvLKeqOswEg/maxresdefault.jpg", category: 'songs' },
+    { title: "Hale Dil", artist: "Emran Hashmi", type: 'youtube', youtubeId: "acdKE2hja7w", cover: "https://img.youtube.com/vi/acdKE2hja7w/maxresdefault.jpg", category: 'songs' },
+    { title: "Chand Sifarish", artist: "Arijit Singh", type: 'youtube', youtubeId: "zWEOx7TSM6I", cover: "https://img.youtube.com/vi/zWEOx7TSM6I/maxresdefault.jpg", category: 'songs' },
+    { title: "Ek din meri bahoo me", artist: "Ranveer Singh", type: 'youtube', youtubeId: "Gf3NhIkdfRs", cover: "https://img.youtube.com/vi/Gf3NhIkdfRs/maxresdefault.jpg", category: 'songs' },
+    { title: "Ki Nesha", artist: "Arijit Singh", type: 'youtube', youtubeId: "ArpxYeFTnws", cover: "https://img.youtube.com/vi/ArpxYeFTnws/maxresdefault.jpg", category: 'songs' },
+    { title: "Milne Hai Mujhse Aayi - Lofi", artist: "Arijit Singh", type: 'youtube', youtubeId: "rTvVuLoOq0I", cover: "https://img.youtube.com/vi/rTvVuLoOq0I/maxresdefault.jpg", category: 'songs' },
+    { title: "Jo Tum Mere Ho (Slowed + Reverb)", artist: "Anuv Jain", type: 'youtube', youtubeId: "uK7Ovgs44Uk", cover: "https://img.youtube.com/vi/uK7Ovgs44Uk/maxresdefault.jpg", category: 'songs' },
+    { title: "O Mere Dil Ke Chain", artist: "Sanam", type: 'youtube', youtubeId: "o9F7oUgmyg0", cover: "https://img.youtube.com/vi/o9F7oUgmyg0/maxresdefault.jpg", category: 'songs' },
+    { title: "Bekhayali", artist: "Arijit Singh", type: 'youtube', youtubeId: "Ps4aVpIESkc", cover: "https://img.youtube.com/vi/Ps4aVpIESkc/maxresdefault.jpg", category: 'songs' },
+    { title: "Lut Gaye", artist: "Emran Hashmi", type: 'youtube', youtubeId: "sCbbMZ-q4-I", cover: "https://img.youtube.com/vi/sCbbMZ-q4-I/maxresdefault.jpg", category: 'songs' },
+    { title: "Jeene Laga Hoon", artist: "Arijit Singh", type: 'youtube', youtubeId: "qpIdoaaPa6U", cover: "https://img.youtube.com/vi/qpIdoaaPa6U/maxresdefault.jpg", category: 'songs' },
+    { title: "Janam Janam", artist: "Shahrukh Khan", type: 'youtube', youtubeId: "pIBoAh4OXhQ", cover: "https://img.youtube.com/vi/pIBoAh4OXhQ/maxresdefault.jpg", category: 'songs' },
+    { title: "Yeh Raaten Yeh Mausam", artist: "Arijit Singh", type: 'youtube', youtubeId: "4HRC6c5-2lQ", cover: "https://img.youtube.com/vi/4HRC6c5-2lQ/maxresdefault.jpg", category: 'songs' },
+    { title: "Bom Diggy Diggy", artist: "Sunny", type: 'youtube', youtubeId: "U4K9guxEix4", cover: "https://img.youtube.com/vi/U4K9guxEix4/maxresdefault.jpg", category: 'songs' },
+    { title: "Nashe Si Chadh Gayi", artist: "Ranveer Singh", type: 'youtube', youtubeId: "Wd2B8OAotU8", cover: "https://img.youtube.com/vi/Wd2B8OAotU8/maxresdefault.jpg", category: 'songs' },
 
-    // YouTube Songs
-    { title: "Gulabi Aankhon", artist: "Sanam Pur", type: 'youtube', youtubeId: "hgi2MYAFgE8", cover: "https://img.youtube.com/vi/hgi2MYAFgE8/maxresdefault.jpg" },
-    { title: "Main Agar Kahoon", artist: "Shahrukh Khan", type: 'youtube', youtubeId: "DAYszemgPxc", cover: "https://img.youtube.com/vi/DAYszemgPxc/maxresdefault.jpg" },
-    { title: "Hamqadam", artist: "Shrey Singhal", type: 'youtube', youtubeId: "rS3dghN1P3I", cover: "https://img.youtube.com/vi/rS3dghN1P3I/maxresdefault.jpg" },
-    { title: "Khairiyat", artist: "Arijit Singh", type: 'youtube', youtubeId: "hoNb6HuNmU0", cover: "https://img.youtube.com/vi/hoNb6HuNmU0/maxresdefault.jpg" },
-    { title: "Mere Mehboob Qayamat Hogi", artist: "Kishore Kumar", type: 'youtube', youtubeId: "M6Ul3ASaFLU", cover: "https://img.youtube.com/vi/M6Ul3ASaFLU/maxresdefault.jpg" },
-    { title: "Zara Zara Bahekta Hai", artist: "JalRaj (Jalaj)", type: 'youtube', youtubeId: "NeXbmEnpSz0", cover: "https://img.youtube.com/vi/NeXbmEnpSz0/maxresdefault.jpg" },
-    { title: "Ek Mulaqat", artist: "Jubin Nautiyal", type: 'youtube', youtubeId: "_qrxVjvVp4M", cover: "https://img.youtube.com/vi/_qrxVjvVp4M/maxresdefault.jpg" },
-    { title: "Sanam ree", artist: "Arijit Singh", type: 'youtube', youtubeId: "rRKAJ6tLBSw", cover: "https://img.youtube.com/vi/rRKAJ6tLBSw/maxresdefault.jpg" },
-    { title: "Kesariya", artist: "Arijit Singh", type: 'youtube', youtubeId: "Dkk9gvTmCXY", cover: "https://img.youtube.com/vi/Dkk9gvTmCXY/maxresdefault.jpg" },
-    { title: "Dil Sambhal Jaa Zara", artist: "Parwan Khan", type: 'youtube', youtubeId: "uHbKAnli9DE", cover: "https://img.youtube.com/vi/uHbKAnli9DE/maxresdefault.jpg" },
-    { title: "Dil Ka Jo Haal Hai", artist: "Arijit Singh", type: 'youtube', youtubeId: "udgrClXV26Y", cover: "https://img.youtube.com/vi/udgrClXV26Y/maxresdefault.jpg" },
-    { title: "Mann Meera", artist: "Arijit Singh", type: 'youtube', youtubeId: "HP2zqQsrsyg", cover: "https://img.youtube.com/vi/HP2zqQsrsyg/maxresdefault.jpg" },
-    { title: "Falak Tak Chal Sath Mere", artist: "Arijit Singh", type: 'youtube', youtubeId: "0pOq8ag0Z0Y", cover: "https://img.youtube.com/vi/0pOq8ag0Z0Y/maxresdefault.jpg" },
-    { title: "Haule Haule", artist: "Sharukh Khan", type: 'youtube', youtubeId: "XgdY_s1LsZc", cover: "https://img.youtube.com/vi/XgdY_s1LsZc/maxresdefault.jpg" },
-    { title: "Dekhte Dekhte", artist: "Arijit Singh", type: 'youtube', youtubeId: "eZHaumDApl0", cover: "https://img.youtube.com/vi/eZHaumDApl0/maxresdefault.jpg" },
-    { title: "Wajah Tum Ho", artist: "Arijit Singh", type: 'youtube', youtubeId: "hk5IqAhOrnY", cover: "https://img.youtube.com/vi/hk5IqAhOrnY/maxresdefault.jpg" },
-    { title: "Uska Hi Banana", artist: "Arijit Singh", type: 'youtube', youtubeId: "q-RP99S_qK0", cover: "https://img.youtube.com/vi/q-RP99S_qK0/maxresdefault.jpg" },
-    { title: "Banjaara", artist: "Arijit Singh", type: 'youtube', youtubeId: "0NFxcNheoLc", cover: "https://img.youtube.com/vi/0NFxcNheoLc/maxresdefault.jpg" },
-    { title: "Pehle Bhi Main", artist: "Arijit Singh", type: 'youtube', youtubeId: "kZGpkkfk2lA", cover: "https://img.youtube.com/vi/kZGpkkfk2lA/maxresdefault.jpg" },
-    { title: "Tu Hi Hai Aashiqui Male Version", artist: "Arijit Singh", type: 'youtube', youtubeId: "GDyiNKZuQYs", cover: "https://img.youtube.com/vi/GDyiNKZuQYs/maxresdefault.jpg" },
-    { title: "Tere liye", artist: "Arijit Singh", type: 'youtube', youtubeId: "G3fsvJ95wHg", cover: "https://img.youtube.com/vi/G3fsvJ95wHg/maxresdefault.jpg" },
-    { title: "Labon Ko", artist: "Arijit Singh", type: 'youtube', youtubeId: "3OYrJWVx7F0", cover: "https://img.youtube.com/vi/3OYrJWVx7F0/maxresdefault.jpg" },
-    { title: "Fallin for you", artist: "Arijit Singh", type: 'youtube', youtubeId: "sVzKavzIKDI", cover: "https://img.youtube.com/vi/sVzKavzIKDI/maxresdefault.jpg" },
-    { title: "Pasoori", artist: "Coke Studio", type: 'youtube', youtubeId: "5Eqb_-j3FDA", cover: "https://img.youtube.com/vi/5Eqb_-j3FDA/maxresdefault.jpg" },
-    { title: "Teri Meri Kahaani", artist: "Arijit Singh", type: 'youtube', youtubeId: "cB_waHMBtn0", cover: "https://img.youtube.com/vi/cB_waHMBtn0/maxresdefault.jpg" },
-    { title: "Aye khuda", artist: "Arijit Singh", type: 'youtube', youtubeId: "HGfc06RZyjQ", cover: "https://img.youtube.com/vi/HGfc06RZyjQ/maxresdefault.jpg" },
-    { title: "Ae Dil Hai Mushki", artist: "Arijit Singh", type: 'youtube', youtubeId: "vrqFJ-yjkRw", cover: "https://img.youtube.com/vi/vrqFJ-yjkRw/maxresdefault.jpg" },
-    { title: "Dil Mein Chhupa Loonga", artist: "Arijit Singh", type: 'youtube', youtubeId: "qUvPzjSWMSM", cover: "https://img.youtube.com/vi/qUvPzjSWMSM/maxresdefault.jpg" },
-    { title: "Dhun X Baarish - Mashup", artist: "Arijit Singh", type: 'youtube', youtubeId: "kvLKeqOswEg", cover: "https://img.youtube.com/vi/kvLKeqOswEg/maxresdefault.jpg" },
-    { title: "Hale Dil", artist: "Emran Hashmi", type: 'youtube', youtubeId: "acdKE2hja7w", cover: "https://img.youtube.com/vi/acdKE2hja7w/maxresdefault.jpg" },
-    { title: "Chand Sifarish", artist: "Arijit Singh", type: 'youtube', youtubeId: "zWEOx7TSM6I", cover: "https://img.youtube.com/vi/zWEOx7TSM6I/maxresdefault.jpg" },
-    { title: "Ki Nesha", artist: "Arijit Singh", type: 'youtube', youtubeId: "ArpxYeFTnws", cover: "https://img.youtube.com/vi/ArpxYeFTnws/maxresdefault.jpg" },
-    { title: "Milne Hai Mujhse Aayi - Lofi", artist: "Arijit Singh", type: 'youtube', youtubeId: "rTvVuLoOq0I", cover: "https://img.youtube.com/vi/rTvVuLoOq0I/maxresdefault.jpg" },
-    { title: "Jo Tum Mere Ho (Slowed + Reverb)", artist: "Anuv Jain", type: 'youtube', youtubeId: "uK7Ovgs44Uk", cover: "https://img.youtube.com/vi/uK7Ovgs44Uk/maxresdefault.jpg" },
-    { title: "O Mere Dil Ke Chain", artist: "Sanam", type: 'youtube', youtubeId: "o9F7oUgmyg0", cover: "https://img.youtube.com/vi/o9F7oUgmyg0/maxresdefault.jpg" },
-    { title: "Bekhayali", artist: "Arijit Singh", type: 'youtube', youtubeId: "Ps4aVpIESkc", cover: "https://img.youtube.com/vi/Ps4aVpIESkc/maxresdefault.jpg" },
-    { title: "Lut Gaye", artist: "Emran Hashmi", type: 'youtube', youtubeId: "sCbbMZ-q4-I", cover: "https://img.youtube.com/vi/sCbbMZ-q4-I/maxresdefault.jpg" },
-    { title: "Jeene Laga Hoon", artist: "Arijit Singh", type: 'youtube', youtubeId: "qpIdoaaPa6U", cover: "https://img.youtube.com/vi/qpIdoaaPa6U/maxresdefault.jpg" },
-    { title: "Janam Janam", artist: "Shahrukh Khan", type: 'youtube', youtubeId: "pIBoAh4OXhQ", cover: "https://img.youtube.com/vi/pIBoAh4OXhQ/maxresdefault.jpg" },
-    { title: "Yeh Raaten Yeh Mausam", artist: "Arijit Singh", type: 'youtube', youtubeId: "4HRC6c5-2lQ", cover: "https://img.youtube.com/vi/4HRC6c5-2lQ/maxresdefault.jpg" },
-    { title: "Bom Diggy Diggy", artist: "Sunny", type: 'youtube', youtubeId: "U4K9guxEix4", cover: "https://img.youtube.com/vi/U4K9guxEix4/maxresdefault.jpg" },
-    { title: "Nashe Si Chadh Gayi", artist: "Ranveer Singh", type: 'youtube', youtubeId: "Wd2B8OAotU8", cover: "https://img.youtube.com/vi/Wd2B8OAotU8/maxresdefault.jpg" },
-  ];
+    // ──────────────── 👻 BHOOT ER GOLPO ────────────────
+    // ⚠️ নিচের youtubeId গুলো তোমার পছন্দের Bhoot FM / ভূতের গল্পের YouTube video ID দিয়ে replace করো
+    { title: "Bhoot.com - কানকুরং (আত্মাবন্দি জাদু পর্ব ২)", artist: "RJ Russell", type: 'youtube', youtubeId: "YZZa7LuP0ko", cover: "https://img.youtube.com/vi/YZZa7LuP0ko/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Bhoot.com - ঘোড়াখাং", artist: "RJ Russell", type: 'youtube', youtubeId: "lensL6CzsT0", cover: "https://img.youtube.com/vi/lensL6CzsT0/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Bhoot.com - টুকু কবিরাজ", artist: "RJ Russell", type: 'youtube', youtubeId: "IzaAqjtqs-0", cover: "https://img.youtube.com/vi/IzaAqjtqs-0/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Bhoot.com - প্রেত কুয়া (সুকান্ত মাইতি)", artist: "RJ Russell", type: 'youtube', youtubeId: "TabyySgySvw", cover: "https://img.youtube.com/vi/TabyySgySvw/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Bhoot.com - ভয়ঙ্কর নৌকা যাত্রা", artist: "RJ Russell", type: 'youtube', youtubeId: "TabyySgySvw", cover: "https://img.youtube.com/vi/TabyySgySvw/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Bhoot.com - কবর বন্দি জ্বীন", artist: "RJ Russell", type: 'youtube', youtubeId: "lioJ9PxQXlw", cover: "https://img.youtube.com/vi/lioJ9PxQXlw/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Bhoot.com - Phire ase sayatan", artist: "RJ Russell", type: 'youtube', youtubeId: "u9Ni5VdIXhc", cover: "https://img.youtube.com/vi/u9Ni5VdIXhc/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Bhoot.com - জ্বিন সেফাতাজ", artist: "RJ Russell", type: 'youtube', youtubeId: "NCKhxSNiqPU", cover: "https://img.youtube.com/vi/NCKhxSNiqPU/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Afnan The Horror World - আলাউদ্দিন কবিরাজ!!", artist: "Afnan Vai", type: 'youtube', youtubeId: "zgnyb7xgsus", cover: "https://img.youtube.com/vi/zgnyb7xgsus/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Afnan The Horror World - অভিরাম তান্ত্রিক!!", artist: "Afnan Vai", type: 'youtube', youtubeId: "TNU-iRSgf7w", cover: "https://img.youtube.com/vi/TNU-iRSgf7w/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Afnan The Horror World - ফোলের বিল!!", artist: "Afnan Vai", type: 'youtube', youtubeId: "2ytSeniNgQs", cover: "https://img.youtube.com/vi/2ytSeniNgQs/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Afnan The Horror World - নাহুদ ফেদালা!!", artist: "Afnan Vai", type: 'youtube', youtubeId: "wyngYNzjBrE", cover: "https://img.youtube.com/vi/wyngYNzjBrE/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Afnan The Horror World - ভেলাদ কাফ্রিয়ান!!", artist: "Afnan Vai", type: 'youtube', youtubeId: "9u0UBIyI7NQ", cover: "https://img.youtube.com/vi/SpCbK1reW1I/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Afnan The Horror World - ইছাসা!!", artist: "Afnan Vai", type: 'youtube', youtubeId: "RQ-ta3Bo7zs", cover: "https://img.youtube.com/vi/RQ-ta3Bo7zs/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Afnan The Horror World - ইয়াসার বড় পুকুরের রাক্ষস", artist: "Afnan Vai", type: 'youtube', youtubeId: "9c5fO8hB8Yc", cover: "https://img.youtube.com/vi/9c5fO8hB8Yc/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Afnan The Horror World - আরারাত", artist: "Afnan Vai", type: 'youtube', youtubeId: "EizP8qRmgsw", cover: "https://img.youtube.com/vi/EizP8qRmgsw/maxresdefault.jpg", category: 'ghosts' },
+    { title: "Afnan The Horror World - সেমহুরেশ ", artist: "Afnan Vai", type: 'youtube', youtubeId: "HFJ9XacTcdA", cover: "https://img.youtube.com/vi/HFJ9XacTcdA/maxresdefault.jpg", category: 'ghosts' },
+    
+    // ──────────────── 🕌 GOJOL (Islamic Devotional Songs) ────────────────
+    { title: "The Way of The Tears", artist: "Muhammad al Muqit", type: 'youtube', youtubeId: "YiSQ_db-Dcw", cover: "https://img.youtube.com/vi/YiSQ_db-Dcw/maxresdefault.jpg", category: 'gojol' },
+    { title: "The Beauty of Existence", artist: "Muhammad al Muqit", type: 'youtube', youtubeId: "NrsCej6SVxM", cover: "https://img.youtube.com/vi/NrsCej6SVxM/maxresdefault.jpg", category: 'gojol' },
+    { title: "Wedding Nasheed ", artist: "Muhammad al Muqit", type: 'youtube', youtubeId: "ivrumxRUz_Y", cover: "https://img.youtube.com/vi/ivrumxRUz_Y/maxresdefault.jpg", category: 'gojol' },
+    { title: "Assubhu Bada", artist: "Kalarab", type: 'youtube', youtubeId: "rpQFuuoAxTc", cover: "https://img.youtube.com/vi/rpQFuuoAxTc/maxresdefault.jpg", category: 'gojol' },
+    { title: "Muhammed Nabina", artist: "Sami Yusuf", type: 'youtube', youtubeId: "xthIEcrbM8A", cover: "https://img.youtube.com/vi/8-NbT05VykQ/maxresdefault.jpg", category: 'gojol' },
+    { title: "Rahman Ya Rahman", artist: "Mishary Rashid Alafasy", type: 'youtube', youtubeId: "Exh3tHQLHWE", cover: "https://img.youtube.com/vi/Exh3tHQLHWE/maxresdefault.jpg", category: 'gojol' },
+    { title: "হাদির জিন্দাবাদ", artist: "Abu Ubayda", type: 'youtube', youtubeId: "oNtZnaocEkQ", cover: "https://img.youtube.com/vi/oNtZnaocEkQ/maxresdefault.jpg", category: 'gojol' },
+    { title: "O Nodire", artist: "Tune Hut", type: 'youtube', youtubeId: "Aj1wu1L5glA", cover: "https://img.youtube.com/vi/Aj1wu1L5glA/maxresdefault.jpg", category: 'gojol' },
+    { title: "Maula Ya Salli", artist: "Sami Yusuf", type: 'youtube', youtubeId: "40nEFfCzb0U", cover: "https://img.youtube.com/vi/40nEFfCzb0U/maxresdefault.jpg", category: 'gojol' },
+    { title: "My Hope (Allah)", artist: "Muhammad al Muqit", type: 'youtube', youtubeId: "slkyMimmb1M", cover: "https://img.youtube.com/vi/slkyMimmb1M/maxresdefault.jpg", category: 'gojol' },
+    { title: "My Favourite Nasheed", artist: "Muhammad al Muqit", type: 'youtube', youtubeId: "_MKfJzqTi4U", cover: "https://img.youtube.com/vi/_MKfJzqTi4U/maxresdefault.jpg", category: 'gojol' },
+    { title: "Liyakun Yawmuka", artist: "Harris J", type: 'youtube', youtubeId: "mawJQfplpnk", cover: "https://img.youtube.com/vi/mawJQfplpnk/maxresdefault.jpg", category: 'gojol' },
+    { title: "asheed Ya Adheeman", artist: "Ahmed Bukhatir", type: 'youtube', youtubeId: "71hi9H6fZuc", cover: "https://img.youtube.com/vi/71hi9H6fZuc/maxresdefault.jpg", category: 'gojol' },
+    { title: "Allahu (Heart Touching Nasheed)", artist: "Harris J", type: 'youtube', youtubeId: "m_tjxz4yS_U", cover: "https://img.youtube.com/vi/m_tjxz4yS_U/maxresdefault.jpg", category: 'gojol' },
+    { title: "Rahmatun Lil Alameen", artist: "Maher Zain", type: 'youtube', youtubeId: "tBbdSzwxqyY", cover: "https://img.youtube.com/vi/tBbdSzwxqyY/maxresdefault.jpg", category: 'gojol' },
+    { title: "Kun Anta", artist: "Humood", type: 'youtube', youtubeId: "qKVW_wJs91Q", cover: "https://img.youtube.com/vi/qKVW_wJs91Q/maxresdefault.jpg", category: 'gojol' },
+    { title: "Hasbi Rabbi", artist: "Sami Yusuf", type: 'youtube', youtubeId: "7jMNpnQel74", cover: "https://img.youtube.com/vi/7jMNpnQel74/maxresdefault.jpg", category: 'gojol' },
+    { title: "Ya Quluban", artist: "Abdullah Al Sinani", type: 'youtube', youtubeId: "5HefSO_hboQ", cover: "https://img.youtube.com/vi/5HefSO_hboQ/maxresdefault.jpg", category: 'gojol' },
+    { title: "Beloved Naasheds", artist: "Rahatul Islam", type: 'youtube', youtubeId: "pbbyCOZgH-A", cover: "https://img.youtube.com/vi/pbbyCOZgH-A/maxresdefault.jpg", category: 'gojol' },
+    { title: "Tasbih", artist: "Ayisha Abdul Basith", type: 'youtube', youtubeId: "IKRJAIcdock", cover: "https://img.youtube.com/vi/IKRJAIcdock/maxresdefault.jpg", category: 'gojol' },
+    { title: "Meherban Tumi Meherban", artist: "Munaem Billah", type: 'youtube', youtubeId: "PqJlOhR_aNc", cover: "https://img.youtube.com/vi/PqJlOhR_aNc/maxresdefault.jpg", category: 'gojol' },
+    { title: "হৃদয় মাঝে মালা গাঁথি", artist: "Holy Tune", type: 'youtube', youtubeId: "QyRRrKQP7fo", cover: "https://img.youtube.com/vi/QyRRrKQP7fo/maxresdefault.jpg", category: 'gojol' },
+    { title: "Hridoyer Rojonigondha", artist: "Hossain Adnan", type: 'youtube', youtubeId: "H1nPe60uPYw", cover: "https://img.youtube.com/vi/H1nPe60uPYw/maxresdefault.jpg", category: 'gojol' },
+    { title: "এলো মাহে রমজান", artist: "Holy Tune", type: 'youtube', youtubeId: "UrC50KP_08o", cover: "https://img.youtube.com/vi/UrC50KP_08o/maxresdefault.jpg", category: 'gojol' },
+    { title: "ওগো মা", artist: "Tune Hut", type: 'youtube', youtubeId: "HrYleYeY_8U", cover: "https://img.youtube.com/vi/HrYleYeY_8U/maxresdefault.jpg", category: 'gojol' },
+    ];
 
   const currentTrack = playlist[currentTrackIndex];
   const isYoutube = currentTrack?.type === 'youtube';
+  const isGhostStory = currentTrack?.category === 'ghosts';
+
+  // 📂 Folder filtered view
+  const filteredPlaylist = playlist
+    .map((track, globalIdx) => ({ track, globalIdx }))
+    .filter(({ track }) => track.category === activeFolder);
 
   // 🎬 Load YouTube IFrame API
   useEffect(() => {
@@ -397,12 +453,43 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
     setCurrentTrackIndex(prevIndex);
   };
 
+  // ⏪ Skip 10 seconds backward (for ghost stories)
+  const skip10SecondsBack = () => {
+    if (isYoutube && youtubePlayerRef.current && playerReady) {
+      try {
+        const currentTime = youtubePlayerRef.current.getCurrentTime();
+        youtubePlayerRef.current.seekTo(Math.max(0, currentTime - 10));
+      } catch (error) {
+        console.error('Skip back error:', error);
+      }
+    } else if (audioRef.current) {
+      audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 10);
+    }
+  };
+
+  // ⏩ Skip 10 seconds forward (for ghost stories)
+  const skip10SecondsForward = () => {
+    if (isYoutube && youtubePlayerRef.current && playerReady) {
+      try {
+        const currentTime = youtubePlayerRef.current.getCurrentTime();
+        const duration = youtubePlayerRef.current.getDuration();
+        youtubePlayerRef.current.seekTo(Math.min(duration, currentTime + 10));
+      } catch (error) {
+        console.error('Skip forward error:', error);
+      }
+    } else if (audioRef.current) {
+      audioRef.current.currentTime = Math.min(audioRef.current.duration, audioRef.current.currentTime + 10);
+    }
+  };
+
   // 🎯 Select track from playlist
   const selectTrack = (index: number) => {
     setPlayHistory(prev => [...prev, currentTrackIndex]);
     setShouldAutoPlay(true); // Always auto-play when selecting from playlist
     setCurrentTrackIndex(index);
     setShowPlaylist(false);
+    // Switch folder tab to match selected track's category
+    setActiveFolder(playlist[index].category);
   };
 
   // 📍 Progress bar click
@@ -744,6 +831,58 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
             .dark .player-controls__item.-repeat.active {
                 color: #818cf8;
                 background: rgba(99, 102, 241, 0.25);
+            }
+
+            /* Skip buttons styling (for -10s and +10s in Bhoot FM) */
+            .player-controls__item.-skip {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2px;
+                padding: 6px;
+                transition: all 0.3s ease;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .player-controls__item.-skip {
+                    padding: 8px;
+                }
+                .player-controls__item.-skip:hover {
+                    transform: scale(1.1);
+                    background: rgba(99, 102, 241, 0.1);
+                    border-radius: 8px;
+                }
+            }
+            
+            .player-controls__item.-skip .skip-label {
+                font-size: 9px;
+                font-weight: 600;
+                opacity: 0.8;
+                margin-top: -2px;
+            }
+            
+            @media screen and (min-width: 768px) {
+                .player-controls__item.-skip .skip-label {
+                    font-size: 10px;
+                }
+            }
+            
+            .player-controls__item.-skip:active {
+                transform: scale(0.95);
+            }
+            
+            @keyframes skipPulse {
+                0%, 100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.7;
+                }
+            }
+            
+            .player-controls__item.-skip:active svg {
+                animation: skipPulse 0.3s ease;
             }
 
             .progress {
@@ -1177,6 +1316,91 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
                 }
             }
 
+            /* Folder Tabs */
+            .folder-tabs {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 14px;
+                background: rgba(0,0,0,0.04);
+                padding: 4px;
+                border-radius: 12px;
+            }
+            .dark .folder-tabs {
+                background: rgba(255,255,255,0.05);
+            }
+            .folder-tab {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                padding: 8px 10px;
+                border-radius: 9px;
+                cursor: pointer;
+                font-size: 13px;
+                font-weight: 600;
+                color: #64748b;
+                transition: all 0.25s ease;
+                white-space: nowrap;
+            }
+            .dark .folder-tab {
+                color: #94a3b8;
+            }
+            .folder-tab.active-songs {
+                background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+                color: white;
+                box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+            }
+            .folder-tab.active-ghosts {
+                background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%);
+                color: white;
+                box-shadow: 0 4px 12px rgba(76, 29, 149, 0.45);
+            }
+            .folder-tab.active-gojol {
+                background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+                color: white;
+                box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
+            }
+            .folder-tab:not(.active-songs):not(.active-ghosts):not(.active-gojol):hover {
+                background: rgba(99, 102, 241, 0.08);
+                color: #6366f1;
+            }
+            .dark .folder-tab:not(.active-songs):not(.active-ghosts):not(.active-gojol):hover {
+                background: rgba(99, 102, 241, 0.15);
+                color: #818cf8;
+            }
+            .folder-count {
+                font-size: 10px;
+                font-weight: 700;
+                opacity: 0.75;
+                background: rgba(0,0,0,0.15);
+                padding: 1px 5px;
+                border-radius: 8px;
+            }
+
+            /* Ghost story special styling */
+            .playlist-item.ghost-item.active {
+                background: rgba(76, 29, 149, 0.12);
+                border-color: rgba(76, 29, 149, 0.3);
+            }
+            .dark .playlist-item.ghost-item.active {
+                background: rgba(76, 29, 149, 0.2);
+                border-color: rgba(76, 29, 149, 0.4);
+            }
+            .ghost-badge {
+                background: linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%);
+                color: white;
+                font-size: 9px;
+                padding: 3px 6px;
+                border-radius: 6px;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+            }
+            /* Active playing bars - ghost color */
+            .ghost-bars div {
+                background-color: #7c3aed !important;
+            }
+
             /* Scrollbar styling */
             .playlist-overlay::-webkit-scrollbar {
                 width: 6px;
@@ -1214,14 +1438,43 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
 
             {showPlaylist ? (
                 <div className="playlist-overlay">
-                    <h3 className="mb-3 text-lg font-bold text-slate-700 dark:text-white md:mb-4 md:text-xl">
-                      Playlist ({playlist.length} songs)
-                    </h3>
-                    {playlist.map((track, idx) => (
+                    {/* Folder Tabs */}
+                    <div className="folder-tabs">
+                        <div
+                            className={`folder-tab ${activeFolder === 'songs' ? 'active-songs' : ''}`}
+                            onClick={() => setActiveFolder('songs')}
+                        >
+                            🎵 Songs
+                            <span className="folder-count">
+                                {playlist.filter(t => t.category === 'songs').length}
+                            </span>
+                        </div>
+                        <div
+                            className={`folder-tab ${activeFolder === 'ghosts' ? 'active-ghosts' : ''}`}
+                            onClick={() => setActiveFolder('ghosts')}
+                        >
+                            👻 Bhoot FM
+                            <span className="folder-count">
+                                {playlist.filter(t => t.category === 'ghosts').length}
+                            </span>
+                        </div>
+                        <div
+                            className={`folder-tab ${activeFolder === 'gojol' ? 'active-gojol' : ''}`}
+                            onClick={() => setActiveFolder('gojol')}
+                        >
+                            🕌 Gojol
+                            <span className="folder-count">
+                                {playlist.filter(t => t.category === 'gojol').length}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Track List */}
+                    {filteredPlaylist.map(({ track, globalIdx }) => (
                         <div 
-                            key={idx} 
-                            className={`playlist-item ${currentTrackIndex === idx ? 'active' : ''}`}
-                            onClick={() => selectTrack(idx)}
+                            key={globalIdx} 
+                            className={`playlist-item ${track.category === 'ghosts' ? 'ghost-item' : ''} ${currentTrackIndex === globalIdx ? 'active' : ''}`}
+                            onClick={() => selectTrack(globalIdx)}
                         >
                             <img 
                               src={track.cover} 
@@ -1237,14 +1490,16 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
                                   {track.artist}
                                 </div>
                             </div>
-                            {track.type === 'youtube' && (
+                            {track.category === 'ghosts' ? (
+                                <span className="ghost-badge">👻</span>
+                            ) : track.type === 'youtube' ? (
                                 <span className="youtube-badge">YT</span>
-                            )}
-                            {currentTrackIndex === idx && isPlaying && (
-                                <div className="flex gap-0.5">
-                                  <div className="w-1 h-3 bg-[#6366f1] dark:bg-[#818cf8] rounded-full animate-pulse"></div>
-                                  <div className="w-1 h-4 bg-[#6366f1] dark:bg-[#818cf8] rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
-                                  <div className="w-1 h-3 bg-[#6366f1] dark:bg-[#818cf8] rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                            ) : null}
+                            {currentTrackIndex === globalIdx && isPlaying && (
+                                <div className={`flex gap-0.5 ${track.category === 'ghosts' ? 'ghost-bars' : ''}`}>
+                                  <div className={`w-1 h-3 ${track.category === 'ghosts' ? 'bg-purple-600 dark:bg-purple-400' : 'bg-[#6366f1] dark:bg-[#818cf8]'} rounded-full animate-pulse`}></div>
+                                  <div className={`w-1 h-4 ${track.category === 'ghosts' ? 'bg-purple-600 dark:bg-purple-400' : 'bg-[#6366f1] dark:bg-[#818cf8]'} rounded-full animate-pulse`} style={{animationDelay: '0.2s'}}></div>
+                                  <div className={`w-1 h-3 ${track.category === 'ghosts' ? 'bg-purple-600 dark:bg-purple-400' : 'bg-[#6366f1] dark:bg-[#818cf8]'} rounded-full animate-pulse`} style={{animationDelay: '0.4s'}}></div>
                                 </div>
                             )}
                         </div>
@@ -1273,6 +1528,18 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
                                 <SkipBack size={20} />
                             </div>
                             
+                            {/* Add -10s button for ghost stories */}
+                            {isGhostStory && (
+                                <div 
+                                    className="player-controls__item -skip"
+                                    onClick={skip10SecondsBack}
+                                    title="Go back 10 seconds"
+                                >
+                                    <RotateCcw size={18} />
+                                    <span className="skip-label">10s</span>
+                                </div>
+                            )}
+                            
                             <div className={`player-controls__item -xl ${isPlaying ? 'is-playing' : ''}`} onClick={togglePlay} title={isPlaying ? "Pause" : "Play"}>
                                 {isPlaying ? (
                                     <Pause size={28} />
@@ -1280,6 +1547,18 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
                                     <Play size={28} style={{marginLeft: '2px'}} />
                                 )}
                             </div>
+                            
+                            {/* Add +10s button for ghost stories */}
+                            {isGhostStory && (
+                                <div 
+                                    className="player-controls__item -skip"
+                                    onClick={skip10SecondsForward}
+                                    title="Skip 10 seconds"
+                                >
+                                    <RotateCw size={18} />
+                                    <span className="skip-label">10s</span>
+                                </div>
+                            )}
                             
                             <div className="player-controls__item" onClick={() => handleNext()} title="Next">
                                 <SkipForward size={20} />
@@ -1300,6 +1579,8 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
                             <div className="album-info">
                                 <div className="album-info__name">{currentTrack.title}</div>
                                 <div className="album-info__track">
+                                  {currentTrack.category === 'ghosts' && <span className="mr-1">👻</span>}
+                                  {currentTrack.category === 'gojol' && <span className="mr-1">🕌</span>}
                                   {currentTrack.artist}
                                   {isYoutube && playerReady && <span className="ml-2 text-xs opacity-50">(Streaming)</span>}
                                   {isYoutube && !playerReady && <span className="ml-2 text-xs opacity-50">(Loading...)</span>}

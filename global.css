@@ -276,3 +276,115 @@ canvas#canvas {
 .dark .success-overlay {
   background: #111827;
 }
+/* ---------------------------------------------------- */
+/* 🎵 MUSIC PLAYER STYLES                               */
+/* ---------------------------------------------------- */
+
+/* Skip buttons styling (for -10s and +10s in Bhoot FM) */
+.player-controls__item.-skip {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px;
+  transition: all 0.3s ease;
+}
+
+.player-controls__item.-skip:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.player-controls__item.-skip .skip-label {
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.8;
+  margin-top: -2px;
+}
+
+.player-controls__item.-skip:active {
+  transform: scale(0.95);
+}
+
+/* Folder tabs styling (Songs, Bhoot FM, Gojol) */
+.folder-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.folder-tab {
+  flex: 1;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.folder-tab:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+}
+
+.folder-tab.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.folder-tab.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Enhanced playlist item with icons */
+.playlist-item-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Animation for active skip button */
+@keyframes skipPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.player-controls__item.-skip:active svg {
+  animation: skipPulse 0.3s ease;
+}
+
+/* Responsive adjustments for skip buttons and tabs */
+@media (max-width: 768px) {
+  .player-controls__item.-skip {
+    padding: 6px;
+  }
+  
+  .player-controls__item.-skip .skip-label {
+    font-size: 9px;
+  }
+  
+  .folder-tab {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
