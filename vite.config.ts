@@ -29,31 +29,12 @@ export default defineConfig(({ mode }) => {
               // Vendor chunks
               'react-vendor': ['react', 'react-dom', 'react-router-dom'],
               'firebase-vendor': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
-              
-              // Heavy components in separate chunks (lazy load করবে)
-              'three-vendor': ['three'],
-              'ui-components': [
-                './components/ui/sunlight-spotlight',
-                './components/DynamicIsland',
-                './components/SpotlightCard'
-              ]
             }
           }
         },
         
-        // Compression & Minification
-        minify: 'terser',
-        terserOptions: {
-          compress: {
-            drop_console: true, // Remove console.logs in production
-            drop_debugger: true,
-            pure_funcs: ['console.log', 'console.info', 'console.debug'],
-          },
-          mangle: true,
-          format: {
-            comments: false, // Remove comments
-          }
-        },
+        // ✅ Use default esbuild minifier (no extra dependency needed)
+        minify: 'esbuild',
         
         // Optimize chunk size
         chunkSizeWarningLimit: 1000,
@@ -82,16 +63,11 @@ export default defineConfig(({ mode }) => {
           'firebase/auth',
           'firebase/firestore'
         ],
-        // Skip heavy dependencies that should load on-demand
-        exclude: ['three']
       },
       
       // 🎨 CSS optimization (design intact রাখতে)
       css: {
         devSourcemap: mode === 'development',
-        modules: {
-          localsConvention: 'camelCase'
-        }
       },
       
       // 🔧 Preview server optimization
