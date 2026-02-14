@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
 // ============================================================
-// Ã°Å¸â€œÂ± Mobile Lite Version Detection
+// 📱 Mobile Lite Version Detection
 // ============================================================
 import useMobileDetect from './hooks/useMobileDetect';
 import LiteHero from './components/LiteHero';
 import LiteNavbar from './components/LiteNavbar';
-import LiteAbout from './components/LiteAbout'; // Ã¢Å“â€¦ Ã Â¦Â¨Ã Â¦Â¤Ã Â§ÂÃ Â¦Â¨
+import LiteAbout from './components/LiteAbout';
 
 // ============================================================
 // Full Version Components
@@ -22,10 +21,8 @@ import About from './components/About';
 import Journey from './components/Journey';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import Tools from './components/Tools';
 import FacebookFeed from './components/FacebookFeed';
 import Resources from './components/Resources';
-import PhotoGallery from './components/PhotoGallery';
 import FeedbackSlider from './components/FeedbackSlider';
 import FeedbackList from './components/FeedbackList';
 import RevealOnScroll from './components/RevealOnScroll';
@@ -42,13 +39,22 @@ import SecretVault from './components/SecretVault';
 import MobilePremiumFeatures from './components/MobilePremiumFeatures';
 import BatteryOptimizer from './components/BatteryOptimizer';
 
-// Ã¢Å“â€¦ Heavy effects Ã¢â‚¬â€ Ã Â¦Â¶Ã Â§ÂÃ Â¦Â§Ã Â§Â desktop Ã Â¦Â Ã Â¦Â¦Ã Â§â€¡Ã Â¦â€“Ã Â¦Â¾Ã Â¦Â¬Ã Â§â€¡ (mobile lite Ã Â¦Â¤Ã Â§â€¡ skip)
+// Heavy effects — desktop only (mobile lite তে skip)
 import { SunlightSpotlight } from './components/ui/sunlight-spotlight';
 import DynamicIsland from './components/DynamicIsland';
 
 import { AuthProvider } from './context/AuthContext';
-import UserProfile from './pages/UserProfile';
 
+// ── Pages ────────────────────────────────────────────────────────────────────
+import UserProfile from './pages/UserProfile';
+import ToolsPage   from './pages/ToolsPage';    // 🆕 /tools
+import GalleryPage from './pages/GalleryPage';  // 🆕 /gallery
+import VaultPage   from './pages/VaultPage';    // 🆕 /vault
+// ❌ সরানো হয়েছে: import Tools, import PhotoGallery (এখন আলাদা page)
+
+// ============================================================
+// Scroll to top on route change
+// ============================================================
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
@@ -56,7 +62,7 @@ const ScrollToTop = () => {
 };
 
 // ============================================================
-// Ã°Å¸â€œÂ± Lite Mobile RevealOnScroll Ã¢â‚¬â€ simpler, no heavy spring
+// 📱 Lite Mobile RevealOnScroll — simpler, no heavy spring
 // ============================================================
 const LiteReveal: React.FC<{ children: React.ReactNode; delay?: number }> = ({ children, delay = 0 }) => {
   const [visible, setVisible] = useState(false);
@@ -89,13 +95,13 @@ const LiteReveal: React.FC<{ children: React.ReactNode; delay?: number }> = ({ c
 // Main App Content
 // ============================================================
 const AppContent: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isToolsOpen, setIsToolsOpen] = useState(false);
-  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isLoading, setIsLoading]           = useState(true);
+  // ❌ isToolsOpen সরানো হয়েছে — এখন /tools route
+  // ❌ isGalleryOpen সরানো হয়েছে — এখন /gallery route
+  const [isChatOpen, setIsChatOpen]         = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
 
-  // Ã°Å¸â€œÂ± Mobile lite mode detection
+  // 📱 Mobile lite mode detection
   const isMobileLite = useMobileDetect();
 
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -111,7 +117,7 @@ const AppContent: React.FC = () => {
     isDarkMode ? html.classList.add('dark') : html.classList.remove('dark');
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
 
-    // Click vibration Ã¢â‚¬â€ only on desktop (not needed on mobile lite, saves CPU cycles)
+    // Click vibration — only on desktop (mobile lite তে CPU save)
     if (!isMobileLite) {
       const handleClick = () => navigator.vibrate?.(5);
       document.addEventListener('click', handleClick);
@@ -125,11 +131,15 @@ const AppContent: React.FC = () => {
     console.log('New Feedback Submitted:', data);
   };
 
-  // Keyboard shortcuts Ã¢â‚¬â€ only desktop
+  // Keyboard shortcuts — only desktop
   useEffect(() => {
     if (isMobileLite) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || (e.target as HTMLElement).isContentEditable) return;
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        (e.target as HTMLElement).isContentEditable
+      ) return;
       if (e.shiftKey) {
         switch (e.key.toLowerCase()) {
           case 'h': window.scrollTo({ top: 0, behavior: 'smooth' }); break;
@@ -144,9 +154,7 @@ const AppContent: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isMobileLite]);
 
-  const location = useLocation();
-
-  // Ã°Å¸â€œÂ± Reveal wrapper Ã¢â‚¬â€ lite vs full
+  // 📱 Reveal wrapper — lite vs full
   const Reveal = isMobileLite ? LiteReveal : RevealOnScroll;
 
   return (
@@ -161,62 +169,55 @@ const AppContent: React.FC = () => {
         }}
       />
 
-      {/* Ã¢Å“â€¦ Heavy effects Ã¢â‚¬â€ Ã Â¦Â¶Ã Â§ÂÃ Â¦Â§Ã Â§Â desktop Ã Â¦Â render Ã Â¦Â¹Ã Â¦Â¬Ã Â§â€¡ (mobile lite Ã Â¦Â¤Ã Â§â€¡ skip) */}
+      {/* Heavy effects — desktop only */}
       {!isMobileLite && <SunlightSpotlight className="z-[50]" />}
       {!isMobileLite && <DynamicIsland />}
 
       <ScrollToTop />
 
-      {/* Ã¢Å“â€¦ Ã Â¦Â¸Ã Â¦Â¬ device Ã Â¦Â Ã Â¦Â¥Ã Â¦Â¾Ã Â¦â€¢Ã Â¦Â¬Ã Â§â€¡ Ã Â¦ÂÃ Â¦â€”Ã Â§ÂÃ Â¦Â²Ã Â§â€¹ (lightweight) */}
+      {/* সব device এ চলে (lightweight) */}
       <SecretVault />
       <DynamicTitle />
       <NetworkStatus />
 
-      {/* ContextMenu Ã¢â‚¬â€ Ã Â¦Â¶Ã Â§ÂÃ Â¦Â§Ã Â§Â desktop Ã Â¦Â (mobile Ã Â¦Â¤Ã Â§â€¡ right-click Ã Â¦Â¨Ã Â§â€¡Ã Â¦â€¡) */}
+      {/* Desktop only */}
       {!isMobileLite && <ContextMenu />}
-
-      {/* BatteryOptimizer Ã¢â‚¬â€ Ã Â¦Â¶Ã Â§ÂÃ Â¦Â§Ã Â§Â desktop Ã Â¦Â */}
       {!isMobileLite && <BatteryOptimizer isDarkMode={isDarkMode} toggleTheme={toggleTheme} />}
 
-      {/* MobilePremiumFeatures Ã¢â‚¬â€ Ã Â¦Â¶Ã Â§ÂÃ Â¦Â§Ã Â§Â mobile Ã Â¦Â (Ã Â¦â€¢Ã Â¦Â¿Ã Â¦Â¨Ã Â§ÂÃ Â¦Â¤Ã Â§Â lite mode handle Ã Â¦â€¢Ã Â¦Â°Ã Â§â€¡) */}
+      {/* Mobile only */}
       <MobilePremiumFeatures />
 
-      {/* Preloader Ã¢â‚¬â€ Ã Â¦Â¶Ã Â§ÂÃ Â¦Â§Ã Â§Â home page Ã Â¦Â */}
-      {isLoading && location.pathname === '/' && <Preloader onFinish={() => setIsLoading(false)} />}
+      {/* ══════════════════════════════════════════════════════
+           Routes — প্রতিটা page আলাদা route
+         ══════════════════════════════════════════════════════ */}
+      <Routes>
 
-      <div
-        className={`transition-opacity duration-700 ease-out ${isLoading && location.pathname === '/' ? 'opacity-0' : 'opacity-100'}`}
-        style={{ position: 'relative', zIndex: 10 }}
-      >
+        {/* ── Home Page ── */}
+        <Route
+          path="/"
+          element={
+            <>
+              {/* Preloader — শুধু home page এ */}
+              {isLoading && <Preloader onFinish={() => setIsLoading(false)} />}
 
-        {/* ===== NAVBAR Ã¢â‚¬â€ Lite vs Full ===== */}
-        {isMobileLite ? (
-          <LiteNavbar
-            isDarkMode={isDarkMode}
-            toggleTheme={toggleTheme}
-            onOpenTools={() => setIsToolsOpen(true)}
-            onOpenGallery={() => setIsGalleryOpen(true)}
-          />
-        ) : (
-          <AppNavbar
-            isDarkMode={isDarkMode}
-            toggleTheme={toggleTheme}
-            onOpenTools={() => setIsToolsOpen(true)}
-            onOpenGallery={() => setIsGalleryOpen(true)}
-          />
-        )}
+              <div
+                className={`transition-opacity duration-700 ease-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                style={{ position: 'relative', zIndex: 10 }}
+              >
+                {/* ===== NAVBAR — Lite vs Full ===== */}
+                {/* ✅ onOpenTools / onOpenGallery props সরানো হয়েছে */}
+                {isMobileLite ? (
+                  <LiteNavbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+                ) : (
+                  <AppNavbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+                )}
 
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                {/* ===== HERO Ã¢â‚¬â€ Lite vs Full ===== */}
+                {/* ===== HERO — Lite vs Full ===== */}
                 {isMobileLite ? <LiteHero /> : <Hero />}
 
                 <TechMarquee />
 
-                {/* ===== ABOUT Ã¢â‚¬â€ Lite vs Full ===== */}
+                {/* ===== ABOUT — Lite vs Full ===== */}
                 <Reveal delay={0.1}>
                   <section id="about">
                     {isMobileLite ? <LiteAbout /> : <About />}
@@ -230,39 +231,37 @@ const AppContent: React.FC = () => {
                 <div id="feedback"><FeedbackList /></div>
                 <Reveal><section id="contact"><Contact /></section></Reveal>
                 <FeedbackSlider onSubmit={handleNewFeedback} />
-              </>
-            }
-          />
-          <Route path="/profile" element={<UserProfile />} />
-        </Routes>
 
-        <Footer />
+                <Footer />
 
-        {/* ===== Global Widgets ===== */}
-        <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
-        <MusicPlayer isPlaying={isMusicPlaying} togglePlay={() => setIsMusicPlaying(!isMusicPlaying)} />
+                {/* ===== Global Widgets ===== */}
+                <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+                <MusicPlayer
+                  isPlaying={isMusicPlaying}
+                  togglePlay={() => setIsMusicPlaying(!isMusicPlaying)}
+                />
+                <FloatingDock
+                  toggleChat={() => setIsChatOpen(!isChatOpen)}
+                  toggleMusic={() => setIsMusicPlaying(!isMusicPlaying)}
+                  toggleTheme={toggleTheme}
+                />
 
-        <FloatingDock
-          toggleChat={() => setIsChatOpen(!isChatOpen)}
-          toggleMusic={() => setIsMusicPlaying(!isMusicPlaying)}
-          toggleTheme={toggleTheme}
+                {/* ❌ PhotoGallery modal সরানো হয়েছে → /gallery route */}
+                {/* ❌ Tools overlay div সরানো হয়েছে → /tools route */}
+              </div>
+            </>
+          }
         />
 
-        <PhotoGallery isOpen={isGalleryOpen} onClose={() => setIsGalleryOpen(false)} />
+        {/* ── Profile Page (আগে থেকে ছিল) ── */}
+        <Route path="/profile" element={<UserProfile />} />
 
-        {isToolsOpen && (
-          <div className="fixed inset-0 z-[100] bg-black overflow-y-auto">
-            <button
-              onClick={() => setIsToolsOpen(false)}
-              className="fixed top-6 right-6 z-[110] p-3 bg-white/10 hover:bg-red-600 text-white rounded-full border border-white/20 transition-all shadow-xl hover:rotate-90"
-            >
-              <X size={28} />
-            </button>
-            <div className="relative min-h-screen"><Tools /></div>
-          </div>
-        )}
+        {/* ── নতুন Dedicated Pages ── */}
+        <Route path="/tools"   element={<ToolsPage />} />
+        <Route path="/gallery" element={<GalleryPage />} />
+        <Route path="/vault"   element={<VaultPage />} />
 
-      </div>
+      </Routes>
     </main>
   );
 };

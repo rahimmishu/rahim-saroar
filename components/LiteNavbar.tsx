@@ -1,7 +1,6 @@
 // 📱 LiteNavbar.tsx – Mobile Lite Version
 // backdrop-blur সরানো হয়েছে (GPU killer on mobile)
-// Profile navigation button added for mobile menu
-// User avatar image display fixed
+// ✅ onOpenTools / onOpenGallery props সরানো হয়েছে — এখন navigate() ব্যবহার হয়
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -14,16 +13,13 @@ import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
 import { useNavigate } from 'react-router-dom';
 
+// ✅ onOpenTools / onOpenGallery সরানো হয়েছে
 interface NavbarProps {
   isDarkMode: boolean;
   toggleTheme: () => void;
-  onOpenTools: () => void;
-  onOpenGallery: () => void;
 }
 
-const LiteNavbar: React.FC<NavbarProps> = ({
-  isDarkMode, toggleTheme, onOpenTools, onOpenGallery,
-}) => {
+const LiteNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
   const [isOpen, setIsOpen]         = useState(false);
   const [scrolled, setScrolled]     = useState(false);
   const { user, logout }            = useAuth();
@@ -47,11 +43,6 @@ const LiteNavbar: React.FC<NavbarProps> = ({
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : 'unset';
   }, [isOpen]);
-
-  const triggerSecretVault = () => {
-    setIsOpen(false);
-    setTimeout(() => window.dispatchEvent(new Event('open-secret-search')), 200);
-  };
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -84,13 +75,30 @@ const LiteNavbar: React.FC<NavbarProps> = ({
     }
   };
 
-  // ✅ FIX: Navigate to profile page
   const handleGoToProfile = () => {
     setIsOpen(false);
     navigate('/profile');
   };
 
-  // 🎨 Lite Navbar bg – solid semi-transparent, no backdrop-blur
+  // ✅ navigate('/gallery')
+  const handleGoToGallery = () => {
+    setIsOpen(false);
+    navigate('/gallery');
+  };
+
+  // ✅ navigate('/tools')
+  const handleGoToTools = () => {
+    setIsOpen(false);
+    navigate('/tools');
+  };
+
+  // ✅ navigate('/vault')
+  const handleGoToVault = () => {
+    setIsOpen(false);
+    navigate('/vault');
+  };
+
+  // 🎨 Lite Navbar bg — solid semi-transparent, no backdrop-blur
   const navBg = scrolled
     ? isDarkMode
       ? 'bg-[#0a0a0a]/97 border-white/8'
@@ -99,13 +107,12 @@ const LiteNavbar: React.FC<NavbarProps> = ({
     ? 'bg-[#0d0d0d]/90 border-white/5'
     : 'bg-white/90 border-slate-200/40';
 
-  // ✅ FIX: Get user avatar for display
-  const userAvatar   = user?.photoURL || null;
-  const userInitial  = user?.displayName
+  const userAvatar  = user?.photoURL || null;
+  const userInitial = user?.displayName
     ? user.displayName.charAt(0).toUpperCase()
     : user?.email?.charAt(0)?.toUpperCase() || 'U';
 
-  /* ─── Avatar mini component (navbar + mobile menu) ─── */
+  /* ─── Avatar mini component ─── */
   const UserAvatarBubble = ({ size = 36, textSize = 'text-sm' }: { size?: number; textSize?: string }) => (
     <div
       className="flex-shrink-0 overflow-hidden bg-white rounded-full"
@@ -120,10 +127,7 @@ const LiteNavbar: React.FC<NavbarProps> = ({
           src={userAvatar}
           alt={user?.displayName || 'User'}
           className="object-cover w-full h-full"
-          onError={(e) => {
-            // Fallback to initials if image fails
-            (e.target as HTMLImageElement).style.display = 'none';
-          }}
+          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
         />
       ) : (
         <div
@@ -142,12 +146,12 @@ const LiteNavbar: React.FC<NavbarProps> = ({
         className={`fixed left-1/2 -translate-x-1/2 z-[50] transition-all duration-500 ease-in-out
           ${scrolled ? 'top-3 w-[96%] md:w-[86%]' : 'top-5 w-[98%] md:w-[90%]'}`}
       >
-        {/* Border wrapper – static gradient (no animation) */}
+        {/* Border wrapper – static gradient */}
         <div
           className="rounded-[28px] p-[1px] shadow-xl"
           style={{ background: 'linear-gradient(135deg, rgba(99,102,241,.4), rgba(139,92,246,.3), rgba(236,72,153,.3))' }}
         >
-          {/* Main container – solid bg instead of backdrop-blur */}
+          {/* Main container */}
           <div className={`rounded-[27px] border transition-all duration-500 ${navBg}`}>
             <div className={`flex items-center justify-between transition-all duration-300 ${scrolled ? 'py-2.5 px-4 md:px-6' : 'py-3 px-4 md:px-6'}`}>
 
@@ -185,24 +189,37 @@ const LiteNavbar: React.FC<NavbarProps> = ({
                     {link.label}
                   </a>
                 ))}
+
+                {/* Desktop: Gallery & Tools — ✅ navigate */}
+                <button
+                  onClick={handleGoToGallery}
+                  className="p-2 ml-1 text-purple-500 transition-all duration-200 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-950/30 active:scale-95"
+                  title="Gallery"
+                >
+                  <Camera size={18} />
+                </button>
+                <button
+                  onClick={handleGoToTools}
+                  className="p-2 text-blue-500 transition-all duration-200 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-950/30 active:scale-95"
+                  title="Tools"
+                >
+                  <Wrench size={18} />
+                </button>
               </div>
 
-              {/* Right actions */}
+              {/* Right side — theme + auth */}
               <div className="flex items-center gap-2">
                 <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
 
-                {/* Desktop: Auth / Profile / Logout */}
+                {/* Desktop auth */}
                 {user ? (
-                  <div className="items-center hidden gap-2 lg:flex">
-                    {/* ✅ Profile button (desktop) */}
+                  <div className="items-center hidden gap-1 lg:flex">
                     <button
                       onClick={handleGoToProfile}
-                      className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-slate-300 rounded-xl hover:bg-white/8 transition-all duration-200 active:scale-95"
+                      className="flex items-center gap-2 px-3 py-2 text-sm font-semibold transition-all duration-200 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/8 active:scale-95"
                     >
-                      <UserAvatarBubble size={28} textSize="text-xs" />
-                      <span className="max-w-[90px] truncate">
-                        {user.displayName || 'Profile'}
-                      </span>
+                      <UserAvatarBubble size={26} textSize="text-xs" />
+                      <span className="max-w-[80px] truncate">{user.displayName?.split(' ')[0] || 'Profile'}</span>
                     </button>
                     <button
                       onClick={handleLogout}
@@ -222,9 +239,8 @@ const LiteNavbar: React.FC<NavbarProps> = ({
                   </button>
                 )}
 
-                {/* Mobile: avatar bubble (when logged in) or menu button */}
+                {/* Mobile: avatar bubble (when logged in) */}
                 <div className="flex items-center gap-2 lg:hidden">
-                  {/* ✅ FIX: Show profile avatar on mobile navbar */}
                   {user && (
                     <button
                       onClick={handleGoToProfile}
@@ -256,10 +272,7 @@ const LiteNavbar: React.FC<NavbarProps> = ({
           ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       >
         {/* Backdrop */}
-        <div
-          className="absolute inset-0 bg-black/60"
-          onClick={() => setIsOpen(false)}
-        />
+        <div className="absolute inset-0 bg-black/60" onClick={() => setIsOpen(false)} />
 
         {/* Slide-in Panel */}
         <div
@@ -272,13 +285,11 @@ const LiteNavbar: React.FC<NavbarProps> = ({
             <div className="w-10 h-1 rounded-full bg-slate-300 dark:bg-slate-700" />
           </div>
 
-          {/* ── User info / auth ───────────────────────── */}
+          {/* ── User info / auth ── */}
           <div className="mb-5">
             {user ? (
               <div className="overflow-hidden border rounded-2xl bg-slate-50 dark:bg-white/5 border-slate-100 dark:border-white/8">
-                {/* User info row */}
                 <div className="flex items-center gap-3 p-4">
-                  {/* ✅ FIX: Show avatar image instead of just initials */}
                   <UserAvatarBubble size={44} textSize="text-base" />
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-bold truncate text-slate-900 dark:text-white">
@@ -295,7 +306,7 @@ const LiteNavbar: React.FC<NavbarProps> = ({
                   </button>
                 </div>
 
-                {/* ✅ NEW: Profile & Settings buttons row */}
+                {/* Profile & Dashboard row */}
                 <div className="grid grid-cols-2 gap-0 border-t border-slate-100 dark:border-white/8">
                   <button
                     onClick={handleGoToProfile}
@@ -325,7 +336,7 @@ const LiteNavbar: React.FC<NavbarProps> = ({
             )}
           </div>
 
-          {/* ── Nav Links ─────────────────────────────── */}
+          {/* ── Nav Links ── */}
           <div className="flex flex-col gap-2 mb-5">
             {navLinks.map((link) => (
               <a
@@ -347,31 +358,34 @@ const LiteNavbar: React.FC<NavbarProps> = ({
             ))}
           </div>
 
-          {/* ── Action Buttons Grid ────────────────────── */}
+          {/* ── Action Buttons Grid ── */}
           <div className="grid grid-cols-2 gap-3">
+            {/* ✅ Gallery → navigate('/gallery') */}
             <button
-              onClick={() => { onOpenGallery(); setIsOpen(false); }}
+              onClick={handleGoToGallery}
               className="flex flex-col items-center gap-2 p-4 text-purple-600 transition-all border rounded-2xl bg-purple-50 dark:bg-purple-950/30 border-purple-200/50 dark:border-purple-800/40 dark:text-purple-400 active:scale-95"
             >
               <Camera size={22} />
               <span className="text-sm font-semibold">Gallery</span>
             </button>
 
+            {/* ✅ Tools → navigate('/tools') */}
             <button
-              onClick={() => { onOpenTools(); setIsOpen(false); }}
+              onClick={handleGoToTools}
               className="flex flex-col items-center gap-2 p-4 text-blue-600 transition-all border rounded-2xl bg-blue-50 dark:bg-blue-950/30 border-blue-200/50 dark:border-blue-800/40 dark:text-blue-400 active:scale-95"
             >
               <Wrench size={22} />
               <span className="text-sm font-semibold">Tools</span>
             </button>
 
+            {/* ✅ Secret Vault → navigate('/vault') */}
             <button
-              onClick={triggerSecretVault}
+              onClick={handleGoToVault}
               className="flex items-center col-span-2 gap-3 p-4 text-white transition-all border rounded-2xl bg-slate-900 dark:bg-black border-slate-700/50 active:scale-95"
             >
               <Lock size={18} className="text-pink-400" />
               <span className="font-semibold">Secret Vault</span>
-              <div className="w-2 h-2 ml-auto bg-red-500 rounded-full" />
+              <div className="w-2 h-2 ml-auto bg-red-500 rounded-full animate-pulse" />
             </button>
           </div>
         </div>

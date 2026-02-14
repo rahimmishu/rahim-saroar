@@ -5,18 +5,16 @@ import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal'; 
 import { RainbowButton } from './ui/rainbow-button'; 
 import { GitHubStarButton } from './ui/github-star'; 
-// ✅ নতুন ইমপোর্ট
 import { PremiumSignInButton } from './ui/premium-signin-button';
 import { useNavigate } from 'react-router-dom';
 
+// ✅ onOpenTools / onOpenGallery prop দুটো সরানো হয়েছে
 interface NavbarProps {
   isDarkMode: boolean;
   toggleTheme: () => void;
-  onOpenTools: () => void;
-  onOpenGallery: () => void;
 }
 
-const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools, onOpenGallery }) => {
+const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   
@@ -27,17 +25,15 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
   const navigate = useNavigate();
 
   const navLinks = [
-    { label: 'Home', href: '#home', icon: <Home size={18} /> },
-    { label: 'Projects', href: '#projects', icon: <Briefcase size={18} /> },
+    { label: 'Home',      href: '#home',      icon: <Home size={18} /> },
+    { label: 'Projects',  href: '#projects',  icon: <Briefcase size={18} /> },
     { label: 'Resources', href: '#resources', isSpecial: true, icon: <BookOpen size={18} /> }, 
-    { label: 'About', href: '#about', icon: <User size={18} /> },
-    { label: 'Contact', href: '#contact', icon: <Mail size={18} /> },
+    { label: 'About',     href: '#about',     icon: <User size={18} /> },
+    { label: 'Contact',   href: '#contact',   icon: <Mail size={18} /> },
   ];
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -46,42 +42,27 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
     document.body.style.overflow = isOpen ? 'hidden' : 'unset';
   }, [isOpen]);
 
-  const triggerSecretVault = () => {
-    setIsOpen(false);
-    setTimeout(() => {
-        window.dispatchEvent(new Event('open-secret-search'));
-    }, 200);
-  };
-
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setIsOpen(false);
     
     if (window.location.pathname !== '/') {
-        navigate('/');
-        setTimeout(() => {
-            const targetId = href.replace('#', '');
-            const element = document.getElementById(targetId);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
-        }, 100);
-        return;
+      navigate('/');
+      setTimeout(() => {
+        const targetId = href.replace('#', '');
+        document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      return;
     }
 
     const targetId = href.replace('#', '');
     const element = document.getElementById(targetId);
-    
     if (element) {
       setTimeout(() => {
         const offset = 100;
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth"
-        });
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
       }, 300);
     }
   };
@@ -93,7 +74,7 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
       setIsProfileMenuOpen(false);
       navigate('/');
     } catch (error) {
-      console.error("Logout failed", error);
+      console.error('Logout failed', error);
     }
   };
 
@@ -103,9 +84,21 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
     setIsOpen(false);
   };
 
-  // 🔥 টুলস পেজে যাওয়ার ফাংশন
+  // ✅ এখন সরাসরি /tools পেজে যাবে
   const goToTools = () => {
-    onOpenTools();
+    navigate('/tools');
+    setIsOpen(false);
+  };
+
+  // ✅ এখন সরাসরি /gallery পেজে যাবে
+  const goToGallery = () => {
+    navigate('/gallery');
+    setIsOpen(false);
+  };
+
+  // ✅ এখন সরাসরি /vault পেজে যাবে
+  const goToVault = () => {
+    navigate('/vault');
     setIsOpen(false);
   };
 
@@ -124,14 +117,13 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
           ${scrolled ? 'shadow-purple-500/10 dark:shadow-purple-400/5' : 'shadow-blue-500/5'}`}
         >
           {/* 💎 Glass Morphism Container */}
-          {/* 🛠️ FIX: 'overflow-hidden' সরিয়ে দিয়েছি যাতে ড্রপডাউন মেনু কেটে না যায় */}
           <div className={`relative rounded-[30px] backdrop-blur-2xl transition-all duration-700
             ${scrolled 
               ? 'bg-white/85 dark:bg-black/85 shadow-[0_8px_32px_0_rgba(139,92,246,0.15)] dark:shadow-[0_8px_32px_0_rgba(139,92,246,0.08)]' 
               : 'bg-white/60 dark:bg-black/50 shadow-[0_4px_24px_0_rgba(99,102,241,0.08)]'
             }`}
           >
-            {/* 🎨 Animated Gradient Overlay (Rounded যোগ করা হয়েছে যাতে বর্ডারের বাইরে না যায়) */}
+            {/* 🎨 Animated Gradient Overlay */}
             <div className="absolute inset-0 rounded-[30px] opacity-30 dark:opacity-20 bg-gradient-to-r from-blue-500/5 via-purple-500/5 to-pink-500/5 animate-gradient-x"></div>
             
             {/* 🔷 Main Content */}
@@ -144,7 +136,6 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                 onClick={(e) => handleLinkClick(e, '#home')} 
                 className="relative flex items-center gap-2.5 group shrink-0 z-10"
               >
-                {/* 🌀 Rotating Glow Effect */}
                 <div className="absolute transition-opacity duration-500 rounded-full opacity-0 -inset-2 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 blur-xl group-hover:opacity-100 animate-pulse"></div>
                 
                 <div className="relative p-1.5 rounded-full bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm">
@@ -155,21 +146,19 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                   <span className="relative z-10 text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text animate-gradient-x bg-[length:200%_auto]">
                     Rahim Saroar <span className="hidden sm:inline">Mishu</span>
                   </span>
-                  {/* ✨ Subtle glow under text */}
                   <span className="absolute inset-0 text-transparent opacity-50 blur-sm bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text"></span>
                 </span>
               </a>
 
               {/* 💎 PREMIUM DESKTOP MENU */}
               <div className="items-center hidden gap-2 lg:flex">
-                {/* 📸 Gallery Button - Premium Style */}
+                {/* 📸 Gallery Button — ✅ navigate('/gallery') */}
                 <button 
-                  onClick={onOpenGallery} 
+                  onClick={goToGallery}
                   className="group relative p-2.5 text-purple-600 dark:text-purple-400 transition-all duration-300 rounded-2xl hover:bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 active:scale-95 hover:shadow-lg hover:shadow-purple-500/20" 
-                  title="Photos"
+                  title="Gallery"
                 >
                   <Camera size={18} className="relative z-10 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />
-                  {/* Hover glow */}
                   <div className="absolute inset-0 transition-all duration-300 rounded-2xl bg-gradient-to-br from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/10 group-hover:to-pink-500/10"></div>
                 </button>
 
@@ -187,7 +176,6 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                         className="mx-1"
                       >
                         <div className="relative flex items-center justify-center p-0 group">
-                          {/* ✨ Rainbow glow on hover */}
                           <div className="absolute inset-0 transition-opacity duration-500 rounded-full opacity-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 group-hover:opacity-20 blur-xl"></div>
                           <RainbowButton className="relative px-5 text-xs font-bold transition-all duration-300 shadow-lg h-9 group hover:shadow-xl hover:shadow-purple-500/30">
                             {link.label}
@@ -207,7 +195,6 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                     >
                       <span className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-6">{link.icon}</span>
                       {link.label}
-                      {/* ✨ Underline effect */}
                       <span className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-3/4 group-hover:left-[12.5%] transition-all duration-300"></span>
                     </a>
                   );
@@ -216,75 +203,61 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                 {/* ✨ Premium Divider */}
                 <div className="w-px h-5 mx-2 bg-gradient-to-b from-transparent via-slate-300 to-transparent dark:via-slate-700"></div>
 
-                {/* 🔥 Tools Button - Premium Style (FIXED) */}
+                {/* 🔧 Tools Button — ✅ navigate('/tools') */}
                 <button 
-                  onClick={goToTools} 
+                  onClick={goToTools}
                   className="group relative p-2.5 text-slate-600 dark:text-slate-300 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-300 rounded-2xl hover:bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 active:scale-95 hover:shadow-lg hover:shadow-purple-500/20" 
                   title="Tools"
                 >
                   <Wrench size={18} className="relative z-10 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
-                  {/* Hover glow */}
                   <div className="absolute inset-0 transition-all duration-300 rounded-2xl bg-gradient-to-br from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/10 group-hover:to-pink-500/10"></div>
                 </button>
-            </div>
-            {/* ✅ এই নতুন div টি মোবাইলেও দেখা যাবে */}
+              </div>
+
+              {/* ✅ এই div টি মোবাইলেও দেখা যাবে */}
               <div className="flex items-center gap-2">
                 {/* 🎨 Theme Toggle */}
                 <div className="relative ml-1 group">
-                  {/* Glow effect */}
                   <div className="absolute transition-all duration-500 -inset-1 bg-gradient-to-r from-blue-500/0 via-purple-500/0 to-pink-500/0 group-hover:from-blue-500/20 group-hover:via-purple-500/20 group-hover:to-pink-500/20 rounded-2xl blur-lg"></div>
                   <div className="relative">
                     <ThemeToggle isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
                   </div>
                 </div>
                 
-                {/* 👤 USER PROFILE / AUTH - PREMIUM STYLE */}
+                {/* 👤 USER PROFILE / AUTH */}
                 {user ? (
                   <div className="relative hidden ml-2 sm:block">
                     <button 
                       onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                       className="group relative flex items-center gap-2.5 px-4 py-2 bg-gradient-to-br from-slate-100/80 to-slate-50/80 dark:from-slate-800/80 dark:to-slate-900/80 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-300 backdrop-blur-sm active:scale-95"
                     >
-                      {/* ✨ Avatar with gradient ring — shows photoURL image or initials fallback */}
                       <div className="relative">
                         <div className="absolute -inset-0.5 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full opacity-75 group-hover:opacity-100 blur-sm transition-opacity"></div>
                         <div className="relative overflow-hidden bg-white rounded-full shadow-lg w-7 h-7">
                           {user.photoURL ? (
-                            <img
-                              src={user.photoURL}
-                              alt={user.displayName || "User"}
-                              className="object-cover w-full h-full"
-                            />
+                            <img src={user.photoURL} alt={user.displayName || 'User'} className="object-cover w-full h-full" />
                           ) : (
                             <div className="flex items-center justify-center w-full h-full text-xs font-bold text-white bg-gradient-to-br from-purple-500 to-blue-500">
-                              {user.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}
+                              {user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U'}
                             </div>
                           )}
                         </div>
                       </div>
-                      
-                      <span className="max-w-[90px] truncate text-xs font-bold bg-gradient-to-r from-slate-700 to-slate-900 dark:from-slate-200 dark:to-slate-100 bg-clip-text text-transparent">
-                        {user.displayName?.split(' ')[0] || "User"}
+                      <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 max-w-[80px] truncate">
+                        {user.displayName?.split(' ')[0] || 'User'}
                       </span>
-                      
-                      <ChevronDown 
-                        size={14} 
-                        className={`text-slate-400 transition-all duration-300 ${isProfileMenuOpen ? 'rotate-180 text-purple-500' : ''}`} 
-                      />
+                      <ChevronDown size={14} className={`transition-all duration-300 text-slate-500 ${isProfileMenuOpen ? 'rotate-180' : ''}`} />
                     </button>
 
                     {/* 💎 Premium Dropdown Menu */}
                     {isProfileMenuOpen && (
                       <div className="absolute right-0 mt-3 overflow-hidden duration-300 border shadow-2xl w-60 bg-white/95 dark:bg-black/95 backdrop-blur-2xl border-white/20 dark:border-white/10 shadow-purple-500/20 dark:shadow-purple-400/10 rounded-3xl animate-in fade-in slide-in-from-top-3 z-[60]">
-                        {/* 🎨 Gradient header */}
                         <div className="relative px-5 py-4 border-b border-slate-100/50 dark:border-slate-800/50 bg-gradient-to-br from-purple-50/50 to-pink-50/50 dark:from-purple-900/20 dark:to-pink-900/20">
-                          <p className="text-sm font-bold truncate text-slate-800 dark:text-white">{user.displayName || "User"}</p>
+                          <p className="text-sm font-bold truncate text-slate-800 dark:text-white">{user.displayName || 'User'}</p>
                           <p className="text-xs truncate text-slate-500 dark:text-slate-400">{user.email}</p>
-                          {/* ✨ Decorative element */}
                           <div className="absolute top-0 right-0 w-20 h-20 rounded-full bg-gradient-to-br from-purple-500/10 to-transparent blur-2xl"></div>
                         </div>
                         
-                        {/* 🔷 Menu Items */}
                         <div className="p-2">
                           <button 
                             onClick={goToProfile} 
@@ -310,13 +283,12 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                     )}
                   </div>
                 ) : (
-                  // ✅ এখানে আপনার নতুন Premium Sign In Button বসানো হয়েছে
                   <div className="ml-2">
                     <PremiumSignInButton onClick={() => setAuthModalOpen(true)} />
                   </div>
                 )}
 
-                {/* 🌟 GitHub Button - Premium */}
+                {/* 🌟 GitHub Button */}
                 <div className="relative hidden ml-2 group md:block">
                   <div className="absolute transition-all duration-500 -inset-1 bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 rounded-2xl blur-lg"></div>
                   <GitHubStarButton 
@@ -327,7 +299,7 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                   />
                 </div>
 
-                {/* 🍔 Mobile Menu Toggle - Premium */}
+                {/* 🍔 Mobile Menu Toggle */}
                 <button 
                   onClick={() => setIsOpen(!isOpen)} 
                   className="group relative p-2.5 transition-all duration-300 lg:hidden text-slate-800 dark:text-white active:scale-90 rounded-2xl hover:bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 ml-2"
@@ -352,45 +324,35 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
         ${isOpen ? 'opacity-100 visible backdrop-blur-3xl' : 'opacity-0 invisible backdrop-blur-none'}`}
         style={{ paddingTop: '110px' }}
       >
-        {/* 🎨 Animated gradient background */}
         <div className={`absolute inset-0 bg-gradient-to-br from-white via-purple-50/30 to-pink-50/30 dark:from-black dark:via-purple-950/30 dark:to-pink-950/30 transition-opacity duration-700 ${isOpen ? 'opacity-100' : 'opacity-0'}`}></div>
         
-        {/* 🌀 Floating orbs */}
         <div className={`absolute top-20 right-10 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-pulse transition-opacity duration-1000 ${isOpen ? 'opacity-100' : 'opacity-0'}`}></div>
         <div className={`absolute bottom-20 left-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse transition-opacity duration-1000 delay-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}></div>
 
         <div className="relative z-10">
-          {/* 👤 User Section - Premium */}
+          {/* 👤 User Section */}
           {user ? (
             <div className="flex flex-col gap-3 mb-8 duration-500 animate-in slide-in-from-top-5">
-              {/* 💎 User Info Card */}
               <div className="relative p-5 overflow-hidden border shadow-2xl bg-gradient-to-br from-white/90 to-slate-50/90 dark:from-zinc-900/90 dark:to-black/90 backdrop-blur-xl rounded-3xl border-white/20 dark:border-zinc-800/50 shadow-purple-500/10">
-                {/* ✨ Gradient overlay */}
                 <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-gradient-to-br from-purple-500/10 to-pink-500/10 blur-3xl"></div>
                 
                 <div className="relative flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    {/* Avatar with animated ring */}
-                    {/* Avatar with animated ring — shows photoURL image or initials fallback */}
                     <div className="relative">
                       <div className="absolute rounded-full -inset-1 bg-gradient-to-br from-purple-500 to-blue-500 animate-spin-slow"></div>
                       <div className="relative overflow-hidden bg-white rounded-full shadow-xl w-14 h-14">
                         {user.photoURL ? (
-                          <img
-                            src={user.photoURL}
-                            alt={user.displayName || "User"}
-                            className="object-cover w-full h-full"
-                          />
+                          <img src={user.photoURL} alt={user.displayName || 'User'} className="object-cover w-full h-full" />
                         ) : (
                           <div className="flex items-center justify-center w-full h-full text-xl font-bold text-white bg-gradient-to-tr from-purple-500 to-blue-500">
-                            {user.displayName ? user.displayName.charAt(0).toUpperCase() : "U"}
+                            {user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U'}
                           </div>
                         )}
                       </div>
                     </div>
                     
                     <div className="overflow-hidden">
-                      <div className="text-lg font-bold truncate text-slate-800 dark:text-white">{user.displayName || "User"}</div>
+                      <div className="text-lg font-bold truncate text-slate-800 dark:text-white">{user.displayName || 'User'}</div>
                       <div className="text-xs truncate text-slate-500 dark:text-slate-400">{user.email}</div>
                     </div>
                   </div>
@@ -428,7 +390,7 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
             </button>
           )}
 
-          {/* 🔗 Navigation Links - Premium Cards */}
+          {/* 🔗 Navigation Links */}
           <div className="relative z-10 flex flex-col w-full max-w-md gap-3 mx-auto mb-6">
             {navLinks.map((link, idx) => (
               <a 
@@ -443,27 +405,22 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
                 `}
                 style={{ transitionDelay: `${idx * 60}ms` }}
               >
-                {/* ✨ Hover gradient */}
                 <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${link.isSpecial ? 'bg-gradient-to-r from-blue-500/10 to-purple-500/10' : 'bg-gradient-to-r from-purple-500/5 to-pink-500/5'}`}></div>
-                
                 <span className={`relative p-3 rounded-2xl shadow-md group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 ${link.isSpecial ? 'bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900' : 'bg-white dark:bg-slate-900'}`}>
                   {link.icon}
                 </span>
-                
                 <span className="relative">{link.label}</span>
-                
-                {/* ✨ Arrow indicator */}
                 <ArrowRight className="relative ml-auto transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-x-1" size={18} />
               </a>
             ))}
           </div>
 
-          {/* 🎨 Action Cards Grid - Premium */}
+          {/* 🎨 Action Cards Grid */}
           <div className={`grid grid-cols-2 gap-4 w-full max-w-md mx-auto relative z-10 transition-all duration-700 delay-300 ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
             
-            {/* 📸 Gallery Card */}
+            {/* 📸 Gallery Card — ✅ navigate('/gallery') */}
             <button 
-              onClick={() => { onOpenGallery(); setIsOpen(false); }} 
+              onClick={goToGallery}
               className="relative flex flex-col items-center justify-center p-5 overflow-hidden transition-all duration-300 border group bg-gradient-to-br from-purple-50/90 to-pink-50/90 dark:from-zinc-900/90 dark:to-purple-900/30 border-purple-200/50 dark:border-zinc-800/50 rounded-3xl active:scale-95 hover:shadow-2xl hover:shadow-purple-500/20 backdrop-blur-xl"
             >
               <div className="absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-purple-500/10 to-pink-500/10"></div>
@@ -473,9 +430,9 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
               <span className="relative text-sm font-bold text-slate-700 dark:text-slate-200">Gallery</span>
             </button>
 
-            {/* 🔧 Tools Card (Fixed) */}
+            {/* 🔧 Tools Card — ✅ navigate('/tools') */}
             <button 
-              onClick={goToTools} 
+              onClick={goToTools}
               className="relative flex flex-col items-center justify-center p-5 overflow-hidden transition-all duration-300 border group bg-gradient-to-br from-blue-50/90 to-cyan-50/90 dark:from-zinc-900/90 dark:to-blue-900/30 border-blue-200/50 dark:border-zinc-800/50 rounded-3xl active:scale-95 hover:shadow-2xl hover:shadow-blue-500/20 backdrop-blur-xl"
             >
               <div className="absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-blue-500/10 to-cyan-500/10"></div>
@@ -485,12 +442,11 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme, onOpenTools
               <span className="relative text-sm font-bold text-slate-700 dark:text-slate-200">Tools</span>
             </button>
 
-            {/* 🔒 Secret Vault - Premium */}
+            {/* 🔒 Secret Vault — ✅ navigate('/vault') */}
             <button 
-              onClick={triggerSecretVault} 
+              onClick={goToVault}
               className="relative flex items-center justify-between col-span-2 p-5 overflow-hidden transition-all duration-300 border group bg-gradient-to-br from-slate-900/95 to-black/95 dark:from-black/95 dark:to-slate-950/95 border-slate-700/50 rounded-3xl active:scale-95 hover:shadow-2xl hover:shadow-pink-500/30 backdrop-blur-xl"
             >
-              {/* ✨ Animated gradient overlay */}
               <div className="absolute inset-0 opacity-20 group-hover:opacity-30 bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-blue-500/20 animate-gradient-x bg-[length:200%_auto] transition-opacity"></div>
               
               <div className="relative flex items-center gap-4">
