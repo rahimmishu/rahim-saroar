@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
+// 🚀 Hidden Performance Optimizer (background এ চলবে)
+import { usePerformanceOptimizer } from './hooks/usePerformanceOptimizer';
+import { registerServiceWorker } from './lib/registerSW';
+
+// Register Service Worker for caching (hidden, automatic)
+registerServiceWorker();
+
 // ============================================================
 // 📱 Mobile Lite Version Detection
 // ============================================================
@@ -38,6 +45,7 @@ import NetworkStatus from './components/NetworkStatus';
 import SecretVault from './components/SecretVault';
 import MobilePremiumFeatures from './components/MobilePremiumFeatures';
 import BatteryOptimizer from './components/BatteryOptimizer';
+import PerformanceDebug from './components/PerformanceDebug';
 
 // Heavy effects — desktop only (mobile lite তে skip)
 import { SunlightSpotlight } from './components/ui/sunlight-spotlight';
@@ -95,6 +103,9 @@ const LiteReveal: React.FC<{ children: React.ReactNode; delay?: number }> = ({ c
 // Main App Content
 // ============================================================
 const AppContent: React.FC = () => {
+  // 🚀 Hidden Performance Optimizer (completely silent, zero UI impact)
+  const perfStatus = usePerformanceOptimizer();
+  
   const [isLoading, setIsLoading]           = useState(true);
   // ❌ isToolsOpen সরানো হয়েছে — এখন /tools route
   // ❌ isGalleryOpen সরানো হয়েছে — এখন /gallery route
@@ -186,6 +197,9 @@ const AppContent: React.FC = () => {
 
       {/* Mobile only */}
       <MobilePremiumFeatures />
+
+      {/* 🔍 Hidden Performance Debug (Dev mode only - Shift+P) */}
+      <PerformanceDebug status={perfStatus} />
 
       {/* ══════════════════════════════════════════════════════
            Routes — প্রতিটা page আলাদা route
