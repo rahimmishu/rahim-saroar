@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║   Image Sitemap — Rahim Saroar Mishu Photo Gallery          ║
+  ║   Google Image Search Indexing                              ║
+  ║   https://developers.google.com/search/docs/crawling        ║
+  ║       -indexing/sitemaps/image-sitemaps                     ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+>
+
+  <url>
+    <loc>https://rahim-saroar.vercel.app/gallery</loc>
+
+    <!-- Photo 1: Profile -->
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-profile.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu Profile Photo – AI Enthusiast Bangladesh</image:title>
+      <image:caption>Rahim Saroar Mishu – AI enthusiast, web developer and content creator from Bangladesh. Official profile photo.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <!-- Photo 2: Content Creator -->
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-content-creator.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu Content Creator – Rhythm of Peace YouTube</image:title>
+      <image:caption>Rahim Saroar Mishu working as a video content creator. Creator of the Rhythm of Peace YouTube channel.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <!-- Photo 3: College / Web Developer -->
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-web-developer.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu Web Developer – College Student Life</image:title>
+      <image:caption>Rahim Saroar Mishu during college life. Young web developer and student from Bangladesh.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <!-- Photo 4: Public Speaker -->
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-speaker.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu Public Speaker – Tech Event Bangladesh</image:title>
+      <image:caption>Rahim Saroar Mishu as a public speaker at a technology event in Bangladesh.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <!-- Photo 5: Lifestyle -->
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-lifestyle.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu Lifestyle Photography Portrait</image:title>
+      <image:caption>Lifestyle portrait of Rahim Saroar Mishu, young developer and creator from Bangladesh.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <!-- Photo 6: Coding Workspace -->
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-coding.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu Coding Workspace – Python Developer Setup</image:title>
+      <image:caption>Rahim Saroar Mishu at his coding workspace. Python and web developer desk setup.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <!-- Photo 7: Travel Sugarmill -->
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-sugarmill.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu Travel – Sugarmill Bangladesh Vlog</image:title>
+      <image:caption>Rahim Saroar Mishu at the Sugarmill, Bangladesh. Travel photography.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <!-- Photo 8: School -->
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-school.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu School Life – Mangalbari Sirajia Memories</image:title>
+      <image:caption>Rahim Saroar Mishu school life memories at Mangalbari Sirajia, Bangladesh.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <!-- Photo 9: Tech Desk Tour -->
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-J.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu Tech Setup – Desk Tour</image:title>
+      <image:caption>Rahim Saroar Mishu tech setup and desk tour photo.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <!-- Photo 10: Friends -->
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-fuad.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu with Friends – Hangout Bangladesh</image:title>
+      <image:caption>Rahim Saroar Mishu hanging out with friends in Bangladesh.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <!-- Photo 11: Late Night Coffee -->
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-coffee.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu Late Night Coding with Coffee</image:title>
+      <image:caption>Rahim Saroar Mishu coding late at night with coffee. Developer lifestyle.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <!-- Photo 12: Minimalist Setup -->
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-c.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu Modern Minimalist Desk Setup</image:title>
+      <image:caption>Rahim Saroar Mishu modern minimalist coding desk setup.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <!-- Photo 13: Wedding Style -->
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu-biya.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu Wedding Guest – Traditional Panjabi Style</image:title>
+      <image:caption>Rahim Saroar Mishu dressed in traditional Panjabi style at a wedding in Bangladesh.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+  </url>
+</urlset>
