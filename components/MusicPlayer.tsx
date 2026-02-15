@@ -4,6 +4,7 @@ import {
   ExternalLink, X, ListMusic, Volume2, VolumeX,
   Shuffle, Repeat, Repeat1, RotateCcw, RotateCw
 } from 'lucide-react';
+import { useCloudStateDebounced } from '../hooks/useCloudState';
 
 interface MusicPlayerProps {
   isPlaying: boolean;
@@ -25,9 +26,20 @@ type FolderType = 'songs' | 'ghosts' | 'gojol';
 
 type RepeatMode = 'off' | 'all' | 'one';
 
+// 💾 Cloud-persistent state type
+interface CloudMusicState {
+  currentTrackIndex: number;
+  volume: number;
+  isMuted: boolean;
+  shuffleMode: boolean;
+  repeatMode: RepeatMode;
+  activeFolder: FolderType;
+  savedPosition: number; // YouTube position in seconds — resume এর জন্য
+}
+
 const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
+  // ── UI-only state (cloud এ save করার দরকার নেই) ──
   const [isOpen, setIsOpen] = useState(false);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [showPlaylist, setShowPlaylist] = useState(false);
   const [currentTime, setCurrentTime] = useState("00:00");
   const [duration, setDuration] = useState("00:00");
@@ -35,13 +47,44 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [youtubeReady, setYoutubeReady] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
-  const [volume, setVolume] = useState(70);
-  const [isMuted, setIsMuted] = useState(false);
-  const [shuffleMode, setShuffleMode] = useState(false);
-  const [repeatMode, setRepeatMode] = useState<RepeatMode>('off');
   const [playHistory, setPlayHistory] = useState<number[]>([]);
   const [shouldAutoPlay, setShouldAutoPlay] = useState(false);
-  const [activeFolder, setActiveFolder] = useState<FolderType>('songs');
+  const hasResumed = useRef(false); // একবারই resume করার জন্য
+
+  // ☁️ Cloud-persistent state — user ফিরে আসলে এখান থেকে resume হবে
+  const [cloudState, setCloudState, isSynced] = useCloudStateDebounced<CloudMusicState>(
+    'music_player',
+    {
+      currentTrackIndex: 0,
+      volume: 70,
+      isMuted: false,
+      shuffleMode: false,
+      repeatMode: 'off',
+      activeFolder: 'songs',
+      savedPosition: 0,
+    },
+    5000 // ৫ সেকেন্ড debounce — API overuse হবে না
+  );
+
+  // Destructure for clean usage — existing code এ কোনো পরিবর্তন লাগবে না
+  const { currentTrackIndex, volume, isMuted, shuffleMode, repeatMode, activeFolder } = cloudState;
+
+  // Wrapper setters — original code এর মতোই call করা যাবে
+  const setCurrentTrackIndex = (index: number | ((prev: number) => number)) => {
+    setCloudState(prev => ({
+      ...prev,
+      currentTrackIndex: typeof index === 'function' ? index(prev.currentTrackIndex) : index,
+      savedPosition: 0, // নতুন track এ position reset
+    }));
+  };
+  const setVolume = (v: number) => setCloudState(prev => ({ ...prev, volume: v }));
+  const setIsMuted = (m: boolean | ((prev: boolean) => boolean)) =>
+    setCloudState(prev => ({ ...prev, isMuted: typeof m === 'function' ? m(prev.isMuted) : m }));
+  const setShuffleMode = (s: boolean | ((prev: boolean) => boolean)) =>
+    setCloudState(prev => ({ ...prev, shuffleMode: typeof s === 'function' ? s(prev.shuffleMode) : s }));
+  const setRepeatMode = (r: RepeatMode | ((prev: RepeatMode) => RepeatMode)) =>
+    setCloudState(prev => ({ ...prev, repeatMode: typeof r === 'function' ? r(prev.repeatMode) : r }));
+  const setActiveFolder = (f: FolderType) => setCloudState(prev => ({ ...prev, activeFolder: f }));
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
@@ -167,6 +210,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
     { title: "Hridoyer Rojonigondha", artist: "Hossain Adnan", type: 'youtube', youtubeId: "H1nPe60uPYw", cover: "https://img.youtube.com/vi/H1nPe60uPYw/maxresdefault.jpg", category: 'gojol' },
     { title: "এলো মাহে রমজান", artist: "Holy Tune", type: 'youtube', youtubeId: "UrC50KP_08o", cover: "https://img.youtube.com/vi/UrC50KP_08o/maxresdefault.jpg", category: 'gojol' },
     { title: "ওগো মা", artist: "Tune Hut", type: 'youtube', youtubeId: "HrYleYeY_8U", cover: "https://img.youtube.com/vi/HrYleYeY_8U/maxresdefault.jpg", category: 'gojol' },
+    { title: "Ami Dekhini Tomay", artist: "Holy Tune", type: 'youtube', youtubeId: "lIQNPWskjuk", cover: "https://img.youtube.com/vi/lIQNPWskjuk/maxresdefault.jpg", category: 'gojol' },
     ];
 
   const currentTrack = playlist[currentTrackIndex];
@@ -177,6 +221,20 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
   const filteredPlaylist = playlist
     .map((track, globalIdx) => ({ track, globalIdx }))
     .filter(({ track }) => track.category === activeFolder);
+
+  // 🔁 Cloud sync হলে last saved position এ resume করো (একবারই)
+  useEffect(() => {
+    if (!isSynced || hasResumed.current) return;
+    if (cloudState.savedPosition > 5 && playerReady && youtubePlayerRef.current) {
+      try {
+        youtubePlayerRef.current.seekTo(cloudState.savedPosition, true);
+        console.log(`[MusicPlayer] Resumed from ${Math.floor(cloudState.savedPosition)}s`);
+      } catch (e) {
+        // Silent fail
+      }
+      hasResumed.current = true;
+    }
+  }, [isSynced, playerReady]);
 
   // 🎬 Load YouTube IFrame API
   useEffect(() => {
@@ -346,8 +404,24 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
       intervalRef.current = setInterval(updateProgress, 100);
     }
 
+    // ⏱️ প্রতি 5 সেকেন্ডে YouTube position cloud এ save করো
+    let positionSaveInterval: NodeJS.Timeout | null = null;
+    if (isPlaying && isYoutube && playerReady) {
+      positionSaveInterval = setInterval(() => {
+        try {
+          if (youtubePlayerRef.current) {
+            const pos = youtubePlayerRef.current.getCurrentTime();
+            if (pos > 0) {
+              setCloudState(prev => ({ ...prev, savedPosition: pos }));
+            }
+          }
+        } catch (_) {}
+      }, 5000);
+    }
+
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
+      if (positionSaveInterval) clearInterval(positionSaveInterval);
     };
   }, [isPlaying, isYoutube, playerReady, currentTrackIndex]);
 

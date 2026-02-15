@@ -1,4 +1,7 @@
 {
+  "buildCommand": "npm run build",
+   "outputDirectory": "dist",
+  "framework": "vite",
   "rewrites": [
     {
       "source": "/sitemap.xml",
@@ -7,6 +10,14 @@
     {
       "source": "/sitemap-images.xml",
       "destination": "/sitemap-images.xml"
+    },
+     {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+     {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     },
     {
       "source": "/robots.txt",
