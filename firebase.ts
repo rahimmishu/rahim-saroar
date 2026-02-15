@@ -1,7 +1,7 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage"; // ✅ ১. স্টোরেজ ইমপোর্ট করা হলো
+import { getStorage } from "firebase/storage";
 
 // 🔥 আপনার Firebase কনফিগ
 const firebaseConfig = {
@@ -14,11 +14,22 @@ const firebaseConfig = {
   measurementId: "G-LNCQDHMM72"
 };
 
-// অ্যাপ ইনিশিলাইজ করা
-// ✅ ২. এখানে 'export' যোগ করা হয়েছে যাতে UserProfile.tsx এটি ব্যবহার করতে পারে
-export const app = initializeApp(firebaseConfig);
+// ✅ FIXED: Duplicate initialization prevention
+// এটা নিশ্চিত করে যে Firebase শুধুমাত্র একবার initialize হবে
+let app;
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
+  console.log('✅ Firebase initialized successfully');
+} else {
+  app = getApp();
+  console.log('✅ Using existing Firebase app');
+}
 
 // 🔥 অথেন্টিকেশন, ডাটাবেস এবং স্টোরেজ এক্সপোর্ট করা
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const storage = getStorage(app); // ✅ ৩. স্টোরেজ এক্সপোর্ট করা হলো (ছবির জন্য লাগবে)
+export const storage = getStorage(app);
+
+// Export app for other uses
+export { app };
+export default app;
