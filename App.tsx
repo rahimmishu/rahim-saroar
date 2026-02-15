@@ -107,6 +107,7 @@ const AppContent: React.FC = () => {
   const perfStatus = usePerformanceOptimizer();
   
   const [isLoading, setIsLoading]           = useState(true);
+  const [showBanner, setShowBanner]         = useState(false);
   // ❌ isToolsOpen সরানো হয়েছে — এখন /tools route
   // ❌ isGalleryOpen সরানো হয়েছে — এখন /gallery route
   const [isChatOpen, setIsChatOpen]         = useState(false);
@@ -212,7 +213,100 @@ const AppContent: React.FC = () => {
           element={
             <>
               {/* Preloader — শুধু home page এ */}
-              {isLoading && <Preloader onFinish={() => setIsLoading(false)} />}
+              {isLoading && (
+                <Preloader
+                  onFinish={() => {
+                    setIsLoading(false);
+                    setShowBanner(true);
+                  }}
+                />
+              )}
+
+              {/* ══ Welcome Banner (Image Modal) ══ */}
+              {showBanner && (
+                <div
+                  onClick={e => e.stopPropagation()}
+                  style={{
+                    position: 'fixed',
+                    inset: 0,
+                    zIndex: 9999,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'rgba(0, 0, 0, 0.35)',
+                    backdropFilter: 'blur(10px) brightness(0.7)',
+                    WebkitBackdropFilter: 'blur(10px) brightness(0.7)',
+                    animation: 'bannerFadeIn 0.4s ease both',
+                    padding: '16px',
+                  }}
+                >
+                  {/* Image Container */}
+                  <div
+                    style={{
+                      position: 'relative',
+                      width: '100%',
+                      maxWidth: '1280px',
+                      aspectRatio: '16/9',
+                      animation: 'bannerScaleIn 0.45s cubic-bezier(0.22,1,0.36,1) both',
+                      borderRadius: '12px',
+                      overflow: 'hidden',
+                      boxShadow: '0 25px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08)',
+                    }}
+                  >
+                    {/* Banner Image */}
+                    <img
+                      src="/banner.jpg"
+                      alt="Welcome Banner"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
+                    />
+
+                    {/* X Close Button — top-right corner */}
+                    <button
+                      onClick={() => setShowBanner(false)}
+                      aria-label="Close banner"
+                      style={{
+                        position: 'absolute',
+                        top: '12px',
+                        right: '12px',
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                        border: '1.5px solid rgba(255,255,255,0.5)',
+                        background: 'rgba(0,0,0,0.55)',
+                        color: '#fff',
+                        fontSize: '18px',
+                        lineHeight: 1,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'background 0.2s, transform 0.2s, border-color 0.2s',
+                        backdropFilter: 'blur(8px)',
+                        zIndex: 10,
+                      }}
+                      onMouseEnter={e => {
+                        const btn = e.currentTarget as HTMLButtonElement;
+                        btn.style.background = 'rgba(220,38,38,0.85)';
+                        btn.style.borderColor = 'rgba(255,255,255,0.8)';
+                        btn.style.transform = 'scale(1.1)';
+                      }}
+                      onMouseLeave={e => {
+                        const btn = e.currentTarget as HTMLButtonElement;
+                        btn.style.background = 'rgba(0,0,0,0.55)';
+                        btn.style.borderColor = 'rgba(255,255,255,0.5)';
+                        btn.style.transform = 'scale(1)';
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              )}
 
               <div
                 className={`transition-opacity duration-700 ease-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}
