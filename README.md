@@ -10,7 +10,6 @@
 <a href="https://git.io/typing-svg">
   <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&duration=3500&pause=1000&color=A855F7&background=00000000&center=true&vCenter=true&multiline=false&width=600&height=50&lines=Building+Next-Gen+Web+Applications+%F0%9F%9A%80;Integrating+AI+into+Real+Products+%F0%9F%A4%96;Crafting+Beautiful+Digital+Experiences+%E2%9C%A8;Open+Source+Contributor+from+Bangladesh+%F0%9F%87%A7%F0%9F%87%A9" alt="Typing SVG" />
 </a>
-
 <br/>
 <!-- Social Badges Row -->
 <p>
