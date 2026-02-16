@@ -166,6 +166,7 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
 
     // ──────────────── 👻 BHOOT ER GOLPO ────────────────
     // ⚠️ নিচের youtubeId গুলো তোমার পছন্দের Bhoot FM / ভূতের গল্পের YouTube video ID দিয়ে replace করো
+    { title: "Bhoot.com - আফ্রিকার এই অভিশপ্ত ভবন এক অন্য পৃথিবী", artist: "RJ Russell", type: 'youtube', youtubeId: "0qdXKb7-dEk", cover: "https://img.youtube.com/vi/0qdXKb7-dEk/maxresdefault.jpg", category: 'ghosts' },
     { title: "Bhoot.com - কানকুরং (আত্মাবন্দি জাদু পর্ব ২)", artist: "RJ Russell", type: 'youtube', youtubeId: "YZZa7LuP0ko", cover: "https://img.youtube.com/vi/YZZa7LuP0ko/maxresdefault.jpg", category: 'ghosts' },
     { title: "Bhoot.com - ঘোড়াখাং", artist: "RJ Russell", type: 'youtube', youtubeId: "lensL6CzsT0", cover: "https://img.youtube.com/vi/lensL6CzsT0/maxresdefault.jpg", category: 'ghosts' },
     { title: "Bhoot.com - টুকু কবিরাজ", artist: "RJ Russell", type: 'youtube', youtubeId: "IzaAqjtqs-0", cover: "https://img.youtube.com/vi/IzaAqjtqs-0/maxresdefault.jpg", category: 'ghosts' },
