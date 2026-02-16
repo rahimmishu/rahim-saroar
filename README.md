@@ -12,7 +12,6 @@
 </a>
 
 <br/>
-
 <!-- Social Badges Row -->
 <p>
   <a href="https://rahim-saroar.vercel.app" target="_blank">
