@@ -24,7 +24,7 @@ import {
 // ── Env vars (set in .env.local + Vercel dashboard) ─────────
 const CLOUDINARY_CLOUD_NAME    = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME as string;
 const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string;
-const ADMIN_EMAIL              = import.meta.env.VITE_GALLERY_ADMIN_EMAIL as string;
+const ADMIN_EMAIL              = import.meta.env.VITE_GALLERY_ADMIN_EMAIL || 'rahimsaroarmishu@gmail.com';
 
 // ── Types ────────────────────────────────────────────────────
 interface Photo {
