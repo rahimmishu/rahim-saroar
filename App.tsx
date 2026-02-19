@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { Analytics } from "@vercel/analytics/next"
 
 // 🚀 Hidden Performance Optimizer (background এ চলবে)
 import { usePerformanceOptimizer } from './hooks/usePerformanceOptimizer';
@@ -16,7 +17,7 @@ import useMobileDetect from './hooks/useMobileDetect';
 import LiteHero from './components/LiteHero';
 import LiteNavbar from './components/LiteNavbar';
 import LiteAbout from './components/LiteAbout';
-import { Analytics } from "@vercel/analytics/next"
+
 
 // ============================================================
 // Full Version Components
