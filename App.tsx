@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { Analytics } from "@vercel/analytics/next"
+
 
 // 🚀 Hidden Performance Optimizer (background এ চলবে)
 import { usePerformanceOptimizer } from './hooks/usePerformanceOptimizer';
@@ -187,7 +187,7 @@ const AppContent: React.FC = () => {
       {!isMobileLite && <SunlightSpotlight className="z-[50]" />}
       {!isMobileLite && <DynamicIsland />}
 
-      <Analytics/>
+
       <ScrollToTop />
 
       {/* সব device এ চলে (lightweight) */}
