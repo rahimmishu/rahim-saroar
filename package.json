@@ -17,6 +17,7 @@
     "@types/three": "^0.182.0",
     "@upstash/redis": "^1.36.2",
     "canvas-confetti": "^1.9.4",
+    "cloudinary": "^2.9.0",
     "clsx": "^2.1.1",
     "firebase": "^12.8.0",
     "framer-motion": "^12.34.0",
