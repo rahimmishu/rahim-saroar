@@ -16,6 +16,7 @@ import useMobileDetect from './hooks/useMobileDetect';
 import LiteHero from './components/LiteHero';
 import LiteNavbar from './components/LiteNavbar';
 import LiteAbout from './components/LiteAbout';
+import { Analytics } from "@vercel/analytics/next"
 
 // ============================================================
 // Full Version Components
@@ -185,6 +186,7 @@ const AppContent: React.FC = () => {
       {!isMobileLite && <SunlightSpotlight className="z-[50]" />}
       {!isMobileLite && <DynamicIsland />}
 
+      <Analytics/>
       <ScrollToTop />
 
       {/* সব device এ চলে (lightweight) */}
