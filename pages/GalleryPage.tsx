@@ -1,153 +1,34 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Camera, ArrowLeft, Instagram } from 'lucide-react';
+import {
+  photos,
+  PERSON_NAME,
+  PERSON_NAME_BN,
+  PAGE_URL,
+  SITE_URL,
+  GALLERY_TITLE,
+  GALLERY_TITLE_SHORT,
+  GALLERY_DESCRIPTION,
+  GALLERY_KEYWORDS,
+  EAGER_LOAD_COUNT,
+  toAbsoluteUrl,
+  buildGalleryJsonLd,
+  buildBreadcrumbJsonLd,
+  buildWebPageJsonLd,
+} from './photos.config';
 
-// ── Site config ───────────────────────────────────────────────────────────────
-const SITE_URL   = 'https://rahim-saroar.vercel.app';
-const PAGE_URL   = `${SITE_URL}/gallery`;
-const PERSON_NAME = 'Rahim Saroar Mishu';
-const DESCRIPTION =
-  'Official photo gallery of Rahim Saroar Mishu — AI enthusiast, web developer, content creator & public speaker from Bangladesh. Browse life moments, workspace setups, travel, college life and more.';
-
-// ── Photos Data ───────────────────────────────────────────────────────────────
-// 🔑 প্রতিটা photo তে: src, caption, alt, title (Google Images এ দেখাবে)
-const photos = [
-  {
-    id: 1,
-    src: `${SITE_URL}/rahim-saroar-mishu-profile.jpg`,
-    caption: 'Profile',
-    alt: 'Rahim Saroar Mishu – AI Enthusiast & Developer from Bangladesh',
-    title: 'Rahim Saroar Mishu Profile Photo',
-  },
-  {
-    id: 2,
-    src: `${SITE_URL}/rahim-saroar-mishu-content-creator.jpg`,
-    caption: 'Content Creation',
-    alt: 'Rahim Saroar Mishu – Video Content Creator, Rhythm of Peace YouTube Channel',
-    title: 'Rahim Saroar Mishu Content Creator',
-  },
-  {
-    id: 3,
-    src: `${SITE_URL}/rahim-saroar-mishu-web-developer.jpg`,
-    caption: 'College',
-    alt: 'Rahim Saroar Mishu – Web Developer, College Student Life Bangladesh',
-    title: 'Rahim Saroar Mishu College Life',
-  },
-  {
-    id: 4,
-    src: `${SITE_URL}/rahim-saroar-mishu-speaker.jpg`,
-    caption: 'Public Speaking',
-    alt: 'Rahim Saroar Mishu – Public Speaker at Tech Event Bangladesh',
-    title: 'Rahim Saroar Mishu Public Speaker',
-  },
-  {
-    id: 5,
-    src: `${SITE_URL}/rahim-saroar-mishu-lifestyle.jpg`,
-    caption: 'Lifestyle',
-    alt: 'Rahim Saroar Mishu – Lifestyle Photography Portrait Bangladesh',
-    title: 'Rahim Saroar Mishu Lifestyle',
-  },
-  {
-    id: 6,
-    src: `${SITE_URL}/rahim-saroar-mishu-coding.jpg`,
-    caption: 'Workspace',
-    alt: 'Rahim Saroar Mishu – Coding Workspace Setup, Python Developer Desk',
-    title: 'Rahim Saroar Mishu Coding Setup',
-  },
-  {
-    id: 7,
-    src: `${SITE_URL}/rahim-saroar-mishu-sugarmill.jpg`,
-    caption: 'Travel',
-    alt: 'Rahim Saroar Mishu – Travel Vlog at Sugarmill Bangladesh',
-    title: 'Rahim Saroar Mishu Travel Bangladesh',
-  },
-  {
-    id: 8,
-    src: `${SITE_URL}/rahim-saroar-mishu-school.jpg`,
-    caption: 'School',
-    alt: 'Rahim Saroar Mishu – School Life Memories, Mangalbari Sirajia',
-    title: 'Rahim Saroar Mishu School Memories',
-  },
-  {
-    id: 9,
-    src: `${SITE_URL}/rahim-saroar-mishu-J.jpg`,
-    caption: 'Workspace',
-    alt: 'Rahim Saroar Mishu – Tech Setup and Desk Tour',
-    title: 'Rahim Saroar Mishu Desk Tour',
-  },
-  {
-    id: 10,
-    src: `${SITE_URL}/rahim-saroar-mishu-fuad.jpg`,
-    caption: 'Friend',
-    alt: 'Rahim Saroar Mishu – Hangout with Friends',
-    title: 'Rahim Saroar Mishu with Friends',
-  },
-  {
-    id: 11,
-    src: `${SITE_URL}/rahim-saroar-mishu-coffee.jpg`,
-    caption: 'Workspace',
-    alt: 'Rahim Saroar Mishu – Late Night Coding with Coffee',
-    title: 'Rahim Saroar Mishu Coding Night',
-  },
-  {
-    id: 12,
-    src: `${SITE_URL}/rahim-saroar-mishu-c.jpg`,
-    caption: 'Workspace',
-    alt: 'Rahim Saroar Mishu – Modern Minimalist Desk Setup',
-    title: 'Rahim Saroar Mishu Minimalist Setup',
-  },
-  {
-    id: 13,
-    src: `${SITE_URL}/rahim-saroar-mishu-biya.jpg`,
-    caption: 'Travel',
-    alt: 'Rahim Saroar Mishu – Wedding Guest, Traditional Panjabi Style',
-    title: 'Rahim Saroar Mishu Wedding Style',
-  },
-];
-
-// ── JSON-LD Structured Data ───────────────────────────────────────────────────
-// Google এটা পড়ে Image Search এ দেখায়
-const buildJsonLd = () => ({
-  '@context': 'https://schema.org',
-  '@type': 'ImageGallery',
-  name: `${PERSON_NAME} – Official Photo Gallery`,
-  description: DESCRIPTION,
-  url: PAGE_URL,
-  author: {
-    '@type': 'Person',
-    name: PERSON_NAME,
-    url: SITE_URL,
-    sameAs: [
-      'https://www.facebook.com/rahimsaroar',
-      'https://github.com/rahimmishu',
-    ],
-    jobTitle: 'AI Enthusiast, Web Developer & Content Creator',
-    nationality: 'Bangladeshi',
-  },
-  image: photos.map((p) => ({
-    '@type': 'ImageObject',
-    contentUrl: p.src,
-    name: p.title,
-    description: p.alt,
-    caption: p.caption,
-    author: { '@type': 'Person', name: PERSON_NAME },
-    copyrightHolder: { '@type': 'Person', name: PERSON_NAME },
-    license: SITE_URL,
-    acquireLicensePage: PAGE_URL,
-  })),
-});
-
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── GalleryPage Component ─────────────────────────────────────────────────────
 const GalleryPage: React.FC = () => {
-  const navigate = useNavigate();
+  const navigate  = useNavigate();
+  const profileImg = toAbsoluteUrl(photos[0].src);
 
-  // ── Dynamic <head> tags (react-helmet ছাড়া) ────────────────────────────────
+  // ── Dynamic <head> injection ───────────────────────────────────────────────
   useEffect(() => {
-    // ── Title ──
     const prevTitle = document.title;
-    document.title = `Photo Gallery – ${PERSON_NAME} | AI Developer Bangladesh`;
+    document.title  = GALLERY_TITLE;
 
-    // helper: meta tag upsert
+    // ── helpers ──────────────────────────────────────────────────────────────
     const setMeta = (attrs: Record<string, string>) => {
       const selector = Object.entries(attrs)
         .filter(([k]) => k !== 'content')
@@ -163,20 +44,23 @@ const GalleryPage: React.FC = () => {
       return el;
     };
 
-    // helper: link tag upsert
     const setLink = (attrs: Record<string, string>) => {
-      let el = document.querySelector<HTMLLinkElement>(`link[rel="${attrs.rel}"]`);
-      if (!el) { el = document.createElement('link'); el.rel = attrs.rel; document.head.appendChild(el); }
+      const rel      = attrs.rel;
+      const existing = attrs.href ?? attrs.hreflang ?? '';
+      let el = document.querySelector<HTMLLinkElement>(`link[rel="${rel}"][href="${existing}"]`);
+      if (!el) {
+        el = document.createElement('link');
+        document.head.appendChild(el);
+      }
       Object.entries(attrs).forEach(([k, v]) => el!.setAttribute(k, v));
       return el;
     };
 
-    // helper: JSON-LD script upsert
     const setJsonLd = (id: string, data: object) => {
       let el = document.getElementById(id) as HTMLScriptElement | null;
       if (!el) {
         el = document.createElement('script');
-        el.id = id;
+        el.id   = id;
         el.type = 'application/ld+json';
         document.head.appendChild(el);
       }
@@ -184,62 +68,92 @@ const GalleryPage: React.FC = () => {
       return el;
     };
 
-    // ── Standard meta ──
+    // ── Standard meta ─────────────────────────────────────────────────────────
     const metas = [
-      setMeta({ name: 'description',        content: DESCRIPTION }),
-      setMeta({ name: 'keywords',            content: 'Rahim Saroar Mishu, Rahim Mishu, Rahim Saroar, রাহিম সরোয়ার মিশু, AI Developer Bangladesh, Web Developer Bangladesh, Content Creator Bangladesh, Photo Gallery, Portfolio' }),
-      setMeta({ name: 'author',              content: PERSON_NAME }),
-      setMeta({ name: 'robots',              content: 'index, follow, max-image-preview:large' }),
-      setMeta({ name: 'googlebot',           content: 'index, follow, max-image-preview:large' }),
+      // Core
+      setMeta({ name: 'description',    content: GALLERY_DESCRIPTION }),
+      setMeta({ name: 'keywords',        content: GALLERY_KEYWORDS }),
+      setMeta({ name: 'author',          content: PERSON_NAME }),
+      setMeta({ name: 'robots',          content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' }),
+      setMeta({ name: 'googlebot',       content: 'index, follow, max-image-preview:large' }),
+      setMeta({ name: 'bingbot',         content: 'index, follow' }),
 
-      // ── Open Graph ──
-      setMeta({ property: 'og:type',         content: 'website' }),
-      setMeta({ property: 'og:title',        content: `Photo Gallery – ${PERSON_NAME}` }),
-      setMeta({ property: 'og:description',  content: DESCRIPTION }),
+      // Geographic — Bangladesh targeting
+      setMeta({ name: 'geo.region',      content: 'BD' }),
+      setMeta({ name: 'geo.placename',   content: 'Bangladesh' }),
+      setMeta({ name: 'language',        content: 'English' }),
+
+      // Open Graph
+      setMeta({ property: 'og:type',         content: 'profile' }),
+      setMeta({ property: 'og:title',        content: GALLERY_TITLE_SHORT }),
+      setMeta({ property: 'og:description',  content: GALLERY_DESCRIPTION }),
       setMeta({ property: 'og:url',          content: PAGE_URL }),
-      setMeta({ property: 'og:image',        content: `${SITE_URL}/rahim-saroar-mishu-profile.jpg` }),
-      setMeta({ property: 'og:image:alt',    content: `${PERSON_NAME} Profile Photo` }),
+      setMeta({ property: 'og:image',        content: profileImg }),
+      setMeta({ property: 'og:image:secure_url', content: profileImg }),
+      setMeta({ property: 'og:image:alt',    content: `${PERSON_NAME} – AI Developer Bangladesh` }),
       setMeta({ property: 'og:image:width',  content: '1200' }),
       setMeta({ property: 'og:image:height', content: '630' }),
-      setMeta({ property: 'og:site_name',    content: `${PERSON_NAME} Portfolio` }),
+      setMeta({ property: 'og:image:type',   content: 'image/jpeg' }),
+      setMeta({ property: 'og:site_name',    content: `${PERSON_NAME} – Portfolio` }),
       setMeta({ property: 'og:locale',       content: 'en_US' }),
+      setMeta({ property: 'profile:username', content: 'rahimsaroar' }),
 
-      // ── Twitter Card ──
+      // Twitter Card
       setMeta({ name: 'twitter:card',        content: 'summary_large_image' }),
-      setMeta({ name: 'twitter:title',       content: `Photo Gallery – ${PERSON_NAME}` }),
-      setMeta({ name: 'twitter:description', content: DESCRIPTION }),
-      setMeta({ name: 'twitter:image',       content: `${SITE_URL}/rahim-saroar-mishu-profile.jpg` }),
+      setMeta({ name: 'twitter:site',        content: '@rahimsaroar' }),
+      setMeta({ name: 'twitter:creator',     content: '@rahimsaroar' }),
+      setMeta({ name: 'twitter:title',       content: GALLERY_TITLE_SHORT }),
+      setMeta({ name: 'twitter:description', content: GALLERY_DESCRIPTION }),
+      setMeta({ name: 'twitter:image',       content: profileImg }),
       setMeta({ name: 'twitter:image:alt',   content: `${PERSON_NAME} Profile Photo` }),
     ];
 
-    // ── Canonical URL ──
-    const canonical = setLink({ rel: 'canonical', href: PAGE_URL });
+    // ── Link tags ─────────────────────────────────────────────────────────────
+    const canonical   = setLink({ rel: 'canonical', href: PAGE_URL });
+    // Preload প্রথম ছবিটা — LCP সবচেয়ে fast হয়
+    const preload     = setLink({ rel: 'preload', href: photos[0].src, as: 'image', fetchpriority: 'high' });
+    // Alternate language — বাংলা ভার্সন থাকলে আলাদা link দাও
+    const altLang     = setLink({ rel: 'alternate', hreflang: 'x-default', href: PAGE_URL });
 
-    // ── JSON-LD Structured Data ──
-    const jsonLd = setJsonLd('gallery-jsonld', buildJsonLd());
+    // ── JSON-LD (multiple schemas) ────────────────────────────────────────────
+    const jsonLdGallery   = setJsonLd('ld-gallery',    buildGalleryJsonLd());
+    const jsonLdWebPage   = setJsonLd('ld-webpage',    buildWebPageJsonLd());
+    const jsonLdBreadcrumb = setJsonLd('ld-breadcrumb', buildBreadcrumbJsonLd());
 
-    // ── Cleanup on unmount ──
+    // ── Cleanup on unmount ────────────────────────────────────────────────────
     return () => {
       document.title = prevTitle;
       metas.forEach((el) => el?.remove());
-      canonical?.remove();
-      jsonLd?.remove();
+      [canonical, preload, altLang, jsonLdGallery, jsonLdWebPage, jsonLdBreadcrumb]
+        .forEach((el) => el?.remove());
     };
   }, []);
 
   return (
-    // itemscope + itemtype = Google Microdata (Schema.org)
     <div
       className="min-h-screen transition-colors duration-300 bg-white dark:bg-black text-slate-900 dark:text-white"
       itemScope
       itemType="https://schema.org/ImageGallery"
     >
-      {/* ── Hidden SEO text (screen reader + Google) ── */}
-      <span className="sr-only" itemProp="name">
-        {PERSON_NAME} Official Photo Gallery – AI Developer, Web Developer & Content Creator Bangladesh
-      </span>
-      <span className="sr-only" itemProp="description">{DESCRIPTION}</span>
-      <link itemProp="url" href={PAGE_URL} />
+      {/* ── Hidden Microdata (crawlers পড়বে, ইউজার দেখবে না) ── */}
+      <meta itemProp="name"        content={`${PERSON_NAME} Official Photo Gallery`} />
+      <meta itemProp="description" content={GALLERY_DESCRIPTION} />
+      <link itemProp="url"         href={PAGE_URL} />
+      <link itemProp="image"       href={profileImg} />
+
+      {/* ── SEO: Breadcrumb (screen reader + Google) ── */}
+      <nav aria-label="Breadcrumb" className="sr-only">
+        <ol itemScope itemType="https://schema.org/BreadcrumbList">
+          <li itemScope itemType="https://schema.org/ListItem">
+            <a itemProp="item" href={SITE_URL}><span itemProp="name">Home</span></a>
+            <meta itemProp="position" content="1" />
+          </li>
+          <li itemScope itemType="https://schema.org/ListItem">
+            <a itemProp="item" href={PAGE_URL}><span itemProp="name">Photo Gallery</span></a>
+            <meta itemProp="position" content="2" />
+          </li>
+        </ol>
+      </nav>
 
       {/* ── Sticky Header ── */}
       <header className="sticky top-0 z-50 border-b border-slate-200 dark:border-neutral-800 bg-white/80 dark:bg-black/80 backdrop-blur-md">
@@ -253,74 +167,85 @@ const GalleryPage: React.FC = () => {
             Back to Home
           </button>
 
-          {/* ── Page Title (H1 — SEO এর জন্য গুরুত্বপূর্ণ) ── */}
+          {/* H1 — page এর সবচেয়ে important SEO element */}
           <h1 className="flex items-center gap-2 text-xl font-bold font-signature text-slate-900 dark:text-white">
             <Camera className="text-purple-500" size={22} aria-hidden="true" />
             <span>Life in <span className="text-purple-500">Frames</span></span>
           </h1>
 
-          {/* spacer */}
           <div className="w-24" aria-hidden="true" />
         </div>
       </header>
 
-      {/* ── Page Content ── */}
+      {/* ── Main Content ── */}
       <main className="max-w-5xl px-4 py-10 mx-auto">
 
-        {/* Sub-heading */}
+        {/* H2 — secondary keyword targeting */}
+        <h2 className="sr-only">
+          {PERSON_NAME} ({PERSON_NAME_BN}) — Official Photo Gallery | AI Developer, Web Developer & Content Creator Bangladesh
+        </h2>
+
         <p className="mb-2 text-center text-slate-500 dark:text-neutral-400">
           A glimpse into my world
         </p>
-        {/* SEO breadcrumb hint */}
         <p className="mb-8 text-xs text-center text-slate-400 dark:text-neutral-600">
           Photos of {PERSON_NAME} — AI Developer & Content Creator, Bangladesh
         </p>
 
         {/* ── Gallery Grid ── */}
-        {/* itemScope ImageGallery এর ভেতরে প্রতিটা photo ImageObject হিসেবে mark */}
         <div
           className="grid grid-cols-2 gap-4 md:grid-cols-3"
           role="list"
           aria-label={`Photo gallery of ${PERSON_NAME}`}
         >
-          {photos.map((photo) => (
-            <figure
-              key={photo.id}
-              role="listitem"
-              className="relative overflow-hidden transition-all shadow-md cursor-pointer group rounded-xl aspect-square hover:shadow-xl transform-gpu bg-slate-100 dark:bg-neutral-900"
-              itemScope
-              itemType="https://schema.org/ImageObject"
-            >
-              {/* ── Schema.org microdata ── */}
-              <link itemProp="contentUrl" href={photo.src} />
-              <meta itemProp="name"        content={photo.title} />
-              <meta itemProp="description" content={photo.alt} />
-              <meta itemProp="author"      content={PERSON_NAME} />
+          {photos.map((photo, index) => {
+            const isEager = index < EAGER_LOAD_COUNT;
 
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                title={photo.title}
-                loading="lazy"
-                decoding="async"
-                itemProp="thumbnail"
-                className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110 will-change-transform"
-                // width/height দিলে CLS কমে, Google Lighthouse খুশি হয়
-                width={600}
-                height={600}
-              />
+            return (
+              <figure
+                key={photo.id}
+                role="listitem"
+                className="relative overflow-hidden transition-all shadow-md cursor-pointer group rounded-xl aspect-square hover:shadow-xl transform-gpu bg-slate-100 dark:bg-neutral-900"
+                itemScope
+                itemType="https://schema.org/ImageObject"
+              >
+                {/* ImageObject Microdata */}
+                <link  itemProp="contentUrl" href={toAbsoluteUrl(photo.src)} />
+                <link  itemProp="url"        href={toAbsoluteUrl(photo.src)} />
+                <meta  itemProp="name"        content={photo.title} />
+                <meta  itemProp="description" content={photo.alt} />
+                <meta  itemProp="author"      content={PERSON_NAME} />
+                <meta  itemProp="creator"     content={PERSON_NAME} />
+                <meta  itemProp="copyrightHolder" content={PERSON_NAME} />
+                {photo.category && <meta itemProp="genre" content={photo.category} />}
 
-              {/* Caption overlay — hover এ দেখায় */}
-              <figcaption className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 opacity-0 bg-black/60 group-hover:opacity-100">
-                <span
-                  itemProp="caption"
-                  className="px-4 py-1 text-sm font-medium text-white border rounded-full border-white/30 bg-black/30 backdrop-blur-sm"
-                >
-                  {photo.caption}
-                </span>
-              </figcaption>
-            </figure>
-          ))}
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  title={photo.title}
+                  // Core Web Vitals: প্রথম ৪টা eager, বাকিগুলো lazy
+                  loading={isEager ? 'eager' : 'lazy'}
+                  decoding={isEager ? 'sync' : 'async'}
+                  fetchPriority={isEager ? 'high' : 'low'}
+                  itemProp="thumbnail"
+                  className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110 will-change-transform"
+                  // width/height দিলে CLS score ভালো থাকে
+                  width={600}
+                  height={600}
+                />
+
+                {/* Caption overlay */}
+                <figcaption className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 opacity-0 bg-black/60 group-hover:opacity-100">
+                  <span
+                    itemProp="caption"
+                    className="px-4 py-1 text-sm font-medium text-white border rounded-full border-white/30 bg-black/30 backdrop-blur-sm"
+                  >
+                    {photo.caption}
+                  </span>
+                </figcaption>
+              </figure>
+            );
+          })}
         </div>
 
         {/* ── Social Link ── */}
@@ -340,14 +265,16 @@ const GalleryPage: React.FC = () => {
           </a>
         </div>
 
-        {/* ── Hidden SEO keyword block (crawlers পড়বে, ইউজার দেখবে না) ── */}
+        {/* ── Hidden SEO paragraph (Google crawl করবে, user দেখবে না) ── */}
         <div className="sr-only" aria-hidden="true">
           <p>
-            Rahim Saroar Mishu photo gallery. Rahim Mishu Bangladesh. রাহিম সরোয়ার মিশু ছবি।
-            AI enthusiast Bangladesh. Web developer portfolio photos. Content creator Bangladesh.
-            Rahim Saroar Mishu images. Rahim Saroar pictures. Young developer Bangladesh.
-            Rhythm of Peace YouTube. Mangalbari Sirajia. Rahim Saroar Mishu workspace.
-            Rahim Mishu coding setup. Rahim Saroar Mishu speaker. Tech event Bangladesh.
+            {PERSON_NAME} ({PERSON_NAME_BN}) is an AI enthusiast, web developer, content creator and public speaker
+            from Bangladesh. This is the official photo gallery of {PERSON_NAME} featuring his life moments,
+            workspace setups, travel photos, college life, school memories, and professional events.
+            Rahim Saroar Mishu runs the Rhythm of Peace YouTube channel and is known for his work in
+            AI, Python, and web development. He studied at Mangalbari Sirajia. This gallery showcases
+            {photos.length} photos across categories including{' '}
+            {[...new Set(photos.map((p) => p.category).filter(Boolean))].join(', ')}.
           </p>
         </div>
       </main>
