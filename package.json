@@ -17,6 +17,7 @@
     "@types/three": "^0.182.0",
     "@upstash/redis": "^1.36.2",
     "@vercel/analytics": "^1.6.1",
+    "@vercel/node": "^5.6.6",
     "canvas-confetti": "^1.9.4",
     "cloudinary": "^2.9.0",
     "clsx": "^2.1.1",

@@ -1,7 +1,5 @@
-// ============================================================
 // api/gallery/[id].ts
-// DELETE /api/gallery/:id  → admin: remove from Redis + Cloudinary
-// ============================================================
+// DELETE /api/gallery/:id → admin remove photo
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Redis } from '@upstash/redis';
@@ -19,52 +17,36 @@ cloudinary.config({
   secure     : true,
 });
 
-const ADMIN_EMAIL  = process.env.GALLERY_ADMIN_EMAIL!;
-const FIREBASE_KEY = process.env.FIREBASE_WEB_API_KEY!;
+const ADMIN_SECRET = process.env.GALLERY_ADMIN_SECRET!;
 const GALLERY_KEY  = 'gallery:photos';
 
-async function verifyAdmin(authHeader?: string): Promise<boolean> {
-  if (!authHeader?.startsWith('Bearer ')) return false;
-  const token = authHeader.slice(7);
-  try {
-    const res = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${FIREBASE_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken: token }),
-      }
-    );
-    if (!res.ok) return false;
-    const data = await res.json();
-    return data.users?.[0]?.email === ADMIN_EMAIL;
-  } catch {
-    return false;
-  }
+function isAdmin(req: VercelRequest): boolean {
+  const secret = req.headers['x-admin-secret'];
+  return typeof secret === 'string' && secret === ADMIN_SECRET;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-secret');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   if (req.method !== 'DELETE') {
     return res.status(405).json({ error: 'Method not allowed.' });
   }
 
-  const isAdmin = await verifyAdmin(req.headers.authorization);
-  if (!isAdmin) return res.status(403).json({ error: 'Forbidden — admin only.' });
+  if (!isAdmin(req)) {
+    return res.status(403).json({ error: 'Forbidden — invalid admin secret.' });
+  }
 
   const { id } = req.query;
   if (!id || typeof id !== 'string') {
     return res.status(400).json({ error: 'Missing photo id.' });
   }
 
-  // Read → filter → write back
   const raw = await redis.get<any>(GALLERY_KEY);
   const photos: any[] = raw
-    ? typeof raw === 'string' ? JSON.parse(raw) : raw
+    ? (typeof raw === 'string' ? JSON.parse(raw) : raw)
     : [];
 
   const target  = photos.find((p) => p.id === id);
@@ -72,7 +54,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   await redis.set(GALLERY_KEY, JSON.stringify(updated));
 
-  // Remove from Cloudinary (best-effort, won't fail the request)
   if (target?.publicId) {
     await cloudinary.uploader.destroy(target.publicId).catch(() => {});
   }

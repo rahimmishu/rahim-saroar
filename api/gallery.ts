@@ -1,8 +1,6 @@
-// ============================================================
 // api/gallery.ts
-// GET  /api/gallery        → public photo list from Redis
-// POST /api/gallery        → admin: add photo metadata to Redis
-// ============================================================
+// GET  /api/gallery  → public photo list
+// POST /api/gallery  → admin add photo (via x-admin-secret header)
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Redis } from '@upstash/redis';
@@ -12,56 +10,41 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-const ADMIN_EMAIL   = process.env.GALLERY_ADMIN_EMAIL!;   // your admin email
-const FIREBASE_KEY  = process.env.FIREBASE_WEB_API_KEY!;  // Firebase web API key
-const GALLERY_KEY   = 'gallery:photos';
+const ADMIN_SECRET = process.env.GALLERY_ADMIN_SECRET!;
+const GALLERY_KEY  = 'gallery:photos';
 
-// ── Verify Firebase ID Token via REST (no Admin SDK needed) ──
-async function verifyAdmin(authHeader?: string): Promise<boolean> {
-  if (!authHeader?.startsWith('Bearer ')) return false;
-  const token = authHeader.slice(7);
-  try {
-    const res = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${FIREBASE_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken: token }),
-      }
-    );
-    if (!res.ok) return false;
-    const data = await res.json();
-    return data.users?.[0]?.email === ADMIN_EMAIL;
-  } catch {
-    return false;
-  }
+function isAdmin(req: VercelRequest): boolean {
+  const secret = req.headers['x-admin-secret'];
+  return typeof secret === 'string' && secret === ADMIN_SECRET;
 }
 
-// ── Helper: get photos from Redis ────────────────────────────
 async function getPhotos(): Promise<any[]> {
   const raw = await redis.get<any>(GALLERY_KEY);
   if (!raw) return [];
   return typeof raw === 'string' ? JSON.parse(raw) : raw;
 }
 
-// ── Handler ──────────────────────────────────────────────────
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-secret');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // ── GET: public, no auth needed ──────────────────────────
+  // ── GET: public ──────────────────────────────────────────
   if (req.method === 'GET') {
-    const photos = await getPhotos();
-    return res.status(200).json({ photos });
+    try {
+      const photos = await getPhotos();
+      return res.status(200).json({ photos });
+    } catch (e: any) {
+      return res.status(500).json({ error: e.message });
+    }
   }
 
   // ── POST: admin only ─────────────────────────────────────
   if (req.method === 'POST') {
-    const isAdmin = await verifyAdmin(req.headers.authorization);
-    if (!isAdmin) return res.status(403).json({ error: 'Forbidden — admin only.' });
+    if (!isAdmin(req)) {
+      return res.status(403).json({ error: 'Forbidden — invalid admin secret.' });
+    }
 
     const { src, caption, alt, publicId } = req.body ?? {};
     if (!src || !caption) {
@@ -70,15 +53,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const newPhoto = {
       id: `ph_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-      src,
+      src: String(src),
       caption: String(caption).trim(),
       alt: String(alt || caption).trim(),
-      ...(publicId ? { publicId } : {}),
+      ...(publicId ? { publicId: String(publicId) } : {}),
       createdAt: Date.now(),
     };
 
     const photos = await getPhotos();
-    photos.unshift(newPhoto); // newest first
+    photos.unshift(newPhoto);
     await redis.set(GALLERY_KEY, JSON.stringify(photos));
 
     return res.status(201).json({ photo: newPhoto });

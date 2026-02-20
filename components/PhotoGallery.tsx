@@ -25,6 +25,7 @@ import {
 const CLOUDINARY_CLOUD_NAME    = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME as string;
 const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string;
 const ADMIN_EMAIL              = import.meta.env.VITE_GALLERY_ADMIN_EMAIL || 'rahimsaroarmishu@gmail.com';
+const ADMIN_SECRET = import.meta.env.VITE_GALLERY_ADMIN_SECRET as string;
 
 // ── Types ────────────────────────────────────────────────────
 interface Photo {
@@ -49,9 +50,8 @@ async function apiFetch(path: string, options?: RequestInit) {
   return res.json();
 }
 
-async function getAuthHeader(user: User): Promise<{ Authorization: string }> {
-  const token = await user.getIdToken();
-  return { Authorization: `Bearer ${token}` };
+function getAdminHeader() {
+  return { 'x-admin-secret': ADMIN_SECRET };
 }
 
 // ── Cloudinary direct upload ─────────────────────────────────
@@ -207,7 +207,7 @@ export default function PhotoGallery() {
         publicId  = res.publicId;
       }
 
-      const headers = await getAuthHeader(currentUser!);
+      const headers = getAdminHeader();
       await apiFetch('/api/gallery', {
         method: 'POST',
         headers,
@@ -241,7 +241,7 @@ export default function PhotoGallery() {
     if (!deleteTarget || !currentUser) return;
     setDeleteBusy(true);
     try {
-      const headers = await getAuthHeader(currentUser);
+      const headers = getAdminHeader();
       await apiFetch(`/api/gallery/${deleteTarget.id}`, { method: 'DELETE', headers });
       setDeleteTarget(null);
       await fetchPhotos();
