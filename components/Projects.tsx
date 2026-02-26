@@ -1,21 +1,45 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, MouseEvent } from 'react';
 import { PROJECTS } from '../constants';
 import { ChevronRight, X, Copy, Check, Terminal, Play, Eye, ExternalLink } from 'lucide-react';
-import Tilt3D from './Tilt3D'; // ✅ Tilt3D ইমপোর্ট
+import Tilt3D from './Tilt3D';
 
 const Projects: React.FC = () => {
-  // ১. কোড মডালের জন্য স্টেট
   const [showCodeModal, setShowCodeModal] = useState(false);
   const [activeCode, setActiveCode] = useState(""); 
   const [activeFilename, setActiveFilename] = useState(""); 
   const [copied, setCopied] = useState(false);
   const codeRef = useRef<HTMLDivElement>(null);
 
-  // ২. ভিডিও প্লেয়ারের জন্য স্টেট
   const [showVideoModal, setShowVideoModal] = useState(false);
-  
-  // 🔵 আপনার ফেসবুক পেজের লিংক
   const facebookPageLink = "https://www.facebook.com/rhythm2OfPeace";
+
+  // ---------------------------------------------------------
+  // 💡 Spotlight & Subtle Tilt Effect Logic for Flagship Card
+  // ---------------------------------------------------------
+  const flagshipRef = useRef<HTMLDivElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (!flagshipRef.current) return;
+    const rect = flagshipRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setPosition({ x, y });
+
+    // অত্যন্ত স্মুথ এবং সামান্য টিল্ট ক্যালকুলেশন (Max 1.5 degrees)
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const tiltX = -((y - centerY) / centerY) * 1.5;
+    const tiltY = ((x - centerX) / centerX) * 1.5;
+    setTilt({ x: tiltX, y: tiltY });
+  };
+
+  const handleMouseLeave = () => {
+    setIsFocused(false);
+    setTilt({ x: 0, y: 0 }); // মাউস সরালে স্মুথলি আগের জায়গায় ফিরে আসবে
+  };
 
   // ---------------------------------------------------------
   // 💻 কোড ১: হ্যাকার স্টাইল GPS ট্র্যাকার
@@ -60,7 +84,6 @@ class GeoTracer_Elite:
     def locate_target_coordinates(self):
         print(f"\\n[*] Triangulating position based on IP signature...")
         try:
-            # Simulated Geolocation
             g = geocoder.ip('me') 
             
             if g.ok:
@@ -93,7 +116,6 @@ if __name__ == "__main__":
     tracer.locate_target_coordinates()
     sys.exit(0)`;
 
-
   // ---------------------------------------------------------
   // 💻 কোড ২: হ্যান্ড ট্র্যাকিং সিস্টেম
   // ---------------------------------------------------------
@@ -116,11 +138,10 @@ class HandDetector:
         self.detectionCon = detectionCon
         self.trackCon = trackCon
 
-        # Initialize MediaPipe Hands Module
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(self.mode, self.maxHands, 
-                                                            self.complexity, self.detectionCon, 
-                                                            self.trackCon)
+                                        self.complexity, self.detectionCon, 
+                                        self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
         self.tipIds = [4, 8, 12, 16, 20]
         
@@ -129,44 +150,33 @@ class HandDetector:
         print("[SYSTEM] Calibrating Optical Sensors...")
 
     def find_hands(self, img, draw=True):
-        """Processes the frame to detect hands and landmarks."""
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(imgRGB)
 
         if self.results.multi_hand_landmarks:
             for handLms in self.results.multi_hand_landmarks:
                 if draw:
-                    # Draw skeletal connections in Matrix Green
-                    self.mpDraw.draw_landmarks(img, handLms, 
-                                                              self.mpHands.HAND_CONNECTIONS)
+                    self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS)
         return img
 
     def find_position(self, img, handNo=0, draw=True):
-        """Calculates specific landmark coordinates."""
         lmList = []
         if self.results.multi_hand_landmarks:
             myHand = self.results.multi_hand_landmarks[handNo]
-            
             for id, lm in enumerate(myHand.landmark):
                 h, w, c = img.shape
                 cx, cy = int(lm.x * w), int(lm.y * h)
                 lmList.append([id, cx, cy])
-                
                 if draw:
                     cv2.circle(img, (cx, cy), 5, (0, 255, 0), cv2.FILLED)
         return lmList
 
     def fingers_up(self, lmList):
-        """Determines which fingers are extended."""
         fingers = []
-        
-        # Thumb Logic (X-axis based)
         if lmList[self.tipIds[0]][1] > lmList[self.tipIds[0] - 1][1]:
             fingers.append(1)
         else:
             fingers.append(0)
-
-        # 4 Fingers Logic (Y-axis based)
         for id in range(1, 5):
             if lmList[self.tipIds[id]][2] < lmList[self.tipIds[id] - 2][2]:
                 fingers.append(1)
@@ -179,16 +189,11 @@ def run_system_diagnostic():
     print("[DIAGNOSTIC] Frame Rate: 60 FPS")
     print("[DIAGNOSTIC] Tracking Confidence: 98.4%")
 
-# =========================================
-# MAIN EXECUTION LOOP
-# =========================================
 if __name__ == "__main__":
     detector = HandDetector()
     run_system_diagnostic()
-    
     cap = cv2.VideoCapture(0)
     pTime = 0
-    
     print("[*] STARTING VISUAL INTERFACE...")
     
     while True:
@@ -200,42 +205,32 @@ if __name__ == "__main__":
             fingers = detector.fingers_up(lmList)
             print(f"Active Fingers: {fingers.count(1)}")
         
-        # Frame Rate Calculation
         cTime = time.time()
         fps = 1 / (cTime - pTime)
         pTime = cTime
         
-        cv2.putText(img, str(int(fps)), (10, 70), 
-                    cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
-        
+        cv2.putText(img, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
         cv2.imshow("Neural Hand Track", img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break`;
 
-
-  // 🎮 বাটন লজিক
   const handleAction = (project: any) => {
-    // 1. GPS Project -> Show GPS Code
     if (project.title.includes("GPS") || project.title.includes("Tracker")) {
       setActiveCode(gpsCode);
       setActiveFilename("gps_tracker_v4.py");
       setShowCodeModal(true);
     } 
-    // 2. Hand Tracking Project -> Show Hand Code
     else if (project.title.includes("Hand") || project.title.includes("Tracking")) {
       setActiveCode(handCode);
       setActiveFilename("gesture_core_ai.py");
       setShowCodeModal(true);
     }
-    // 3. AI Project -> Show Video
     else if (project.title.includes("AI") || project.title.includes("Assistant")) {
       setShowVideoModal(true);
     } 
-    // 4. Rhythm of Peace -> Open Facebook Page
     else if (project.title.includes("Rhythm") || project.title.includes("Peace")) {
         window.open(facebookPageLink, "_blank");
     }
-    // 5. Others
     else {
       alert("Demo link coming soon!"); 
     }
@@ -254,10 +249,9 @@ if __name__ == "__main__":
   }, [showCodeModal]);
 
   return (
-    // 🔥 Update 1: Reduced py-24 to py-12 for mobile
     <section id="projects" className="relative py-12 transition-colors duration-300 md:py-24 bg-slate-50 dark:bg-black">
       <div className="container px-4 mx-auto md:px-8">
-        {/* 🔥 Update 2: Reduced margins and font sizes for mobile */}
+        
         <div className="mb-10 text-center md:mb-16">
           <h2 className="mb-4 text-2xl font-extrabold md:text-4xl text-slate-900 dark:text-white">Featured Projects</h2>
           <p className="max-w-2xl mx-auto text-base md:text-lg text-slate-600 dark:text-slate-400">
@@ -265,17 +259,102 @@ if __name__ == "__main__":
           </p>
         </div>
 
+        {/* 🌟 PREMIUM FLAGSHIP PROJECT: NOTCH FOR WINDOWS 🌟 */}
+        <div className="mb-12 md:mb-16" style={{ perspective: '2000px' }}>
+          <div 
+            ref={flagshipRef}
+            onMouseMove={handleMouseMove}
+            onMouseEnter={() => setIsFocused(true)}
+            onMouseLeave={handleMouseLeave}
+            onClick={() => window.open('https://apple-notch.vercel.app', '_blank')}
+            className="relative flex flex-col md:flex-row items-center overflow-hidden cursor-pointer rounded-3xl bg-[#0A0A0F] border border-white/10 shadow-[0_20px_60px_-15px_rgba(99,102,241,0.2)] group hover:shadow-[0_20px_80px_-15px_rgba(99,102,241,0.4)] hover:border-indigo-500/30"
+            style={{
+              transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+              transition: isFocused 
+                ? 'transform 0.1s ease-out, box-shadow 0.5s ease, border-color 0.5s ease' 
+                : 'transform 0.5s ease-out, box-shadow 0.5s ease, border-color 0.5s ease',
+            }}
+          >
+            {/* ✨ Spotlight Mouse Glow Effect */}
+            <div
+              className="absolute inset-0 z-0 transition-opacity duration-500 pointer-events-none"
+              style={{
+                opacity: isFocused ? 1 : 0,
+                background: `radial-gradient(800px circle at ${position.x}px ${position.y}px, rgba(99,102,241,0.12), transparent 40%)`,
+              }}
+            />
+
+            {/* Background ambient glow */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(99,102,241,0.15)_0%,_transparent_50%)] pointer-events-none" />
+            <div className="absolute inset-0 transition-opacity duration-700 opacity-0 pointer-events-none bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+
+            {/* Text Content (Left Side) */}
+            <div className="relative z-10 flex flex-col justify-center w-full p-8 md:w-1/2 md:p-12">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 mb-6 text-xs font-bold tracking-wide text-indigo-300 uppercase border w-max rounded-full bg-indigo-500/10 border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.3)]">
+                <span className="relative flex w-2 h-2 mr-1">
+                  <span className="absolute inline-flex w-full h-full bg-indigo-400 rounded-full opacity-75 animate-ping"></span>
+                  <span className="relative inline-flex w-2 h-2 bg-indigo-500 rounded-full"></span>
+                </span>
+                Flagship Product
+              </div>
+              
+              <h3 className="mb-4 text-4xl font-extrabold tracking-tight text-white md:text-5xl font-display">
+                Notch <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">for Windows</span>
+              </h3>
+              
+              <p className="mb-8 text-base leading-relaxed text-white/50 md:text-lg">
+                Bring the elegant Dynamic Island experience to your PC. The first truly seamless, fully functional, and beautifully designed notch for Windows 10 & 11.
+              </p>
+              
+              <div className="flex items-center gap-4">
+                <button className="flex items-center gap-2.5 px-7 py-3 text-sm font-semibold text-black transition-transform bg-white rounded-full shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-105 hover:bg-white/90">
+                  <svg viewBox="0 0 384 512" fill="currentColor" className="w-[14px] h-[14px] pb-[1px] text-black">
+                    <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.3 48.6-.8 90.5-90.8 103.1-125.5-44.3-18.9-62.4-59.5-62.2-85.1zM210.1 87c21.8-26.8 31.2-54.6 29.2-86.2-24.3 3.4-53.8 18.6-72.7 44.4-15.6 21-29.2 49-26 84.7 27.6 2.3 50.8-12.7 69.5-42.9z" />
+                  </svg>
+                  Explore Mac Now
+                </button>
+              </div>
+            </div>
+
+            {/* Visual Presentation (Right Side - MacBook Pro Style Notch & Video) */}
+            <div className="relative flex items-center justify-center w-full p-6 md:w-1/2 min-h-[300px]">
+               {/* MacBook Frame Container */}
+               <div className="relative z-10 w-full max-w-[450px] aspect-[16/10] bg-black rounded-t-[24px] overflow-hidden border-[6px] border-[#1a1a1a] border-b-0 shadow-2xl group-hover:shadow-indigo-500/20 transition-shadow">
+                  
+                  {/* The Real Notch (Overlay on top of video) */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[34px] w-[160px] bg-black rounded-b-[20px] z-20 flex items-center justify-center">
+                      {/* Camera/sensor indicators */}
+                      <div className="flex gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#1a1a1a]"></div>
+                          <div className="w-2 h-2 rounded-full bg-[#0d0d0d] border-[0.5px] border-[#333]"></div>
+                      </div>
+                  </div>
+
+                  {/* The Screen Content (YouTube Video Autoplay) */}
+                  <div className="relative w-full h-full overflow-hidden bg-black rounded-t-[18px]">
+                     <iframe
+                        src="https://www.youtube.com/embed/e1QTM-IwH7M?autoplay=1&mute=1&loop=1&playlist=e1QTM-IwH7M&controls=0&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3"
+                        className="w-full h-full scale-[1.35] pointer-events-none"
+                        title="Notch Demo"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                     ></iframe>
+                     <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                  </div>
+               </div>
+            </div>
+
+          </div>
+        </div>
+        {/* 🌟 END OF FLAGSHIP PROJECT 🌟 */}
+
         <div className="grid grid-cols-1 gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-4">
           {PROJECTS.map((project) => (
-            
-            // 🔥 UPDATE: SpotlightCard এর পরিবর্তে Tilt3D ব্যবহার করা হয়েছে
             <Tilt3D key={project.id} className="h-full">
              <div className="relative flex flex-col h-full overflow-hidden transition-all duration-300 bg-white shadow-sm dark:bg-zinc-950 rounded-2xl group hover:shadow-xl dark:border-zinc-800">
-                
-                {/* ✨ Shimmer Effect Layer */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none z-10" />
+                <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
 
-                {/* 🔥 Update 3: Reduced image height to h-40 for mobile */}
                 <div className="relative h-40 overflow-hidden md:h-48 bg-slate-200 dark:bg-zinc-900">
                   <img 
                     src={project.image} 
@@ -285,7 +364,6 @@ if __name__ == "__main__":
                   <div className="absolute inset-0 transition-colors bg-black/10 group-hover:bg-transparent" />
                 </div>
 
-                {/* 🔥 Update 4: Reduced padding to p-5 for mobile */}
                 <div className="relative z-20 flex flex-col flex-grow p-5 md:p-6">
                   <h3 className="mb-2 text-lg font-bold transition-colors text-slate-900 dark:text-white group-hover:text-primary line-clamp-1">
                     {project.title}
@@ -301,7 +379,6 @@ if __name__ == "__main__":
                     >
                       {project.action}
                       <span className="bg-blue-50 dark:bg-zinc-800 p-1.5 rounded-full group-hover:bg-primary group-hover:text-white transition-all">
-                          {/* ডাইনামিক আইকন সিলেকশন */}
                           {project.title.includes("AI") ? <Play size={16} fill="currentColor"/> : 
                            project.title.includes("Hand") ? <Eye size={16} /> :
                            project.title.includes("GPS") ? <Terminal size={16} /> :
@@ -321,8 +398,6 @@ if __name__ == "__main__":
       {showCodeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 duration-300 bg-black/90 backdrop-blur-sm animate-in fade-in">
           <div className="bg-[#0a0a0a] rounded-lg shadow-2xl w-full max-w-3xl border border-green-500/30 overflow-hidden font-mono relative">
-            
-             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 bg-[#111111] border-b border-green-500/30 relative z-10">
               <div className="flex items-center gap-3">
                 <Terminal size={18} className="text-green-500 animate-pulse" />
@@ -338,14 +413,12 @@ if __name__ == "__main__":
               </div>
             </div>
 
-            {/* Code Body */}
-            <div ref={codeRef} className="p-6 overflow-auto bg-[#0a0a0a] max-h-[70vh] custom-scrollbar relative z-10">
+            <div ref={codeRef} className="relative z-10 p-6 overflow-auto bg-[#0a0a0a] max-h-[70vh] custom-scrollbar">
               <pre className="text-sm leading-relaxed text-green-400 whitespace-pre">
                 <code>{activeCode}</code>
               </pre>
             </div>
 
-            {/* Footer */}
             <div className="px-4 py-2 bg-[#111111] border-t border-green-500/30 text-green-600/70 text-xs font-medium flex justify-between relative z-10">
               <span>STATUS: ACTIVE RUNTIME</span>
               <span>ENCRYPTION: ON</span>
