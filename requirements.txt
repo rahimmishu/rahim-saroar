@@ -1,5 +1,8 @@
 python-telegram-bot>=21.0
+python-telegram-bot[job-queue]
 python-dotenv
 requests
 flask
 yt-dlp
+upstash-redis
+pytz
