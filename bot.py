@@ -46,41 +46,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     await update.message.reply_text(text, parse_mode='HTML', reply_markup=get_webapp_keyboard())
 
-async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = (
-        "👨‍💻 <b>আমার সম্পর্কে (About Me)</b>\n"
-        "━━━━━━━━━━━━━━━━━━━━\n\n"
-        "আমি বর্তমানে একাদশ শ্রেণিতে বিজ্ঞান বিভাগে অধ্যয়নরত।\n\n"
-        "💡 <b>প্যাশন ও স্কিলস:</b>\n"
-        "• কোডিং ও প্রবলেম সলভিং (Python, React, Next.js)\n"
-        "• কনটেন্ট ক্রিয়েশন ও পাবলিক স্পিকিং\n"
-        "• AI ইন্টিগ্রেশন ও ডেভেলপমেন্ট"
-    )
-    await update.message.reply_text(text, parse_mode='HTML', reply_markup=get_webapp_keyboard())
-
-async def projects(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = (
-        "💻 <b>উল্লেখযোগ্য প্রজেক্টসমূহ</b>\n"
-        "━━━━━━━━━━━━━━━━━━━━\n\n"
-        "🎓 <b>EduSpace:</b>\n"
-        "<i>SSC/HSC শিক্ষার্থীদের জন্য একটি আধুনিক এডুকেশনাল প্ল্যাটফর্ম।</i>\n\n"
-        "📰 <b>Khobor Shunbi?:</b>\n"
-        "<i>একাধিক সোর্স থেকে ডেটা সংগ্রহকারী একটি চমৎকার AI নিউজ এগ্রিগেটর।</i>\n\n"
-        "📍 <b>Stealth GPS Tracker:</b>\n"
-        "<i>পাইথন দিয়ে তৈরি একটি অ্যাডভান্সড জিপিএস ট্র্যাকিং সিস্টেম।</i>\n\n"
-        "📌 <i>আরও প্রজেক্ট দেখতে নিচের অ্যাপটি ওপেন করুন!</i>"
-    )
-    await update.message.reply_text(text, parse_mode='HTML', reply_markup=get_webapp_keyboard())
-
-async def ai_works(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = (
-        "🤖 <b>AI প্রজেক্ট ও ক্রিয়েশনস</b>\n"
-        "━━━━━━━━━━━━━━━━━━━━\n\n"
-        "আমি বর্তমানে <b>J.A.R.V.I.S</b> নামের একটি পার্সোনাল AI অ্যাসিস্ট্যান্ট ডেভেলপ করছি, যা ভয়েস কমান্ডের মাধ্যমে পুরো পিসি কন্ট্রোল করতে সক্ষম!\n\n"
-        "এছাড়াও আমি AI টুলস ব্যবহার করে সিনেম্যাটিক এবং হাইপার-রিয়েলিস্টিক ইমেজ জেনারেট করতে ভীষণ পছন্দ করি।"
-    )
-    await update.message.reply_text(text, parse_mode='HTML', reply_markup=get_webapp_keyboard())
-
 async def contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
         "📧 <b>যোগাযোগ (Contact)</b>\n"
@@ -132,88 +97,14 @@ async def yt(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await processing_msg.edit_text("❌ <b>Error:</b> ভিডিওটি ডাউনলোড করা সম্ভব হয়নি।", parse_mode='HTML')
 
-# --- Phone Specifications Command (Open Source API) ---
-async def phone(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not context.args:
-        await update.message.reply_text("⚠️ <b>ব্যবহারবিধি:</b> /phone &lt;মডেলের নাম&gt;\n<i>উদাহরণ: /phone iPhone 15 Pro Max</i>", parse_mode='HTML')
-        return
-
-    query = "%20".join(context.args)
-    phone_name_display = " ".join(context.args)
-    processing_msg = await update.message.reply_text(f"🔍 <i>'{phone_name_display}' এর তথ্য খোঁজা হচ্ছে...</i>", parse_mode='HTML')
-
-    try:
-        # Step 1: Open Source API দিয়ে ফোন সার্চ করা
-        search_url = f"https://api-mobilespecs.azharimm.dev/v2/search?query={query}"
-        search_res = requests.get(search_url).json()
-
-        if search_res.get('status') and search_res.get('data') and search_res['data'].get('phones'):
-            # প্রথম সার্চ রেজাল্ট থেকে ফোনের Slug (ID) নেওয়া
-            phone_slug = search_res['data']['phones'][0]['slug']
-            
-            # Step 2: Slug ব্যবহার করে ফোনের পুরো ডিটেইলস বের করা
-            details_url = f"https://api-mobilespecs.azharimm.dev/v2/{phone_slug}"
-            details_res = requests.get(details_url).json()
-            
-            if details_res.get('status'):
-                data = details_res['data']
-                
-                name = data.get('phone_name', phone_name_display)
-                image_url = data.get('thumbnail', 'https://via.placeholder.com/400?text=No+Image')
-                release_date = data.get('release_date', 'অজানা')
-                os = data.get('os', 'অজানা')
-                storage = data.get('storage', 'অজানা')
-                
-                # স্পেসিফিকেশন অ্যারে থেকে নির্দিষ্ট ডেটা ফিল্টার করা
-                specs = data.get('specifications', [])
-                display = "অজানা"
-                camera = "অজানা"
-                battery = "অজানা"
-                processor = "অজানা"
-                
-                for spec in specs:
-                    title = spec.get('title', '').lower()
-                    if title == 'display' and spec.get('specs'):
-                        display = spec['specs'][0]['val'][0] if spec['specs'][0].get('val') else "অজানা"
-                    elif title == 'main camera' and spec.get('specs'):
-                        camera = spec['specs'][0]['val'][0] if spec['specs'][0].get('val') else "অজানা"
-                    elif title == 'battery' and spec.get('specs'):
-                        battery = spec['specs'][0]['val'][0] if spec['specs'][0].get('val') else "অজানা"
-                    elif title == 'platform' and spec.get('specs'):
-                        for p_spec in spec['specs']:
-                            if p_spec.get('name', '').lower() == 'chipset' and p_spec.get('val'):
-                                processor = p_spec['val'][0]
-                
-                # টেলিগ্রামের জন্য মেসেজ সাজানো
-                text = f"📱 <b>{name}</b>\n"
-                text += "━━━━━━━━━━━━━━━━━━\n"
-                text += f"📅 <b>রিলিজ:</b> {release_date}\n"
-                text += f"🖥️ <b>ডিসপ্লে:</b> {display}\n"
-                text += f"⚙️ <b>প্রসেসর:</b> {processor}\n"
-                text += f"💾 <b>স্টোরেজ ও OS:</b> {storage} | {os}\n"
-                text += f"📸 <b>ক্যামেরা:</b> {camera}\n"
-                text += f"🔋 <b>ব্যাটারি:</b> {battery}\n"
-                text += "━━━━━━━━━━━━━━━━━━"
-
-                await processing_msg.delete()
-                await context.bot.send_photo(chat_id=update.effective_chat.id, photo=image_url, caption=text, parse_mode='HTML')
-            else:
-                await processing_msg.edit_text(f"❌ <b>দুঃখিত:</b> '{phone_name_display}' এর বিস্তারিত তথ্য পাওয়া যায়নি।", parse_mode='HTML')
-        else:
-            await processing_msg.edit_text(f"❌ <b>দুঃখিত:</b> '{phone_name_display}' নামের কোনো ফোন ডেটাবেসে পাওয়া যায়নি। সঠিক নাম লেখার চেষ্টা করুন।", parse_mode='HTML')
-
-    except Exception as e:
-        print(f"[Phone Command Error]: {e}")
-        await processing_msg.edit_text("❌ <b>Error:</b> সার্ভার কানেকশন ফেইল করেছে। কিছুক্ষণ পর আবার চেষ্টা করুন।", parse_mode='HTML')
-
 # --- Ramadan Assistant ---
 RAMADAN_CONTENT = {
     "sehri_dua": "<b>সেহরির নিয়ত:</b>\nنَوَيْتُ اَنْ اُصُوْمَ غَدًا مِّنْ شَهْرِ رَمْضَانَ الْمُبَارَكِ فَرْضَا لَكَ يَا اللهُ فَتَقَبَّل مِنِّى اِنَّكَ اَنْتَ السَّمِيْعُ الْعَلِيْم\n\n<b>উচ্চারণ:</b> নাওয়াইতু আন আসুমা গাদাম মিন শাহরি রামাদানাল মুবারাকি ফারদাল্লাকা ইয়া আল্লাহু ফাতাকাব্বাল মিন্নি ইন্নাকা আনতাস সামিউল আলিম।",
-    "iftar_dua": "<b>ইফতারের দোয়া:</b>\nاَللَّهُمَّ لَكَ صُمْتُ وَ عَلَى رِزْقِكَ اَفْطَرْتُ\n\n<b>উচ্চারণ:</b> আল্লাহুম্মা লাকা সুমতু ওয়া আলা রিযক্বিকা আফতারতু।",
+    "iftar_dua": "<b>ইফতারের দোয়া:</b>\nاَللَّهُمَّ لَكَ صُمْتُ وَ عَلَى رِزْقِكَ اَفْطَرْتُ\n\n<b>উচ্চারণ:</b> আল্লাহুম্মা লাকা subhту ওয়া আলা রিযক্বিকা আফতারতু।",
     "rakaats": {
         "Fajr": "ফজর: ২ রাকাত সুন্নত, ২ রাকাত ফরজ (মোট ৪ রাকাত)।",
         "Dhuhr": "যোহর: ৪ সুন্নত, ৪ ফরজ, ২ সুন্নত, ২ নফল (মোট ১২ রাকাত)।",
-        "Asr": "আসর: ৪ সুন্নত, ৪ ফরজ (মোট ৮ রাকাত)।",
+        "Asr": "আসর: ৪ সুন্নত, ৪ ফরজ (মোট ۸ রাকাত)।",
         "Maghrib": "মাগরিব: ৩ ফরজ, ২ সুন্নত, ২ নফল (মোট ৭ রাকাত)।",
         "Isha": "এশা ও তারাবিহ: ৪ সুন্নত, ৪ ফরজ, ২ সুন্নত, ২ নফল, ৩ বিতর (মোট ১৫ রাকাত) এবং ২০ রাকাত তারাবিহ।"
     }
@@ -329,16 +220,12 @@ if __name__ == '__main__':
         app = ApplicationBuilder().token(TOKEN).build()
 
         app.add_handler(CommandHandler("start", start))
-        app.add_handler(CommandHandler("about", about))
-        app.add_handler(CommandHandler("projects", projects))
-        app.add_handler(CommandHandler("ai_works", ai_works))
         app.add_handler(CommandHandler("contact", contact))
         app.add_handler(CommandHandler("khobor", khobor))
         app.add_handler(CommandHandler("yt", yt))
         app.add_handler(CommandHandler("ramadan", ramadan))
         app.add_handler(MessageHandler(filters.LOCATION, handle_location))
         app.add_handler(CallbackQueryHandler(button_handler))
-        app.add_handler(CommandHandler("phone", phone))
 
         app.job_queue.run_repeating(check_alerts, interval=60, first=10)
 
