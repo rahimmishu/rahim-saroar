@@ -1,8 +1,14 @@
+import os
 import requests
+from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-# ⚠️ সতর্কতা: প্রোডাকশনে যাওয়ার আগে টোকেনটি .env ফাইলে লুকিয়ে রাখবে
+# .env.local ফাইল থেকে ডেটা লোড করা
+load_dotenv('.env.local')
+
+# টোকেনটি ভেরিয়েবলে সেট করা
+TOKEN = os.getenv('TOKEN')
 
 WEB_APP_URL = 'https://rahim-saroar.vercel.app/'
 
@@ -55,39 +61,44 @@ async def contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(text, parse_mode='Markdown', reply_markup=get_webapp_keyboard())
 
 # 🆕 নতুন যুক্ত করা 'khobor' ফাংশন
+# 🆕 আপডেট করা 'khobor' ফাংশন (আসল খবরের জন্য)
 async def khobor(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # ইউজারকে জানানো হচ্ছে যে খবর খোঁজা হচ্ছে
-    processing_msg = await update.message.reply_text("⏳ 'Khobor Shunbi?' থেকে আজকের বাছাই করা খবরগুলো সংগ্রহ করছি, একটু অপেক্ষা করুন...")
+    processing_msg = await update.message.reply_text("⏳ 'Khobor Shunbi?' থেকে আজকের তাজা খবর সংগ্রহ করছি, একটু অপেক্ষা করুন...")
     
     try:
-        # তোমার ওয়েবসাইটের API Endpoint
-        api_url = f'{WEB_APP_URL}api/news' 
+        # 👈 তোমার আসল খবরের ওয়েবসাইটের JSON লিংক
+        api_url = 'https://khobor-shunbi.vercel.app/live_news.json' 
         
         response = requests.get(api_url)
         
         if response.status_code == 200:
             news_data = response.json()
             
-            final_message = "📰 *Khobor Shunbi? - আজকের শীর্ষ সংবাদ*\n\n"
+            final_message = "📰 *Khobor Shunbi? - আজকের তাজা খবর*\n\n"
             
-            # API থেকে আসা ডেটাগুলো লুপ করে সাজানো হচ্ছে (প্রথম ৫টি)
+            # প্রথম ৫টি খবর দেখাচ্ছে
             for index, news in enumerate(news_data[:5]): 
+                # তোমার scraper.py এর কি (Keys) অনুযায়ী ডেটা নিচ্ছি
                 title = news.get('title', 'শিরোনাম পাওয়া যায়নি')
-                summary = news.get('summary', 'বিস্তারিত জানতে লিংকে ক্লিক করুন')
-                link = news.get('link', WEB_APP_URL)
+                details = news.get('details', 'বিস্তারিত জানতে লিংকে ক্লিক করুন')
+                link = news.get('url', 'https://khobor-shunbi.vercel.app/')
+                
+                # details অনেক বড় হতে পারে, তাই প্রথম ১০০ অক্ষর নিচ্ছি
+                short_details = details[:100] + "..." if len(details) > 100 else details
                 
                 final_message += f"*{index + 1}. {title}*\n"
-                final_message += f"📝 {summary}\n"
+                final_message += f"📝 {short_details}\n"
                 final_message += f"🔗 [বিস্তারিত পড়ুন]({link})\n\n"
             
             await processing_msg.delete()
             await update.message.reply_text(final_message, parse_mode='Markdown', disable_web_page_preview=True, reply_markup=get_webapp_keyboard())
             
         else:
-            await processing_msg.edit_text("❌ এই মুহূর্তে খবরগুলো লোড করা যাচ্ছে না। API ঠিকমতো কাজ করছে কিনা চেক করুন।", reply_markup=get_webapp_keyboard())
+            await processing_msg.edit_text("❌ এই মুহূর্তে খবরগুলো লোড করা যাচ্ছে না।", reply_markup=get_webapp_keyboard())
             
     except Exception as e:
-        await processing_msg.edit_text("❌ সার্ভারে কোনো সমস্যা হয়েছে অথবা Vercel-এ API এখনো তৈরি করা হয়নি।", reply_markup=get_webapp_keyboard())
+        await processing_msg.edit_text("❌ সার্ভারে কোনো সমস্যা হয়েছে।", reply_markup=get_webapp_keyboard())
 
 
 if __name__ == '__main__':
