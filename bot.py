@@ -1,6 +1,7 @@
 import os
 import requests
 import threading
+import yt_dlp
 from flask import Flask
 from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
@@ -117,6 +118,48 @@ async def khobor(update: Update, context: ContextTypes.DEFAULT_TYPE):
         print(f"[Error] Fetching news failed: {e}")
         await processing_msg.edit_text("❌ <b>Error:</b> Server connection failed.", parse_mode='HTML', reply_markup=get_webapp_keyboard())
 
+import yt_dlp
+# ... (বাকি কোড)
+
+async def yt(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # ইউজার লিংকের সাথে কমান্ড দিয়েছে কি না তা চেক করা
+    if not context.args:
+        await update.message.reply_text("⚠️ <b>ব্যবহারবিধি:</b> /yt &lt;video_link&gt;\n<i>উদাহরণ: /yt https://youtu.be/...</i>", parse_mode='HTML')
+        return
+
+    url = context.args[0]
+    processing_msg = await update.message.reply_text("⏳ <i>ভিডিও প্রসেস হচ্ছে, দয়া করে অপেক্ষা করুন...</i>", parse_mode='HTML')
+
+    try:
+        # টেলিগ্রামের ফাইল সাইজ লিমিট 50MB, তাই আমরা 45MB এর নিচের সেরা কোয়ালিটির ভিডিও খুঁজব
+        ydl_opts = {
+            'format': 'best[ext=mp4][filesize<=45M]/worst[ext=mp4]',
+            'outtmpl': 'video_%(id)s.%(ext)s',
+            'quiet': True,
+            'noplaylist': True,
+        }
+
+        # ভিডিও ডাউনলোড করা
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(url, download=True)
+            filename = ydl.prepare_filename(info)
+
+        await processing_msg.edit_text("📤 <i>টেলিগ্রামে আপলোড করা হচ্ছে...</i>", parse_mode='HTML')
+
+        # ইউজারের কাছে ভিডিও পাঠানো
+        with open(filename, 'rb') as video_file:
+            title = info.get('title', 'Downloaded Video')
+            caption = f"🎬 <b>{title}</b>" 
+            await update.message.reply_video(video=video_file, caption=caption, parse_mode='HTML')
+
+        # সার্ভার থেকে ফাইলটি মুছে ফেলা (যাতে Render-এর ফ্রি স্টোরেজ ফুল না হয়)
+        os.remove(filename)
+        await processing_msg.delete()
+
+    except Exception as e:
+        print(f"[Error] Media Download Failed: {e}")
+        await processing_msg.edit_text("❌ <b>Error:</b> ভিডিওটি ডাউনলোড করা সম্ভব হয়নি। ভিডিওর সাইজ ৫০MB এর বেশি হতে পারে বা লিংকটি প্রাইভেট।", parse_mode='HTML')
+
 if __name__ == '__main__':
     print("🌐 Starting Flask dummy server for Render...")
     # Flask সার্ভারটিকে ব্যাকগ্রাউন্ড থ্রেডে রান করানো হচ্ছে
@@ -132,6 +175,7 @@ if __name__ == '__main__':
         app.add_handler(CommandHandler("ai_works", ai_works))
         app.add_handler(CommandHandler("contact", contact))
         app.add_handler(CommandHandler("khobor", khobor))
+        app.add_handler(CommandHandler("yt", yt))
 
         print("✅ Bot is running successfully! Press Ctrl+C to stop.")
         app.run_polling()

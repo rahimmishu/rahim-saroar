@@ -2,3 +2,4 @@ python-telegram-bot>=21.0
 python-dotenv
 requests
 flask
+yt-dlp
