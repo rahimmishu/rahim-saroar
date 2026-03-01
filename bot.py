@@ -1,5 +1,7 @@
 import os
 import requests
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
@@ -8,6 +10,20 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 load_dotenv('.env.local')
 TOKEN = os.getenv('TOKEN')
 WEB_APP_URL = 'https://rahim-saroar.vercel.app/'
+
+# --- Dummy Web Server to keep Render Free Tier happy ---
+class DummyHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/plain')
+        self.end_headers()
+        self.wfile.write(b"Bot is successfully running on Render!")
+
+def run_dummy_server():
+    port = int(os.environ.get('PORT', 10000)) # Render uses PORT env var
+    server = HTTPServer(('0.0.0.0', port), DummyHandler)
+    server.serve_forever()
+# -------------------------------------------------------
 
 # Web App Button Function
 def get_webapp_keyboard():
@@ -104,6 +120,9 @@ async def khobor(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await processing_msg.edit_text("❌ <b>Error:</b> Server connection failed.", parse_mode='HTML', reply_markup=get_webapp_keyboard())
 
 if __name__ == '__main__':
+    print("🌐 Starting dummy web server for Render...")
+    threading.Thread(target=run_dummy_server, daemon=True).start()
+
     print("🚀 Initializing Bot...")
     try:
         app = ApplicationBuilder().token(TOKEN).build()
