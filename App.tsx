@@ -127,7 +127,18 @@ const AppContent: React.FC = () => {
   });
 
   useEffect(() => {
+    
+    const tg = (window as any).Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+    if (tg.colorScheme === 'dark') { setIsDarkMode(true); }
+    }
+  }, []);
+  
+
+  useEffect(() => {
     const html = document.documentElement;
+    
     isDarkMode ? html.classList.add('dark') : html.classList.remove('dark');
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
 
