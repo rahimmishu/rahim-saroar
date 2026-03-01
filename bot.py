@@ -132,63 +132,79 @@ async def yt(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await processing_msg.edit_text("❌ <b>Error:</b> ভিডিওটি ডাউনলোড করা সম্ভব হয়নি।", parse_mode='HTML')
 
+# --- Phone Specifications Command (Open Source API) ---
 async def phone(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # ইউজার মডেলের নাম দিয়েছে কি না তা চেক করা
     if not context.args:
-        await update.message.reply_text("⚠️ <b>ব্যবহারবিধি:</b> /phone &lt;মডেলের নাম&gt;\n<i>উদাহরণ: /phone Samsung Galaxy S24</i>", parse_mode='HTML')
+        await update.message.reply_text("⚠️ <b>ব্যবহারবিধি:</b> /phone &lt;মডেলের নাম&gt;\n<i>উদাহরণ: /phone iPhone 15 Pro Max</i>", parse_mode='HTML')
         return
 
-    query = " ".join(context.args)
-    processing_msg = await update.message.reply_text(f"🔍 <i>'{query}' এর ছবি ও স্পেসিফিকেশন খোঁজা হচ্ছে...</i>", parse_mode='HTML')
+    query = "%20".join(context.args)
+    phone_name_display = " ".join(context.args)
+    processing_msg = await update.message.reply_text(f"🔍 <i>'{phone_name_display}' এর তথ্য খোঁজা হচ্ছে...</i>", parse_mode='HTML')
 
     try:
-        # RapidAPI থেকে ডেটা আনার জন্য রিকোয়েস্ট (এখানে একটি ডেমো API URL দেওয়া হলো)
-        url = "https://mobile-phone-specs-database.p.rapidapi.com/v1/search"
-        querystring = {"query": query}
-        
-        # .env.local ফাইল থেকে RAPIDAPI_KEY নিতে হবে
-        headers = {
-            "X-RapidAPI-Key": os.getenv("RAPIDAPI_KEY"),
-            "X-RapidAPI-Host": "mobile-phone-specs-database.p.rapidapi.com"
-        }
+        # Step 1: Open Source API দিয়ে ফোন সার্চ করা
+        search_url = f"https://api-mobilespecs.azharimm.dev/v2/search?query={query}"
+        search_res = requests.get(search_url).json()
 
-        response = requests.get(url, headers=headers, params=querystring)
-        
-        if response.status_code == 200:
-            data = response.json()
+        if search_res.get('status') and search_res.get('data') and search_res['data'].get('phones'):
+            # প্রথম সার্চ রেজাল্ট থেকে ফোনের Slug (ID) নেওয়া
+            phone_slug = search_res['data']['phones'][0]['slug']
             
-            # API থেকে ডেটা এক্সট্র্যাক্ট করা (এটি API এর স্ট্রাকচারের ওপর নির্ভর করে)
-            if data and len(data) > 0:
-                phone_data = data[0] # সার্চ রেজাল্টের প্রথম ফোনটি নিচ্ছি
+            # Step 2: Slug ব্যবহার করে ফোনের পুরো ডিটেইলস বের করা
+            details_url = f"https://api-mobilespecs.azharimm.dev/v2/{phone_slug}"
+            details_res = requests.get(details_url).json()
+            
+            if details_res.get('status'):
+                data = details_res['data']
                 
-                phone_name = phone_data.get('phone_name', query)
-                image_url = phone_data.get('image', 'https://via.placeholder.com/400x400?text=No+Image+Found')
-                display = phone_data.get('display', 'তথ্য পাওয়া যায়নি')
-                processor = phone_data.get('processor', 'তথ্য পাওয়া যায়নি')
-                ram_storage = phone_data.get('storage', 'তথ্য পাওয়া যায়নি')
-                battery = phone_data.get('battery', 'তথ্য পাওয়া যায়নি')
+                name = data.get('phone_name', phone_name_display)
+                image_url = data.get('thumbnail', 'https://via.placeholder.com/400?text=No+Image')
+                release_date = data.get('release_date', 'অজানা')
+                os = data.get('os', 'অজানা')
+                storage = data.get('storage', 'অজানা')
                 
-                # মেসেজটি সুন্দর করে সাজানো
-                text = f"📱 <b>{phone_name}</b>\n"
+                # স্পেসিফিকেশন অ্যারে থেকে নির্দিষ্ট ডেটা ফিল্টার করা
+                specs = data.get('specifications', [])
+                display = "অজানা"
+                camera = "অজানা"
+                battery = "অজানা"
+                processor = "অজানা"
+                
+                for spec in specs:
+                    title = spec.get('title', '').lower()
+                    if title == 'display' and spec.get('specs'):
+                        display = spec['specs'][0]['val'][0] if spec['specs'][0].get('val') else "অজানা"
+                    elif title == 'main camera' and spec.get('specs'):
+                        camera = spec['specs'][0]['val'][0] if spec['specs'][0].get('val') else "অজানা"
+                    elif title == 'battery' and spec.get('specs'):
+                        battery = spec['specs'][0]['val'][0] if spec['specs'][0].get('val') else "অজানা"
+                    elif title == 'platform' and spec.get('specs'):
+                        for p_spec in spec['specs']:
+                            if p_spec.get('name', '').lower() == 'chipset' and p_spec.get('val'):
+                                processor = p_spec['val'][0]
+                
+                # টেলিগ্রামের জন্য মেসেজ সাজানো
+                text = f"📱 <b>{name}</b>\n"
                 text += "━━━━━━━━━━━━━━━━━━\n"
+                text += f"📅 <b>রিলিজ:</b> {release_date}\n"
                 text += f"🖥️ <b>ডিসপ্লে:</b> {display}\n"
                 text += f"⚙️ <b>প্রসেসর:</b> {processor}\n"
-                text += f"💾 <b>র‍্যাম ও স্টোরেজ:</b> {ram_storage}\n"
+                text += f"💾 <b>স্টোরেজ ও OS:</b> {storage} | {os}\n"
+                text += f"📸 <b>ক্যামেরা:</b> {camera}\n"
                 text += f"🔋 <b>ব্যাটারি:</b> {battery}\n"
                 text += "━━━━━━━━━━━━━━━━━━"
 
                 await processing_msg.delete()
-                # ইউজারের কাছে ছবিসহ ক্যাপশন পাঠানো
                 await context.bot.send_photo(chat_id=update.effective_chat.id, photo=image_url, caption=text, parse_mode='HTML')
             else:
-                await processing_msg.edit_text(f"❌ <b>দুঃখিত:</b> '{query}' নামের কোনো ফোনের সঠিক তথ্য পাওয়া যায়নি।", parse_mode='HTML')
-                
+                await processing_msg.edit_text(f"❌ <b>দুঃখিত:</b> '{phone_name_display}' এর বিস্তারিত তথ্য পাওয়া যায়নি।", parse_mode='HTML')
         else:
-            await processing_msg.edit_text(f"❌ <b>Error:</b> সার্ভারে সমস্যা হচ্ছে। (Status Code: {response.status_code})", parse_mode='HTML')
+            await processing_msg.edit_text(f"❌ <b>দুঃখিত:</b> '{phone_name_display}' নামের কোনো ফোন ডেটাবেসে পাওয়া যায়নি। সঠিক নাম লেখার চেষ্টা করুন।", parse_mode='HTML')
 
     except Exception as e:
         print(f"[Phone Command Error]: {e}")
-        await processing_msg.edit_text("❌ <b>Error:</b> তথ্য লোড করতে ব্যর্থ হয়েছে।", parse_mode='HTML')
+        await processing_msg.edit_text("❌ <b>Error:</b> সার্ভার কানেকশন ফেইল করেছে। কিছুক্ষণ পর আবার চেষ্টা করুন।", parse_mode='HTML')
 
 # --- Ramadan Assistant ---
 RAMADAN_CONTENT = {
