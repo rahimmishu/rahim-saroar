@@ -1,7 +1,7 @@
 import os
 import requests
 import threading
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from flask import Flask
 from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
@@ -11,19 +11,18 @@ load_dotenv('.env.local')
 TOKEN = os.getenv('TOKEN')
 WEB_APP_URL = 'https://rahim-saroar.vercel.app/'
 
-# --- Dummy Web Server to keep Render Free Tier happy ---
-class DummyHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
-        self.end_headers()
-        self.wfile.write(b"Bot is successfully running on Render!")
+# --- Dummy Web Server using Flask (Render Free Tier Hack) ---
+web_app = Flask(__name__)
+
+@web_app.route('/')
+def home():
+    return "🤖 Bot is successfully running on Render!"
 
 def run_dummy_server():
-    port = int(os.environ.get('PORT', 10000)) # Render uses PORT env var
-    server = HTTPServer(('0.0.0.0', port), DummyHandler)
-    server.serve_forever()
-# -------------------------------------------------------
+    port = int(os.environ.get('PORT', 10000))
+    # debug=False এবং use_reloader=False দেওয়া জরুরি, নাহলে থ্রেডিংয়ে সমস্যা হবে
+    web_app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False)
+# -------------------------------------------------------------
 
 # Web App Button Function
 def get_webapp_keyboard():
@@ -112,7 +111,6 @@ async def khobor(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text(final_message, parse_mode='HTML', disable_web_page_preview=True, reply_markup=get_webapp_keyboard())
             
         else:
-            print(f"[Error] API Status Code: {response.status_code}")
             await processing_msg.edit_text("❌ <b>Error:</b> Could not load news at this moment.", parse_mode='HTML', reply_markup=get_webapp_keyboard())
             
     except Exception as e:
@@ -120,7 +118,8 @@ async def khobor(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await processing_msg.edit_text("❌ <b>Error:</b> Server connection failed.", parse_mode='HTML', reply_markup=get_webapp_keyboard())
 
 if __name__ == '__main__':
-    print("🌐 Starting dummy web server for Render...")
+    print("🌐 Starting Flask dummy server for Render...")
+    # Flask সার্ভারটিকে ব্যাকগ্রাউন্ড থ্রেডে রান করানো হচ্ছে
     threading.Thread(target=run_dummy_server, daemon=True).start()
 
     print("🚀 Initializing Bot...")
