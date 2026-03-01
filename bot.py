@@ -4,116 +4,118 @@ from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-# .env.local ফাইল থেকে ডেটা লোড করা
+# Load environment variables
 load_dotenv('.env.local')
-
-# টোকেনটি ভেরিয়েবলে সেট করা
 TOKEN = os.getenv('TOKEN')
-
 WEB_APP_URL = 'https://rahim-saroar.vercel.app/'
 
-# ওয়েব অ্যাপ ওপেন করার বাটন তৈরির ফাংশন
+# Web App Button Function
 def get_webapp_keyboard():
-    keyboard = [[InlineKeyboardButton("🚀 Open Portfolio", web_app=WebAppInfo(url=WEB_APP_URL))]]
+    keyboard = [[InlineKeyboardButton("🚀 Open Portfolio App", web_app=WebAppInfo(url=WEB_APP_URL))]]
     return InlineKeyboardMarkup(keyboard)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
-        "হ্যালো! 👋 আমার পার্সোনাল পোর্টফোলিও বটে আপনাকে স্বাগতম!\n\n"
-        "আমি রহিম সারোয়ার মিশু, একজন Full Stack Developer এবং AI Enthusiast. "
-        "নিচের বাটন থেকে সরাসরি আমার ওয়েবসাইটটি এক্সপ্লোর করতে পারেন।"
+        "👋 <b>স্বাগতম আমার ডিজিটাল ওয়ার্ল্ডে!</b>\n"
+        "━━━━━━━━━━━━━━━━━━━━\n\n"
+        "আমি <b>রহিম সারোয়ার মিশু</b>, একজন Full Stack Developer এবং AI Enthusiast।\n\n"
+        "আমার তৈরি করা প্রজেক্ট, AI টুলস এবং পোর্টফোলিও দেখতে নিচের বাটনটিতে ক্লিক করে সরাসরি অ্যাপটি এক্সপ্লোর করতে পারেন।"
     )
-    await update.message.reply_text(text, reply_markup=get_webapp_keyboard())
+    await update.message.reply_text(text, parse_mode='HTML', reply_markup=get_webapp_keyboard())
 
 async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
-        "👨‍💻 *আমার সম্পর্কে:*\n\n"
-        "আমি বর্তমানে একাদশ শ্রেণিতে বিজ্ঞান বিভাগে পড়ছি। "
-        "কোডিং, প্রবলেম সলভিং আর নতুন প্রযুক্তি (বিশেষ করে Python, React, Next.js) নিয়ে কাজ করাই আমার প্যাশন। "
-        "পাশাপাশি আমি কনটেন্ট ক্রিয়েশন এবং পাবলিক স্পিকিং নিয়েও কাজ করছি।"
+        "👨‍💻 <b>আমার সম্পর্কে (About Me)</b>\n"
+        "━━━━━━━━━━━━━━━━━━━━\n\n"
+        "আমি বর্তমানে একাদশ শ্রেণিতে বিজ্ঞান বিভাগে অধ্যয়নরত।\n\n"
+        "💡 <b>প্যাশন ও স্কিলস:</b>\n"
+        "• কোডিং ও প্রবলেম সলভিং (Python, React, Next.js)\n"
+        "• কনটেন্ট ক্রিয়েশন ও পাবলিক স্পিকিং\n"
+        "• AI ইন্টিগ্রেশন ও ডেভেলপমেন্ট"
     )
-    await update.message.reply_text(text, parse_mode='Markdown', reply_markup=get_webapp_keyboard())
+    await update.message.reply_text(text, parse_mode='HTML', reply_markup=get_webapp_keyboard())
 
 async def projects(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
-        "💻 *আমার উল্লেখযোগ্য প্রজেক্টসমূহ:*\n\n"
-        "১. *EduSpace:* SSC/HSC শিক্ষার্থীদের জন্য একটি এডুকেশনাল প্ল্যাটফর্ম।\n"
-        "২. *Khobor Shunbi?:* একটি চমৎকার AI নিউজ এগ্রিগেটর।\n"
-        "৩. *Stealth GPS Tracker:* পাইথন দিয়ে তৈরি একটি জিপিএস ট্র্যাকিং সিস্টেম।\n\n"
-        "বিস্তারিত দেখতে নিচের অ্যাপটি ওপেন করুন!"
+        "💻 <b>উল্লেখযোগ্য প্রজেক্টসমূহ</b>\n"
+        "━━━━━━━━━━━━━━━━━━━━\n\n"
+        "🎓 <b>EduSpace:</b>\n"
+        "<i>SSC/HSC শিক্ষার্থীদের জন্য একটি আধুনিক এডুকেশনাল প্ল্যাটফর্ম।</i>\n\n"
+        "📰 <b>Khobor Shunbi?:</b>\n"
+        "<i>একাধিক সোর্স থেকে ডেটা সংগ্রহকারী একটি চমৎকার AI নিউজ এগ্রিগেটর।</i>\n\n"
+        "📍 <b>Stealth GPS Tracker:</b>\n"
+        "<i>পাইথন দিয়ে তৈরি একটি অ্যাডভান্সড জিপিএস ট্র্যাকিং সিস্টেম।</i>\n\n"
+        "📌 <i>আরও প্রজেক্ট দেখতে নিচের অ্যাপটি ওপেন করুন!</i>"
     )
-    await update.message.reply_text(text, parse_mode='Markdown', reply_markup=get_webapp_keyboard())
+    await update.message.reply_text(text, parse_mode='HTML', reply_markup=get_webapp_keyboard())
 
 async def ai_works(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
-        "🤖 *AI প্রজেক্ট ও কাজ:*\n\n"
-        "আমি বর্তমানে *J.A.R.V.I.S* নামের একটি পার্সোনাল AI অ্যাসিস্ট্যান্ট বানাচ্ছি, যা পিসি কন্ট্রোল করতে পারে! "
-        "এছাড়া আমি AI দিয়ে সিনেম্যাটিক এবং হাইপার-রিয়েলিস্টিক ইমেজ জেনারেট করতে খুব পছন্দ করি।"
+        "🤖 <b>AI প্রজেক্ট ও ক্রিয়েশনস</b>\n"
+        "━━━━━━━━━━━━━━━━━━━━\n\n"
+        "আমি বর্তমানে <b>J.A.R.V.I.S</b> নামের একটি পার্সোনাল AI অ্যাসিস্ট্যান্ট ডেভেলপ করছি, যা ভয়েস কমান্ডের মাধ্যমে পুরো পিসি কন্ট্রোল করতে সক্ষম!\n\n"
+        "এছাড়াও আমি AI টুলস ব্যবহার করে সিনেম্যাটিক এবং হাইপার-রিয়েলিস্টিক ইমেজ জেনারেট করতে ভীষণ পছন্দ করি।"
     )
-    await update.message.reply_text(text, parse_mode='Markdown', reply_markup=get_webapp_keyboard())
+    await update.message.reply_text(text, parse_mode='HTML', reply_markup=get_webapp_keyboard())
 
 async def contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (
-        "📧 *যোগাযোগ:*\n\n"
-        "আমার সাথে কানেক্ট হতে বা যেকোনো প্রজেক্ট নিয়ে আলোচনা করতে আমার পোর্টফোলিও অ্যাপের 'Contact' সেকশনে যেতে পারেন, "
-        "অথবা আমার 'Rhythm of Peace' ফেসবুক পেজেও মেসেজ দিতে পারেন!"
+        "📧 <b>যোগাযোগ (Contact)</b>\n"
+        "━━━━━━━━━━━━━━━━━━━━\n\n"
+        "যেকোনো প্রজেক্ট, আইডিয়া বা কোলাবোরেশন নিয়ে আলোচনা করতে চাইলে:\n\n"
+        "🌐 আমার পোর্টফোলিও অ্যাপের <b>Contact</b> সেকশন ব্যবহার করুন।\n"
+        "📱 অথবা আমার <b>Rhythm of Peace</b> ফেসবুক পেজে মেসেজ দিতে পারেন।"
     )
-    await update.message.reply_text(text, parse_mode='Markdown', reply_markup=get_webapp_keyboard())
+    await update.message.reply_text(text, parse_mode='HTML', reply_markup=get_webapp_keyboard())
 
-# 🆕 নতুন যুক্ত করা 'khobor' ফাংশন
-# 🆕 আপডেট করা 'khobor' ফাংশন (আসল খবরের জন্য)
 async def khobor(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # ইউজারকে জানানো হচ্ছে যে খবর খোঁজা হচ্ছে
-    processing_msg = await update.message.reply_text("⏳ 'Khobor Shunbi?' থেকে আজকের তাজা খবর সংগ্রহ করছি, একটু অপেক্ষা করুন...")
+    processing_msg = await update.message.reply_text("⏳ <i>Fetching today's top news from 'Khobor Shunbi?'...</i>", parse_mode='HTML')
     
     try:
-        # 👈 তোমার আসল খবরের ওয়েবসাইটের JSON লিংক
         api_url = 'https://khobor-shunbi.vercel.app/live_news.json' 
-        
         response = requests.get(api_url)
         
         if response.status_code == 200:
             news_data = response.json()
             
-            final_message = "📰 *Khobor Shunbi? - আজকের তাজা খবর*\n\n"
+            final_message = "📰 <b>Khobor Shunbi? - আজকের তাজা খবর</b>\n"
+            final_message += "━━━━━━━━━━━━━━━━━━━━\n\n"
             
-            # প্রথম ৫টি খবর দেখাচ্ছে
             for index, news in enumerate(news_data[:5]): 
-                # তোমার scraper.py এর কি (Keys) অনুযায়ী ডেটা নিচ্ছি
                 title = news.get('title', 'শিরোনাম পাওয়া যায়নি')
                 details = news.get('details', 'বিস্তারিত জানতে লিংকে ক্লিক করুন')
                 link = news.get('url', 'https://khobor-shunbi.vercel.app/')
                 
-                # details অনেক বড় হতে পারে, তাই প্রথম ১০০ অক্ষর নিচ্ছি
-                short_details = details[:100] + "..." if len(details) > 100 else details
+                short_details = details[:120] + "..." if len(details) > 120 else details
                 
-                final_message += f"*{index + 1}. {title}*\n"
-                final_message += f"📝 {short_details}\n"
-                final_message += f"🔗 [বিস্তারিত পড়ুন]({link})\n\n"
+                final_message += f"<b>{index + 1}. {title}</b>\n"
+                final_message += f"📝 <i>{short_details}</i>\n"
+                final_message += f"🔗 <a href='{link}'>বিস্তারিত পড়ুন</a>\n\n"
             
             await processing_msg.delete()
-            await update.message.reply_text(final_message, parse_mode='Markdown', disable_web_page_preview=True, reply_markup=get_webapp_keyboard())
+            await update.message.reply_text(final_message, parse_mode='HTML', disable_web_page_preview=True, reply_markup=get_webapp_keyboard())
             
         else:
-            await processing_msg.edit_text("❌ এই মুহূর্তে খবরগুলো লোড করা যাচ্ছে না।", reply_markup=get_webapp_keyboard())
+            print(f"[Error] API Status Code: {response.status_code}")
+            await processing_msg.edit_text("❌ <b>Error:</b> Could not load news at this moment.", parse_mode='HTML', reply_markup=get_webapp_keyboard())
             
     except Exception as e:
-        await processing_msg.edit_text("❌ সার্ভারে কোনো সমস্যা হয়েছে।", reply_markup=get_webapp_keyboard())
-
+        print(f"[Error] Fetching news failed: {e}")
+        await processing_msg.edit_text("❌ <b>Error:</b> Server connection failed.", parse_mode='HTML', reply_markup=get_webapp_keyboard())
 
 if __name__ == '__main__':
-    # বট রান করার মূল অংশ
-    app = ApplicationBuilder().token(TOKEN).build()
+    print("🚀 Initializing Bot...")
+    try:
+        app = ApplicationBuilder().token(TOKEN).build()
 
-    # কমান্ডগুলোর সাথে ফাংশন যুক্ত করা হলো
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("about", about))
-    app.add_handler(CommandHandler("projects", projects))
-    app.add_handler(CommandHandler("ai_works", ai_works))
-    app.add_handler(CommandHandler("contact", contact))
-    
-    # 🆕 নতুন কমান্ড হ্যান্ডলার
-    app.add_handler(CommandHandler("khobor", khobor))
+        app.add_handler(CommandHandler("start", start))
+        app.add_handler(CommandHandler("about", about))
+        app.add_handler(CommandHandler("projects", projects))
+        app.add_handler(CommandHandler("ai_works", ai_works))
+        app.add_handler(CommandHandler("contact", contact))
+        app.add_handler(CommandHandler("khobor", khobor))
 
-    print("বট সফলভাবে চালু হয়েছে! টেলিগ্রামে গিয়ে চেক করুন...")
-    app.run_polling()
+        print("✅ Bot is running successfully! Press Ctrl+C to stop.")
+        app.run_polling()
+    except Exception as e:
+        print(f"❌ Failed to start bot: {e}")
