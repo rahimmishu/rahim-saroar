@@ -132,6 +132,64 @@ async def yt(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await processing_msg.edit_text("❌ <b>Error:</b> ভিডিওটি ডাউনলোড করা সম্ভব হয়নি।", parse_mode='HTML')
 
+async def phone(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # ইউজার মডেলের নাম দিয়েছে কি না তা চেক করা
+    if not context.args:
+        await update.message.reply_text("⚠️ <b>ব্যবহারবিধি:</b> /phone &lt;মডেলের নাম&gt;\n<i>উদাহরণ: /phone Samsung Galaxy S24</i>", parse_mode='HTML')
+        return
+
+    query = " ".join(context.args)
+    processing_msg = await update.message.reply_text(f"🔍 <i>'{query}' এর ছবি ও স্পেসিফিকেশন খোঁজা হচ্ছে...</i>", parse_mode='HTML')
+
+    try:
+        # RapidAPI থেকে ডেটা আনার জন্য রিকোয়েস্ট (এখানে একটি ডেমো API URL দেওয়া হলো)
+        url = "https://mobile-phone-specs-database.p.rapidapi.com/v1/search"
+        querystring = {"query": query}
+        
+        # .env.local ফাইল থেকে RAPIDAPI_KEY নিতে হবে
+        headers = {
+            "X-RapidAPI-Key": os.getenv("RAPIDAPI_KEY"),
+            "X-RapidAPI-Host": "mobile-phone-specs-database.p.rapidapi.com"
+        }
+
+        response = requests.get(url, headers=headers, params=querystring)
+        
+        if response.status_code == 200:
+            data = response.json()
+            
+            # API থেকে ডেটা এক্সট্র্যাক্ট করা (এটি API এর স্ট্রাকচারের ওপর নির্ভর করে)
+            if data and len(data) > 0:
+                phone_data = data[0] # সার্চ রেজাল্টের প্রথম ফোনটি নিচ্ছি
+                
+                phone_name = phone_data.get('phone_name', query)
+                image_url = phone_data.get('image', 'https://via.placeholder.com/400x400?text=No+Image+Found')
+                display = phone_data.get('display', 'তথ্য পাওয়া যায়নি')
+                processor = phone_data.get('processor', 'তথ্য পাওয়া যায়নি')
+                ram_storage = phone_data.get('storage', 'তথ্য পাওয়া যায়নি')
+                battery = phone_data.get('battery', 'তথ্য পাওয়া যায়নি')
+                
+                # মেসেজটি সুন্দর করে সাজানো
+                text = f"📱 <b>{phone_name}</b>\n"
+                text += "━━━━━━━━━━━━━━━━━━\n"
+                text += f"🖥️ <b>ডিসপ্লে:</b> {display}\n"
+                text += f"⚙️ <b>প্রসেসর:</b> {processor}\n"
+                text += f"💾 <b>র‍্যাম ও স্টোরেজ:</b> {ram_storage}\n"
+                text += f"🔋 <b>ব্যাটারি:</b> {battery}\n"
+                text += "━━━━━━━━━━━━━━━━━━"
+
+                await processing_msg.delete()
+                # ইউজারের কাছে ছবিসহ ক্যাপশন পাঠানো
+                await context.bot.send_photo(chat_id=update.effective_chat.id, photo=image_url, caption=text, parse_mode='HTML')
+            else:
+                await processing_msg.edit_text(f"❌ <b>দুঃখিত:</b> '{query}' নামের কোনো ফোনের সঠিক তথ্য পাওয়া যায়নি।", parse_mode='HTML')
+                
+        else:
+            await processing_msg.edit_text(f"❌ <b>Error:</b> সার্ভারে সমস্যা হচ্ছে। (Status Code: {response.status_code})", parse_mode='HTML')
+
+    except Exception as e:
+        print(f"[Phone Command Error]: {e}")
+        await processing_msg.edit_text("❌ <b>Error:</b> তথ্য লোড করতে ব্যর্থ হয়েছে।", parse_mode='HTML')
+
 # --- Ramadan Assistant ---
 RAMADAN_CONTENT = {
     "sehri_dua": "<b>সেহরির নিয়ত:</b>\nنَوَيْتُ اَنْ اُصُوْمَ غَدًا مِّنْ شَهْرِ رَمْضَانَ الْمُبَارَكِ فَرْضَا لَكَ يَا اللهُ فَتَقَبَّل مِنِّى اِنَّكَ اَنْتَ السَّمِيْعُ الْعَلِيْم\n\n<b>উচ্চারণ:</b> নাওয়াইতু আন আসুমা গাদাম মিন শাহরি রামাদানাল মুবারাকি ফারদাল্লাকা ইয়া আল্লাহু ফাতাকাব্বাল মিন্নি ইন্নাকা আনতাস সামিউল আলিম।",
@@ -264,6 +322,7 @@ if __name__ == '__main__':
         app.add_handler(CommandHandler("ramadan", ramadan))
         app.add_handler(MessageHandler(filters.LOCATION, handle_location))
         app.add_handler(CallbackQueryHandler(button_handler))
+        app.add_handler(CommandHandler("phone", phone))
 
         app.job_queue.run_repeating(check_alerts, interval=60, first=10)
 
