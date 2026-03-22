@@ -9,7 +9,9 @@ export default defineConfig(({ mode }) => {
         port: 3000,
         host: '0.0.0.0',
       },
-      plugins: [react()],
+      plugins: [
+        react(),
+      ],
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
@@ -20,60 +22,56 @@ export default defineConfig(({ mode }) => {
         }
       },
       
-      // 🚀 Hidden Performance Optimizations
       build: {
-        // Code splitting for faster initial load
         rollupOptions: {
           output: {
             manualChunks: {
-              // Vendor chunks
+              // ✅ react, react-dom, react-router-dom — সব একসাথে!
+              // আলাদা করলে "createContext" error আসে
               'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+              // Firebase আলাদা (React-এর সাথে কোনো dependency নেই)
               'firebase-vendor': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
-            }
+            },
           }
         },
         
-        // ✅ Use default esbuild minifier (no extra dependency needed)
         minify: 'esbuild',
-        
-        // Optimize chunk size
         chunkSizeWarningLimit: 1000,
-        
-        // Target modern browsers for smaller bundle
         target: 'es2015',
         
-        // Enable CSS code splitting
         cssCodeSplit: true,
         
-        // Source maps only for development
         sourcemap: mode === 'development',
         
-        // Asset optimization
-        assetsInlineLimit: 4096, // Inline small assets as base64
+        // 8KB পর্যন্ত inline করবে (আগে ছিল 4KB)
+        // ছোট ছোট icon/svg গুলো inline হয়ে যাবে, extra request কমবে
+        assetsInlineLimit: 8192,
+
+        // CSS minification
+        cssMinify: true,
       },
       
-      // ⚡ Performance optimizations
       optimizeDeps: {
-        // Pre-bundle dependencies
         include: [
           'react',
           'react-dom',
           'react-router-dom',
           'firebase/app',
           'firebase/auth',
-          'firebase/firestore'
+          'firebase/firestore',
+          'firebase/storage',
         ],
+        // Dev server এ faster cold start
+        force: false,
       },
       
-      // 🎨 CSS optimization (design intact রাখতে)
       css: {
         devSourcemap: mode === 'development',
       },
       
-      // 🔧 Preview server optimization
       preview: {
         port: 4173,
-        host: '0.0.0.0'
+        host: '0.0.0.0',
       }
     };
 });
