@@ -64,21 +64,7 @@ const Hero: React.FC = () => {
   }, [text, isDeleting, loopNum, typingSpeed]);
 
   return (
-    <section
-      id="home"
-      className="relative flex items-center min-h-screen pt-24 pb-12 overflow-hidden transition-colors duration-300 bg-white dark:bg-black"
-      // ✅ SEO: Section-level Person microdata — Google Knowledge Panel এর জন্য
-      itemScope
-      itemType="https://schema.org/Person"
-    >
-      {/* Hidden microdata — Google কে explicitly জানানো */}
-      <meta itemProp="name"        content="Rahim Saroar Mishu" />
-      <meta itemProp="alternateName" content="Rahim Saroar" />
-      <meta itemProp="jobTitle"    content="Full Stack Developer, AI Enthusiast, Content Creator" />
-      <meta itemProp="url"         content="https://rahim-saroar.vercel.app" />
-      <link itemProp="sameAs"      href="https://www.facebook.com/rahimsaroar" />
-      <link itemProp="sameAs"      href="https://www.linkedin.com/in/rahim-saroar/" />
-      <link itemProp="sameAs"      href="https://github.com/rahimmishu" />
+    <section id="home" className="relative flex items-center min-h-screen pt-24 pb-12 overflow-hidden transition-colors duration-300 bg-white dark:bg-black">
       
       {/* 🔥 CSS Animations */}
       <style>{`
@@ -152,153 +138,184 @@ const Hero: React.FC = () => {
           50%  { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
         }
-        .gradient-text {
-          background: linear-gradient(270deg, #8b5cf6, #3b82f6, #ec4899, #8b5cf6);
-          background-size: 300% 300%;
-          animation: gradient-shift 4s ease infinite;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+        .gradient-shift {
+          background-size: 200% 200%;
+          animation: gradient-shift 3s ease infinite;
         }
-        @keyframes photo-float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          33%      { transform: translateY(-8px) rotate(0.5deg); }
-          66%      { transform: translateY(-4px) rotate(-0.3deg); }
+
+        @keyframes blue-glow {
+          0%,100% { box-shadow: 0 0 15px 2px rgba(59,130,246,0.5), 0 0 35px 6px rgba(99,102,241,0.25), 0 4px 20px rgba(139,92,246,0.3); }
+          50%     { box-shadow: 0 0 28px 6px rgba(59,130,246,0.8), 0 0 60px 12px rgba(99,102,241,0.45), 0 4px 30px rgba(139,92,246,0.5); }
         }
-        .photo-float { animation: photo-float 6s ease-in-out infinite; }
+        .blue-glow { animation: blue-glow 1.8s ease-in-out infinite; }
+
+        @keyframes rotate-border-blue {
+          0%   { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .rotate-border-blue { animation: rotate-border-blue 3s linear infinite; }
+
+        @keyframes blue-shimmer {
+          0%   { transform: translateX(-120%) skewX(-20deg); opacity: 0; }
+          10%  { opacity: 1; }
+          90%  { opacity: 1; }
+          100% { transform: translateX(220%) skewX(-20deg); opacity: 0; }
+        }
+        .blue-shimmer { animation: blue-shimmer 2.2s ease-in-out infinite; }
+
+        @keyframes arrow-float {
+          0%,100% { transform: translateX(0px); }
+          50%     { transform: translateX(5px); }
+        }
+        .arrow-float { animation: arrow-float 1.2s ease-in-out infinite; }
 
         @keyframes spin-border {
           0%   { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
         }
-        .spin-border         { animation: spin-border 3s linear infinite; }
-        .spin-border-reverse { animation: spin-border 5s linear infinite reverse; }
+        .spin-border { animation: spin-border 4s linear infinite; }
+        .spin-border-reverse { animation: spin-border 6s linear infinite reverse; }
 
-        @keyframes ring-pulse {
-          0%, 100% { transform: translate(-50%, -50%) scale(1);   opacity: 0.6; }
-          50%      { transform: translate(-50%, -50%) scale(1.08); opacity: 0.3; }
+        @keyframes photo-float {
+          0%,100% { transform: translateY(0px) rotate(2deg); }
+          50%     { transform: translateY(-18px) rotate(-1deg); }
         }
-        .ring-pulse-1 { animation: ring-pulse 3s ease-in-out infinite 0s; }
-        .ring-pulse-2 { animation: ring-pulse 3s ease-in-out infinite 1s; }
-        .ring-pulse-3 { animation: ring-pulse 3s ease-in-out infinite 2s; }
+        .photo-float { animation: photo-float 5s ease-in-out infinite; }
 
         @keyframes orbit {
-          0%   { transform: rotate(0deg)   translateX(145px) rotate(0deg); }
-          100% { transform: rotate(360deg) translateX(145px) rotate(-360deg); }
+          0%   { transform: rotate(0deg) translateX(170px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateX(170px) rotate(-360deg); }
         }
-        @keyframes orbit2 {
-          0%   { transform: rotate(120deg) translateX(160px) rotate(-120deg); }
-          100% { transform: rotate(480deg) translateX(160px) rotate(-480deg); }
+        @keyframes orbit-reverse {
+          0%   { transform: rotate(0deg) translateX(195px) rotate(0deg); }
+          100% { transform: rotate(-360deg) translateX(195px) rotate(360deg); }
         }
-        @keyframes orbit-r {
-          0%   { transform: rotate(240deg) translateX(130px) rotate(-240deg); }
-          100% { transform: rotate(-120deg) translateX(130px) rotate(120deg); }
+        .orbit-dot   { animation: orbit 6s linear infinite; }
+        .orbit-dot-2 { animation: orbit 6s linear infinite 2s; }
+        .orbit-dot-r { animation: orbit-reverse 9s linear infinite; }
+
+        @keyframes badge-float {
+          0%,100% { transform: translateY(0px) scale(1); }
+          50%     { transform: translateY(-8px) scale(1.04); }
         }
-        .orbit-dot   { animation: orbit   7s linear infinite; }
-        .orbit-dot-2 { animation: orbit2  9s linear infinite; }
-        .orbit-dot-r { animation: orbit-r 5s linear infinite reverse; }
+        .badge-float-1 { animation: badge-float 3.5s ease-in-out infinite 0s; }
+        .badge-float-2 { animation: badge-float 3.5s ease-in-out infinite 1.2s; }
+        .badge-float-3 { animation: badge-float 3.5s ease-in-out infinite 2.4s; }
 
         @keyframes corner-spark {
-          0%, 100% { transform: scale(1) rotate(0deg);   opacity: 0.9; }
-          50%      { transform: scale(1.4) rotate(20deg); opacity: 0.5; }
+          0%,100% { opacity: 0.4; transform: scale(0.8) rotate(0deg); }
+          50%     { opacity: 1;   transform: scale(1.3) rotate(180deg); }
         }
-        .corner-spark { animation: corner-spark 2.5s ease-in-out infinite; }
-
-        @keyframes badge-float-1 {
-          0%, 100% { transform: translateY(0px); }
-          50%      { transform: translateY(-6px); }
-        }
-        @keyframes badge-float-2 {
-          0%, 100% { transform: translateY(0px); }
-          50%      { transform: translateY(-5px); }
-        }
-        @keyframes badge-float-3 {
-          0%, 100% { transform: translateY(-50%) translateX(0px); }
-          50%      { transform: translateY(-50%) translateX(5px); }
-        }
-        .badge-float-1 { animation: badge-float-1 4s ease-in-out infinite; }
-        .badge-float-2 { animation: badge-float-2 4s ease-in-out infinite 1.5s; }
-        .badge-float-3 { animation: badge-float-3 4s ease-in-out infinite 0.8s; }
+        .corner-spark { animation: corner-spark 2s ease-in-out infinite; }
 
         @keyframes photo-shimmer {
-          0%   { transform: translateX(-120%) skewX(-15deg); opacity: 0; }
-          10%  { opacity: 1; }
-          90%  { opacity: 1; }
-          100% { transform: translateX(220%)  skewX(-15deg); opacity: 0; }
+          0%   { transform: translateX(-120%) skewX(-15deg); }
+          100% { transform: translateX(220%)  skewX(-15deg); }
         }
-        .photo-shimmer { animation: photo-shimmer 4s ease-in-out infinite 2s; }
+        .photo-shimmer { animation: photo-shimmer 3.5s ease-in-out infinite; }
+
+        @keyframes ring-pulse {
+          0%   { transform: scale(1);   opacity: 0.5; }
+          100% { transform: scale(1.6); opacity: 0;   }
+        }
+        .ring-pulse-1 { animation: ring-pulse 2.5s ease-out infinite 0s; }
+        .ring-pulse-2 { animation: ring-pulse 2.5s ease-out infinite 0.8s; }
+        .ring-pulse-3 { animation: ring-pulse 2.5s ease-out infinite 1.6s; }
       `}</style>
 
-      {/* Background Blobs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute rounded-full w-96 h-96 -top-40 -right-40 bg-purple-500/10 animate-blob blur-3xl" />
-        <div className="absolute rounded-full w-96 h-96 top-40 -left-40 bg-blue-500/10 animate-blob animation-delay-2000 blur-3xl" />
-        <div className="absolute rounded-full w-80 h-80 bottom-20 right-20 bg-pink-500/8 animate-blob animation-delay-4000 blur-3xl" />
+      {/* GRID BACKGROUND */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
       </div>
 
-      <div className="container relative z-10 px-6 mx-auto max-w-7xl">
-        <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
+      {/* BACKGROUND BLOBS */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 -right-4 w-96 h-96 bg-purple-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[128px] opacity-50 dark:opacity-40 animate-blob"></div>
+        <div className="absolute top-0 -right-4 w-96 h-96 bg-blue-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[128px] opacity-50 dark:opacity-40 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-32 -left-20 w-96 h-96 bg-pink-500/30 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[128px] opacity-50 dark:opacity-40 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/10 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[100px] opacity-30 dark:opacity-20 animate-pulse"></div>
+      </div>
+
+      <div className="container relative z-10 px-4 mx-auto md:px-8">
+        <div className="flex flex-col-reverse items-center justify-between gap-12 lg:flex-row lg:gap-20">
           
           {/* Left Content */}
-          <div className="flex flex-col items-center w-full gap-6 text-center lg:w-1/2 lg:items-start lg:text-left">
-
-            {/* Badge */}
-            <div className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-purple-700 border border-purple-200 rounded-full dark:text-purple-300 bg-purple-50 dark:bg-purple-900/20 dark:border-purple-800">
-              <Sparkles size={16} className="text-purple-500" />
-              <span>Available for new projects</span>
+          <div className="w-full space-y-8 text-center lg:w-1/2 lg:text-left">
+            
+            <div className="inline-flex items-center gap-2 px-3 py-1 mx-auto text-sm font-semibold text-blue-600 bg-blue-100 border border-blue-200 rounded-full dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800 animate-fade-in-up lg:mx-0">
+              <span className="relative flex w-2 h-2">
+                <span className="absolute inline-flex w-full h-full bg-blue-400 rounded-full opacity-75 animate-ping"></span>
+                <span className="relative inline-flex w-2 h-2 bg-blue-500 rounded-full"></span>
+              </span>
+              <span className="flex items-center gap-1">
+                <Sparkles size={14} /> Future Tech Leader
+              </span>
             </div>
 
-            {/* Main Heading — ✅ SEO: h1 এ নাম explicitly আছে */}
-            <div>
-              <p className="mb-2 text-base font-medium tracking-widest uppercase text-slate-500 dark:text-neutral-400">
-                Hello, I'm
-              </p>
-              <h1 className="text-5xl font-black leading-tight md:text-6xl xl:text-7xl text-slate-900 dark:text-white font-signature">
-                Rahim Saroar
-                <span className="block gradient-text">Mishu</span>
-              </h1>
-            </div>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight text-slate-900 dark:text-white font-sans min-h-[3.5em] lg:min-h-[auto]">
+              I am a <br />
+              <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
+                {text}
+                <span className="h-full ml-1 align-middle border-r-4 border-purple-500 animate-cursor">&nbsp;</span>
+              </span>
+            </h1>
 
-            {/* Typewriter */}
-            <div className="flex items-center h-10 gap-3 text-xl font-bold md:text-2xl text-slate-700 dark:text-neutral-200">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>{text}</span>
-              <span className="w-0.5 h-7 bg-purple-500 animate-cursor" />
-            </div>
-
-            {/* Description */}
-            <p className="max-w-lg text-base leading-relaxed md:text-lg text-slate-600 dark:text-neutral-400">
-              A passionate <strong>Full Stack Developer</strong> & <strong>AI Enthusiast</strong> from{' '}
-              <span itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
-                <span itemProp="addressLocality">Joypurhat</span>,{' '}
-                <span itemProp="addressCountry">Bangladesh</span>
-              </span>. Building the future, one line of code at a time.
+            <h2 className="text-2xl font-bold md:text-3xl text-slate-700 dark:text-slate-300 font-bengali">
+              প্রযুক্তির সাথে, স্বপ্নের পথে
+            </h2>
+            
+            <p className="max-w-lg mx-auto text-lg leading-relaxed text-slate-500 dark:text-slate-400 lg:mx-0">
+              Turning ideas into reality with Python, AI, and Creative Coding.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
+            <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row lg:justify-start">
+              
+              {/* View Projects Button */}
               <a
                 ref={projectsRef}
                 href="#projects"
                 onClick={handleProjectsClick}
-                className="relative flex items-center gap-2 px-8 py-4 overflow-hidden font-bold text-white transition-all rounded-full shadow-lg group bg-gradient-to-r from-purple-600 to-blue-600 hover:shadow-purple-500/25 hover:scale-105"
+                className="blue-glow relative flex items-center justify-center w-full sm:w-auto gap-3 px-8 py-4 overflow-hidden font-bold rounded-full transition-all duration-300 hover:-translate-y-[6px] hover:scale-[1.05] active:scale-95 select-none group"
+                style={{
+                  background: 'linear-gradient(135deg, #2563eb, #6366f1, #8b5cf6, #2563eb)',
+                  color: '#ffffff',
+                  border: '2px solid rgba(99,102,241,0.7)',
+                }}
               >
+                <span className="pointer-events-none absolute -inset-[2px] rounded-full overflow-hidden z-0">
+                  <span className="absolute rounded-full rotate-border-blue -inset-4"
+                    style={{ background: 'conic-gradient(from 0deg, transparent 60%, rgba(147,197,253,0.9) 80%, transparent 100%)' }}
+                  />
+                </span>
+                <span className="blue-shimmer pointer-events-none absolute inset-0 w-[40%] h-full bg-gradient-to-r from-transparent via-white/30 to-transparent z-10 rounded-full" />
                 {projectRipples.map(r => (
                   <span key={r.id} className="absolute z-20 rounded-full pointer-events-none ripple-circle bg-white/40"
                     style={{ width: 40, height: 40, left: r.x - 20, top: r.y - 20 }} />
                 ))}
-                <span className="relative z-10">View My Work</span>
-                <ArrowRight size={18} className="relative z-10 transition-transform group-hover:translate-x-1" />
+                <span className="absolute inset-0 z-10 overflow-hidden rounded-full pointer-events-none">
+                  <span className="star-1 absolute left-[18%] bottom-3 text-blue-200 text-[9px]">★</span>
+                  <span className="star-2 absolute left-[38%] bottom-2 text-white text-[7px]">✦</span>
+                  <span className="star-3 absolute left-[60%] bottom-3 text-indigo-200 text-[9px]">★</span>
+                  <span className="star-4 absolute left-[78%] bottom-2 text-white text-[7px]">✦</span>
+                </span>
+                <span className="relative z-30 flex items-center gap-3">
+                  <span className="text-lg leading-none cup-bounce">🚀</span>
+                  <span className="flex flex-col items-start leading-none gap-[2px]">
+                    <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-white/60">Explore Work</span>
+                    <span className="text-[15px] font-black tracking-wide text-white">View My Projects</span>
+                  </span>
+                  <ArrowRight size={20} className="arrow-float text-white/90" />
+                </span>
               </a>
 
-              {/* Buy Me a Coffee — unchanged */}
+              {/* Buy Me a Coffee Button */}
               <a
                 ref={coffeeRef}
                 href="https://www.buymeacoffee.com/rahimsaroar"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleCoffeeClick}
-                className="relative flex items-center gap-2 px-6 py-4 overflow-hidden font-bold transition-all rounded-full group gold-glow hover:scale-105"
+                className="gold-glow relative flex items-center justify-center w-full sm:w-auto gap-3 px-8 py-4 overflow-hidden font-bold rounded-full transition-all duration-300 hover:-translate-y-[6px] hover:scale-[1.05] active:scale-95 select-none group"
                 style={{
                   background: 'linear-gradient(135deg, #f59e0b, #fbbf24, #fb923c, #f59e0b)',
                   color: '#1a0a00',
@@ -341,10 +358,10 @@ const Hero: React.FC = () => {
 
             {/* Social Icons */}
             <div className="flex items-center justify-center gap-6 pt-6 lg:justify-start text-slate-400">
-              <a href="https://github.com/rahimmishu" target="_blank" rel="noopener noreferrer" aria-label="Rahim Saroar Mishu on GitHub" className="transition-all hover:text-slate-900 dark:hover:text-white hover:scale-110"><Github size={24} /></a>
-              <a href="https://www.facebook.com/rahimsaroar" target="_blank" rel="noopener noreferrer" aria-label="Rahim Saroar Mishu on Facebook" className="transition-all hover:text-blue-600 hover:scale-110"><Facebook size={24} /></a>
-              <a href="https://www.linkedin.com/in/rahim-saroar/" target="_blank" rel="noopener noreferrer" aria-label="Rahim Saroar Mishu on LinkedIn" className="transition-all hover:text-blue-500 hover:scale-110"><Linkedin size={24} /></a>
-              <a href="mailto:rahim@example.com" aria-label="Email Rahim Saroar Mishu" className="transition-all hover:text-red-500 hover:scale-110"><Mail size={24} /></a>
+              <a href="https://github.com/rahimmishu" target="_blank" className="transition-all hover:text-slate-900 dark:hover:text-white hover:scale-110"><Github size={24} /></a>
+              <a href="https://www.facebook.com/rahimsaroar" target="_blank" className="transition-all hover:text-blue-600 hover:scale-110"><Facebook size={24} /></a>
+              <a href="https://www.linkedin.com/in/rahim-saroar/" target="_blank" className="transition-all hover:text-blue-500 hover:scale-110"><Linkedin size={24} /></a>
+              <a href="mailto:rahim@example.com" className="transition-all hover:text-red-500 hover:scale-110"><Mail size={24} /></a>
             </div>
           </div>
 
@@ -383,20 +400,14 @@ const Hero: React.FC = () => {
                 <div className="relative h-full w-full rounded-[60px] overflow-hidden border-[5px] border-white/10 shadow-[0_0_60px_rgba(139,92,246,0.4),0_30px_60px_rgba(0,0,0,0.5)] z-10">
                   <span className="photo-shimmer pointer-events-none absolute inset-0 w-[30%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent z-20" />
 
-                  {/* ✅ SEO FIXES:
-                      - title="..." added → Google Images এ hover text হিসেবে দেখায়
-                      - itemProp="image" → Person schema র সাথে link হয়
-                      - width/height → CLS (layout shift) ঠেকায়, Core Web Vitals ভালো হয় */}
+                  {/* ✅ FIX: Hero image — eager load করতে হবে, এটা LCP element!
+                      loading="lazy" ছিল আগে — সেটাই lag-এর কারণ ছিল */}
                   <img
                     src="/1.jpg"
-                    alt="Rahim Saroar Mishu – Full Stack Developer & AI Enthusiast from Joypurhat, Bangladesh"
-                    title="Rahim Saroar Mishu – Full Stack Developer, AI Enthusiast & Content Creator from Bangladesh"
+                    alt="Rahim Saroar Mishu"
                     loading="eager"
                     decoding="async"
                     fetchPriority="high"
-                    itemProp="image"
-                    width={800}
-                    height={1000}
                     className="object-cover w-full h-full transition-transform duration-700 scale-105 group-hover:scale-110"
                   />
 
