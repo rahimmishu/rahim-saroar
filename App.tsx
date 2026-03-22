@@ -1,109 +1,66 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
-// 🚀 Performance hooks (lightweight — eagerly load করা ঠিক আছে)
+
+// 🚀 Hidden Performance Optimizer (background এ চলবে)
 import { usePerformanceOptimizer } from './hooks/usePerformanceOptimizer';
 import { registerServiceWorker } from './lib/registerSW';
+
+// Register Service Worker for caching (hidden, automatic)
 registerServiceWorker();
 
-// 📱 Mobile detection (lightweight)
+// ============================================================
+// 📱 Mobile Lite Version Detection
+// ============================================================
 import useMobileDetect from './hooks/useMobileDetect';
+import LiteHero from './components/LiteHero';
+import LiteNavbar from './components/LiteNavbar';
+import LiteAbout from './components/LiteAbout';
+
 
 // ============================================================
-// ✅ EAGER LOADS — এগুলো above-fold বা structurally critical
+// Full Version Components
 // ============================================================
-import AppNavbar    from './components/AppNavbar';
-import LiteNavbar   from './components/LiteNavbar';
-import Hero         from './components/Hero';
-import LiteHero     from './components/LiteHero';
-import TechMarquee  from './components/TechMarquee';
-import Preloader    from './components/Preloader';
+import AppNavbar from './components/AppNavbar';
+import Hero from './components/Hero';
+import TechMarquee from './components/TechMarquee';
+import Projects from './components/Projects';
+import About from './components/About';
+import Journey from './components/Journey';
+import Contact from './components/Contact';
+import Footer from './components/Footer';
+import FacebookFeed from './components/FacebookFeed';
+import Resources from './components/Resources';
+import FeedbackSlider from './components/FeedbackSlider';
+import FeedbackList from './components/FeedbackList';
 import RevealOnScroll from './components/RevealOnScroll';
+
+// Utilities
+import Preloader from './components/Preloader';
+import ContextMenu from './components/ContextMenu';
+import FloatingDock from './components/FloatingDock';
+import Chatbot from './components/Chatbot';
+import MusicPlayer from './components/MusicPlayer';
 import DynamicTitle from './components/DynamicTitle';
 import NetworkStatus from './components/NetworkStatus';
-import FloatingDock from './components/FloatingDock';
+import SecretVault from './components/SecretVault';
+import MobilePremiumFeatures from './components/MobilePremiumFeatures';
+import BatteryOptimizer from './components/BatteryOptimizer';
+import PerformanceDebug from './components/PerformanceDebug';
+
+// Heavy effects — desktop only (mobile lite তে skip)
+import { SunlightSpotlight } from './components/ui/sunlight-spotlight';
+import DynamicIsland from './components/DynamicIsland';
+
 import { AuthProvider } from './context/AuthContext';
 
-// ============================================================
-// 🦥 LAZY LOADS — below-fold sections (scroll করলে তখন load হবে)
-// ============================================================
-
-// Main page sections
-const About          = lazy(() => import('./components/About'));
-const LiteAbout      = lazy(() => import('./components/LiteAbout'));
-const Projects       = lazy(() => import('./components/Projects'));
-const Resources      = lazy(() => import('./components/Resources'));
-const FacebookFeed   = lazy(() => import('./components/FacebookFeed'));
-const Journey        = lazy(() => import('./components/Journey'));
-const FeedbackList   = lazy(() => import('./components/FeedbackList'));
-const FeedbackSlider = lazy(() => import('./components/FeedbackSlider'));
-const Contact        = lazy(() => import('./components/Contact'));
-const Footer         = lazy(() => import('./components/Footer'));
-
-// Optional / on-demand widgets
-const Chatbot              = lazy(() => import('./components/Chatbot'));
-const MusicPlayer          = lazy(() => import('./components/MusicPlayer'));
-const ContextMenu          = lazy(() => import('./components/ContextMenu'));
-const SecretVault          = lazy(() => import('./components/SecretVault'));
-const BatteryOptimizer     = lazy(() => import('./components/BatteryOptimizer'));
-const PerformanceDebug     = lazy(() => import('./components/PerformanceDebug'));
-const MobilePremiumFeatures = lazy(() => import('./components/MobilePremiumFeatures'));
-
-// Heavy desktop-only effects
-const SunlightSpotlight = lazy(() =>
-  import('./components/ui/sunlight-spotlight').then(m => ({ default: m.SunlightSpotlight }))
-);
-const DynamicIsland = lazy(() => import('./components/DynamicIsland'));
-
-// ── Pages (separate routes — always lazy) ────────────────────
-const UserProfile = lazy(() => import('./pages/UserProfile'));
-const ToolsPage   = lazy(() => import('./pages/ToolsPage'));
-const GalleryPage = lazy(() => import('./pages/GalleryPage'));
-const VaultPage   = lazy(() => import('./pages/VaultPage'));
-
-// ============================================================
-// Suspense fallbacks
-// ============================================================
-
-// Section loader — below-fold sections-এর জন্য
-const SectionFallback = () => (
-  <div style={{ minHeight: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    <div
-      style={{
-        width: 32,
-        height: 32,
-        borderRadius: '50%',
-        border: '3px solid rgba(139,92,246,0.2)',
-        borderTopColor: '#8b5cf6',
-        animation: 'spin 0.7s linear infinite',
-      }}
-    />
-    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-  </div>
-);
-
-// Page loader — full route change-এর জন্য
-const PageFallback = () => (
-  <div style={{
-    minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: '#000',
-  }}>
-    <div style={{
-      width: 48, height: 48, borderRadius: '50%',
-      border: '4px solid rgba(139,92,246,0.2)',
-      borderTopColor: '#8b5cf6',
-      animation: 'spin 0.7s linear infinite',
-    }} />
-    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-  </div>
-);
-
-// Invisible fallback — widget গুলোর জন্য (UI-তে কিছু দেখাবে না)
-const NullFallback = () => null;
+// ── Pages ────────────────────────────────────────────────────────────────────
+import UserProfile from './pages/UserProfile';
+import ToolsPage   from './pages/ToolsPage';    // 🆕 /tools
+import GalleryPage from './pages/GalleryPage';  // 🆕 /gallery
+import VaultPage   from './pages/VaultPage';    // 🆕 /vault
+// ❌ সরানো হয়েছে: import Tools, import PhotoGallery (এখন আলাদা page)
 
 // ============================================================
 // Scroll to top on route change
@@ -115,7 +72,7 @@ const ScrollToTop = () => {
 };
 
 // ============================================================
-// 📱 Lite Mobile RevealOnScroll
+// 📱 Lite Mobile RevealOnScroll — simpler, no heavy spring
 // ============================================================
 const LiteReveal: React.FC<{ children: React.ReactNode; delay?: number }> = ({ children, delay = 0 }) => {
   const [visible, setVisible] = useState(false);
@@ -148,13 +105,17 @@ const LiteReveal: React.FC<{ children: React.ReactNode; delay?: number }> = ({ c
 // Main App Content
 // ============================================================
 const AppContent: React.FC = () => {
+  // 🚀 Hidden Performance Optimizer (completely silent, zero UI impact)
   const perfStatus = usePerformanceOptimizer();
   
-  const [isLoading, setIsLoading]       = useState(true);
-  const [showBanner, setShowBanner]     = useState(false);
-  const [isChatOpen, setIsChatOpen]     = useState(false);
+  const [isLoading, setIsLoading]           = useState(true);
+  const [showBanner, setShowBanner]         = useState(false);
+  // ❌ isToolsOpen সরানো হয়েছে — এখন /tools route
+  // ❌ isGalleryOpen সরানো হয়েছে — এখন /gallery route
+  const [isChatOpen, setIsChatOpen]         = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
 
+  // 📱 Mobile lite mode detection
   const isMobileLite = useMobileDetect();
 
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -166,18 +127,22 @@ const AppContent: React.FC = () => {
   });
 
   useEffect(() => {
+    
     const tg = (window as any).Telegram?.WebApp;
     if (tg) {
       tg.ready();
-      if (tg.colorScheme === 'dark') { setIsDarkMode(true); }
+    if (tg.colorScheme === 'dark') { setIsDarkMode(true); }
     }
   }, []);
+  
 
   useEffect(() => {
     const html = document.documentElement;
+    
     isDarkMode ? html.classList.add('dark') : html.classList.remove('dark');
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
 
+    // Click vibration — only on desktop (mobile lite তে CPU save)
     if (!isMobileLite) {
       const handleClick = () => navigator.vibrate?.(5);
       document.addEventListener('click', handleClick);
@@ -191,6 +156,7 @@ const AppContent: React.FC = () => {
     console.log('New Feedback Submitted:', data);
   };
 
+  // Keyboard shortcuts — only desktop
   useEffect(() => {
     if (isMobileLite) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -213,6 +179,7 @@ const AppContent: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isMobileLite]);
 
+  // 📱 Reveal wrapper — lite vs full
   const Reveal = isMobileLite ? LiteReveal : RevealOnScroll;
 
   return (
@@ -227,42 +194,30 @@ const AppContent: React.FC = () => {
         }}
       />
 
-      {/* Heavy effects — desktop only, lazy loaded */}
-      {!isMobileLite && (
-        <Suspense fallback={<NullFallback />}>
-          <SunlightSpotlight className="z-[50]" />
-          <DynamicIsland />
-        </Suspense>
-      )}
+      {/* Heavy effects — desktop only */}
+      {!isMobileLite && <SunlightSpotlight className="z-[50]" />}
+      {!isMobileLite && <DynamicIsland />}
+
 
       <ScrollToTop />
 
-      {/* Lightweight utilities */}
-      <Suspense fallback={<NullFallback />}>
-        <SecretVault />
-      </Suspense>
+      {/* সব device এ চলে (lightweight) */}
+      <SecretVault />
       <DynamicTitle />
       <NetworkStatus />
 
       {/* Desktop only */}
-      {!isMobileLite && (
-        <Suspense fallback={<NullFallback />}>
-          <ContextMenu />
-          <BatteryOptimizer isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
-        </Suspense>
-      )}
+      {!isMobileLite && <ContextMenu />}
+      {!isMobileLite && <BatteryOptimizer isDarkMode={isDarkMode} toggleTheme={toggleTheme} />}
 
       {/* Mobile only */}
-      <Suspense fallback={<NullFallback />}>
-        <MobilePremiumFeatures />
-      </Suspense>
+      <MobilePremiumFeatures />
 
-      <Suspense fallback={<NullFallback />}>
-        <PerformanceDebug status={perfStatus} />
-      </Suspense>
+      {/* 🔍 Hidden Performance Debug (Dev mode only - Shift+P) */}
+      <PerformanceDebug status={perfStatus} />
 
       {/* ══════════════════════════════════════════════════════
-           Routes
+           Routes — প্রতিটা page আলাদা route
          ══════════════════════════════════════════════════════ */}
       <Routes>
 
@@ -271,6 +226,7 @@ const AppContent: React.FC = () => {
           path="/"
           element={
             <>
+              {/* Preloader — শুধু home page এ */}
               {isLoading && (
                 <Preloader
                   onFinish={() => {
@@ -280,7 +236,7 @@ const AppContent: React.FC = () => {
                 />
               )}
 
-              {/* Welcome Banner */}
+              {/* ══ Welcome Banner (Image Modal) ══ */}
               {showBanner && (
                 <div
                   onClick={e => e.stopPropagation()}
@@ -298,6 +254,7 @@ const AppContent: React.FC = () => {
                     padding: '16px',
                   }}
                 >
+                  {/* Image Container */}
                   <div
                     style={{
                       position: 'relative',
@@ -310,27 +267,41 @@ const AppContent: React.FC = () => {
                       boxShadow: '0 25px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08)',
                     }}
                   >
-                    {/* ✅ banner.jpg — loading="lazy" কারণ এটা modal, সাথে সাথে দেখা যাচ্ছে না */}
+                    {/* Banner Image */}
                     <img
                       src="/banner.jpg"
                       alt="Welcome Banner"
-                      loading="lazy"
-                      decoding="async"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
                     />
 
+                    {/* X Close Button — top-right corner */}
                     <button
                       onClick={() => setShowBanner(false)}
                       aria-label="Close banner"
                       style={{
-                        position: 'absolute', top: '12px', right: '12px',
-                        width: '36px', height: '36px', borderRadius: '50%',
+                        position: 'absolute',
+                        top: '12px',
+                        right: '12px',
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
                         border: '1.5px solid rgba(255,255,255,0.5)',
-                        background: 'rgba(0,0,0,0.55)', color: '#fff',
-                        fontSize: '18px', lineHeight: 1, cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: 'rgba(0,0,0,0.55)',
+                        color: '#fff',
+                        fontSize: '18px',
+                        lineHeight: 1,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         transition: 'background 0.2s, transform 0.2s, border-color 0.2s',
-                        backdropFilter: 'blur(8px)', zIndex: 10,
+                        backdropFilter: 'blur(8px)',
+                        zIndex: 10,
                       }}
                       onMouseEnter={e => {
                         const btn = e.currentTarget as HTMLButtonElement;
@@ -355,115 +326,62 @@ const AppContent: React.FC = () => {
                 className={`transition-opacity duration-700 ease-out ${isLoading ? 'opacity-0' : 'opacity-100'}`}
                 style={{ position: 'relative', zIndex: 10 }}
               >
-                {/* NAVBAR — above fold, eagerly loaded */}
+                {/* ===== NAVBAR — Lite vs Full ===== */}
+                {/* ✅ onOpenTools / onOpenGallery props সরানো হয়েছে */}
                 {isMobileLite ? (
                   <LiteNavbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
                 ) : (
                   <AppNavbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
                 )}
 
-                {/* HERO — above fold, eagerly loaded */}
+                {/* ===== HERO — Lite vs Full ===== */}
                 {isMobileLite ? <LiteHero /> : <Hero />}
 
                 <TechMarquee />
 
-                {/* ── Below-fold sections — সব Suspense-এ wrap করা ── */}
-
+                {/* ===== ABOUT — Lite vs Full ===== */}
                 <Reveal delay={0.1}>
                   <section id="about">
-                    <Suspense fallback={<SectionFallback />}>
-                      {isMobileLite ? <LiteAbout /> : <About />}
-                    </Suspense>
+                    {isMobileLite ? <LiteAbout /> : <About />}
                   </section>
                 </Reveal>
 
-                <Reveal delay={0.1}>
-                  <section id="projects">
-                    <Suspense fallback={<SectionFallback />}>
-                      <Projects />
-                    </Suspense>
-                  </section>
-                </Reveal>
+                <Reveal delay={0.1}><section id="projects"><Projects /></section></Reveal>
+                <Reveal><section id="resources"><Resources /></section></Reveal>
+                <Reveal><FacebookFeed /></Reveal>
+                <Reveal><section id="journey"><Journey /></section></Reveal>
+                <div id="feedback"><FeedbackList /></div>
+                <Reveal><section id="contact"><Contact /></section></Reveal>
+                <FeedbackSlider onSubmit={handleNewFeedback} />
 
-                <Reveal>
-                  <section id="resources">
-                    <Suspense fallback={<SectionFallback />}>
-                      <Resources />
-                    </Suspense>
-                  </section>
-                </Reveal>
+                <Footer />
 
-                <Reveal>
-                  <Suspense fallback={<SectionFallback />}>
-                    <FacebookFeed />
-                  </Suspense>
-                </Reveal>
-
-                <Reveal>
-                  <section id="journey">
-                    <Suspense fallback={<SectionFallback />}>
-                      <Journey />
-                    </Suspense>
-                  </section>
-                </Reveal>
-
-                <div id="feedback">
-                  <Suspense fallback={<SectionFallback />}>
-                    <FeedbackList />
-                  </Suspense>
-                </div>
-
-                <Reveal>
-                  <section id="contact">
-                    <Suspense fallback={<SectionFallback />}>
-                      <Contact />
-                    </Suspense>
-                  </section>
-                </Reveal>
-
-                <Suspense fallback={<NullFallback />}>
-                  <FeedbackSlider onSubmit={handleNewFeedback} />
-                </Suspense>
-
-                <Suspense fallback={<NullFallback />}>
-                  <Footer />
-                </Suspense>
-
-                {/* Global Widgets — lazy loaded, only mount when needed */}
-                <Suspense fallback={<NullFallback />}>
-                  <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
-                </Suspense>
-
-                <Suspense fallback={<NullFallback />}>
-                  <MusicPlayer
-                    isPlaying={isMusicPlaying}
-                    togglePlay={() => setIsMusicPlaying(!isMusicPlaying)}
-                  />
-                </Suspense>
-
+                {/* ===== Global Widgets ===== */}
+                <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+                <MusicPlayer
+                  isPlaying={isMusicPlaying}
+                  togglePlay={() => setIsMusicPlaying(!isMusicPlaying)}
+                />
                 <FloatingDock
                   toggleChat={() => setIsChatOpen(!isChatOpen)}
                   toggleMusic={() => setIsMusicPlaying(!isMusicPlaying)}
                   toggleTheme={toggleTheme}
                 />
+
+                {/* ❌ PhotoGallery modal সরানো হয়েছে → /gallery route */}
+                {/* ❌ Tools overlay div সরানো হয়েছে → /tools route */}
               </div>
             </>
           }
         />
 
-        {/* ── Other Pages — সব lazy loaded ── */}
-        <Route path="/profile" element={
-          <Suspense fallback={<PageFallback />}><UserProfile /></Suspense>
-        } />
-        <Route path="/tools" element={
-          <Suspense fallback={<PageFallback />}><ToolsPage /></Suspense>
-        } />
-        <Route path="/gallery" element={
-          <Suspense fallback={<PageFallback />}><GalleryPage /></Suspense>
-        } />
-        <Route path="/vault" element={
-          <Suspense fallback={<PageFallback />}><VaultPage /></Suspense>
-        } />
+        {/* ── Profile Page (আগে থেকে ছিল) ── */}
+        <Route path="/profile" element={<UserProfile />} />
+
+        {/* ── নতুন Dedicated Pages ── */}
+        <Route path="/tools"   element={<ToolsPage />} />
+        <Route path="/gallery" element={<GalleryPage />} />
+        <Route path="/vault"   element={<VaultPage />} />
 
       </Routes>
     </main>
