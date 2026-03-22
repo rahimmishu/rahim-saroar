@@ -9,9 +9,7 @@ export default defineConfig(({ mode }) => {
         port: 3000,
         host: '0.0.0.0',
       },
-      plugins: [
-        react(),
-      ],
+      plugins: [react()],
       define: {
         'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
         'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
@@ -22,104 +20,60 @@ export default defineConfig(({ mode }) => {
         }
       },
       
+      // 🚀 Hidden Performance Optimizations
       build: {
+        // Code splitting for faster initial load
         rollupOptions: {
           output: {
-            manualChunks(id) {
-              // React core — সবার আগে load হবে
-              if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
-                return 'react-core';
-              }
-              // Router আলাদা chunk
-              if (id.includes('react-router-dom')) {
-                return 'react-router';
-              }
-              // Firebase সব একসাথে, কিন্তু আলাদা chunk-এ
-              if (id.includes('firebase')) {
-                return 'firebase-vendor';
-              }
-              // Animation libraries (framer-motion, gsap ইত্যাদি থাকলে)
-              if (id.includes('framer-motion') || id.includes('gsap')) {
-                return 'animation-vendor';
-              }
-              // বাকি সব node_modules এক জায়গায়
-              if (id.includes('node_modules')) {
-                return 'vendor';
-              }
-            },
-
-            // Cache-friendly file naming — browser cache ভালো কাজ করবে
-            chunkFileNames: 'assets/js/[name]-[hash].js',
-            entryFileNames: 'assets/js/[name]-[hash].js',
-            assetFileNames: (assetInfo) => {
-              const name = assetInfo.name ?? '';
-              // Images আলাদা folder-এ
-              if (/\.(png|jpe?g|gif|svg|webp|avif)$/i.test(name)) {
-                return 'assets/img/[name]-[hash][extname]';
-              }
-              // Fonts আলাদা folder-এ
-              if (/\.(woff2?|ttf|eot)$/i.test(name)) {
-                return 'assets/fonts/[name]-[hash][extname]';
-              }
-              // CSS আলাদা folder-এ
-              if (/\.css$/i.test(name)) {
-                return 'assets/css/[name]-[hash][extname]';
-              }
-              return 'assets/[name]-[hash][extname]';
-            },
+            manualChunks: {
+              // Vendor chunks
+              'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+              'firebase-vendor': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
+            }
           }
         },
         
+        // ✅ Use default esbuild minifier (no extra dependency needed)
         minify: 'esbuild',
         
-        // esbuild minify options — আরো aggressive compression
-        esbuildOptions: {
-          drop: mode === 'production' ? ['console', 'debugger'] : [],
-          legalComments: 'none',
-        },
-
-        chunkSizeWarningLimit: 800, // 1000 থেকে কমালাম, warning আগে পাবে
-
-        // Modern browsers target — smaller bundle size
-        target: 'es2020',
+        // Optimize chunk size
+        chunkSizeWarningLimit: 1000,
         
+        // Target modern browsers for smaller bundle
+        target: 'es2015',
+        
+        // Enable CSS code splitting
         cssCodeSplit: true,
         
+        // Source maps only for development
         sourcemap: mode === 'development',
         
-        // 8KB পর্যন্ত inline করবে (আগে ছিল 4KB)
-        // ছোট ছোট icon/svg গুলো inline হয়ে যাবে, extra request কমবে
-        assetsInlineLimit: 8192,
-
-        // CSS minification
-        cssMinify: true,
+        // Asset optimization
+        assetsInlineLimit: 4096, // Inline small assets as base64
       },
       
+      // ⚡ Performance optimizations
       optimizeDeps: {
+        // Pre-bundle dependencies
         include: [
           'react',
           'react-dom',
           'react-router-dom',
           'firebase/app',
           'firebase/auth',
-          'firebase/firestore',
-          'firebase/storage',
+          'firebase/firestore'
         ],
-        // Dev server এ faster cold start
-        force: false,
       },
       
+      // 🎨 CSS optimization (design intact রাখতে)
       css: {
         devSourcemap: mode === 'development',
       },
       
+      // 🔧 Preview server optimization
       preview: {
         port: 4173,
-        host: '0.0.0.0',
-        // Preview server-এ cache headers
-        headers: {
-          'Cache-Control': 'public, max-age=31536000',
-        },
+        host: '0.0.0.0'
       }
     };
 });
