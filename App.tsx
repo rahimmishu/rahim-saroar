@@ -54,7 +54,8 @@ const MobilePremiumFeatures = lazy(() => import('./components/MobilePremiumFeatu
 const SunlightSpotlight = lazy(() =>
   import('./components/ui/sunlight-spotlight').then(m => ({ default: m.SunlightSpotlight }))
 );
-const DynamicIsland = lazy(() => import('./components/DynamicIsland'));
+const DynamicIsland    = lazy(() => import('./components/DynamicIsland'));
+const WelcomeGreeting  = lazy(() => import('./components/WelcomeGreeting'));
 
 // ── Pages (separate routes — always lazy) ────────────────────
 const UserProfile = lazy(() => import('./pages/UserProfile'));
@@ -232,6 +233,7 @@ const AppContent: React.FC = () => {
         <Suspense fallback={<NullFallback />}>
           <SunlightSpotlight className="z-[50]" />
           <DynamicIsland />
+          <WelcomeGreeting ready={!isLoading} />
         </Suspense>
       )}
 

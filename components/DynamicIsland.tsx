@@ -21,9 +21,13 @@ const vibratePhone = (type: 'success' | 'info' | 'error') => {
   }
 };
 
-export const triggerIsland = (msg: string, type: 'success' | 'info' | 'error' = 'success') => {
+export const triggerIsland = (
+  msg: string,
+  type: 'success' | 'info' | 'error' = 'success',
+  duration = 7000
+) => {
   vibratePhone(type);
-  const event = new CustomEvent('dynamic-island', { detail: { msg, type } });
+  const event = new CustomEvent('dynamic-island', { detail: { msg, type, duration } });
   window.dispatchEvent(event);
 };
 
@@ -59,16 +63,15 @@ const DynamicIsland: React.FC = () => {
       setType(e.detail.type);
       setActive(true);
 
-      // এনিমেশন সিকোয়েন্স
-      setTimeout(() => {
-        setIsExpanded(true);
-      }, 100);
+      // open animation
+      setTimeout(() => setIsExpanded(true), 100);
 
-      // ৭ সেকেন্ড পর অটো ক্লোজ হবে
+      // custom duration — default 7s
+      const closeDuration = e.detail.duration ?? 7000;
       const closeTimer = setTimeout(() => {
         setIsExpanded(false);
         setTimeout(() => setActive(false), 500);
-      }, 7000);
+      }, closeDuration);
 
       return () => clearTimeout(closeTimer);
     };

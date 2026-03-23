@@ -3,15 +3,13 @@
   --primary: #60a5fa;
   --glass: rgba(255, 255, 255, 0.08);
   --border: rgba(255, 255, 255, 0.12);
-  /* ডিফল্ট কালার */
-  --bg-color-1: #020617; 
+  --bg-color-1: #020617;
   --bg-color-2: #1e293b;
   --glow-color: rgba(96, 165, 250, 0.15);
 
   width: 100%;
   height: 100%;
-  /* টুলস কন্টেইনারের হাইট */
-  min-height: 80vh; 
+  min-height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,18 +18,15 @@
   position: relative;
   overflow: hidden;
   border-radius: 24px;
-  /* ব্যাকগ্রাউন্ড এখান থেকে কন্ট্রোল হবে */
   background: radial-gradient(circle at 20% 30%, var(--bg-color-2) 0%, var(--bg-color-1) 100%);
   transition: background 1.5s ease-in-out;
 }
 
-/* Weather Effects Layer */
+/* ─── Effects ─── */
 .weather-effects {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   pointer-events: none;
   z-index: 1;
 }
@@ -39,8 +34,7 @@
 .rain-drop {
   position: absolute;
   background-color: rgba(255, 255, 255, 0.4);
-  width: 2px;
-  height: 15px;
+  width: 2px; height: 15px;
   top: -20px;
   animation: fall linear infinite;
 }
@@ -53,10 +47,7 @@
   animation: fall linear infinite, sway ease-in-out infinite;
 }
 
-@keyframes fall {
-  to { transform: translateY(100vh); }
-}
-
+@keyframes fall { to { transform: translateY(100vh); } }
 @keyframes sway {
   0%, 100% { transform: translateX(0); }
   50% { transform: translateX(20px); }
@@ -64,9 +55,8 @@
 
 .bg-glow {
   position: absolute;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, var(--glow-color) 0%, rgba(0, 0, 0, 0) 70%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, var(--glow-color) 0%, rgba(0,0,0,0) 70%);
   z-index: 0;
   filter: blur(60px);
   animation: float 12s infinite ease-in-out;
@@ -74,35 +64,39 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translate(0, 0); }
+  0%, 100% { transform: translate(0,0); }
   50% { transform: translate(10%, 5%); }
 }
 
-/* 🔥 এই ক্লাসটি মিসিং ছিল হয়তো */
+/* ─── Card ─── */
 .wa-glass-card {
   background: var(--glass);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   border: 1px solid var(--border);
   border-radius: 32px;
-  padding: 30px;
+  padding: 28px 24px;
   width: 95%;
-  max-width: 420px;
+  max-width: 440px;
   text-align: center;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
   z-index: 10;
   position: relative;
-  /* ফ্লেক্স লেআউট ফিক্স */
   display: flex;
   flex-direction: column;
+  max-height: 90vh;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
+.wa-glass-card::-webkit-scrollbar { display: none; }
 
+/* ─── Search ─── */
 .search-box {
   display: flex;
   background: rgba(0, 0, 0, 0.3);
   border-radius: 18px;
   padding: 5px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   border: 1px solid var(--border);
 }
 
@@ -120,100 +114,230 @@
   background: var(--primary);
   color: white;
   border: none;
-  width: 40px;
-  height: 40px;
+  width: 40px; height: 40px;
   border-radius: 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: 0.3s;
+  flex-shrink: 0;
 }
+.wa-search-btn:hover { transform: scale(1.05); }
 
-.wa-search-btn:hover {
-  transform: scale(1.05);
+/* ─── City + Temp ─── */
+.wa-city-name {
+  font-weight: 500;
+  font-size: 1rem;
+  opacity: 0.85;
+  margin: 0;
 }
 
 .temp-val {
-  font-size: 4.5rem;
+  font-size: 4.2rem;
   font-weight: 600;
   line-height: 1;
-  margin: 10px 0;
+  margin: 8px 0;
 }
 
 .desc-pill {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 6px 15px;
+  background: rgba(255, 255, 255, 0.07);
+  padding: 5px 14px;
   border-radius: 50px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  border: 1px solid var(--border);
+  margin: 2px;
+}
+
+/* ─── Tabs ─── */
+.wa-tabs {
+  display: flex;
+  gap: 6px;
+  margin: 18px 0 0;
+  background: rgba(0,0,0,0.25);
+  border-radius: 14px;
+  padding: 4px;
   border: 1px solid var(--border);
 }
 
+.wa-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  padding: 8px 0;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.78rem;
+  transition: all 0.2s;
+}
+.wa-tab-btn.active {
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+
+/* ─── Metrics Grid ─── */
 .metrics {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
-  gap: 15px;
+  margin-top: 18px;
+  gap: 10px;
 }
 
 .metric-item {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
   padding: 12px;
   border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  border: 1px solid var(--border);
+}
+
+.metric-item label {
+  font-size: 0.58rem;
+  opacity: 0.5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ─── UV Bar ─── */
+.uv-bar-container {
+  margin-top: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 12px 14px;
+}
+
+.uv-bar-track {
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.uv-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.8s ease;
+}
+
+/* ─── Sun Times ─── */
+.sun-times {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 14px;
+}
+
+.sun-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
 }
 
-.metric-item label {
+.sun-item label {
   font-size: 0.6rem;
   opacity: 0.5;
   text-transform: uppercase;
 }
 
+.sun-item span {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.sun-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--border);
+}
+
+/* ─── Forecast / Hourly ─── */
 .forecast-container {
-  margin-top: 25px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
+  margin-top: 18px;
 }
 
 .forecast-grid {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 8px;
   overflow-x: auto;
-  padding-bottom: 5px;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
 
 .forecast-item {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border);
-  padding: 10px 5px;
-  border-radius: 12px;
-  min-width: 65px;
+  padding: 10px 6px;
+  border-radius: 14px;
+  min-width: 62px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 5px;
+  flex-shrink: 0;
 }
 
 .forecast-day {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   opacity: 0.6;
 }
 
 .forecast-temp {
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
 }
 
+/* ─── Daily Grid ─── */
+.daily-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.daily-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 16px;
+}
+
+.daily-day {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  min-width: 90px;
+  text-align: left;
+}
+
+.daily-temps {
+  display: flex;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ─── Loading ─── */
 .wa-loading {
   animation: spin 1s linear infinite;
   opacity: 0.5;
+  display: flex;
+  justify-content: center;
 }
 
 @keyframes spin {
@@ -221,16 +345,15 @@
   to { transform: rotate(360deg); }
 }
 
+/* ─── Close Button ─── */
 .wa-close-btn {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 20px; right: 20px;
   z-index: 50;
   background: rgba(255,255,255,0.1);
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 40px; height: 40px;
   color: white;
   cursor: pointer;
   display: flex;
@@ -238,6 +361,4 @@
   justify-content: center;
   backdrop-filter: blur(5px);
 }
-.wa-close-btn:hover {
-  background: rgba(255,0,0,0.6);
-}
+.wa-close-btn:hover { background: rgba(255,0,0,0.6); }
