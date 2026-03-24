@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Camera, Wrench, Sparkles, Home, Briefcase, BookOpen, User, Mail, Lock, LogOut, LogIn, ChevronDown, ArrowRight, UserCircle } from 'lucide-react';
-import ThemeToggle from './ThemeToggle';
-import { useAuth } from '../context/AuthContext'; 
-import AuthModal from './AuthModal'; 
-import { RainbowButton } from './ui/rainbow-button'; 
-import { GitHubStarButton } from './ui/github-star'; 
-import { PremiumSignInButton } from './ui/premium-signin-button';
+import ThemeToggle from '../ui/ThemeToggle';
+import { useAuth } from '../../context/AuthContext'; 
+import AuthModal from '../modals/AuthModal'; 
+import { RainbowButton } from '../ui/rainbow-button'; 
+import { GitHubStarButton } from '../ui/github-star'; 
+import { PremiumSignInButton } from '../ui/premium-signin-button';
 import { useNavigate } from 'react-router-dom';
 
 // ✅ onOpenTools / onOpenGallery prop দুটো সরানো হয়েছে

@@ -4,7 +4,7 @@ import {
   MessageCircle, Music, Bot, ArrowUp, 
   Home, GripHorizontal
 } from 'lucide-react';
-import VoiceControl from './VoiceControl'; 
+import VoiceControl from '../tools/VoiceControl'; 
 
 interface FloatingDockProps {
   toggleChat: () => void;

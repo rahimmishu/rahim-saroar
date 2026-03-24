@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, X, Lock, Grid, Play, Video, Sparkles, Command, ArrowRight } from 'lucide-react';
-// import { triggerIsland } from './DynamicIsland'; // 🔥 নোটিফিকেশনের জন্য ইমপোর্ট (প্রয়োজন হলে আনকমেন্ট করুন)
+// import { triggerIsland } from '../layout/DynamicIsland'; // 🔥 নোটিফিকেশনের জন্য ইমপোর্ট (প্রয়োজন হলে আনকমেন্ট করুন)
 
 interface MediaItem {
   type: 'image' | 'video';

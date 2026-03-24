@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Angry, Frown, Meh, Smile, Star, CheckCircle, X, User, Loader2 } from 'lucide-react';
-import { db } from "../firebase"; 
+import { db } from "../../firebase"; 
 import { collection, addDoc, serverTimestamp } from "firebase/firestore"; 
 
 // Mood Configuration

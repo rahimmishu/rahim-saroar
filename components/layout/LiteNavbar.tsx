@@ -8,9 +8,9 @@ import {
   BookOpen, User, Mail, Lock, LogOut, LogIn, ArrowRight,
   UserCircle, Settings,
 } from 'lucide-react';
-import ThemeToggle from './ThemeToggle';
-import { useAuth } from '../context/AuthContext';
-import AuthModal from './AuthModal';
+import ThemeToggle from '../ui/ThemeToggle';
+import { useAuth } from '../../context/AuthContext';
+import AuthModal from '../modals/AuthModal';
 import { useNavigate } from 'react-router-dom';
 
 // ✅ onOpenTools / onOpenGallery সরানো হয়েছে

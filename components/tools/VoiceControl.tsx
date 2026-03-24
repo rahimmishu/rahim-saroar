@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Mic, MicOff } from 'lucide-react';
-import { triggerIsland } from './DynamicIsland'; // আপনার DynamicIsland ইমপোর্ট ঠিক থাকলে এটি কাজ করবে
+import { triggerIsland } from '../layout/DynamicIsland'; // আপনার DynamicIsland ইমপোর্ট ঠিক থাকলে এটি কাজ করবে
 
 interface VoiceControlProps {
   toggleTheme: () => void;

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { triggerIsland } from './DynamicIsland';
+import { triggerIsland } from '../layout/DynamicIsland';
 
 interface BatteryOptimizerProps {
   isDarkMode: boolean;

@@ -8,7 +8,7 @@ import {
   FacebookAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 import ReCAPTCHA from "react-google-recaptcha";
 
 /* ─── Icons ─────────────────────────────────────────── */

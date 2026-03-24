@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { collection, query, orderBy, onSnapshot, limit } from "firebase/firestore";
 import { Star, Quote, Shield, TrendingUp, Users, Award } from "lucide-react";
 

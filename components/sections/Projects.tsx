@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, MouseEvent } from 'react';
-import { PROJECTS } from '../constants';
+import { PROJECTS } from '../../constants';
 import { ChevronRight, X, Copy, Check, Terminal, Play, Eye, ExternalLink } from 'lucide-react';
-import Tilt3D from './Tilt3D';
+import Tilt3D from '../ui/Tilt3D';
 
 const Projects: React.FC = () => {
   const [showCodeModal, setShowCodeModal] = useState(false);

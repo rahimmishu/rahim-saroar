@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRight, Sparkles, Github, Facebook, Linkedin, Mail, Coffee } from 'lucide-react';
-import Tilt3D from './Tilt3D'; 
-import { triggerIsland } from './DynamicIsland'; 
+import Tilt3D from '../ui/Tilt3D';
+import { triggerIsland } from '../layout/DynamicIsland';
 
 const Hero: React.FC = () => {
   const [text, setText] = useState('');

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ACHIEVEMENTS } from '../constants';
+import { ACHIEVEMENTS } from '../../constants';
 import { Award, BookOpen, Video, Quote } from 'lucide-react';
 
 const Achievements: React.FC = () => {

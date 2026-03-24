@@ -4,7 +4,7 @@ import {
   ExternalLink, X, ListMusic, Volume2, VolumeX,
   Shuffle, Repeat, Repeat1, RotateCcw, RotateCw
 } from 'lucide-react';
-import { useCloudStateDebounced } from '../hooks/useCloudState';
+import { useCloudStateDebounced } from '../../hooks/useCloudState';
 
 interface MusicPlayerProps {
   isPlaying: boolean;

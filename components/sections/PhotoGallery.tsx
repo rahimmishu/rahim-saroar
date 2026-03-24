@@ -1,6 +1,6 @@
 import React from 'react';
 import { Camera, X, Instagram } from 'lucide-react';
-import { photos, PERSON_NAME, EAGER_LOAD_COUNT, toAbsoluteUrl } from '../pages/photos.config';
+import { photos, PERSON_NAME, EAGER_LOAD_COUNT, toAbsoluteUrl } from '../../pages/photos.config';
 
 interface PhotoGalleryProps {
   isOpen: boolean;
