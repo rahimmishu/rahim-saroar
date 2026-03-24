@@ -1,0 +1,205 @@
+File Tree: rahim-saroar-mishu-portfolio
+Generated on: 3/24/2026, 7:26:30 PM
+Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
+
+────────────────────────────────────────────────────────────────────────────────
+
+├── .github/
+│   └── workflows/
+│       └── publish.yml
+├── api/
+│   ├── load.ts
+│   ├── news.ts
+│   └── save.ts
+├── assets/
+│   └── images/
+│       ├── facebook_cover.png
+│       ├── redirect_logo.png
+│       └── telegram_profile.png
+├── components/
+│   ├── games/
+│   │   ├── BirthdayCake.css
+│   │   ├── BirthdayCake.tsx
+│   │   ├── LuckRoyale.css
+│   │   ├── LuckRoyale.tsx
+│   │   ├── MemoryGame.css
+│   │   ├── MemoryGame.tsx
+│   │   ├── PokemonGame.tsx
+│   │   ├── RockPaperScissors.tsx
+│   │   ├── TicTacToe.css
+│   │   └── TicTacToe.tsx
+│   ├── layout/
+│   │   ├── AppNavbar.tsx
+│   │   ├── DynamicIsland.tsx
+│   │   ├── DynamicTitle.tsx
+│   │   ├── FloatingDock.tsx
+│   │   ├── FloatingWhatsApp.tsx
+│   │   ├── Footer.tsx
+│   │   ├── LiteNavbar.tsx
+│   │   ├── NetworkStatus.tsx
+│   │   ├── NoiseOverlay.tsx
+│   │   ├── Preloader.css
+│   │   └── Preloader.tsx
+│   ├── modals/
+│   │   ├── AuthModal.tsx
+│   │   ├── ContextMenu.tsx
+│   │   ├── MobilePremiumFeatures.tsx
+│   │   ├── SecretVault.tsx
+│   │   └── ToolsModal.tsx
+│   ├── sections/
+│   │   ├── About.tsx
+│   │   ├── Achievements.tsx
+│   │   ├── Certifications.tsx
+│   │   ├── Contact.tsx
+│   │   ├── CreativeWork.tsx
+│   │   ├── FacebookFeed.tsx
+│   │   ├── FeedbackList.tsx
+│   │   ├── FeedbackSlider.tsx
+│   │   ├── Hero.tsx
+│   │   ├── Home.tsx
+│   │   ├── Journey.tsx
+│   │   ├── LiteAbout.tsx
+│   │   ├── LiteHero.tsx
+│   │   ├── PhotoGallery.tsx
+│   │   ├── Projects.tsx
+│   │   ├── Resources.tsx
+│   │   ├── TechMarquee.tsx
+│   │   ├── TechStack.tsx
+│   │   └── WelcomeGreeting.tsx
+│   ├── tools/
+│   │   ├── BatteryOptimizer.tsx
+│   │   ├── Calculator.css
+│   │   ├── Calculator.tsx
+│   │   ├── Chatbot.tsx
+│   │   ├── FocusTimer.css
+│   │   ├── FocusTimer.tsx
+│   │   ├── GpaCalculator.tsx
+│   │   ├── MusicPlayer.tsx
+│   │   ├── SpeedTest.css
+│   │   ├── SpeedTest.tsx
+│   │   ├── Tools.tsx
+│   │   ├── VoiceControl.tsx
+│   │   ├── WeatherApp.css
+│   │   └── WeatherApp.tsx
+│   └── ui/
+│       ├── LazyImage.tsx
+│       ├── PerformanceDebug.tsx
+│       ├── RevealOnScroll.tsx
+│       ├── SpotlightCard.tsx
+│       ├── ThemeToggle.css
+│       ├── ThemeToggle.tsx
+│       ├── Tilt3D.tsx
+│       ├── github-star.tsx
+│       ├── premium-signin-button.tsx
+│       ├── rainbow-button.tsx
+│       └── sunlight-spotlight.tsx
+├── context/
+│   └── AuthContext.tsx
+├── hooks/
+│   ├── useCloudState.ts
+│   ├── useMobileDetect.ts
+│   └── usePerformanceOptimizer.ts
+├── lib/
+│   ├── PerformanceOptimizer.ts
+│   ├── registerSW.ts
+│   └── utils.ts
+├── pages/
+│   ├── GalleryPage.tsx
+│   ├── RedirectPage.tsx
+│   ├── ToolsPage.tsx
+│   ├── UserProfile.tsx
+│   ├── VaultPage.tsx
+│   └── photos.config.ts
+├── public/
+│   ├── downloads/
+│   │   └── Exam routine.pdf
+│   ├── users/
+│   │   ├── 2.png
+│   │   ├── 3.jpg
+│   │   ├── 4.jpg
+│   │   ├── 5.png
+│   │   ├── 6.png
+│   │   ├── 8.jpg
+│   │   └── 9.jpg
+│   ├── 1.jpg
+│   ├── 159dd35c8f374d459805a3729378f4c7.txt
+│   ├── arrow.png
+│   ├── background.jpg
+│   ├── background2.jpg
+│   ├── banner.jpg
+│   ├── bg.gif
+│   ├── blonde.jpg
+│   ├── code-scaled.jpg
+│   ├── deep.jpg
+│   ├── f.jpg
+│   ├── favicon.ico
+│   ├── favicon.png
+│   ├── fb-profile.png
+│   ├── fok.jpg
+│   ├── goju.jpg
+│   ├── google894a53b93d57d330.html
+│   ├── gps-tracker-new.jpg
+│   ├── hand-tracking.jpg
+│   ├── horny.jpg
+│   ├── hornyh.jpg
+│   ├── hot.jpg
+│   ├── jarvis-ai.jpg
+│   ├── manual.jpg
+│   ├── map-bg.jpg
+│   ├── mywot4b74afe4ed33f8f9012b.html
+│   ├── og-image.jpg
+│   ├── pagla.jpg
+│   ├── portfolio.png
+│   ├── rahim-saroar-mishu-J.jpg
+│   ├── rahim-saroar-mishu-biya.jpg
+│   ├── rahim-saroar-mishu-c.jpg
+│   ├── rahim-saroar-mishu-coding.jpg
+│   ├── rahim-saroar-mishu-coffee.jpg
+│   ├── rahim-saroar-mishu-content-creator.jpg
+│   ├── rahim-saroar-mishu-fuad.jpg
+│   ├── rahim-saroar-mishu-lifestyle.jpg
+│   ├── rahim-saroar-mishu-profile.jpg
+│   ├── rahim-saroar-mishu-school.jpg
+│   ├── rahim-saroar-mishu-speaker.jpg
+│   ├── rahim-saroar-mishu-speaker.png
+│   ├── rahim-saroar-mishu-sugarmill.jpg
+│   ├── rahim-saroar-mishu-web-developer.jpg
+│   ├── rahim-saroar-pic.png
+│   ├── resume.pdf
+│   ├── robots.txt
+│   ├── secret-pic.jpg
+│   ├── sitemap-images.xml
+│   ├── sitemap.xml
+│   ├── step.jpg
+│   ├── sw.js
+│   ├── victory.jpg
+│   └── wheel.jpg
+├── .gitignore
+├── App.css
+├── App.tsx
+├── Dockerfile
+├── LICENSE
+├── README.md
+├── SECURITY.md
+├── Untitled-1.txt
+├── bot.py
+├── constants.tsx
+├── firebase.ts
+├── global.css
+├── index.html
+├── index.tsx
+├── lite-mobile.css
+├── metadata.json
+├── package-lock.json
+├── package.json
+├── premium-navbar-animations.css
+├── requirements.txt
+├── tailwind.config.js
+├── tsconfig.json
+├── types.ts
+├── vercel.json
+├── vite-env.d.ts
+└── vite.config.ts
+
+────────────────────────────────────────────────────────────────────────────────
+Generated by FileTree Pro Extension

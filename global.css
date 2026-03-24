@@ -1,11 +1,9 @@
+@import './premium-navbar-animations.css';
+@import './lite-mobile.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import './premium-navbar-animations.css';
-
-/* 📱 Mobile Lite Mode Performance CSS */
-@import './lite-mobile.css';
 
 /* 🔥 CSS Variables for Rainbow Button */
 :root {
