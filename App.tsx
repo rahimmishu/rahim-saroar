@@ -13,16 +13,16 @@ import useMobileDetect from './hooks/useMobileDetect';
 // ============================================================
 // ✅ EAGER LOADS — এগুলো above-fold বা structurally critical
 // ============================================================
-import AppNavbar    from './components/AppNavbar';
-import LiteNavbar   from './components/LiteNavbar';
-import Hero         from './components/Hero';
-import LiteHero     from './components/LiteHero';
-import TechMarquee  from './components/TechMarquee';
-import Preloader    from './components/Preloader';
-import RevealOnScroll from './components/RevealOnScroll';
-import DynamicTitle from './components/DynamicTitle';
-import NetworkStatus from './components/NetworkStatus';
-import FloatingDock from './components/FloatingDock';
+import AppNavbar    from './components/layout/AppNavbar';
+import LiteNavbar   from './components/layout/LiteNavbar';
+import Hero         from './components/sections/Hero';
+import LiteHero     from './components/sections/LiteHero';
+import TechMarquee  from './components/sections/TechMarquee';
+import Preloader    from './components/layout/Preloader';
+import RevealOnScroll from './components/ui/RevealOnScroll';
+import DynamicTitle from './components/layout/DynamicTitle';
+import NetworkStatus from './components/layout/NetworkStatus';
+import FloatingDock from './components/layout/FloatingDock';
 import { AuthProvider } from './context/AuthContext';
 
 // ============================================================
@@ -30,32 +30,32 @@ import { AuthProvider } from './context/AuthContext';
 // ============================================================
 
 // Main page sections
-const About          = lazy(() => import('./components/About'));
-const LiteAbout      = lazy(() => import('./components/LiteAbout'));
-const Projects       = lazy(() => import('./components/Projects'));
-const Resources      = lazy(() => import('./components/Resources'));
-const FacebookFeed   = lazy(() => import('./components/FacebookFeed'));
-const Journey        = lazy(() => import('./components/Journey'));
-const FeedbackList   = lazy(() => import('./components/FeedbackList'));
-const FeedbackSlider = lazy(() => import('./components/FeedbackSlider'));
-const Contact        = lazy(() => import('./components/Contact'));
-const Footer         = lazy(() => import('./components/Footer'));
+const About          = lazy(() => import('./components/sections/About'));
+const LiteAbout      = lazy(() => import('./components/sections/LiteAbout'));
+const Projects       = lazy(() => import('./components/sections/Projects'));
+const Resources      = lazy(() => import('./components/sections/Resources'));
+const FacebookFeed   = lazy(() => import('./components/sections/FacebookFeed'));
+const Journey        = lazy(() => import('./components/sections/Journey'));
+const FeedbackList   = lazy(() => import('./components/sections/FeedbackList'));
+const FeedbackSlider = lazy(() => import('./components/sections/FeedbackSlider'));
+const Contact        = lazy(() => import('./components/sections/Contact'));
+const Footer         = lazy(() => import('./components/layout/Footer'));
 
 // Optional / on-demand widgets
-const Chatbot              = lazy(() => import('./components/Chatbot'));
-const MusicPlayer          = lazy(() => import('./components/MusicPlayer'));
-const ContextMenu          = lazy(() => import('./components/ContextMenu'));
-const SecretVault          = lazy(() => import('./components/SecretVault'));
-const BatteryOptimizer     = lazy(() => import('./components/BatteryOptimizer'));
-const PerformanceDebug     = lazy(() => import('./components/PerformanceDebug'));
-const MobilePremiumFeatures = lazy(() => import('./components/MobilePremiumFeatures'));
+const Chatbot              = lazy(() => import('./components/tools/Chatbot'));
+const MusicPlayer          = lazy(() => import('./components/tools/MusicPlayer'));
+const ContextMenu          = lazy(() => import('./components/modals/ContextMenu'));
+const SecretVault          = lazy(() => import('./components/modals/SecretVault'));
+const BatteryOptimizer     = lazy(() => import('./components/tools/BatteryOptimizer'));
+const PerformanceDebug     = lazy(() => import('./components/ui/PerformanceDebug'));
+const MobilePremiumFeatures = lazy(() => import('./components/modals/MobilePremiumFeatures'));
 
 // Heavy desktop-only effects
 const SunlightSpotlight = lazy(() =>
   import('./components/ui/sunlight-spotlight').then(m => ({ default: m.SunlightSpotlight }))
 );
-const DynamicIsland    = lazy(() => import('./components/DynamicIsland'));
-const WelcomeGreeting  = lazy(() => import('./components/WelcomeGreeting'));
+const DynamicIsland    = lazy(() => import('./components/layout/DynamicIsland'));
+const WelcomeGreeting  = lazy(() => import('./components/sections/WelcomeGreeting'));
 
 // ── Pages (separate routes — always lazy) ────────────────────
 const UserProfile = lazy(() => import('./pages/UserProfile'));

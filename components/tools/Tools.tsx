@@ -5,13 +5,13 @@ import {
   GraduationCap
 } from 'lucide-react';
 
-import PokemonGame from './PokemonGame';
-import LuckRoyale from './LuckRoyale';
+import PokemonGame from '../games/PokemonGame';
+import LuckRoyale from '../games/LuckRoyale';
 import SpeedTest from './SpeedTest';
 import WeatherApp from './WeatherApp';
 import FocusTimer from './FocusTimer';
-import TicTacToe from './TicTacToe';
-import MemoryGame from './MemoryGame';
+import TicTacToe from '../games/TicTacToe';
+import MemoryGame from '../games/MemoryGame';
 import GpaCalculator from './GpaCalculator'; 
 
 
