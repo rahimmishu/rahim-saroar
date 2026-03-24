@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { triggerIsland } from './DynamicIsland';
+import { triggerIsland } from '../layout/DynamicIsland';
 
 interface WelcomeGreetingProps {
   ready?: boolean; // Preloader শেষ হলে true হবে
