@@ -1,3 +1,0 @@
-git add .
-git commit -m "SEO metadata added to index.html"
-git push origin main
