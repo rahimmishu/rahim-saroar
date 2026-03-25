@@ -1,242 +1,259 @@
 import React, { useEffect, useState, useRef, ReactNode } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-/* ─────────────────────────────────────────────
-   FALLBACK ASSETS  (replace with real imports)
-───────────────────────────────────────────── */
-const fallbackTelegramPic =
-  'https://cdn.pixabay.com/photo/2017/02/12/11/44/telegram-icon-2059714_1280.png';
-const fallbackFacebookPic =
-  'https://w7.pngwing.com/pngs/318/1000/png-transparent-logo-facebook-fb-social-media-icon-interface-logos-icon-thumbnail.png';
-const fallbackDefaultIcon =
-  'https://cdn-icons-png.flaticon.com/512/81/81041.png';
+// ── Local profile images (alada alada platform er jonno)
+import telegramProfilePic from '../assets/images/telegram_profile.png';
+import facebookProfilePic from '../assets/images/facebook_cover.png';
+import redirectLogo from '../assets/images/redirect_logo.png';
 
 /* ─────────────────────────────────────────────
    PLATFORM CONFIG
 ───────────────────────────────────────────── */
 interface PlatformConfig {
   name: string;
+  fullName: string;
   handle: string;
   url: string;
   profilePic: string;
-  accent: string;        // hex for SVG / canvas usage
-  accentTw: string;      // tailwind color name (text-*)
-  ringFrom: string;
-  ringTo: string;
-  btnFrom: string;
-  btnTo: string;
-  aurora1: string;
-  aurora2: string;
+  accent: string;
+  gradientStart: string;
+  gradientEnd: string;
+  glowColor: string;
+  bgDark: string;
+  bgDarker: string;
+  particleColor: string;
   icon: ReactNode;
   badge: string;
+  description: string;
+  followers: string;
 }
 
 const platforms: Record<string, PlatformConfig> = {
   telegram: {
     name: 'Telegram',
+    fullName: 'Rahim Saroar Mishu',
     handle: '@rahim_saroar_mishu',
     url: 'https://t.me/rahim_saroar_mishu',
-    profilePic: fallbackTelegramPic,
-    accent: '#38bdf8',
-    accentTw: 'sky',
-    ringFrom: '#0ea5e9',
-    ringTo: '#67e8f9',
-    btnFrom: '#0284c7',
-    btnTo: '#0369a1',
-    aurora1: 'rgba(14,165,233,0.22)',
-    aurora2: 'rgba(103,232,249,0.12)',
+    profilePic: telegramProfilePic,
+    accent: '#24A1DE',
+    gradientStart: '#0B2540',
+    gradientEnd: '#0A1628',
+    glowColor: 'rgba(36,161,222,0.35)',
+    bgDark: '#061220',
+    bgDarker: '#030C18',
+    particleColor: '#24A1DE',
     icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.14 13.647l-2.95-.924c-.642-.204-.657-.642.136-.953l11.57-4.461c.537-.194 1.006.131.998.912z" />
+      <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
       </svg>
     ),
-    badge: 'Verified Channel',
+    badge: 'Official Channel',
+    description: 'টেলিগ্রামে Join করুন — Exclusive content, updates & more',
+    followers: '2.4K+ Members',
   },
   facebook: {
     name: 'Facebook',
-    handle: 'Rahim Saroar Mishu',
+    fullName: 'Rahim Saroar Mishu',
+    handle: 'rahimsaroar',
     url: 'https://www.facebook.com/rahimsaroar',
-    profilePic: fallbackFacebookPic,
-    accent: '#3b82f6',
-    accentTw: 'blue',
-    ringFrom: '#2563eb',
-    ringTo: '#818cf8',
-    btnFrom: '#1d4ed8',
-    btnTo: '#1e40af',
-    aurora1: 'rgba(37,99,235,0.22)',
-    aurora2: 'rgba(129,140,248,0.14)',
+    profilePic: facebookProfilePic,
+    accent: '#1877F2',
+    gradientStart: '#0F1B35',
+    gradientEnd: '#0A1020',
+    glowColor: 'rgba(24,119,242,0.35)',
+    bgDark: '#080F20',
+    bgDarker: '#040810',
+    particleColor: '#1877F2',
     icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
         <path d="M24 12.073C24 5.406 18.627 0 12 0S0 5.406 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.514c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" />
       </svg>
     ),
-    badge: 'Official Profile',
+    badge: 'Verified Profile',
+    description: 'ফেসবুকে Follow করুন — Latest updates, posts & activities',
+    followers: '5K+ Followers',
   },
 };
 
 /* ─────────────────────────────────────────────
-   SVG RING COUNTDOWN
+   ANIMATED BACKGROUND ORBS
+───────────────────────────────────────────── */
+const BackgroundOrbs: React.FC<{ color: string }> = ({ color }) => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div
+      style={{
+        position: 'absolute',
+        top: '-20%',
+        left: '-10%',
+        width: '60%',
+        height: '60%',
+        borderRadius: '50%',
+        background: `radial-gradient(circle, ${color}18 0%, transparent 70%)`,
+        animation: 'orbFloat1 12s ease-in-out infinite',
+      }}
+    />
+    <div
+      style={{
+        position: 'absolute',
+        bottom: '-20%',
+        right: '-10%',
+        width: '55%',
+        height: '55%',
+        borderRadius: '50%',
+        background: `radial-gradient(circle, ${color}12 0%, transparent 70%)`,
+        animation: 'orbFloat2 15s ease-in-out infinite',
+      }}
+    />
+    <div
+      style={{
+        position: 'absolute',
+        top: '40%',
+        left: '60%',
+        width: '30%',
+        height: '30%',
+        borderRadius: '50%',
+        background: `radial-gradient(circle, ${color}0e 0%, transparent 70%)`,
+        animation: 'orbFloat3 9s ease-in-out infinite',
+      }}
+    />
+  </div>
+);
+
+/* ─────────────────────────────────────────────
+   GRID LINES BACKGROUND
+───────────────────────────────────────────── */
+const GridLines: React.FC<{ color: string }> = ({ color }) => (
+  <div
+    className="absolute inset-0 pointer-events-none"
+    style={{
+      backgroundImage: `
+        linear-gradient(${color}08 1px, transparent 1px),
+        linear-gradient(90deg, ${color}08 1px, transparent 1px)
+      `,
+      backgroundSize: '60px 60px',
+    }}
+  />
+);
+
+/* ─────────────────────────────────────────────
+   FLOATING PARTICLES
+───────────────────────────────────────────── */
+const FloatingDots: React.FC<{ color: string }> = ({ color }) => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    {Array.from({ length: 20 }).map((_, i) => (
+      <div
+        key={i}
+        style={{
+          position: 'absolute',
+          width: `${Math.random() * 2.5 + 1}px`,
+          height: `${Math.random() * 2.5 + 1}px`,
+          borderRadius: '50%',
+          background: color,
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          opacity: 0,
+          animation: `particleRise ${5 + Math.random() * 8}s ${Math.random() * 6}s ease-in infinite`,
+        }}
+      />
+    ))}
+  </div>
+);
+
+/* ─────────────────────────────────────────────
+   RING COUNTDOWN
 ───────────────────────────────────────────── */
 interface RingProps {
   countdown: number;
   total: number;
-  from: string;
-  to: string;
+  accent: string;
 }
 
-const RingCountdown: React.FC<RingProps> = ({ countdown, total, from, to }) => {
-  const R = 52;
+const RingCountdown: React.FC<RingProps> = ({ countdown, total, accent }) => {
+  const R = 34;
   const C = 2 * Math.PI * R;
   const progress = (countdown / total) * C;
-  const id = 'ringGrad';
 
   return (
-    <div className="relative flex items-center justify-center mx-auto mb-8 w-36 h-36">
-      <svg viewBox="0 0 120 120" className="absolute inset-0 w-full h-full -rotate-90">
-        <defs>
-          <linearGradient id={id} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor={from} />
-            <stop offset="100%" stopColor={to} />
-          </linearGradient>
-        </defs>
-        {/* Track */}
-        <circle cx="60" cy="60" r={R} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="7" />
-        {/* Progress */}
+    <div style={{ position: 'relative', width: '88px', height: '88px', margin: '0 auto' }}>
+      <svg
+        viewBox="0 0 80 80"
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', transform: 'rotate(-90deg)' }}
+      >
+        <circle cx="40" cy="40" r={R} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="4" />
         <circle
-          cx="60" cy="60" r={R}
+          cx="40"
+          cy="40"
+          r={R}
           fill="none"
-          stroke={`url(#${id})`}
-          strokeWidth="7"
+          stroke={accent}
+          strokeWidth="4"
           strokeLinecap="round"
           strokeDasharray={`${progress} ${C}`}
-          style={{ transition: 'stroke-dasharray 0.9s cubic-bezier(0.4,0,0.2,1)' }}
+          style={{
+            filter: `drop-shadow(0 0 6px ${accent}88)`,
+            transition: 'stroke-dasharray 0.9s cubic-bezier(0.4,0,0.2,1)',
+          }}
         />
       </svg>
-      {/* Number */}
-      <div className="relative z-10 text-center">
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <span
-          className="block text-4xl font-black text-white tabular-nums"
-          style={{ fontFamily: "'DM Mono', monospace", lineHeight: 1 }}
+          style={{
+            fontSize: '26px',
+            fontWeight: 900,
+            color: '#fff',
+            lineHeight: 1,
+            fontVariantNumeric: 'tabular-nums',
+            fontFamily: "'Space Mono', monospace",
+          }}
         >
           {countdown}
         </span>
-        <span className="block text-[10px] tracking-[0.25em] uppercase text-white/40 mt-1">sec</span>
+        <span
+          style={{
+            fontSize: '8px',
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+            color: 'rgba(255,255,255,0.35)',
+            marginTop: '3px',
+          }}
+        >
+          sec
+        </span>
       </div>
     </div>
   );
 };
 
 /* ─────────────────────────────────────────────
-   AURORA CANVAS BACKGROUND
+   STAT PILL
 ───────────────────────────────────────────── */
-const AuroraCanvas: React.FC<{ c1: string; c2: string }> = ({ c1, c2 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d')!;
-    let frame = 0;
-    let animId: number;
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const draw = () => {
-      frame += 0.004;
-      const { width: W, height: H } = canvas;
-      ctx.clearRect(0, 0, W, H);
-
-      // Orb 1
-      const x1 = W * 0.25 + Math.sin(frame * 1.1) * W * 0.15;
-      const y1 = H * 0.35 + Math.cos(frame * 0.8) * H * 0.18;
-      const g1 = ctx.createRadialGradient(x1, y1, 0, x1, y1, W * 0.45);
-      g1.addColorStop(0, c1);
-      g1.addColorStop(1, 'transparent');
-      ctx.fillStyle = g1;
-      ctx.fillRect(0, 0, W, H);
-
-      // Orb 2
-      const x2 = W * 0.72 + Math.cos(frame * 0.9) * W * 0.18;
-      const y2 = H * 0.62 + Math.sin(frame * 1.3) * H * 0.15;
-      const g2 = ctx.createRadialGradient(x2, y2, 0, x2, y2, W * 0.38);
-      g2.addColorStop(0, c2);
-      g2.addColorStop(1, 'transparent');
-      ctx.fillStyle = g2;
-      ctx.fillRect(0, 0, W, H);
-
-      animId = requestAnimationFrame(draw);
-    };
-    draw();
-
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener('resize', resize);
-    };
-  }, [c1, c2]);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="absolute inset-0 w-full h-full"
-      style={{ opacity: 1 }}
-    />
-  );
-};
-
-/* ─────────────────────────────────────────────
-   PARTICLES
-───────────────────────────────────────────── */
-const Particles: React.FC<{ color: string }> = ({ color }) => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {Array.from({ length: 18 }).map((_, i) => (
-      <div
-        key={i}
-        className="absolute rounded-full opacity-0"
-        style={{
-          width: `${Math.random() * 3 + 1}px`,
-          height: `${Math.random() * 3 + 1}px`,
-          background: color,
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-          animation: `floatUp ${4 + Math.random() * 6}s ${Math.random() * 5}s ease-in infinite`,
-        }}
-      />
-    ))}
-    <style>{`
-      @keyframes floatUp {
-        0%   { opacity: 0; transform: translateY(0px) scale(1); }
-        20%  { opacity: 0.7; }
-        80%  { opacity: 0.4; }
-        100% { opacity: 0; transform: translateY(-120px) scale(0.4); }
-      }
-      @keyframes cardIn {
-        0%   { opacity: 0; transform: translateY(32px) scale(0.96); }
-        100% { opacity: 1; transform: translateY(0px) scale(1); }
-      }
-      @keyframes avatarIn {
-        0%   { opacity: 0; transform: scale(0.7) rotate(-6deg); }
-        70%  { transform: scale(1.07) rotate(1deg); }
-        100% { opacity: 1; transform: scale(1) rotate(0deg); }
-      }
-      @keyframes shimmer {
-        0%   { background-position: -200% center; }
-        100% { background-position: 200% center; }
-      }
-      @keyframes badgePop {
-        0%   { opacity: 0; transform: scale(0.5); }
-        70%  { transform: scale(1.15); }
-        100% { opacity: 1; transform: scale(1); }
-      }
-      @keyframes scanline {
-        0%   { transform: translateY(-100%); }
-        100% { transform: translateY(100vh); }
-      }
-    `}</style>
+const StatPill: React.FC<{ icon: string; label: string; accent: string }> = ({ icon, label, accent }) => (
+  <div
+    style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '6px',
+      padding: '6px 14px',
+      borderRadius: '999px',
+      background: `${accent}12`,
+      border: `1px solid ${accent}28`,
+      fontSize: '12px',
+      color: accent,
+      fontWeight: 600,
+      letterSpacing: '0.01em',
+    }}
+  >
+    <span>{icon}</span>
+    <span>{label}</span>
   </div>
 );
 
@@ -244,23 +261,44 @@ const Particles: React.FC<{ color: string }> = ({ color }) => (
    INVALID PAGE
 ───────────────────────────────────────────── */
 const InvalidPage: React.FC = () => (
-  <div className="relative flex items-center justify-center min-h-screen bg-[#080810] text-white overflow-hidden">
-    <AuroraCanvas c1="rgba(239,68,68,0.18)" c2="rgba(168,85,247,0.12)" />
+  <div
+    style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#050510',
+      fontFamily: 'sans-serif',
+    }}
+  >
     <div
-      className="relative z-10 max-w-sm px-8 py-12 mx-4 text-center rounded-3xl"
       style={{
+        textAlign: 'center',
+        padding: '48px 40px',
+        borderRadius: '24px',
         background: 'rgba(255,255,255,0.04)',
-        backdropFilter: 'blur(32px)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        boxShadow: '0 32px 80px rgba(0,0,0,0.6)',
+        border: '1px solid rgba(255,255,255,0.1)',
+        maxWidth: '380px',
       }}
     >
-      <div className="mb-5 text-6xl">⚠️</div>
-      <h1 className="mb-3 text-2xl font-bold text-red-400">Invalid Link</h1>
-      <p className="text-sm leading-relaxed text-white/50">
+      <div style={{ fontSize: '52px', marginBottom: '16px' }}>⚠️</div>
+      <h1 style={{ color: '#f87171', fontSize: '22px', fontWeight: 800, marginBottom: '12px' }}>
+        Invalid Link
+      </h1>
+      <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '13px', lineHeight: 1.7 }}>
         সঠিক প্ল্যাটফর্ম পাওয়া যায়নি।
         <br />
-        <code className="inline-block px-3 py-1 mt-2 text-xs rounded-lg text-white/30 bg-white/5">
+        <code
+          style={{
+            display: 'inline-block',
+            marginTop: '10px',
+            padding: '6px 14px',
+            borderRadius: '8px',
+            background: 'rgba(255,255,255,0.06)',
+            color: 'rgba(255,255,255,0.3)',
+            fontSize: '11px',
+          }}
+        >
           /link?platform=telegram
         </code>
       </p>
@@ -269,7 +307,7 @@ const InvalidPage: React.FC = () => (
 );
 
 /* ─────────────────────────────────────────────
-   MAIN COMPONENT
+   MAIN PAGE
 ───────────────────────────────────────────── */
 const TOTAL = 5;
 
@@ -280,6 +318,7 @@ const RedirectPage: React.FC = () => {
 
   const [countdown, setCountdown] = useState(TOTAL);
   const [mounted, setMounted] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 60);
@@ -304,171 +343,459 @@ const RedirectPage: React.FC = () => {
   if (!cfg) return <InvalidPage />;
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-[#05050d] overflow-hidden">
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: `radial-gradient(ellipse 120% 100% at 50% -10%, ${cfg.gradientStart} 0%, ${cfg.bgDarker} 60%)`,
+        position: 'relative',
+        overflow: 'hidden',
+        fontFamily: "'Outfit', 'DM Sans', sans-serif",
+      }}
+    >
 
-      {/* ── Aurora background ── */}
-      <AuroraCanvas c1={cfg.aurora1} c2={cfg.aurora2} />
+      {/* ── Background layers ── */}
+      <GridLines color={cfg.accent} />
+      <BackgroundOrbs color={cfg.accent} />
+      <FloatingDots color={cfg.particleColor} />
 
-      {/* ── Subtle scanline overlay ── */}
+      {/* ── Top subtle bar ── */}
       <div
-        className="absolute inset-0 pointer-events-none z-[1]"
         style={{
-          backgroundImage:
-            'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.012) 2px, rgba(255,255,255,0.012) 4px)',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '2px',
+          background: `linear-gradient(90deg, transparent, ${cfg.accent}, transparent)`,
+          zIndex: 50,
+          opacity: 0.8,
         }}
       />
 
-      {/* ── Floating particles ── */}
-      <Particles color={cfg.accent} />
-
-      {/* ── Card ── */}
+      {/* ── Redirect logo top-left ── */}
       <div
-        className="relative z-10 w-full max-w-md mx-4"
         style={{
-          animation: mounted ? 'cardIn 0.7s cubic-bezier(0.16,1,0.3,1) forwards' : 'none',
-          opacity: mounted ? undefined : 0,
+          position: 'fixed',
+          top: '20px',
+          left: '24px',
+          zIndex: 50,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          opacity: mounted ? 1 : 0,
+          transition: 'opacity 0.6s ease 0.3s',
         }}
       >
+        <img
+          src={redirectLogo}
+          alt="mishu.dev"
+          style={{ width: '28px', height: '28px', borderRadius: '8px', objectFit: 'cover' }}
+          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+        />
+        <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.35)', fontWeight: 500 }}>
+          mishu.dev
+        </span>
+      </div>
+
+      {/* ── Secure badge top-right ── */}
+      <div
+        style={{
+          position: 'fixed',
+          top: '20px',
+          right: '24px',
+          zIndex: 50,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          padding: '6px 12px',
+          borderRadius: '999px',
+          background: 'rgba(255,255,255,0.05)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          opacity: mounted ? 1 : 0,
+          transition: 'opacity 0.6s ease 0.3s',
+        }}
+      >
+        <span style={{ fontSize: '11px' }}>🔒</span>
+        <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', fontWeight: 500 }}>
+          Verified Link
+        </span>
+      </div>
+
+      {/* ── Main card ── */}
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '420px',
+          margin: '0 16px',
+          opacity: mounted ? 1 : 0,
+          transform: mounted ? 'translateY(0) scale(1)' : 'translateY(28px) scale(0.97)',
+          transition: 'opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)',
+          position: 'relative',
+          zIndex: 10,
+        }}
+      >
+
+        {/* Outer glow ring */}
         <div
-          className="rounded-[2rem] px-8 pt-10 pb-8 text-center"
           style={{
-            background:
-              'linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%)',
-            backdropFilter: 'blur(48px)',
-            WebkitBackdropFilter: 'blur(48px)',
+            position: 'absolute',
+            inset: '-1px',
+            borderRadius: '28px',
+            background: `linear-gradient(135deg, ${cfg.accent}40, transparent 50%, ${cfg.accent}20)`,
+            zIndex: -1,
+          }}
+        />
+
+        <div
+          style={{
+            borderRadius: '26px',
+            padding: '36px 32px 28px',
+            background: `linear-gradient(160deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 100%)`,
+            backdropFilter: 'blur(40px)',
+            WebkitBackdropFilter: 'blur(40px)',
             border: '1px solid rgba(255,255,255,0.1)',
-            boxShadow: `0 40px 100px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 1px rgba(0,0,0,0.4)`,
+            boxShadow: `
+              0 48px 120px rgba(0,0,0,0.7),
+              0 0 0 1px rgba(0,0,0,0.5),
+              inset 0 1px 0 rgba(255,255,255,0.1)
+            `,
           }}
         >
 
-          {/* ── Top pill label ── */}
-          <div
-            className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-1.5 rounded-full mb-6"
-            style={{
-              background: `linear-gradient(90deg, ${cfg.ringFrom}22, ${cfg.ringTo}22)`,
-              border: `1px solid ${cfg.accent}44`,
-              color: cfg.accent,
-            }}
-          >
-            {cfg.icon}
-            {cfg.badge}
-          </div>
-
-          {/* ── Avatar ── */}
-          <div
-            className="relative w-24 h-24 mx-auto mb-5"
-            style={{ animation: mounted ? 'avatarIn 0.7s 0.15s cubic-bezier(0.16,1,0.3,1) both' : 'none' }}
-          >
-            {/* Glow ring behind avatar */}
+          {/* ── Platform badge ── */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '28px' }}>
             <div
-              className="absolute inset-[-6px] rounded-full"
               style={{
-                background: `conic-gradient(from 0deg, ${cfg.ringFrom}, ${cfg.ringTo}, ${cfg.ringFrom})`,
-                animation: 'spin 4s linear infinite',
-              }}
-            />
-            <div
-              className="absolute inset-[3px] rounded-full"
-              style={{ background: '#05050d' }}
-            />
-            <img
-              src={cfg.profilePic}
-              alt={cfg.name}
-              className="absolute inset-[6px] w-[calc(100%-12px)] h-[calc(100%-12px)] rounded-full object-cover"
-            />
-            {/* Verified dot */}
-            <div
-              className="absolute bottom-0 right-0 w-7 h-7 rounded-full flex items-center justify-center text-white text-[11px]"
-              style={{
-                background: `linear-gradient(135deg, ${cfg.ringFrom}, ${cfg.ringTo})`,
-                border: '2.5px solid #05050d',
-                animation: 'badgePop 0.5s 0.5s cubic-bezier(0.16,1,0.3,1) both',
-                boxShadow: `0 0 12px ${cfg.accent}88`,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 18px',
+                borderRadius: '999px',
+                background: `linear-gradient(135deg, ${cfg.accent}20, ${cfg.accent}08)`,
+                border: `1px solid ${cfg.accent}35`,
+                color: cfg.accent,
+                fontSize: '13px',
+                fontWeight: 700,
+                letterSpacing: '0.02em',
               }}
             >
-              ✓
+              {cfg.icon}
+              {cfg.badge}
+              <span
+                style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: cfg.accent,
+                  animation: 'blink 1.5s ease-in-out infinite',
+                  boxShadow: `0 0 6px ${cfg.accent}`,
+                }}
+              />
             </div>
           </div>
 
-          {/* ── Name & handle ── */}
-          <div className="mb-1">
-            <h1
-              className="text-2xl font-black tracking-tight text-white"
-              style={{ fontFamily: "'DM Sans', 'Sora', sans-serif" }}
+          {/* ── Profile section ── */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '24px' }}>
+
+            {/* Avatar with ring */}
+            <div
+              style={{
+                position: 'relative',
+                width: '110px',
+                height: '110px',
+                marginBottom: '18px',
+                opacity: mounted ? 1 : 0,
+                transform: mounted ? 'scale(1)' : 'scale(0.7)',
+                transition: 'opacity 0.6s cubic-bezier(0.16,1,0.3,1) 0.2s, transform 0.6s cubic-bezier(0.16,1,0.3,1) 0.2s',
+              }}
             >
-              {cfg.name}
+              {/* Spinning gradient ring */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: '-3px',
+                  borderRadius: '50%',
+                  background: `conic-gradient(${cfg.accent}, ${cfg.accent}44, ${cfg.accent})`,
+                  animation: 'spinRing 3s linear infinite',
+                  filter: `blur(0px)`,
+                }}
+              />
+              {/* Dark gap between ring and image */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: '3px',
+                  borderRadius: '50%',
+                  background: cfg.bgDarker,
+                  zIndex: 1,
+                }}
+              />
+              {/* Profile picture */}
+              <img
+                src={imgError ? `https://ui-avatars.com/api/?name=Rahim+Saroar+Mishu&background=${cfg.accent.replace('#', '')}&color=fff&size=200` : cfg.profilePic}
+                alt={cfg.fullName}
+                onError={() => setImgError(true)}
+                style={{
+                  position: 'absolute',
+                  inset: '6px',
+                  width: 'calc(100% - 12px)',
+                  height: 'calc(100% - 12px)',
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                  objectPosition: 'center top',
+                  zIndex: 2,
+                }}
+              />
+              {/* Glow under avatar */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '-10px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '70%',
+                  height: '20px',
+                  borderRadius: '50%',
+                  background: cfg.accent,
+                  filter: 'blur(16px)',
+                  opacity: 0.25,
+                  zIndex: 0,
+                }}
+              />
+              {/* Verified checkmark */}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '4px',
+                  right: '4px',
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '50%',
+                  background: cfg.accent,
+                  border: `2.5px solid ${cfg.bgDarker}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '12px',
+                  zIndex: 3,
+                  boxShadow: `0 0 12px ${cfg.accent}66`,
+                  opacity: mounted ? 1 : 0,
+                  transform: mounted ? 'scale(1)' : 'scale(0)',
+                  transition: 'opacity 0.4s ease 0.5s, transform 0.4s cubic-bezier(0.34,1.56,0.64,1) 0.5s',
+                }}
+              >
+                ✓
+              </div>
+            </div>
+
+            {/* Name */}
+            <h1
+              style={{
+                fontSize: '22px',
+                fontWeight: 800,
+                color: '#ffffff',
+                letterSpacing: '-0.02em',
+                margin: '0 0 4px',
+                fontFamily: "'Outfit', sans-serif",
+              }}
+            >
+              {cfg.fullName}
             </h1>
-            <p className="text-sm mt-0.5" style={{ color: cfg.accent, opacity: 0.8 }}>
+
+            {/* Handle */}
+            <p
+              style={{
+                fontSize: '13px',
+                color: cfg.accent,
+                fontWeight: 500,
+                margin: '0 0 12px',
+                opacity: 0.85,
+                fontFamily: "'Space Mono', monospace",
+              }}
+            >
               {cfg.handle}
             </p>
+
+            {/* Followers pill */}
+            <StatPill icon="👥" label={cfg.followers} accent={cfg.accent} />
           </div>
 
-          {/* ── Divider ── */}
-          <div
-            className="w-full h-px my-6"
-            style={{
-              background: `linear-gradient(90deg, transparent, ${cfg.accent}33, transparent)`,
-            }}
-          />
-
-          {/* ── Ring countdown ── */}
-          <RingCountdown
-            countdown={countdown}
-            total={TOTAL}
-            from={cfg.ringFrom}
-            to={cfg.ringTo}
-          />
-
-          {/* ── Status text ── */}
+          {/* ── Description ── */}
           <p
-            className="mb-6 text-xs tracking-wide uppercase text-white/40"
-            style={{ letterSpacing: '0.12em', fontFamily: "'DM Mono', monospace" }}
+            style={{
+              textAlign: 'center',
+              fontSize: '13px',
+              color: 'rgba(255,255,255,0.5)',
+              lineHeight: 1.7,
+              margin: '0 0 24px',
+              padding: '14px 16px',
+              borderRadius: '14px',
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255,255,255,0.06)',
+            }}
           >
-            {countdown > 0
-              ? `Redirecting to ${cfg.name} automatically…`
-              : 'Opening now…'}
+            {cfg.description}
+          </p>
+
+          {/* ── Divider with countdown ── */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              marginBottom: '22px',
+            }}
+          >
+            <div
+              style={{
+                flex: 1,
+                height: '1px',
+                background: `linear-gradient(90deg, transparent, ${cfg.accent}25, transparent)`,
+              }}
+            />
+
+            {/* Ring countdown */}
+            <RingCountdown countdown={countdown} total={TOTAL} accent={cfg.accent} />
+
+            <div
+              style={{
+                flex: 1,
+                height: '1px',
+                background: `linear-gradient(90deg, transparent, ${cfg.accent}25, transparent)`,
+              }}
+            />
+          </div>
+
+          {/* Countdown label */}
+          <p
+            style={{
+              textAlign: 'center',
+              fontSize: '11px',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.3)',
+              margin: '0 0 20px',
+              fontFamily: "'Space Mono', monospace",
+            }}
+          >
+            {countdown > 0 ? `Auto-redirect in ${countdown}s…` : 'Opening now…'}
           </p>
 
           {/* ── CTA Button ── */}
           <a
             href={cfg.url}
-            className="group relative flex items-center justify-center gap-3 w-full py-4 rounded-2xl text-white font-bold text-base overflow-hidden transition-transform duration-200 hover:scale-[1.025] active:scale-[0.98]"
             style={{
-              background: `linear-gradient(135deg, ${cfg.btnFrom}, ${cfg.btnTo})`,
-              boxShadow: `0 8px 32px ${cfg.accent}44, inset 0 1px 0 rgba(255,255,255,0.15)`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '10px',
+              width: '100%',
+              padding: '16px 24px',
+              borderRadius: '16px',
+              background: `linear-gradient(135deg, ${cfg.accent}, ${cfg.accent}cc)`,
+              color: '#fff',
+              fontWeight: 700,
+              fontSize: '15px',
+              textDecoration: 'none',
+              boxShadow: `0 8px 32px ${cfg.glowColor}, inset 0 1px 0 rgba(255,255,255,0.2)`,
+              transition: 'transform 0.18s ease, box-shadow 0.18s ease',
+              position: 'relative',
+              overflow: 'hidden',
+              marginBottom: '20px',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-2px) scale(1.01)';
+              (e.currentTarget as HTMLAnchorElement).style.boxShadow = `0 14px 40px ${cfg.glowColor}, inset 0 1px 0 rgba(255,255,255,0.2)`;
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(0) scale(1)';
+              (e.currentTarget as HTMLAnchorElement).style.boxShadow = `0 8px 32px ${cfg.glowColor}, inset 0 1px 0 rgba(255,255,255,0.2)`;
+            }}
+            onMouseDown={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.transform = 'scale(0.98)';
+            }}
+            onMouseUp={(e) => {
+              (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-2px) scale(1.01)';
             }}
           >
-            {/* Shimmer sweep */}
+            {/* Shimmer */}
             <span
-              className="absolute inset-0 transition-opacity duration-500 opacity-0 group-hover:opacity-100"
               style={{
-                background:
-                  'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)',
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%)',
                 backgroundSize: '200% auto',
-                animation: 'shimmer 1.2s linear infinite',
+                animation: 'shimmer 2s linear infinite',
               }}
             />
-            <span className="relative flex items-center gap-2">
+            <span style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '8px' }}>
               {cfg.icon}
               এখনই Open করুন
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 transition-transform duration-200 translate-x-0 group-hover:translate-x-1">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
                 <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </span>
           </a>
 
-          {/* ── Footer note ── */}
-          <p className="mt-5 text-[11px] text-white/20 leading-relaxed">
-            আপনি{' '}
-            <span className="text-white/40">mishu.dev</span>
-            {' '}থেকে redirect হচ্ছেন &nbsp;·&nbsp; নিরাপদ ও ভেরিফাইড লিংক
-          </p>
+          {/* ── Footer ── */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              flexWrap: 'wrap',
+            }}
+          >
+            <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)' }}>
+              🔒 mishu.dev থেকে redirect হচ্ছেন
+            </span>
+            <span style={{ color: 'rgba(255,255,255,0.1)', fontSize: '11px' }}>·</span>
+            <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)' }}>
+              নিরাপদ ও ভেরিফাইড লিংক
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* ── Keyframe for spinning conic ring ── */}
+      {/* ── Global keyframes ── */}
       <style>{`
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+
+        @keyframes spinRing {
+          to { transform: rotate(360deg); }
+        }
+        @keyframes orbFloat1 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(40px, -30px) scale(1.05); }
+          66% { transform: translate(-20px, 20px) scale(0.97); }
+        }
+        @keyframes orbFloat2 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(-30px, 40px) scale(1.04); }
+          66% { transform: translate(25px, -15px) scale(0.96); }
+        }
+        @keyframes orbFloat3 {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(-20px, 25px); }
+        }
+        @keyframes particleRise {
+          0%   { opacity: 0; transform: translateY(0) scale(1); }
+          20%  { opacity: 0.8; }
+          80%  { opacity: 0.3; }
+          100% { opacity: 0; transform: translateY(-100px) scale(0.3); }
+        }
+        @keyframes shimmer {
+          0%   { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50%  { opacity: 0.3; }
+        }
       `}</style>
     </div>
   );
