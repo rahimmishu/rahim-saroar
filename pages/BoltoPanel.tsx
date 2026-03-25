@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Facebook, Youtube, Instagram, Twitter, MessageCircle, PlaySquare, TrendingUp, Search, Wallet, X, PlusCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext'; 
 import AppNavbar from '../components/layout/AppNavbar'; 
+import Preloader from '../components/layout/Preloader';
 import toast from 'react-hot-toast';
 
 interface SmmService {
@@ -22,6 +23,7 @@ const BoltoPanel: React.FC = () => {
   // Panel States
   const [services, setServices] = useState<SmmService[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [showPreloader, setShowPreloader] = useState<boolean>(true);
   const [balance, setBalance] = useState<number>(0);
   const [selectedPlatform, setSelectedPlatform] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -85,37 +87,47 @@ const BoltoPanel: React.FC = () => {
         toast.error('Failed to load data!');
       } finally {
         setLoading(false);
+        setShowPreloader(false);
       }
     };
     fetchData();
   }, [user]);
 
-  // 3. Handle Deposit (Add Funds)
-  const handleDeposit = async () => {
-    if (!user) return toast.error('Please login first!');
-    if (!depositAmount || parseFloat(depositAmount) <= 0) return toast.error('Enter a valid amount');
-    
-    const loadingToast = toast.loading('Adding funds...');
+  // 3. Handle Payment (Add Funds through Real Payment Flow)
+  const handlePayment = async () => {
+    if (!user) return toast.error('Login first!');
+    if (!depositAmount || parseFloat(depositAmount) <= 0) return toast.error('Enter valid amount');
+
+    const loadingToast = toast.loading('Redirecting to payment...');
+
     try {
-      const response = await fetch('/api/balance', {
+      const res = await fetch('/api/payment', {
         method: 'POST',
-        body: JSON.stringify({ uid: user.uid, action: 'add', amount: depositAmount })
+        body: JSON.stringify({ uid: user.uid, amount: depositAmount })
       });
-      const data = await response.json();
-      setBalance(data.balance);
-      setShowDepositModal(false);
-      setDepositAmount('');
-      toast.success(`৳${depositAmount} added successfully!`, { id: loadingToast });
+
+      const data = await res.json();
+
+      toast.success('Redirecting...', { id: loadingToast });
+      window.location.href = data.paymentUrl;
     } catch (err) {
-      toast.error('Failed to add funds', { id: loadingToast });
+      toast.error('Payment failed', { id: loadingToast });
     }
   };
 
-  // 4. Handle Order (Deduct Balance)
+  // 4. Handle Panel Scroll (Smooth section navigation)
+  const handlePanelScroll = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // 5. Handle Order (Deduct Balance)
   const handleOrderSubmit = async () => {
     if (!user) return toast.error('Please login to place an order!');
+    if (!orderLink.includes('http')) return toast.error('Valid link dao!');
+    if (!orderQuantity) return toast.error('Quantity lagbe!');
+
     const price = (parseFloat(orderQuantity) / 1000) * (parseFloat(selectedService!.rate) * PROFIT_MARGIN);
-    
     if (balance < price) return toast.error('Insufficient Balance! Please deposit.');
 
     const loadingToast = toast.loading('Processing Order...');
@@ -166,11 +178,32 @@ const BoltoPanel: React.FC = () => {
       {/* --- Dynamic AppNavbar --- */}
       <AppNavbar isDarkMode={isDarkMode} toggleTheme={handleThemeToggle} />
 
-      {/* --- Preloader --- */}
-      {loading && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-md">
-          <div className="loader"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" stroke="white" strokeWidth="6" fill="none" strokeDasharray="150 50 150 50" className="animate-spin-slow"></circle></svg></div>
+      {/* --- Premium Stats --- */}
+      <div className="grid grid-cols-2 gap-4 px-4 mb-6 md:grid-cols-4 sm:px-6 lg:px-8">
+        <div className="p-5 text-white shadow-xl rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600">
+          <p className="text-sm">Total Orders</p>
+          <h2 className="text-2xl font-bold">1,245</h2>
         </div>
+
+        <div className="p-5 text-white shadow-xl rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600">
+          <p className="text-sm">Completed</p>
+          <h2 className="text-2xl font-bold">1,120</h2>
+        </div>
+
+        <div className="p-5 text-white shadow-xl rounded-2xl bg-gradient-to-r from-yellow-500 to-orange-500">
+          <p className="text-sm">Pending</p>
+          <h2 className="text-2xl font-bold">125</h2>
+        </div>
+
+        <div className="p-5 text-white shadow-xl rounded-2xl bg-gradient-to-r from-pink-500 to-red-500">
+          <p className="text-sm">Spent</p>
+          <h2 className="text-2xl font-bold">৳ {balance.toFixed(0)}</h2>
+        </div>
+      </div>
+
+      {/* --- Preloader --- */}
+      {showPreloader && (
+        <Preloader onFinish={() => setShowPreloader(false)} />
       )}
 
       {/* --- Auto-sliding Hero Banner --- */}
@@ -267,7 +300,7 @@ const BoltoPanel: React.FC = () => {
         </div>
 
         {/* --- Data Table --- */}
-        <div className="bg-white dark:bg-[#1a1c23] border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-xl">
+        <div className="border shadow-2xl backdrop-blur-xl bg-white/70 dark:bg-white/5 border-white/20 rounded-2xl">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
               <thead className="bg-gray-50 dark:bg-[#121318]">
@@ -297,7 +330,7 @@ const BoltoPanel: React.FC = () => {
                     <td className="px-6 py-4 text-center">
                       <button 
                         onClick={() => setSelectedService(service)}
-                        className="px-6 py-2 text-sm font-bold text-white transition-transform bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 active:scale-95"
+                        className="px-6 py-2 text-sm font-bold text-white transition-transform rounded-lg shadow-md bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-600 hover:to-pink-600 active:scale-95"
                       >
                         Order
                       </button>
@@ -327,7 +360,7 @@ const BoltoPanel: React.FC = () => {
             />
             <div className="flex gap-3">
               <button onClick={() => setShowDepositModal(false)} className="flex-1 py-3 font-bold text-gray-600 bg-gray-200 rounded-xl dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700">Cancel</button>
-              <button onClick={handleDeposit} className="flex-1 py-3 font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700">Pay Now</button>
+              <button onClick={handlePayment} className="flex-1 py-3 font-bold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-600 hover:to-pink-600 rounded-xl">Proceed to Payment</button>
             </div>
           </div>
         </div>
@@ -383,7 +416,7 @@ const BoltoPanel: React.FC = () => {
 
               <button 
                 onClick={handleOrderSubmit}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-transform active:scale-95"
+                className="w-full text-white font-bold py-3.5 rounded-xl shadow-lg transition-transform active:scale-95 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-600 hover:to-pink-600"
               >
                 Submit Order
               </button>
@@ -391,6 +424,14 @@ const BoltoPanel: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* --- Order History --- */}
+      <div id="history" className="px-4 mt-10 sm:px-6 lg:px-8">
+        <h2 className="mb-4 text-2xl font-bold text-white">Order History</h2>
+        <div className="p-5 bg-white/70 dark:bg-white/5 backdrop-blur-xl rounded-2xl">
+          <p className="text-gray-500">No orders yet...</p>
+        </div>
+      </div>
 
     </div>
   );
