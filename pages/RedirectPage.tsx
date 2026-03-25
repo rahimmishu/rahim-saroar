@@ -342,16 +342,17 @@ const RedirectPage: React.FC = () => {
   // Monetag Ad Script Loader
   useEffect(() => {
     const script = document.createElement('script');
-    // Monetag থেকে পাওয়া স্ক্রিপ্ট লিংকটি নিচের src-তে দিন
-    script.src = 'https://YOUR_MONETAG_SCRIPT_URL.js'; 
+    script.src = 'https://nap5k.com/tag.min.js'; 
     script.async = true;
-    script.setAttribute('data-zone', 'YOUR_ZONE_ID'); // যদি জোন আইডি থাকে
+    script.setAttribute('data-zone', '10783550'); 
     
     document.body.appendChild(script);
 
     return () => {
       // কম্পোনেন্ট আনমাউন্ট হলে স্ক্রিপ্ট রিমুভ করে দেওয়া ভালো
-      document.body.removeChild(script);
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
     };
   }, []);
 
