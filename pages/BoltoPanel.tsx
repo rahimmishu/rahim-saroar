@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Facebook, Youtube, Instagram, Twitter, MessageCircle, PlaySquare, TrendingUp, Search, User as UserIcon, LogOut, Wallet, X } from 'lucide-react';
-import { useAuth } from '../context/AuthContext'; // আপনার AuthContext 
-import ThemeToggle from '../components/ui/ThemeToggle'; // আপনার ThemeToggle 
+import { Facebook, Youtube, Instagram, Twitter, MessageCircle, PlaySquare, TrendingUp, Search, Wallet, X, PlusCircle, CheckCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext'; 
+import AppNavbar from '../components/layout/AppNavbar'; 
+import toast from 'react-hot-toast';
 
 interface SmmService {
   service: string;
@@ -15,23 +16,25 @@ interface SmmService {
 
 const BoltoPanel: React.FC = () => {
   // Auth & Theme States
-  const { user, logout } = useAuth(); // 
+  const { user } = useAuth(); 
   const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
   
   // Panel States
   const [services, setServices] = useState<SmmService[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>('');
+  const [balance, setBalance] = useState<number>(0);
   const [selectedPlatform, setSelectedPlatform] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   
   // Banner Slider State
   const [currentBanner, setCurrentBanner] = useState(0);
 
-  // Order Modal State
+  // Modals State
   const [selectedService, setSelectedService] = useState<SmmService | null>(null);
   const [orderLink, setOrderLink] = useState('');
   const [orderQuantity, setOrderQuantity] = useState('');
+  const [showDepositModal, setShowDepositModal] = useState(false);
+  const [depositAmount, setDepositAmount] = useState('');
 
   const PROFIT_MARGIN = 1.5;
 
@@ -45,7 +48,7 @@ const BoltoPanel: React.FC = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentBanner((prev) => (prev + 1) % banners.length);
-    }, 4000); // প্রতি ৪ সেকেন্ড পর পর চেঞ্জ হবে
+    }, 4000); 
     return () => clearInterval(timer);
   }, [banners.length]);
 
@@ -63,22 +66,80 @@ const BoltoPanel: React.FC = () => {
     }
   };
 
-  // Fetch Services
+  // 2. Fetch Services & Balance
   useEffect(() => {
-    const fetchServices = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('/api/bolto-panel');
-        if (!response.ok) throw new Error('সার্ভার থেকে রেসপন্স পেতে সমস্যা হচ্ছে।');
-        const result = await response.json();
-        if (result && result.data) setServices(result.data);
-      } catch (err: any) {
-        setError('সার্ভিসগুলো লোড করতে ব্যর্থ হয়েছে।');
+        // Fetch Services
+        const resServices = await fetch('/api/bolto-panel');
+        const dataServices = await resServices.json();
+        if (dataServices.data) setServices(dataServices.data);
+
+        // Fetch Balance
+        if (user) {
+          const resBalance = await fetch(`/api/balance?uid=${user.uid}`);
+          const dataBalance = await resBalance.json();
+          if (dataBalance.balance !== undefined) setBalance(dataBalance.balance);
+        }
+      } catch (error) {
+        toast.error('Failed to load data!');
       } finally {
         setLoading(false);
       }
     };
-    fetchServices();
-  }, []);
+    fetchData();
+  }, [user]);
+
+  // 3. Handle Deposit (Add Funds)
+  const handleDeposit = async () => {
+    if (!user) return toast.error('Please login first!');
+    if (!depositAmount || parseFloat(depositAmount) <= 0) return toast.error('Enter a valid amount');
+    
+    const loadingToast = toast.loading('Adding funds...');
+    try {
+      const response = await fetch('/api/balance', {
+        method: 'POST',
+        body: JSON.stringify({ uid: user.uid, action: 'add', amount: depositAmount })
+      });
+      const data = await response.json();
+      setBalance(data.balance);
+      setShowDepositModal(false);
+      setDepositAmount('');
+      toast.success(`৳${depositAmount} added successfully!`, { id: loadingToast });
+    } catch (err) {
+      toast.error('Failed to add funds', { id: loadingToast });
+    }
+  };
+
+  // 4. Handle Order (Deduct Balance)
+  const handleOrderSubmit = async () => {
+    if (!user) return toast.error('Please login to place an order!');
+    const price = (parseFloat(orderQuantity) / 1000) * (parseFloat(selectedService!.rate) * PROFIT_MARGIN);
+    
+    if (balance < price) return toast.error('Insufficient Balance! Please deposit.');
+
+    const loadingToast = toast.loading('Processing Order...');
+    try {
+      // Deduct Balance
+      const res = await fetch('/api/balance', {
+        method: 'POST',
+        body: JSON.stringify({ uid: user.uid, action: 'deduct', amount: price })
+      });
+      if (!res.ok) throw new Error('Balance deduction failed');
+      
+      const data = await res.json();
+      setBalance(data.balance);
+      
+      // TODO: Add SMM Panel API Order Request here later
+      
+      setSelectedService(null);
+      setOrderLink('');
+      setOrderQuantity('');
+      toast.success('Order Placed Successfully! 🎉', { id: loadingToast });
+    } catch (err) {
+      toast.error('Order Failed!', { id: loadingToast });
+    }
+  };
 
   const platforms = [
     { name: 'All', icon: <TrendingUp size={24} />, color: 'bg-gradient-to-r from-blue-500 to-purple-600' },
@@ -102,35 +163,17 @@ const BoltoPanel: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#0f1014] text-gray-900 dark:text-white font-sans transition-colors duration-300 pb-20">
       
-      {/* --- Top Navigation Bar for Auth & Theme --- */}
-      <div className="sticky top-0 z-50 bg-white/80 dark:bg-[#1a1c23]/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex justify-between items-center">
-        <div className="text-2xl font-extrabold tracking-tight text-blue-600">Bolto Panel</div>
-        
-        <div className="flex items-center gap-6">
-          <ThemeToggle isDarkMode={isDarkMode} toggleTheme={handleThemeToggle} /> {/*  */}
-          
-          {user ? (
-            <div className="flex items-center gap-4">
-              <div className="flex-col hidden text-right md:flex">
-                <span className="text-sm font-bold">{user.displayName || 'User'}</span>
-                <span className="flex items-center justify-end gap-1 text-xs font-semibold text-blue-500">
-                  <Wallet size={12} /> ৳ 0.00 {/* Next step e aita dynamic korbo */}
-                </span>
-              </div>
-              <img src={user.photoURL || 'https://via.placeholder.com/40'} alt="Profile" className="w-10 h-10 border-2 border-blue-500 rounded-full" />
-              <button onClick={logout} className="p-2 text-red-500 transition-colors rounded-full hover:bg-red-50 dark:hover:bg-red-500/10">
-                <LogOut size={20} />
-              </button>
-            </div>
-          ) : (
-            <button className="px-6 py-2 font-bold text-white transition-transform bg-blue-600 rounded-full hover:bg-blue-700 active:scale-95">
-              Login
-            </button>
-          )}
-        </div>
-      </div>
+      {/* --- Dynamic AppNavbar --- */}
+      <AppNavbar isDarkMode={isDarkMode} toggleTheme={handleThemeToggle} />
 
-      {/* --- 1. Auto-sliding Hero Banner --- */}
+      {/* --- Preloader --- */}
+      {loading && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-md">
+          <div className="loader"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" stroke="white" strokeWidth="6" fill="none" strokeDasharray="150 50 150 50" className="animate-spin-slow"></circle></svg></div>
+        </div>
+      )}
+
+      {/* --- Auto-sliding Hero Banner --- */}
       <div className="relative w-full h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
         {banners.map((img, index) => (
           <img 
@@ -153,7 +196,6 @@ const BoltoPanel: React.FC = () => {
             The #1 Reseller Panel in BD. Get likes, followers, and views instantly.
           </p>
           
-          {/* Slider Indicators */}
           <div className="flex justify-center gap-2 mt-8">
             {banners.map((_, idx) => (
               <div key={idx} className={`h-2 rounded-full transition-all ${idx === currentBanner ? 'w-8 bg-blue-500' : 'w-2 bg-white/50'}`} />
@@ -164,7 +206,31 @@ const BoltoPanel: React.FC = () => {
 
       <div className="relative z-20 px-4 mx-auto -mt-8 max-w-7xl sm:px-6 lg:px-8">
         
-        {/* --- 2. Visual Categories --- */}
+        {/* --- User Dashboard Summary (Balance & Deposit) --- */}
+        {user && (
+          <div className="p-6 mb-8 border shadow-2xl bg-gradient-to-br from-blue-900 to-purple-900 rounded-3xl border-white/10">
+            <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+              <div>
+                <h2 className="text-2xl font-bold text-white">Welcome, {user.displayName}</h2>
+                <p className="text-blue-200">Ready to boost your social presence?</p>
+              </div>
+              <div className="flex items-center gap-6 p-4 bg-black/40 rounded-2xl backdrop-blur-sm">
+                <div>
+                  <p className="text-sm font-semibold text-gray-400 uppercase">Current Balance</p>
+                  <p className="text-3xl font-extrabold text-white">৳ {balance.toFixed(2)}</p>
+                </div>
+                <button 
+                  onClick={() => setShowDepositModal(true)}
+                  className="flex items-center gap-2 px-6 py-3 font-bold text-black transition-transform bg-white rounded-xl hover:scale-105 active:scale-95"
+                >
+                  <PlusCircle size={20} /> Add Funds
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* --- Visual Categories --- */}
         <div className="mb-10">
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
             {platforms.map((platform) => (
@@ -186,74 +252,88 @@ const BoltoPanel: React.FC = () => {
           </div>
         </div>
 
-        {/* --- 3. Fixed Search Bar --- */}
+        {/* --- Fixed Search Bar --- */}
         <div className="relative mb-8 shadow-sm">
           <div className="absolute inset-y-0 left-0 flex items-center pl-5 pointer-events-none">
             <Search size={20} className="text-gray-400" />
           </div>
           <input
             type="text"
-            placeholder="Search by ID or Service Name (e.g., 2080 or Facebook Page)..."
+            placeholder="Search by ID or Service Name..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-white dark:bg-[#1a1c23] border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white rounded-2xl py-4 pl-14 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all text-lg"
           />
         </div>
 
-        {/* --- 4. Data Table --- */}
-        {loading ? (
-          <div className="flex justify-center py-20">
-            <div className="w-12 h-12 border-t-4 border-blue-500 rounded-full animate-spin"></div>
-          </div>
-        ) : (
-          <div className="bg-white dark:bg-[#1a1c23] border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-xl">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
-                <thead className="bg-gray-50 dark:bg-[#121318]">
-                  <tr>
-                    <th className="px-6 py-5 text-xs font-bold text-left text-gray-500 uppercase dark:text-gray-400">ID</th>
-                    <th className="px-6 py-5 text-xs font-bold text-left text-gray-500 uppercase dark:text-gray-400">Service Name</th>
-                    <th className="px-6 py-5 text-xs font-bold text-center text-gray-500 uppercase dark:text-gray-400">Rate per 1k</th>
-                    <th className="px-6 py-5 text-xs font-bold text-center text-gray-500 uppercase dark:text-gray-400">Min/Max</th>
-                    <th className="px-6 py-5 text-xs font-bold text-center text-gray-500 uppercase dark:text-gray-400">Action</th>
+        {/* --- Data Table --- */}
+        <div className="bg-white dark:bg-[#1a1c23] border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-xl">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+              <thead className="bg-gray-50 dark:bg-[#121318]">
+                <tr>
+                  <th className="px-6 py-5 text-xs font-bold text-left text-gray-500 uppercase dark:text-gray-400">ID</th>
+                  <th className="px-6 py-5 text-xs font-bold text-left text-gray-500 uppercase dark:text-gray-400">Service Name</th>
+                  <th className="px-6 py-5 text-xs font-bold text-center text-gray-500 uppercase dark:text-gray-400">Rate per 1k</th>
+                  <th className="px-6 py-5 text-xs font-bold text-center text-gray-500 uppercase dark:text-gray-400">Min/Max</th>
+                  <th className="px-6 py-5 text-xs font-bold text-center text-gray-500 uppercase dark:text-gray-400">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800/50">
+                {filteredServices.slice(0, 100).map((service) => (
+                  <tr key={service.service} className="hover:bg-blue-50 dark:hover:bg-[#252830] transition-colors group">
+                    <td className="px-6 py-4 text-sm font-bold text-gray-500">#{service.service}</td>
+                    <td className="px-6 py-4 text-sm font-medium">
+                      <div className="line-clamp-2">{service.name}</div>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className="px-3 py-1 font-bold text-blue-700 bg-blue-100 border border-blue-200 rounded-lg dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20">
+                        ৳ {(parseFloat(service.rate) * PROFIT_MARGIN).toFixed(2)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-center text-gray-500 dark:text-gray-400">
+                      {service.min} - {service.max}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <button 
+                        onClick={() => setSelectedService(service)}
+                        className="px-6 py-2 text-sm font-bold text-white transition-transform bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 active:scale-95"
+                      >
+                        Order
+                      </button>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 dark:divide-gray-800/50">
-                  {filteredServices.slice(0, 100).map((service) => (
-                    <tr key={service.service} className="hover:bg-blue-50 dark:hover:bg-[#252830] transition-colors group">
-                      <td className="px-6 py-4 text-sm font-bold text-gray-500">#{service.service}</td>
-                      <td className="px-6 py-4 text-sm font-medium">
-                        <div className="line-clamp-2">{service.name}</div>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <span className="px-3 py-1 font-bold text-blue-700 bg-blue-100 border border-blue-200 rounded-lg dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20">
-                          ৳ {(parseFloat(service.rate) * PROFIT_MARGIN).toFixed(2)}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-center text-gray-500 dark:text-gray-400">
-                        {service.min} - {service.max}
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <button 
-                          onClick={() => setSelectedService(service)}
-                          className="px-6 py-2 text-sm font-bold text-white transition-transform bg-blue-600 rounded-lg shadow-md hover:bg-blue-700 active:scale-95"
-                        >
-                          Order
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {filteredServices.length === 0 && (
-                <div className="py-12 text-lg text-center text-gray-500">No services found. Try another search!</div>
-              )}
-            </div>
+                ))}
+              </tbody>
+            </table>
+            {!loading && filteredServices.length === 0 && (
+              <div className="py-12 text-lg text-center text-gray-500">No services found. Try another search!</div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
-      {/* --- 5. Order Popup Modal --- */}
+      {/* --- Deposit Modal --- */}
+      {showDepositModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-[#1a1c23] w-full max-w-sm rounded-3xl p-6 border border-gray-200 dark:border-gray-800 shadow-2xl">
+            <h3 className="mb-4 text-2xl font-bold dark:text-white">Add Funds</h3>
+            <input 
+              type="number" 
+              placeholder="Enter Amount (৳)" 
+              value={depositAmount} 
+              onChange={(e) => setDepositAmount(e.target.value)} 
+              className="w-full p-4 mb-4 text-lg font-bold bg-gray-50 border border-gray-300 rounded-xl dark:bg-[#121318] dark:border-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-blue-500" 
+            />
+            <div className="flex gap-3">
+              <button onClick={() => setShowDepositModal(false)} className="flex-1 py-3 font-bold text-gray-600 bg-gray-200 rounded-xl dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700">Cancel</button>
+              <button onClick={handleDeposit} className="flex-1 py-3 font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700">Pay Now</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- Order Popup Modal --- */}
       {selectedService && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="bg-white dark:bg-[#1a1c23] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-800 animate-in zoom-in-95 duration-200">
@@ -302,7 +382,7 @@ const BoltoPanel: React.FC = () => {
               </div>
 
               <button 
-                onClick={() => alert("অর্ডার API ইন্টিগ্রেশন পেমেন্ট সিস্টেমের সাথে যুক্ত হবে!")}
+                onClick={handleOrderSubmit}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-transform active:scale-95"
               >
                 Submit Order
