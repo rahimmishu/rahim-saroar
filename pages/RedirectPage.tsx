@@ -391,12 +391,12 @@ const RedirectPage: React.FC = () => {
       >
         <img
           src={redirectLogo}
-          alt="mishu.dev"
+          alt="RAHIM SAROAR"
           style={{ width: '28px', height: '28px', borderRadius: '8px', objectFit: 'cover' }}
           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
         />
         <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.35)', fontWeight: 500 }}>
-          mishu.dev
+          RAHIM SAROAR
         </span>
       </div>
 
@@ -751,7 +751,7 @@ const RedirectPage: React.FC = () => {
             }}
           >
             <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)' }}>
-              🔒 mishu.dev থেকে redirect হচ্ছেন
+              🔒 Portfolio থেকে redirect হচ্ছেন
             </span>
             <span style={{ color: 'rgba(255,255,255,0.1)', fontSize: '11px' }}>·</span>
             <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.2)' }}>
