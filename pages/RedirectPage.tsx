@@ -309,7 +309,7 @@ const InvalidPage: React.FC = () => (
 /* ─────────────────────────────────────────────
    MAIN PAGE
 ───────────────────────────────────────────── */
-const TOTAL = 5;
+const TOTAL = 10;
 
 const RedirectPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -339,6 +339,21 @@ const RedirectPage: React.FC = () => {
     }, 1000);
     return () => clearInterval(timer);
   }, [cfg]);
+  // Monetag Ad Script Loader
+  useEffect(() => {
+    const script = document.createElement('script');
+    // Monetag থেকে পাওয়া স্ক্রিপ্ট লিংকটি নিচের src-তে দিন
+    script.src = 'https://YOUR_MONETAG_SCRIPT_URL.js'; 
+    script.async = true;
+    script.setAttribute('data-zone', 'YOUR_ZONE_ID'); // যদি জোন আইডি থাকে
+    
+    document.body.appendChild(script);
+
+    return () => {
+      // কম্পোনেন্ট আনমাউন্ট হলে স্ক্রিপ্ট রিমুভ করে দেওয়া ভালো
+      document.body.removeChild(script);
+    };
+  }, []);
 
   if (!cfg) return <InvalidPage />;
 
@@ -758,6 +773,29 @@ const RedirectPage: React.FC = () => {
               নিরাপদ ও ভেরিফাইড লিংক
             </span>
           </div>
+        </div>
+      </div>
+
+      {/* ── Monetag Banner Ad Section ── */}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 100,
+          padding: '10px 0',
+          background: 'rgba(5, 5, 16, 0.8)',
+          backdropFilter: 'blur(10px)',
+          borderTop: '1px solid rgba(255,255,255,0.05)',
+        }}
+      >
+        {/* Monetag-এর দেওয়া ad zone ID এখানে বসবে */}
+        <div id="monetag-banner-container">
+            {/* Monetag Script Load হলে এখানে অ্যাড শো করবে */}
         </div>
       </div>
 
