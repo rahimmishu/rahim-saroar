@@ -71,7 +71,7 @@ const platforms: Record<string, PlatformConfig> = {
     ),
     badge: 'Verified Profile',
     description: 'ফেসবুকে Follow করুন — Latest updates, posts & activities',
-    followers: '5K+ Followers',
+    followers: '9K+ Followers',
   },
 };
 
