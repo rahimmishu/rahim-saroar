@@ -6,7 +6,8 @@ import AuthModal from '../modals/AuthModal';
 import { RainbowButton } from '../ui/rainbow-button'; 
 import { GitHubStarButton } from '../ui/github-star'; 
 import { PremiumSignInButton } from '../ui/premium-signin-button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 
 // ✅ onOpenTools / onOpenGallery prop দুটো সরানো হয়েছে
 interface NavbarProps {
@@ -23,14 +24,27 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation(); // বর্তমান লিংক চেক করার হুক
+  const isPanel = location.pathname === '/panel'; // প্যানেলে আছে কিনা চেক
 
-  const navLinks = [
+  // মেইন ওয়েবসাইটের লিংক
+  const mainLinks = [
     { label: 'Home',      href: '#home',      icon: <Home size={18} /> },
     { label: 'Projects',  href: '#projects',  icon: <Briefcase size={18} /> },
     { label: 'Resources', href: '#resources', isSpecial: true, icon: <BookOpen size={18} /> }, 
     { label: 'About',     href: '#about',     icon: <User size={18} /> },
     { label: 'Contact',   href: '#contact',   icon: <Mail size={18} /> },
   ];
+
+  // প্যানেলের জন্য স্পেশাল লিংক
+  const panelLinks = [
+    { label: 'Services',  href: '#services',  icon: <Sparkles size={18} /> },
+    { label: 'History',   href: '#history',   icon: <Briefcase size={18} /> },
+    { label: 'Deposit',   href: '#deposit',   isSpecial: true, icon: <Lock size={18} /> }, 
+  ];
+
+  // যেই পেজে আছে, সেই অনুযায়ী লিংক দেখাবে
+  const navLinks = isPanel ? panelLinks : mainLinks;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -144,7 +158,7 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
                 
                 <span className="relative pb-1 text-sm font-bold md:text-xl font-signature whitespace-nowrap">
                   <span className="relative z-10 text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text animate-gradient-x bg-[length:200%_auto]">
-                    Rahim Saroar <span className="hidden sm:inline">Mishu</span>
+                    {isPanel ? "Bolto Panel" : "Rahim Saroar"} <span className="hidden sm:inline">{!isPanel && "Mishu"}</span>
                   </span>
                   <span className="absolute inset-0 text-transparent opacity-50 blur-sm bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text"></span>
                 </span>
