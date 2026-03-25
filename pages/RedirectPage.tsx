@@ -761,28 +761,7 @@ const RedirectPage: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Monetag Banner Ad Section ── */}
-      <div
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 100,
-          padding: '10px 0',
-          background: 'rgba(5, 5, 16, 0.8)',
-          backdropFilter: 'blur(10px)',
-          borderTop: '1px solid rgba(255,255,255,0.05)',
-        }}
-      >
-        {/* Monetag-এর দেওয়া ad zone ID এখানে বসবে */}
-        <div id="monetag-banner-container">
-            {/* Monetag Script Load হলে এখানে অ্যাড শো করবে */}
-        </div>
-      </div>
+      
 
       {/* ── Global keyframes ── */}
       <style>{`
