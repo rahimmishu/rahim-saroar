@@ -202,6 +202,38 @@
       <image:geo_location>Joypurhat, Bangladesh</image:geo_location>
       <image:license>https://rahim-saroar.vercel.app</image:license>
     </image:image>
+
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/mishu.png</image:loc>
+      <image:title>Rahim Saroar Mishu Portrait</image:title>
+      <image:caption>Portrait of Rahim Saroar Mishu, AI Enthusiast from Bangladesh.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar-mishu.png</image:loc>
+      <image:title>Rahim Saroar Mishu - Web Developer</image:title>
+      <image:caption>Rahim Saroar Mishu, full stack web developer from Bangladesh.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar.jpg</image:loc>
+      <image:title>Rahim Saroar Mishu Photography</image:title>
+      <image:caption>Photography of Rahim Saroar Mishu.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://rahim-saroar.vercel.app/rahim-saroar.png</image:loc>
+      <image:title>Rahim Saroar Mishu Developer Portrait</image:title>
+      <image:caption>Portrait of Rahim Saroar Mishu.</image:caption>
+      <image:geo_location>Bangladesh</image:geo_location>
+      <image:license>https://rahim-saroar.vercel.app</image:license>
+    </image:image>
   </url>
 
   <!-- ═══════════════════════════════════════
