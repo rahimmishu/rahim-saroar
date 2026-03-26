@@ -150,16 +150,39 @@ export const photos: Photo[] = [
     title: 'Rahim Saroar Mishu – Traditional Panjabi Style at Wedding',
     category: 'Event',
   },
-
-  // ── 👇 নতুন ছবি এখানে যোগ করো ──────────────────────────────────────────
-  // {
-  //   id: 14,
-  //   src: '/rahim-saroar-mishu-new-photo.jpg',
-  //   caption: 'Caption Text',
-  //   alt: 'Rahim Saroar Mishu – descriptive sentence for Google Image Search, mention context and location',
-  //   title: 'Rahim Saroar Mishu – Short 5-8 Word Title',
-  //   category: 'Lifestyle', // Portrait | Workspace | Travel | Education | Event | Social | Content Creation
-  // },
+   {
+    id: 14,
+    src: '/mishu.png',
+    caption: 'Exam',
+    alt: 'Rahim Saroar Mishu at a college exam, student life and academic activities Bangladesh',
+    title: 'Rahim Saroar Mishu – College Exam Participation',
+    category: 'Exam',
+  },
+  {
+    id: 15,
+    src: '/rahim-saroar-mishu.png',
+    caption: 'Exam',
+    alt: 'Rahim Saroar Mishu at a college exam, student life and academic activities Bangladesh',
+    title: 'Rahim Saroar Mishu – College Exam Participation',
+    category: 'Exam',
+  },
+  {
+    id: 16,
+    src: '/rahim-saroar.jpg',
+    caption: 'Exam',
+    alt: 'Rahim Saroar Mishu at a college exam, student life and academic activities Bangladesh',
+    title: 'Rahim Saroar Mishu – College Exam Participation',
+    category: 'Exam',
+  },
+  {
+    id: 17,
+    src: '/rahim-saroar.png',
+    caption: 'Event',
+    alt: 'Rahim Saroar Mishu at Eid event wearing traditional Panjabi attire, cultural fashion Bangladesh',
+    title: 'Rahim Saroar Mishu – Traditional Panjabi Style at Eid',
+    category: 'Event',
+  },
+    // ── 👇 নতুন ছবি এখানে যোগ করো ──────────────────────────────────────────
 ];
 
 // ── Helper: relative → absolute URL ──────────────────────────────────────────
