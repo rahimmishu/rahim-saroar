@@ -63,7 +63,7 @@ const ToolsPage   = lazy(() => import('./pages/ToolsPage'));
 const GalleryPage = lazy(() => import('./pages/GalleryPage'));
 const VaultPage   = lazy(() => import('./pages/VaultPage'));
 const RedirectPage = lazy(() => import('./pages/RedirectPage'));
-
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 
 // ============================================================
 // Suspense fallbacks
@@ -471,7 +471,9 @@ const AppContent: React.FC = () => {
         <Route path="/link" element={
           <Suspense fallback={<PageFallback />}><RedirectPage /></Suspense>
         } />
-        
+        <Route path="/privacy" element={
+          <Suspense fallback={<PageFallback />}><PrivacyPage /></Suspense>
+        } />
 
       </Routes>
     </main>
