@@ -403,7 +403,7 @@ const Hero: React.FC = () => {
                   {/* ✅ FIX: Hero image — eager load করতে হবে, এটা LCP element!
                       loading="lazy" ছিল আগে — সেটাই lag-এর কারণ ছিল */}
                   <img
-                    src="/1.jpg"
+                    src="/paharpur_rahim_saroar (1).jpg"
                     alt="Rahim Saroar Mishu"
                     loading="eager"
                     decoding="async"

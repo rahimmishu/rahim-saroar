@@ -165,7 +165,7 @@ const LiteHero: React.FC = () => {
                   {/* ✅ FIX: Hero image — mobile-তেও eager load করতে হবে।
                       এটা viewport-এর উপরে থাকে, lazy করলে দেরি হয় */}
                   <img
-                    src="/1.jpg"
+                    src="/paharpur_rahim_saroar (1).jpg"
                     alt="Rahim Saroar Mishu"
                     loading="eager"
                     decoding="async"
