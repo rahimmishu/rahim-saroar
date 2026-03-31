@@ -1,5 +1,5 @@
 File Tree: rahim-saroar-mishu-portfolio
-Generated on: 3/25/2026, 8:18:36 PM
+Generated on: 3/31/2026, 7:55:41 AM
 Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 
 ────────────────────────────────────────────────────────────────────────────────
@@ -8,7 +8,6 @@ Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 │   └── workflows/
 │       └── publish.yml
 ├── api/
-│   ├── bolto-panel.ts
 │   ├── load.ts
 │   ├── news.ts
 │   └── save.ts
@@ -105,8 +104,8 @@ Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 │   ├── registerSW.ts
 │   └── utils.ts
 ├── pages/
-│   ├── BoltoPanel.tsx
 │   ├── GalleryPage.tsx
+│   ├── PrivacyPage.tsx
 │   ├── RedirectPage.tsx
 │   ├── ToolsPage.tsx
 │   ├── UserProfile.tsx
@@ -148,9 +147,11 @@ Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 │   ├── jarvis-ai.jpg
 │   ├── manual.jpg
 │   ├── map-bg.jpg
+│   ├── mishu.png
 │   ├── mywot4b74afe4ed33f8f9012b.html
 │   ├── og-image.jpg
 │   ├── pagla.jpg
+│   ├── paharpur_rahim_saroar (1).jpg
 │   ├── portfolio.png
 │   ├── rahim-saroar-mishu-J.jpg
 │   ├── rahim-saroar-mishu-biya.jpg
@@ -166,7 +167,10 @@ Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 │   ├── rahim-saroar-mishu-speaker.png
 │   ├── rahim-saroar-mishu-sugarmill.jpg
 │   ├── rahim-saroar-mishu-web-developer.jpg
+│   ├── rahim-saroar-mishu.png
 │   ├── rahim-saroar-pic.png
+│   ├── rahim-saroar.jpg
+│   ├── rahim-saroar.png
 │   ├── resume.pdf
 │   ├── robots.txt
 │   ├── secret-pic.jpg
