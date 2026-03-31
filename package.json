@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
-    "@google/genai": "^1.46.0",
+    "@google/genai": "^1.47.0",
     "@google/generative-ai": "^0.24.1",
     "@remix-run/router": "^1.23.2",
     "@types/canvas-confetti": "^1.9.0",
@@ -25,7 +25,7 @@
     "framer-motion": "^12.38.0",
     "lightweight-charts": "^4.2.2",
     "lucide-react": "^0.263.1",
-    "motion": "^12.33.0",
+    "motion": "^12.38.0",
     "react": "18.3.1",
     "react-dom": "^18.3.1",
     "react-google-recaptcha": "^3.1.0",
