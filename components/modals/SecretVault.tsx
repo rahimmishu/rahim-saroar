@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Search, X, Lock, Grid, Play, Video, Sparkles, Command, ArrowRight } from 'lucide-react';
+import { Search, X, Lock, Grid, Play, Video, Sparkles, Command, ArrowRight, Folder } from 'lucide-react';
 // import { triggerIsland } from '../layout/DynamicIsland'; // 🔥 নোটিফিকেশনের জন্য ইমপোর্ট (প্রয়োজন হলে আনকমেন্ট করুন)
 
 interface MediaItem {
-  type: 'image' | 'video';
+  type: 'image' | 'video'| 'folder';
   src: string;
   title: string;
   thumbnail?: string;
@@ -30,7 +30,7 @@ const SecretVault: React.FC = () => {
     "hotcdi": { 
       msg: "📂 ছিঃ! ছিঃ! 🤢 কি দেখপা আইছি! 👀🐸", type: 'gallery',
       items: [
-        { type: 'video', src: 'https://drive.google.com/drive/folders/1Pv264KpS96cm6MGyXEkW-3Ri30BeGkLK?usp=sharing', title: 'Hidden File 01', thumbnail: '/new.jpg' },
+        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1Pv264KpS96cm6MGyXEkW-3Ri30BeGkLK#grid', title: 'Hidden File 01', thumbnail: '/new.jpg' },
         { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: 'Hidden File 01', thumbnail: '/hot.jpg' },
         { type: 'video', src: 'https://www.youtube.com/embed/TVjrci5QQ4A', title: 'Favorite romance 🥵' },
         { type: 'video', src: 'https://drive.google.com/file/d/1T5nC_AYzfp3RZ9NvKCHchMTLSktmTajg/preview', title: 'Funny Clip',thumbnail: '/pagla.jpg' },
@@ -238,10 +238,13 @@ const SecretVault: React.FC = () => {
                                     </>
                                 ) : (
                                     <div className="flex items-center justify-center w-full h-full transition-colors bg-neutral-900 group-hover:bg-neutral-800">
-                                        {item.type === 'video' ? 
-                                            <Video className="w-12 h-12 transition-colors text-neutral-600 group-hover:text-purple-500" /> : 
-                                            <img src={item.src} className="object-cover w-full h-full opacity-60 group-hover:opacity-100" />
-                                        }
+                                        {item.type === 'video' ? (
+    <Video className="w-12 h-12 transition-colors text-neutral-600 group-hover:text-purple-500" /> 
+) : item.type === 'folder' ? (
+    <Folder className="w-12 h-12 transition-colors text-neutral-600 group-hover:text-purple-500" />
+) : (
+    <img src={item.src} className="object-cover w-full h-full opacity-60 group-hover:opacity-100" />
+)}
                                     </div>
                                 )}
                             </div>
@@ -272,13 +275,13 @@ const SecretVault: React.FC = () => {
             
             <div className="relative flex flex-col items-center w-full max-w-7xl">
                 <div className="relative w-full overflow-hidden bg-black border shadow-2xl rounded-2xl border-white/10">
-                    {currentMedia.type === 'video' ? (
-                        isExternalVideo(currentMedia.src) ? 
-                        <iframe src={currentMedia.src} className="w-full aspect-video max-h-[85vh]" allowFullScreen allow="autoplay; encrypted-media"></iframe> : 
-                        <video src={currentMedia.src} controls autoPlay className="w-full h-auto max-h-[85vh]" />
-                    ) : (
-                        <img src={currentMedia.src} className="w-full h-auto max-h-[85vh] object-contain" />
-                    )}
+                    {currentMedia.type === 'video' || currentMedia.type === 'folder' ? (
+    isExternalVideo(currentMedia.src) || currentMedia.type === 'folder' ? 
+    <iframe src={currentMedia.src} className="w-full aspect-video max-h-[85vh] bg-white" allowFullScreen allow="autoplay; encrypted-media"></iframe> : 
+    <video src={currentMedia.src} controls autoPlay className="w-full h-auto max-h-[85vh]" />
+) : (
+    <img src={currentMedia.src} className="w-full h-auto max-h-[85vh] object-contain" />
+)}
                 </div>
                 <h3 className="mt-6 text-2xl font-bold tracking-wide text-white">{currentMedia.title}</h3>
             </div>
