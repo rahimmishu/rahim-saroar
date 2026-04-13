@@ -30,7 +30,8 @@ const SecretVault: React.FC = () => {
     "hotcdi": { 
       msg: "📂 ছিঃ! ছিঃ! 🤢 কি দেখপা আইছি! 👀🐸", type: 'gallery',
       items: [
-        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1Pv264KpS96cm6MGyXEkW-3Ri30BeGkLK#grid', title: 'Hidden File 01', thumbnail: '/new.jpg' },
+        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1xQOy834GMMulzcIqnDbERcBue69p25nd#grid', title: 'Hidden File 01', thumbnail: '/new2.jpg' },
+        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1Pv264KpS96cm6MGyXEkW-3Ri30BeGkLK#grid', title: 'Hidden File 02', thumbnail: '/new.jpg' },
         { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: 'Hidden File 01', thumbnail: '/hot.jpg' },
         { type: 'video', src: 'https://www.youtube.com/embed/TVjrci5QQ4A', title: 'Favorite romance 🥵' },
         { type: 'video', src: 'https://drive.google.com/file/d/1T5nC_AYzfp3RZ9NvKCHchMTLSktmTajg/preview', title: 'Funny Clip',thumbnail: '/pagla.jpg' },
