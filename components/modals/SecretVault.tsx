@@ -30,6 +30,8 @@ const SecretVault: React.FC = () => {
     "hotcdi": { 
       msg: "📂 ছিঃ! ছিঃ! 🤢 কি দেখপা আইছি! 👀🐸", type: 'gallery',
       items: [
+        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1L3EmyqG1dtBYJTvCu46QRGusROpFVZAs#grid', title: 'new viral', thumbnail: '/new4.jpg' },
+        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1Olhm4gxG_MbZUvESalNZDVBCDEufIZGA#grid', title: 'bangla viral', thumbnail: '/new3.jpg' },
         { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1xQOy834GMMulzcIqnDbERcBue69p25nd#grid', title: 'Hidden File 01', thumbnail: '/new2.jpg' },
         { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1Pv264KpS96cm6MGyXEkW-3Ri30BeGkLK#grid', title: 'Hidden File 02', thumbnail: '/new.jpg' },
         { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: 'Hidden File 01', thumbnail: '/hot.jpg' },
