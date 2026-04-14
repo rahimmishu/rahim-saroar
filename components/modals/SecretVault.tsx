@@ -91,7 +91,7 @@ const SecretVault: React.FC = () => {
             { type: 'image', src: '/secret/nn7.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn7.jpg' },
             { type: 'video', src: 'https://drive.google.com/file/d/1k8VOtMOMA-t-TEc4_1ODK_De3kSEBlXT/preview', title: 'secret video',thumbnail: '/secret/ll.png' },
             { type: 'video', src: 'https://drive.google.com/file/d/1LWtnZX1q25NCcUUPE27tIIKp1DTrcGNn/preview', title: 'secret video',thumbnail: '/secret/ll2.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1UCM3ppUXVb0qYEWBLJ8trSDeIB0EqxO7/preview', title: 'secret video',thumbnail: '/secret/nn3.png' }
+            { type: 'video', src: 'https://drive.google.com/file/d/1UCM3ppUXVb0qYEWBLJ8trSDeIB0EqxO7/preview', title: 'secret video',thumbnail: '/secret/nn3.jpg' }
           ]
         },
         { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: 'Hidden File 01', thumbnail: '/secret/hot.jpg' },
