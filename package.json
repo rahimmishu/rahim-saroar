@@ -13,6 +13,7 @@
     "@google/genai": "^1.50.0",
     "@google/generative-ai": "^0.24.1",
     "@remix-run/router": "^1.23.2",
+    "@supabase/supabase-js": "^2.103.0",
     "@types/canvas-confetti": "^1.9.0",
     "@types/three": "^0.183.1",
     "@upstash/redis": "^1.37.0",

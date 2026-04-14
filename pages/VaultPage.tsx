@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabase'; // 🔥 Supabase ডাটাবেস ইমপোর্ট
 import {
   Search, X, Lock, Grid, Play, Video, Sparkles,
   Command, ArrowRight, ArrowLeft, Folder
@@ -13,7 +14,7 @@ interface MediaItem {
   items?: MediaItem[]; 
 }
 
-// ── Secret codes ────────────────────────────────────────────
+// ── Local Secret codes (আগের মতো) ────────────────────────────────────────────
 const secretCodes: {
   [key: string]: {
     msg: string;
@@ -25,107 +26,6 @@ const secretCodes: {
 } = {
   magic: { msg: '✨ You found the hidden magic!', type: 'text' },
   intro: { msg: '🎬 Playing Intro...', type: 'media', mediaType: 'video', src: '/intro.mp4' },
-  hotcdi: {
-    msg: '📂 ছিঃ! ছিঃ! 🤢 কি দেখপা আইছি! 👀🐸',
-    type: 'gallery',
-    items: [
-      { 
-        type: 'folder', 
-        title: 'new viral', 
-        thumbnail: '/secret/nm3.jpg',
-        items: [
-          { type: 'image', src: '/secret/nm1.jpg', title: 'Hidden File 01', thumbnail: '/secret/nm1.jpg' },
-          { type: 'image', src: '/secret/nm2.jpg', title: 'Hidden File 02', thumbnail: '/secret/nm2.jpg' },
-          { type: 'image', src: '/secret/nm3.jpg', title: 'Hidden File 03', thumbnail: '/secret/nm3.jpg' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1LZRfCo05Qe2QnuLC6RHtxND5lDtm5zY1/preview', title: 'secret video',thumbnail: '/secret/nm1.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1GWjJB1dbzFUmmv1NZfEqK0btVpPLZJS6/preview', title: 'secret video',thumbnail: '/secret/nm1.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/138yEDWOF_oSfOBzsdoPPb4UGaGvqFkYB/preview', title: 'secret video',thumbnail: '/secret/nm1.png' }
-        ]
-      },
-      { 
-          type: 'folder', 
-          title: 'new viral', 
-          thumbnail: '/secret/lk3.jpg',
-          items: [
-            { type: 'image', src: '/secret/lk.jpg', title: 'Hidden File 01', thumbnail: '/secret/lk.jpg' },
-            { type: 'image', src: '/secret/lk1.jpg', title: 'Hidden File 02', thumbnail: '/secret/lk1.jpg' },
-            { type: 'image', src: '/secret/lk2.jpg', title: 'Hidden File 03', thumbnail: '/secret/lk2.jpg' },
-            { type: 'image', src: '/secret/lk3.jpg', title: 'Hidden File 02', thumbnail: '/secret/lk3.jpg' },
-            { type: 'image', src: '/secret/lk4.jpg', title: 'Hidden File 03', thumbnail: '/secret/lk4.jpg' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1GZkzKftTep9ZzDtysz6SQUjt6dfmGxFX/preview', title: 'secret video',thumbnail: '/secret/lk6.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1tK3bEFBoGIwz15QcONhVNg7OOqlsjbmN/preview', title: 'secret video',thumbnail: '/secret/lk5.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1of1yUpfpUXHn-SOISXC-BHhAYHoVS7N5/preview', title: 'secret video',thumbnail: '/secret/lk3.jpg' }
-          ]
-        },
-      { 
-        type: 'folder', 
-        title: 'new viral', 
-        thumbnail: '/secret/new2.jpg',
-        items: [
-          { type: 'image', src: '/secret/new2.jpg', title: 'Hidden File 01', thumbnail: '/secret/new2.jpg' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1Rv5u81m_BYYxhbxpBERYfIzyWvPsX6aw/preview', title: 'secret video',thumbnail: '/secret/mm1.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1I3UWeq2qgLObNWK4JEcwRpjih5pYvtr5/preview', title: 'secret video',thumbnail: '/secret/mm2.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/18FPaUW7IyChBJ_Oj7M1SzPS4hqhvDY8H/preview', title: 'secret video',thumbnail: '/secret/mm3.png' }
-        ]
-      },
-      { 
-        type: 'folder', 
-        title: 'new viral', 
-        thumbnail: '/secret/ss1.jpg',
-        items: [
-          { type: 'image', src: '/secret/ss1.jpg', title: 'Hidden File 01', thumbnail: '/secret/ss1.jpg' },
-          { type: 'image', src: '/secret/ss2.jpg', title: 'Hidden File 01', thumbnail: '/secret/ss2.jpg' },
-          { type: 'image', src: '/secret/ss3.jpg', title: 'Hidden File 01', thumbnail: '/secret/ss3.jpg' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1zZ7fi4jgw961N8pexKlTqQqXQPA92zo9/preview', title: 'secret video',thumbnail: '/secret/bn.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/11Q-OGigPDyARVIr9S7Exc5ITfS7DXOem/preview', title: 'secret video',thumbnail: '/secret/bn2.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1xFWPt1XYpvjhLAnkhfMTY6v7YCDTegyr/preview', title: 'secret video',thumbnail: '/secret/ss5.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1k5fHTAFWJjHkAcx2TeeRhtww9HdkejRP/preview', title: 'secret video',thumbnail: '/secret/ss6.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1Xyt4DBifWALIUeBkGtuPbGs_VdgnTvY_/preview', title: 'secret video',thumbnail: '/secret/ss7.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1PLxlo4BgBdAOyv3hgIGgvEnjpMWvYcFb/preview', title: 'secret video',thumbnail: '/secret/ss8.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1JE_hKj9wOMTWMubc3rpuzMAyRKJsu2lT/preview', title: 'secret video',thumbnail: '/secret/ss9.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/15sPdo1o4BwN41lon-oL2ZbMjqd9jK9xI/preview', title: 'secret video',thumbnail: '/secret/ss10.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1M60pu9BTIiK3fWS6S6EbMc_c4F4V716G/preview', title: 'secret video',thumbnail: '/secret/ss1.jpg' },
-          { type: 'video', src: 'https://drive.google.com/file/d/11V71lZ7noPBgVF5np2dZLJfgoHcnhZ6G/preview', title: 'secret video',thumbnail: '/secret/ss5.png' },
-        ]
-      },
-      { 
-        type: 'folder', 
-        title: 'new viral', 
-        thumbnail: '/secret/ll.png',
-        items: [
-          { type: 'image', src: '/secret/nn1.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn1.jpg' },
-          { type: 'image', src: '/secret/nn2.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn2.jpg' },
-          { type: 'image', src: '/secret/nn3.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn3.jpg' },
-          { type: 'image', src: '/secret/nn4.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn4.jpg' },
-          { type: 'image', src: '/secret/nn5.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn5.jpg' },
-          { type: 'image', src: '/secret/nn6.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn6.jpg' },
-          { type: 'image', src: '/secret/nn7.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn7.jpg' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1k8VOtMOMA-t-TEc4_1ODK_De3kSEBlXT/preview', title: 'secret video',thumbnail: '/secret/ll.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1LWtnZX1q25NCcUUPE27tIIKp1DTrcGNn/preview', title: 'secret video',thumbnail: '/secret/ll2.png' },
-          { type: 'video', src: 'https://drive.google.com/file/d/1UCM3ppUXVb0qYEWBLJ8trSDeIB0EqxO7/preview', title: 'secret video',thumbnail: '/secret/nn3.jpg' }
-        ]
-      },
-      { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: 'Hidden File 01', thumbnail: '/secret/hot.jpg' },
-      { type: 'video', src: 'https://www.youtube.com/embed/TVjrci5QQ4A', title: 'Favorite romance 🥵' },
-      { type: 'video', src: 'https://drive.google.com/file/d/1T5nC_AYzfp3RZ9NvKCHchMTLSktmTajg/preview', title: 'Funny Clip', thumbnail: '/secret/pagla.jpg' },
-      { type: 'video', src: 'https://drive.google.com/file/d/1osCjA7soR9r9l7rdt0roG4DewVOk98Nn/preview', title: 'Couple Moment', thumbnail: '/secret/goju.jpg' },
-      { type: 'video', src: 'https://drive.google.com/file/d/1C-fGEcNowdv6Igyb_PZCtMUtDuB7NIgr/preview', title: 'Romantic Video', thumbnail: '/secret/horny.jpg' },
-      { type: 'video', src: 'https://drive.google.com/file/d/1aW3atn8w4OkSfvmhnt1lEKjuNwVvn_60/preview', title: 'Throat Romantice', thumbnail: '/secret/hornyh.jpg' },
-      { type: 'video', src: 'https://drive.google.com/file/d/1rk4xeKb5WpXi8BO9nNJNtOFMKtBDsqNb/preview', title: 'Funny Dub', thumbnail: '/secret/deep.jpg' },
-      { type: 'video', src: 'https://drive.google.com/file/d/1ounJZxu1fY-MNXUHCdNyejkKTz4J99lG/preview', title: 'Teen Clip', thumbnail: '/secret/blonde.jpg' },
-      { type: 'video', src: 'https://drive.google.com/file/d/1ZmhaN6ft7z-WufCFmiDoTYMUWD_MX2-9/preview', title: 'Brunette Clip', thumbnail: '/secret/fok.jpg' },
-      { type: 'video', src: 'https://drive.google.com/file/d/1oNTdU03qDdoPCscx5kqmsTdoFXueoXVp/preview', title: 'Teen Scene', thumbnail: '/secret/f.jpg' },
-      { type: 'image', src: '/secret-pic.jpg', title: 'Secret Image' },
-    ],
-  },
-  love: {
-    msg: '🚀 Showing Secret Content...',
-    type: 'gallery',
-    items: [
-      { type: 'video', src: '/secret-video.mp4', title: 'Secret Project 1' },
-      { type: 'video', src: '/secret-video2.mp4', title: 'Secret Project 2' },
-    ],
-  },
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -159,8 +59,8 @@ const VaultPage: React.FC = () => {
   const [galleryItems, setGalleryItems] = useState<MediaItem[]>([]);
   const [galleryTitle, setGalleryTitle] = useState('');
   const [currentMedia, setCurrentMedia] = useState<MediaItem | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   
-  // ফোল্ডার হিস্ট্রি সেভ করার জন্য
   const [galleryHistory, setGalleryHistory] = useState<{items: MediaItem[], title: string}[]>([]);
 
   useEffect(() => { inputRef.current?.focus(); }, []);
@@ -171,7 +71,7 @@ const VaultPage: React.FC = () => {
         if (view === 'player') setView('gallery');
         else if (view === 'gallery') {
           setView('search');
-          setGalleryHistory([]); // ব্যাক করলে হিস্ট্রি ডিলিট
+          setGalleryHistory([]); 
         }
         else navigate('/');
       }
@@ -180,38 +80,100 @@ const VaultPage: React.FC = () => {
     return () => window.removeEventListener('keydown', onKey);
   }, [view, navigate]);
 
-  const handleSearch = (e: React.FormEvent) => {
+  // 🔥 এখানেই মূল ডাটাবেসের ম্যাজিকটা হবে!
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     const lowerQuery = query.toLowerCase().trim();
-    const result = secretCodes[lowerQuery];
+    setIsLoading(true);
+    setMessage('🔄 Checking Database...');
 
-    if (result) {
-      setMessage(result.msg);
-      if (result.type === 'gallery' && result.items) {
+    try {
+      // ১. ডাটাবেস থেকে ভিডিও খোঁজা
+      const { data, error } = await supabase
+        .from('vault_items')
+        .select('*')
+        .eq('secret_code', lowerQuery);
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        // ডাটা পাওয়া গেলে ফোল্ডার অনুযায়ী সাজানো হবে
+        const folderMap = new Map();
+        const directItems: MediaItem[] = [];
+
+        data.forEach((row: any) => {
+          const item: MediaItem = {
+            type: row.type,
+            src: row.src,
+            title: row.title,
+            thumbnail: row.type === 'image' ? row.src : undefined
+          };
+
+          if (row.folder_name) {
+            if (!folderMap.has(row.folder_name)) {
+              folderMap.set(row.folder_name, {
+                type: 'folder',
+                title: row.folder_name,
+                thumbnail: row.type === 'image' ? row.src : undefined,
+                items: []
+              });
+            }
+            folderMap.get(row.folder_name).items.push(item);
+            if (!folderMap.get(row.folder_name).thumbnail && row.type === 'image') {
+              folderMap.get(row.folder_name).thumbnail = row.src;
+            }
+          } else {
+            directItems.push(item);
+          }
+        });
+
+        const finalItems = [...Array.from(folderMap.values()), ...directItems];
+
+        setMessage('📂 Access Granted!');
         setTimeout(() => {
-          setGalleryItems(result.items!);
+          setGalleryItems(finalItems);
           setGalleryTitle(lowerQuery.toUpperCase());
           setView('gallery');
+          setIsLoading(false);
         }, 800);
-      } else if (result.type === 'media') {
-        setTimeout(() => {
-          setCurrentMedia({ type: result.mediaType!, src: result.src!, title: 'Secret Content' });
-          setView('player');
-        }, 800);
+
+      } else {
+        // ২. ডাটাবেসে না পেলে লোকাল কোড চেক করবে (magic, intro ইত্যাদি)
+        const result = secretCodes[lowerQuery];
+        if (result) {
+          setMessage(result.msg);
+          if (result.type === 'gallery' && result.items) {
+            setTimeout(() => {
+              setGalleryItems(result.items!);
+              setGalleryTitle(lowerQuery.toUpperCase());
+              setView('gallery');
+              setIsLoading(false);
+            }, 800);
+          } else if (result.type === 'media') {
+            setTimeout(() => {
+              setCurrentMedia({ type: result.mediaType!, src: result.src!, title: 'Secret Content' });
+              setView('player');
+              setIsLoading(false);
+            }, 800);
+          }
+        } else {
+          setMessage('❌ Access Denied: Invalid Code');
+          setIsLoading(false);
+        }
       }
-    } else {
-      setMessage('❌ Access Denied: Invalid Code');
+    } catch (err) {
+      console.error(err);
+      setMessage('❌ Database Error. Check connection.');
+      setIsLoading(false);
     }
   };
 
   const openMedia = (item: MediaItem) => {
     if (item.type === 'folder' && item.items) {
-      // ফোল্ডার হলে হিস্ট্রি সেভ করে নতুন ফোল্ডার ওপেন করবে
       setGalleryHistory([...galleryHistory, { items: galleryItems, title: galleryTitle }]);
       setGalleryItems(item.items);
       setGalleryTitle(item.title);
     } else if (item.src) {
-      // ভিডিও বা ছবি হলে প্লেয়ার ওপেন করবে
       setCurrentMedia(item as MediaItem & { src: string });
       setView('player');
     }
@@ -244,13 +206,14 @@ const VaultPage: React.FC = () => {
 
         <div className="w-full max-w-xl mx-4 relative overflow-hidden bg-[#0a0a0a]/80 border border-white/10 shadow-2xl rounded-2xl backdrop-blur-2xl ring-1 ring-white/5">
           <div className="flex items-center px-6 py-5 border-b border-white/5">
-            <Command className="w-6 h-6 mr-4 text-purple-500 animate-pulse" />
+            <Command className={`w-6 h-6 mr-4 text-purple-500 ${isLoading ? 'animate-spin' : 'animate-pulse'}`} />
             <form onSubmit={handleSearch} className="flex-1">
               <input
                 ref={inputRef}
                 type="text"
+                disabled={isLoading}
                 placeholder="Enter access code..."
-                className="w-full text-xl font-medium tracking-wide text-white bg-transparent border-none outline-none placeholder:text-neutral-500"
+                className="w-full text-xl font-medium tracking-wide text-white bg-transparent border-none outline-none placeholder:text-neutral-500 disabled:opacity-50"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
@@ -282,7 +245,7 @@ const VaultPage: React.FC = () => {
     );
   }
 
-// ── GALLERY VIEW ─────────────────────────────────────────────────────────────
+  // ── GALLERY VIEW ─────────────────────────────────────────────────────────────
   if (view === 'gallery') {
     return (
       <div 
@@ -291,8 +254,6 @@ const VaultPage: React.FC = () => {
       >
         <div className="sticky top-0 z-50 px-6 py-4 border-b bg-black/80 backdrop-blur-xl border-white/10">
           <div className="flex items-center justify-between max-w-6xl mx-auto">
-            
-            {/* ব্যাক বাটন ও টাইটেল */}
             <div className="flex items-center gap-4">
               {galleryHistory.length > 0 && (
                 <button

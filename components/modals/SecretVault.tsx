@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Search, X, Lock, Grid, Play, Video, Sparkles, Command, ArrowRight, Folder, ArrowLeft } from 'lucide-react';
-// import { triggerIsland } from '../layout/DynamicIsland'; // 🔥 নোটিফিকেশনের জন্য ইমপোর্ট (প্রয়োজন হলে আনকমেন্ট করুন)
+import { supabase } from '../../lib/supabase'; // 🔥 Supabase কানেকশন
 
 interface MediaItem {
-  type: 'image' | 'video'| 'folder';
+  type: 'image' | 'video' | 'folder';
   src?: string;
   title: string;
   thumbnail?: string;
-  items?: MediaItem[]; // ফোল্ডারের ভেতরের আইটেম রাখার জন্য
+  items?: MediaItem[];
 }
 
 const SecretVault: React.FC = () => {
@@ -22,131 +22,30 @@ const SecretVault: React.FC = () => {
   const [showPlayer, setShowPlayer] = useState(false);
   const [currentMedia, setCurrentMedia] = useState<MediaItem | null>(null);
   const [galleryHistory, setGalleryHistory] = useState<{items: MediaItem[], title: string}[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // আপনার সিক্রেট কোড লিস্ট (আপনার আগের ডাটাই আছে)
+  // ── Local Secret codes (আগের মতো) ──
   const secretCodes: { [key: string]: { 
       msg: string, type: 'text' | 'media' | 'gallery', src?: string, mediaType?: 'image' | 'video', items?: MediaItem[], action?: () => void 
   } } = {
     "magic": { msg: "✨ You found the hidden magic!", type: 'text' },
     "intro": { msg: "🎬 Playing Intro...", type: 'media', mediaType: 'video', src: '/intro.mp4' },
-    "hotcdi": { 
-      msg: "📂 ছিঃ! ছিঃ! 🤢 কি দেখপা আইছি! 👀🐸", type: 'gallery',
-      items: [
-        // --- ১. প্রথম ফোল্ডার (এর ভেতরে কিছু ভিডিও ঢুকিয়ে দিলাম) ---
-        { 
-          type: 'folder', 
-          title: 'new viral', 
-          thumbnail: '/secret/nm3.jpg',
-          items: [
-            { type: 'image', src: '/secret/nm1.jpg', title: 'Hidden File 01', thumbnail: '/secret/nm1.jpg' },
-            { type: 'image', src: '/secret/nm2.jpg', title: 'Hidden File 02', thumbnail: '/secret/nm2.jpg' },
-            { type: 'image', src: '/secret/nm3.jpg', title: 'Hidden File 03', thumbnail: '/secret/nm3.jpg' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1LZRfCo05Qe2QnuLC6RHtxND5lDtm5zY1/preview', title: 'secret video',thumbnail: '/secret/nm1.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1GWjJB1dbzFUmmv1NZfEqK0btVpPLZJS6/preview', title: 'secret video',thumbnail: '/secret/nm1.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/138yEDWOF_oSfOBzsdoPPb4UGaGvqFkYB/preview', title: 'secret video',thumbnail: '/secret/nm1.png' }
-          ]
-        },
-        { 
-          type: 'folder', 
-          title: 'new viral', 
-          thumbnail: '/secret/new2.jpg',
-          items: [
-            { type: 'image', src: '/secret/new2.jpg', title: 'Hidden File 01', thumbnail: '/secret/new2.jpg' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1Rv5u81m_BYYxhbxpBERYfIzyWvPsX6aw/preview', title: 'secret video',thumbnail: '/secret/mm1.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1I3UWeq2qgLObNWK4JEcwRpjih5pYvtr5/preview', title: 'secret video',thumbnail: '/secret/mm2.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/18FPaUW7IyChBJ_Oj7M1SzPS4hqhvDY8H/preview', title: 'secret video',thumbnail: '/secret/mm3.png' }
-          ]
-        },
-        { 
-          type: 'folder', 
-          title: 'new viral', 
-          thumbnail: '/secret/ss1.jpg',
-          items: [
-            { type: 'image', src: '/secret/ss1.jpg', title: 'Hidden File 01', thumbnail: '/secret/ss1.jpg' },
-            { type: 'image', src: '/secret/ss2.jpg', title: 'Hidden File 01', thumbnail: '/secret/ss2.jpg' },
-            { type: 'image', src: '/secret/ss3.jpg', title: 'Hidden File 01', thumbnail: '/secret/ss3.jpg' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1zZ7fi4jgw961N8pexKlTqQqXQPA92zo9/preview', title: 'secret video',thumbnail: '/secret/bn.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/11Q-OGigPDyARVIr9S7Exc5ITfS7DXOem/preview', title: 'secret video',thumbnail: '/secret/bn2.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1xFWPt1XYpvjhLAnkhfMTY6v7YCDTegyr/preview', title: 'secret video',thumbnail: '/secret/ss5.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1k5fHTAFWJjHkAcx2TeeRhtww9HdkejRP/preview', title: 'secret video',thumbnail: '/secret/ss6.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1Xyt4DBifWALIUeBkGtuPbGs_VdgnTvY_/preview', title: 'secret video',thumbnail: '/secret/ss7.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1PLxlo4BgBdAOyv3hgIGgvEnjpMWvYcFb/preview', title: 'secret video',thumbnail: '/secret/ss8.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1JE_hKj9wOMTWMubc3rpuzMAyRKJsu2lT/preview', title: 'secret video',thumbnail: '/secret/ss9.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/15sPdo1o4BwN41lon-oL2ZbMjqd9jK9xI/preview', title: 'secret video',thumbnail: '/secret/ss10.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1M60pu9BTIiK3fWS6S6EbMc_c4F4V716G/preview', title: 'secret video',thumbnail: '/secret/ss1.jpg' },
-            { type: 'video', src: 'https://drive.google.com/file/d/11V71lZ7noPBgVF5np2dZLJfgoHcnhZ6G/preview', title: 'secret video',thumbnail: '/secret/ss5.png' },
-          ]
-        },
-        { 
-          type: 'folder', 
-          title: 'new viral', 
-          thumbnail: '/secret/ll.png',
-          items: [
-            { type: 'image', src: '/secret/nn1.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn1.jpg' },
-            { type: 'image', src: '/secret/nn2.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn2.jpg' },
-            { type: 'image', src: '/secret/nn3.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn3.jpg' },
-            { type: 'image', src: '/secret/nn4.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn4.jpg' },
-            { type: 'image', src: '/secret/nn5.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn5.jpg' },
-            { type: 'image', src: '/secret/nn6.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn6.jpg' },
-            { type: 'image', src: '/secret/nn7.jpg', title: 'Hidden File 01', thumbnail: '/secret/nn7.jpg' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1k8VOtMOMA-t-TEc4_1ODK_De3kSEBlXT/preview', title: 'secret video',thumbnail: '/secret/ll.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1LWtnZX1q25NCcUUPE27tIIKp1DTrcGNn/preview', title: 'secret video',thumbnail: '/secret/ll2.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1UCM3ppUXVb0qYEWBLJ8trSDeIB0EqxO7/preview', title: 'secret video',thumbnail: '/secret/nn3.jpg' }
-          ]
-        },
-        { 
-          type: 'folder', 
-          title: 'new viral', 
-          thumbnail: '/secret/lk3.jpg',
-          items: [
-            { type: 'image', src: '/secret/lk.jpg', title: 'Hidden File 01', thumbnail: '/secret/lk.jpg' },
-            { type: 'image', src: '/secret/lk1.jpg', title: 'Hidden File 02', thumbnail: '/secret/lk1.jpg' },
-            { type: 'image', src: '/secret/lk2.jpg', title: 'Hidden File 03', thumbnail: '/secret/lk2.jpg' },
-            { type: 'image', src: '/secret/lk3.jpg', title: 'Hidden File 02', thumbnail: '/secret/lk3.jpg' },
-            { type: 'image', src: '/secret/lk4.jpg', title: 'Hidden File 03', thumbnail: '/secret/lk4.jpg' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1GZkzKftTep9ZzDtysz6SQUjt6dfmGxFX/preview', title: 'secret video',thumbnail: '/secret/lk6.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1tK3bEFBoGIwz15QcONhVNg7OOqlsjbmN/preview', title: 'secret video',thumbnail: '/secret/lk5.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1of1yUpfpUXHn-SOISXC-BHhAYHoVS7N5/preview', title: 'secret video',thumbnail: '/secret/lk3.jpg' }
-          ]
-        },
-        { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: 'Hidden File 01', thumbnail: '/secret/hot.jpg' },
-        { type: 'video', src: 'https://www.youtube.com/embed/TVjrci5QQ4A', title: 'Favorite romance 🥵' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1T5nC_AYzfp3RZ9NvKCHchMTLSktmTajg/preview', title: 'Funny Clip',thumbnail: '/secret/pagla.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1osCjA7soR9r9l7rdt0roG4DewVOk98Nn/preview', title: 'Couple Moment', thumbnail: '/secret/goju.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1C-fGEcNowdv6Igyb_PZCtMUtDuB7NIgr/preview', title: 'Romantic Video', thumbnail: '/secret/horny.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1aW3atn8w4OkSfvmhnt1lEKjuNwVvn_60/preview', title: 'Throat Romantice', thumbnail: '/secret/hornyh.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1rk4xeKb5WpXi8BO9nNJNtOFMKtBDsqNb/preview', title: 'Funny Dub', thumbnail: '/secret/deep.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1ounJZxu1fY-MNXUHCdNyejkKTz4J99lG/preview', title: 'Teen Clip', thumbnail: '/secret/blonde.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1ZmhaN6ft7z-WufCFmiDoTYMUWD_MX2-9/preview', title: 'Brunette Clip', thumbnail: '/secret/fok.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1oNTdU03qDdoPCscx5kqmsTdoFXueoXVp/preview', title: 'Teen Scene', thumbnail: '/secret/f.jpg' },
-        { type: 'image', src: '/secret-pic.jpg', title: 'Secret Image' }
-      ]
-    },
-    "love": {
-        msg: "🚀 Showing Secret Content...", type: 'gallery',
-        items: [
-            { type: 'video', src: '/secret-video.mp4', title: 'Secret Project 1' },
-            { type: 'video', src: '/secret-video2.mp4', title: 'Secret Project 2' },
-        ]
-    }
   };
 
   const openSecretSearch = () => {
-    console.log("🔓 Secret Vault Open Signal Received!");
     setIsOpen(true);
     setMessage('');
     setQuery('');
     setShowGallery(false);
     setShowPlayer(false);
-    setGalleryHistory([]); // নতুন যুক্ত করা হলো
-    // triggerIsland("Secret Vault Activated 🔐", "success");
+    setGalleryHistory([]);
   };
 
   const closeAll = () => {
     if (showPlayer) setShowPlayer(false);
     else if (showGallery) setShowGallery(false);
     else setIsOpen(false);
-    setGalleryHistory([]); // নতুন যুক্ত করা হলো
+    setGalleryHistory([]);
   };
 
   useEffect(() => {
@@ -171,60 +70,121 @@ const SecretVault: React.FC = () => {
 
   const getThumbnail = (src?: string, manualThumbnail?: string) => {
     if (manualThumbnail) return manualThumbnail;
-    if (!src) return null; // এই লাইনটি নতুন যুক্ত হলো
+    if (!src) return null; 
     if (src.includes('youtube.com') || src.includes('youtu.be')) {
       let videoId = null;
       if (src.includes('embed/')) videoId = src.split('embed/')[1]?.split('?')[0];
       else if (src.includes('v=')) videoId = src.split('v=')[1]?.split('&')[0];
       else videoId = src.split('/').pop();
-      
       if (videoId) return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
     }
     return null;
   };
 
-  const handleSearch = (e: React.FormEvent) => {
+  // 🔥 এখানেই ডাটাবেসের ম্যাজিকটা হবে!
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     const lowerQuery = query.toLowerCase().trim();
-    const result = secretCodes[lowerQuery];
+    setIsLoading(true);
+    setMessage('🔄 Checking Database...');
 
-    if (result) {
-      setMessage(result.msg);
-      if (result.type === 'gallery' && result.items) {
+    try {
+      // ১. ডাটাবেস থেকে ভিডিও খোঁজা
+      const { data, error } = await supabase
+        .from('vault_items')
+        .select('*')
+        .eq('secret_code', lowerQuery);
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        // ডাটা পাওয়া গেলে ফোল্ডার অনুযায়ী সাজানো হবে
+        const folderMap = new Map();
+        const directItems: MediaItem[] = [];
+
+        data.forEach((row: any) => {
+          const item: MediaItem = {
+            type: row.type,
+            src: row.src,
+            title: row.title,
+            thumbnail: row.type === 'image' ? row.src : undefined
+          };
+
+          if (row.folder_name) {
+            if (!folderMap.has(row.folder_name)) {
+              folderMap.set(row.folder_name, {
+                type: 'folder',
+                title: row.folder_name,
+                thumbnail: row.type === 'image' ? row.src : undefined,
+                items: []
+              });
+            }
+            folderMap.get(row.folder_name).items.push(item);
+            if (!folderMap.get(row.folder_name).thumbnail && row.type === 'image') {
+              folderMap.get(row.folder_name).thumbnail = row.src;
+            }
+          } else {
+            directItems.push(item);
+          }
+        });
+
+        const finalItems = [...Array.from(folderMap.values()), ...directItems];
+
+        setMessage('📂 Access Granted!');
         setTimeout(() => {
-          setGalleryItems(result.items!);
+          setGalleryItems(finalItems);
           setGalleryTitle(lowerQuery.toUpperCase());
           setShowGallery(true);
+          setIsLoading(false);
         }, 800);
-      } else if (result.type === 'media') {
-        setTimeout(() => {
-          setCurrentMedia({ type: result.mediaType!, src: result.src!, title: 'Secret Content' });
-          setShowPlayer(true);
-        }, 800);
-      } else if (result.action) {
-        setTimeout(() => result.action!(), 1000);
+
+      } else {
+        // ২. ডাটাবেসে না পেলে লোকাল কোড চেক করবে
+        const result = secretCodes[lowerQuery];
+        if (result) {
+          setMessage(result.msg);
+          if (result.type === 'gallery' && result.items) {
+            setTimeout(() => {
+              setGalleryItems(result.items!);
+              setGalleryTitle(lowerQuery.toUpperCase());
+              setShowGallery(true);
+              setIsLoading(false);
+            }, 800);
+          } else if (result.type === 'media') {
+            setTimeout(() => {
+              setCurrentMedia({ type: result.mediaType!, src: result.src!, title: 'Secret Content' });
+              setShowPlayer(true);
+              setIsLoading(false);
+            }, 800);
+          } else if (result.action) {
+            setTimeout(() => {
+                result.action!();
+                setIsLoading(false);
+            }, 1000);
+          }
+        } else {
+          setMessage("❌ Access Denied: Invalid Code");
+          setIsLoading(false);
+        }
       }
-    } else {
-      setMessage("❌ Access Denied: Invalid Code");
+    } catch (err) {
+      console.error(err);
+      setMessage('❌ Database Error. Check connection.');
+      setIsLoading(false);
     }
   };
 
   const openMedia = (item: MediaItem) => {
     if (item.type === 'folder' && item.items) {
-      // বর্তমান গ্যালারিটি হিস্ট্রিতে সেভ করে রাখা হচ্ছে (যাতে Back করা যায়)
       setGalleryHistory([...galleryHistory, { items: galleryItems, title: galleryTitle }]);
-      
-      // নতুন ফোল্ডারের ডাটা দিয়ে গ্যালারি আপডেট করা হচ্ছে
       setGalleryItems(item.items);
       setGalleryTitle(item.title);
     } else if (item.src) {
-      // ভিডিও বা ছবি হলে আগের মতোই পপআপ প্লেয়ার ওপেন হবে
       setCurrentMedia(item as MediaItem & { src: string });
       setShowPlayer(true);
     }
   };
 
-  // Back বাটনে ক্লিক করলে আগের গ্যালারিতে ফিরে যাওয়ার ফাংশন
   const handleBack = () => {
     const newHistory = [...galleryHistory];
     const prev = newHistory.pop();
@@ -236,7 +196,7 @@ const SecretVault: React.FC = () => {
   };
 
   const isExternalVideo = (src?: string) => {
-    if (!src) return false; // এই লাইনটি নতুন যুক্ত হলো
+    if (!src) return false; 
     return src.includes('youtube') || src.includes('youtu.be') || src.includes('vimeo') || src.includes('drive.google.com');
   };
 
@@ -244,24 +204,23 @@ const SecretVault: React.FC = () => {
 
   return (
     <>
-      {/* SEARCH MODAL - PREMIUM GLASSMORPHISM */}
+      {/* SEARCH MODAL */}
       {isOpen && !showGallery && !showPlayer && (
         <div className="fixed inset-0 z-[99999] bg-black/60 backdrop-blur-xl flex items-start justify-center pt-[20vh] animate-in fade-in duration-300">
           
-          {/* Background Glow Effect */}
           <div className="absolute top-[20vh] left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-500/20 blur-[100px] rounded-full pointer-events-none"></div>
 
           <div className="w-full max-w-xl mx-4 relative overflow-hidden bg-[#0a0a0a]/80 border border-white/10 shadow-2xl rounded-2xl backdrop-blur-2xl ring-1 ring-white/5 transform transition-all">
             
-            {/* Header / Input Area */}
             <div className="flex items-center px-6 py-5 border-b border-white/5">
-              <Command className="w-6 h-6 mr-4 text-purple-500 animate-pulse" />
+              <Command className={`w-6 h-6 mr-4 text-purple-500 ${isLoading ? 'animate-spin' : 'animate-pulse'}`} />
               <form onSubmit={handleSearch} className="flex-1">
                 <input 
                   type="text" 
                   autoFocus 
+                  disabled={isLoading}
                   placeholder="Enter access code..." 
-                  className="w-full text-xl font-medium tracking-wide text-white bg-transparent border-none outline-none placeholder:text-neutral-500" 
+                  className="w-full text-xl font-medium tracking-wide text-white bg-transparent border-none outline-none placeholder:text-neutral-500 disabled:opacity-50" 
                   value={query} 
                   onChange={(e) => setQuery(e.target.value)} 
                 />
@@ -271,7 +230,6 @@ const SecretVault: React.FC = () => {
               </div>
             </div>
 
-            {/* Message / Status Area */}
             <div className="p-8 text-center min-h-[140px] flex flex-col items-center justify-center">
                 {message ? (
                     <div className="duration-300 animate-in slide-in-from-bottom-2 fade-in">
@@ -291,43 +249,40 @@ const SecretVault: React.FC = () => {
                 )}
             </div>
             
-            {/* Footer Decoration */}
             <div className="w-full h-1 opacity-50 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
           </div>
         </div>
       )}
 
-      {/* GALLERY VIEW - PREMIUM GRID */}
+      {/* GALLERY VIEW */}
       {showGallery && (
         <div
           className="fixed inset-0 z-[100000] h-screen bg-[#050505] animate-in zoom-in-95 duration-500 overflow-y-auto overflow-x-hidden overscroll-contain"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
             
-            {/* Gallery Header */}
             <div className="sticky top-0 z-50 px-6 py-4 border-b bg-black/80 backdrop-blur-xl border-white/10">
                 <div className="flex items-center justify-between max-w-6xl mx-auto">
                     <div className="flex items-center gap-4">
-    {galleryHistory.length > 0 && (
-        <button 
-            onClick={handleBack} 
-            className="p-2 text-white transition-all rounded-full bg-white/10 hover:bg-purple-600"
-        >
-            <ArrowLeft size={20} />
-        </button>
-    )}
-    <h2 className="flex items-center gap-3 text-2xl font-black tracking-tight text-white">
-        <Grid className="text-purple-500" /> 
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-400">{galleryTitle}</span>
-    </h2>
-</div>
+                        {galleryHistory.length > 0 && (
+                            <button 
+                                onClick={handleBack} 
+                                className="p-2 text-white transition-all rounded-full bg-white/10 hover:bg-purple-600"
+                            >
+                                <ArrowLeft size={20} />
+                            </button>
+                        )}
+                        <h2 className="flex items-center gap-3 text-2xl font-black tracking-tight text-white">
+                            <Grid className="text-purple-500" /> 
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-400">{galleryTitle}</span>
+                        </h2>
+                    </div>
                     <button onClick={() => setShowGallery(false)} className="p-2 transition-all rounded-full text-neutral-400 hover:bg-white/10 hover:text-white hover:rotate-90">
                         <X size={24} />
                     </button>
                 </div>
             </div>
 
-            {/* Gallery Grid */}
             <div className="grid w-full max-w-6xl grid-cols-1 gap-6 p-6 pb-20 mx-auto md:grid-cols-2 lg:grid-cols-3">
                 {galleryItems.map((item, idx) => {
                     const thumbUrl = getThumbnail(item.src, item.thumbnail);
@@ -337,7 +292,6 @@ const SecretVault: React.FC = () => {
                             onClick={() => openMedia(item)} 
                             className="group relative overflow-hidden cursor-pointer bg-neutral-900 border border-white/5 rounded-3xl aspect-video hover:border-purple-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] hover:-translate-y-1"
                         >
-                            {/* Image/Thumbnail */}
                             <div className="relative w-full h-full">
                                 {thumbUrl ? (
                                     <>
@@ -353,17 +307,16 @@ const SecretVault: React.FC = () => {
                                 ) : (
                                     <div className="flex items-center justify-center w-full h-full transition-colors bg-neutral-900 group-hover:bg-neutral-800">
                                         {item.type === 'video' ? (
-    <Video className="w-12 h-12 transition-colors text-neutral-600 group-hover:text-purple-500" /> 
-) : item.type === 'folder' ? (
-    <Folder className="w-12 h-12 transition-colors text-neutral-600 group-hover:text-purple-500" />
-) : (
-    <img src={item.src} className="object-cover w-full h-full opacity-60 group-hover:opacity-100" />
-)}
+                                            <Video className="w-12 h-12 transition-colors text-neutral-600 group-hover:text-purple-500" /> 
+                                        ) : item.type === 'folder' ? (
+                                            <Folder className="w-12 h-12 transition-colors text-neutral-600 group-hover:text-purple-500" />
+                                        ) : (
+                                            <img src={item.src} className="object-cover w-full h-full opacity-60 group-hover:opacity-100" />
+                                        )}
                                     </div>
                                 )}
                             </div>
 
-                            {/* Title Overlay */}
                             <div className="absolute inset-x-0 bottom-0 p-5 transition-transform duration-300 translate-y-2 bg-gradient-to-t from-black via-black/80 to-transparent group-hover:translate-y-0">
                                 <h3 className="flex items-center gap-2 text-lg font-bold text-white truncate">
                                     {item.title} 
@@ -377,7 +330,7 @@ const SecretVault: React.FC = () => {
         </div>
       )}
 
-      {/* MEDIA PLAYER - CINEMATIC MODE */}
+      {/* MEDIA PLAYER */}
       {showPlayer && currentMedia && (
         <div className="fixed inset-0 z-[100001] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 animate-in fade-in duration-300">
             <button 
@@ -390,12 +343,12 @@ const SecretVault: React.FC = () => {
             <div className="relative flex flex-col items-center w-full max-w-7xl">
                 <div className="relative w-full overflow-hidden bg-black border shadow-2xl rounded-2xl border-white/10">
                     {currentMedia.type === 'video' || currentMedia.type === 'folder' ? (
-    isExternalVideo(currentMedia.src) || currentMedia.type === 'folder' ? 
-    <iframe src={currentMedia.src} className="w-full aspect-video max-h-[85vh] bg-white" allowFullScreen allow="autoplay; encrypted-media"></iframe> : 
-    <video src={currentMedia.src} controls autoPlay className="w-full h-auto max-h-[85vh]" />
-) : (
-    <img src={currentMedia.src} className="w-full h-auto max-h-[85vh] object-contain" />
-)}
+                        isExternalVideo(currentMedia.src) || currentMedia.type === 'folder' ? 
+                        <iframe src={currentMedia.src} className="w-full aspect-video max-h-[85vh] bg-white" allowFullScreen allow="autoplay; encrypted-media"></iframe> : 
+                        <video src={currentMedia.src} controls autoPlay className="w-full h-auto max-h-[85vh]" />
+                    ) : (
+                        <img src={currentMedia.src} className="w-full h-auto max-h-[85vh] object-contain" />
+                    )}
                 </div>
                 <h3 className="mt-6 text-2xl font-bold tracking-wide text-white">{currentMedia.title}</h3>
             </div>
