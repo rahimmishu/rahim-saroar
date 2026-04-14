@@ -101,9 +101,7 @@ const SecretVault: React.FC = () => {
         { type: 'video', src: 'https://drive.google.com/file/d/1C-fGEcNowdv6Igyb_PZCtMUtDuB7NIgr/preview', title: 'Romantic Video', thumbnail: '/secret/horny.jpg' },
         { type: 'video', src: 'https://drive.google.com/file/d/1aW3atn8w4OkSfvmhnt1lEKjuNwVvn_60/preview', title: 'Throat Romantice', thumbnail: '/secret/hornyh.jpg' },
         { type: 'video', src: 'https://drive.google.com/file/d/1rk4xeKb5WpXi8BO9nNJNtOFMKtBDsqNb/preview', title: 'Funny Dub', thumbnail: '/secret/deep.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1OX1MiT6NDNhHUdLvSwQiJwfmTDUD34Ha/preview', title: 'Drama Clip', thumbnail: '/secret/step.jpg' },
         { type: 'video', src: 'https://drive.google.com/file/d/1ounJZxu1fY-MNXUHCdNyejkKTz4J99lG/preview', title: 'Teen Clip', thumbnail: '/secret/blonde.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1_4TgeMds_TSBVw5B-BznJaBWkyVvzKh6/preview', title: 'Action Scene', thumbnail: '/secret/manual.jpg' },
         { type: 'video', src: 'https://drive.google.com/file/d/1ZmhaN6ft7z-WufCFmiDoTYMUWD_MX2-9/preview', title: 'Brunette Clip', thumbnail: '/secret/fok.jpg' },
         { type: 'video', src: 'https://drive.google.com/file/d/1oNTdU03qDdoPCscx5kqmsTdoFXueoXVp/preview', title: 'Teen Scene', thumbnail: '/secret/f.jpg' },
         { type: 'image', src: '/secret-pic.jpg', title: 'Secret Image' }
