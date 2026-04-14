@@ -14,7 +14,7 @@ interface MediaItem {
   items?: MediaItem[]; 
 }
 
-// ── Local Secret codes (আগের মতো) ────────────────────────────────────────────
+// ── Local Secret codes ────────────────────────────────────────────
 const secretCodes: {
   [key: string]: {
     msg: string;
@@ -102,11 +102,12 @@ const VaultPage: React.FC = () => {
         const directItems: MediaItem[] = [];
 
         data.forEach((row: any) => {
+          // 🔥 ডাটাবেসের thumbnail কলাম যুক্ত করা হলো
           const item: MediaItem = {
             type: row.type,
             src: row.src,
             title: row.title,
-            thumbnail: row.type === 'image' ? row.src : undefined
+            thumbnail: row.thumbnail || (row.type === 'image' ? row.src : undefined)
           };
 
           if (row.folder_name) {
@@ -114,13 +115,14 @@ const VaultPage: React.FC = () => {
               folderMap.set(row.folder_name, {
                 type: 'folder',
                 title: row.folder_name,
-                thumbnail: row.type === 'image' ? row.src : undefined,
+                thumbnail: row.thumbnail || (row.type === 'image' ? row.src : undefined),
                 items: []
               });
             }
             folderMap.get(row.folder_name).items.push(item);
-            if (!folderMap.get(row.folder_name).thumbnail && row.type === 'image') {
-              folderMap.get(row.folder_name).thumbnail = row.src;
+            
+            if (!folderMap.get(row.folder_name).thumbnail) {
+              folderMap.get(row.folder_name).thumbnail = row.thumbnail || (row.type === 'image' ? row.src : undefined);
             }
           } else {
             directItems.push(item);

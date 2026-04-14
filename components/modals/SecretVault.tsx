@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, X, Lock, Grid, Play, Video, Sparkles, Command, ArrowRight, Folder, ArrowLeft } from 'lucide-react';
-import { supabase } from '../../lib/supabase'; // 🔥 Supabase কানেকশন
+import { supabase } from '../../lib/supabase';
 
 interface MediaItem {
   type: 'image' | 'video' | 'folder';
@@ -24,7 +24,6 @@ const SecretVault: React.FC = () => {
   const [galleryHistory, setGalleryHistory] = useState<{items: MediaItem[], title: string}[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // ── Local Secret codes (আগের মতো) ──
   const secretCodes: { [key: string]: { 
       msg: string, type: 'text' | 'media' | 'gallery', src?: string, mediaType?: 'image' | 'video', items?: MediaItem[], action?: () => void 
   } } = {
@@ -81,7 +80,6 @@ const SecretVault: React.FC = () => {
     return null;
   };
 
-  // 🔥 এখানেই ডাটাবেসের ম্যাজিকটা হবে!
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     const lowerQuery = query.toLowerCase().trim();
@@ -89,7 +87,6 @@ const SecretVault: React.FC = () => {
     setMessage('🔄 Checking Database...');
 
     try {
-      // ১. ডাটাবেস থেকে ভিডিও খোঁজা
       const { data, error } = await supabase
         .from('vault_items')
         .select('*')
@@ -98,16 +95,16 @@ const SecretVault: React.FC = () => {
       if (error) throw error;
 
       if (data && data.length > 0) {
-        // ডাটা পাওয়া গেলে ফোল্ডার অনুযায়ী সাজানো হবে
         const folderMap = new Map();
         const directItems: MediaItem[] = [];
 
         data.forEach((row: any) => {
+          // 🔥 ডাটাবেসের thumbnail কলাম যুক্ত করা হলো
           const item: MediaItem = {
             type: row.type,
             src: row.src,
             title: row.title,
-            thumbnail: row.type === 'image' ? row.src : undefined
+            thumbnail: row.thumbnail || (row.type === 'image' ? row.src : undefined)
           };
 
           if (row.folder_name) {
@@ -115,13 +112,14 @@ const SecretVault: React.FC = () => {
               folderMap.set(row.folder_name, {
                 type: 'folder',
                 title: row.folder_name,
-                thumbnail: row.type === 'image' ? row.src : undefined,
+                thumbnail: row.thumbnail || (row.type === 'image' ? row.src : undefined),
                 items: []
               });
             }
             folderMap.get(row.folder_name).items.push(item);
-            if (!folderMap.get(row.folder_name).thumbnail && row.type === 'image') {
-              folderMap.get(row.folder_name).thumbnail = row.src;
+            
+            if (!folderMap.get(row.folder_name).thumbnail) {
+              folderMap.get(row.folder_name).thumbnail = row.thumbnail || (row.type === 'image' ? row.src : undefined);
             }
           } else {
             directItems.push(item);
@@ -139,7 +137,6 @@ const SecretVault: React.FC = () => {
         }, 800);
 
       } else {
-        // ২. ডাটাবেসে না পেলে লোকাল কোড চেক করবে
         const result = secretCodes[lowerQuery];
         if (result) {
           setMessage(result.msg);
@@ -204,14 +201,10 @@ const SecretVault: React.FC = () => {
 
   return (
     <>
-      {/* SEARCH MODAL */}
       {isOpen && !showGallery && !showPlayer && (
         <div className="fixed inset-0 z-[99999] bg-black/60 backdrop-blur-xl flex items-start justify-center pt-[20vh] animate-in fade-in duration-300">
-          
           <div className="absolute top-[20vh] left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-500/20 blur-[100px] rounded-full pointer-events-none"></div>
-
           <div className="w-full max-w-xl mx-4 relative overflow-hidden bg-[#0a0a0a]/80 border border-white/10 shadow-2xl rounded-2xl backdrop-blur-2xl ring-1 ring-white/5 transform transition-all">
-            
             <div className="flex items-center px-6 py-5 border-b border-white/5">
               <Command className={`w-6 h-6 mr-4 text-purple-500 ${isLoading ? 'animate-spin' : 'animate-pulse'}`} />
               <form onSubmit={handleSearch} className="flex-1">
@@ -229,7 +222,6 @@ const SecretVault: React.FC = () => {
                  <button onClick={closeAll} className="px-2 py-1 text-[10px] font-bold tracking-wider rounded bg-white/5 text-neutral-400 border border-white/5 hover:bg-white/10 transition-colors">ESC</button>
               </div>
             </div>
-
             <div className="p-8 text-center min-h-[140px] flex flex-col items-center justify-center">
                 {message ? (
                     <div className="duration-300 animate-in slide-in-from-bottom-2 fade-in">
@@ -248,27 +240,18 @@ const SecretVault: React.FC = () => {
                     </div>
                 )}
             </div>
-            
             <div className="w-full h-1 opacity-50 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
           </div>
         </div>
       )}
 
-      {/* GALLERY VIEW */}
       {showGallery && (
-        <div
-          className="fixed inset-0 z-[100000] h-screen bg-[#050505] animate-in zoom-in-95 duration-500 overflow-y-auto overflow-x-hidden overscroll-contain"
-          style={{ WebkitOverflowScrolling: 'touch' }}
-        >
-            
+        <div className="fixed inset-0 z-[100000] h-screen bg-[#050505] animate-in zoom-in-95 duration-500 overflow-y-auto overflow-x-hidden overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
             <div className="sticky top-0 z-50 px-6 py-4 border-b bg-black/80 backdrop-blur-xl border-white/10">
                 <div className="flex items-center justify-between max-w-6xl mx-auto">
                     <div className="flex items-center gap-4">
                         {galleryHistory.length > 0 && (
-                            <button 
-                                onClick={handleBack} 
-                                className="p-2 text-white transition-all rounded-full bg-white/10 hover:bg-purple-600"
-                            >
+                            <button onClick={handleBack} className="p-2 text-white transition-all rounded-full bg-white/10 hover:bg-purple-600">
                                 <ArrowLeft size={20} />
                             </button>
                         )}
@@ -287,11 +270,7 @@ const SecretVault: React.FC = () => {
                 {galleryItems.map((item, idx) => {
                     const thumbUrl = getThumbnail(item.src, item.thumbnail);
                     return (
-                        <div 
-                            key={idx} 
-                            onClick={() => openMedia(item)} 
-                            className="group relative overflow-hidden cursor-pointer bg-neutral-900 border border-white/5 rounded-3xl aspect-video hover:border-purple-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] hover:-translate-y-1"
-                        >
+                        <div key={idx} onClick={() => openMedia(item)} className="group relative overflow-hidden cursor-pointer bg-neutral-900 border border-white/5 rounded-3xl aspect-video hover:border-purple-500/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] hover:-translate-y-1">
                             <div className="relative w-full h-full">
                                 {thumbUrl ? (
                                     <>
@@ -330,16 +309,11 @@ const SecretVault: React.FC = () => {
         </div>
       )}
 
-      {/* MEDIA PLAYER */}
       {showPlayer && currentMedia && (
         <div className="fixed inset-0 z-[100001] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 animate-in fade-in duration-300">
-            <button 
-                onClick={() => setShowPlayer(false)} 
-                className="absolute z-50 p-3 transition-all border border-transparent rounded-full text-white/50 top-6 right-6 hover:bg-white/10 hover:text-white hover:border-white/10"
-            >
+            <button onClick={() => setShowPlayer(false)} className="absolute z-50 p-3 transition-all border border-transparent rounded-full text-white/50 top-6 right-6 hover:bg-white/10 hover:text-white hover:border-white/10">
                 <X size={32} />
             </button>
-            
             <div className="relative flex flex-col items-center w-full max-w-7xl">
                 <div className="relative w-full overflow-hidden bg-black border shadow-2xl rounded-2xl border-white/10">
                     {currentMedia.type === 'video' || currentMedia.type === 'folder' ? (
