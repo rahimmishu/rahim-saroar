@@ -41,9 +41,9 @@ const SecretVault: React.FC = () => {
             { type: 'image', src: '/secret/nm1.jpg', title: 'Hidden File 01', thumbnail: '/secret/nm1.jpg' },
             { type: 'image', src: '/secret/nm2.jpg', title: 'Hidden File 02', thumbnail: '/secret/nm2.jpg' },
             { type: 'image', src: '/secret/nm3.jpg', title: 'Hidden File 03', thumbnail: '/secret/nm3.jpg' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1LZRfCo05Qe2QnuLC6RHtxND5lDtm5zY1/view?usp=drive_link', title: 'secret video',thumbnail: '/secret/nm1.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/1GWjJB1dbzFUmmv1NZfEqK0btVpPLZJS6/view?usp=drive_link', title: 'secret video',thumbnail: '/secret/nm1.png' },
-            { type: 'video', src: 'https://drive.google.com/file/d/138yEDWOF_oSfOBzsdoPPb4UGaGvqFkYB/view?usp=drive_link', title: 'secret video',thumbnail: '/secret/nm1.png' }
+            { type: 'video', src: 'https://drive.google.com/file/d/1LZRfCo05Qe2QnuLC6RHtxND5lDtm5zY1/preview', title: 'secret video',thumbnail: '/secret/nm1.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1GWjJB1dbzFUmmv1NZfEqK0btVpPLZJS6/preview', title: 'secret video',thumbnail: '/secret/nm1.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/138yEDWOF_oSfOBzsdoPPb4UGaGvqFkYB/preview', title: 'secret video',thumbnail: '/secret/nm1.png' }
           ]
         },
         { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1L3EmyqG1dtBYJTvCu46QRGusROpFVZAs#grid', title: 'new viral', thumbnail: '/secret/new4.jpg' },
