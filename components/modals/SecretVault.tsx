@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Search, X, Lock, Grid, Play, Video, Sparkles, Command, ArrowRight, Folder } from 'lucide-react';
+import { Search, X, Lock, Grid, Play, Video, Sparkles, Command, ArrowRight, Folder, ArrowLeft } from 'lucide-react';
 // import { triggerIsland } from '../layout/DynamicIsland'; // 🔥 নোটিফিকেশনের জন্য ইমপোর্ট (প্রয়োজন হলে আনকমেন্ট করুন)
 
 interface MediaItem {
   type: 'image' | 'video'| 'folder';
-  src: string;
+  src?: string;
   title: string;
   thumbnail?: string;
+  items?: MediaItem[]; // ফোল্ডারের ভেতরের আইটেম রাখার জন্য
 }
 
 const SecretVault: React.FC = () => {
@@ -20,6 +21,7 @@ const SecretVault: React.FC = () => {
   
   const [showPlayer, setShowPlayer] = useState(false);
   const [currentMedia, setCurrentMedia] = useState<MediaItem | null>(null);
+  const [galleryHistory, setGalleryHistory] = useState<{items: MediaItem[], title: string}[]>([]);
 
   // আপনার সিক্রেট কোড লিস্ট (আপনার আগের ডাটাই আছে)
   const secretCodes: { [key: string]: { 
@@ -30,22 +32,36 @@ const SecretVault: React.FC = () => {
     "hotcdi": { 
       msg: "📂 ছিঃ! ছিঃ! 🤢 কি দেখপা আইছি! 👀🐸", type: 'gallery',
       items: [
-        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1L3EmyqG1dtBYJTvCu46QRGusROpFVZAs#grid', title: 'new viral', thumbnail: '/new4.jpg' },
-        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1Olhm4gxG_MbZUvESalNZDVBCDEufIZGA#grid', title: 'bangla viral', thumbnail: '/new3.jpg' },
-        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1xQOy834GMMulzcIqnDbERcBue69p25nd#grid', title: 'Hidden File 01', thumbnail: '/new2.jpg' },
-        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1Pv264KpS96cm6MGyXEkW-3Ri30BeGkLK#grid', title: 'Hidden File 02', thumbnail: '/new.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: 'Hidden File 01', thumbnail: '/hot.jpg' },
+        // --- ১. প্রথম ফোল্ডার (এর ভেতরে কিছু ভিডিও ঢুকিয়ে দিলাম) ---
+        { 
+          type: 'folder', 
+          title: 'new viral', 
+          thumbnail: '/secret/nm3.jpg',
+          items: [
+            { type: 'image', src: '/secret/nm1.jpg', title: 'Hidden File 01', thumbnail: '/secret/nm1.jpg' },
+            { type: 'image', src: '/secret/nm2.jpg', title: 'Hidden File 02', thumbnail: '/secret/nm2.jpg' },
+            { type: 'image', src: '/secret/nm3.jpg', title: 'Hidden File 03', thumbnail: '/secret/nm3.jpg' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1LZRfCo05Qe2QnuLC6RHtxND5lDtm5zY1/view?usp=drive_link', title: 'secret video',thumbnail: '/secret/nm1.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1GWjJB1dbzFUmmv1NZfEqK0btVpPLZJS6/view?usp=drive_link', title: 'secret video',thumbnail: '/secret/nm1.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/138yEDWOF_oSfOBzsdoPPb4UGaGvqFkYB/view?usp=drive_link', title: 'secret video',thumbnail: '/secret/nm1.png' }
+          ]
+        },
+        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1L3EmyqG1dtBYJTvCu46QRGusROpFVZAs#grid', title: 'new viral', thumbnail: '/secret/new4.jpg' },
+        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1Olhm4gxG_MbZUvESalNZDVBCDEufIZGA#grid', title: 'bangla viral', thumbnail: '/secret/new3.jpg' },
+        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1xQOy834GMMulzcIqnDbERcBue69p25nd#grid', title: 'Hidden File 01', thumbnail: '/secret/new2.jpg' },
+        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1Pv264KpS96cm6MGyXEkW-3Ri30BeGkLK#grid', title: 'Hidden File 02', thumbnail: '/secret/new.jpg' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: 'Hidden File 01', thumbnail: '/secret/hot.jpg' },
         { type: 'video', src: 'https://www.youtube.com/embed/TVjrci5QQ4A', title: 'Favorite romance 🥵' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1T5nC_AYzfp3RZ9NvKCHchMTLSktmTajg/preview', title: 'Funny Clip',thumbnail: '/pagla.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1osCjA7soR9r9l7rdt0roG4DewVOk98Nn/preview', title: 'Couple Moment', thumbnail: '/goju.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1C-fGEcNowdv6Igyb_PZCtMUtDuB7NIgr/preview', title: 'Romantic Video', thumbnail: '/horny.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1aW3atn8w4OkSfvmhnt1lEKjuNwVvn_60/preview', title: 'Throat Romantice', thumbnail: '/hornyh.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1rk4xeKb5WpXi8BO9nNJNtOFMKtBDsqNb/preview', title: 'Funny Dub', thumbnail: '/deep.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1OX1MiT6NDNhHUdLvSwQiJwfmTDUD34Ha/preview', title: 'Drama Clip', thumbnail: '/step.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1ounJZxu1fY-MNXUHCdNyejkKTz4J99lG/preview', title: 'Teen Clip', thumbnail: '/blonde.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1_4TgeMds_TSBVw5B-BznJaBWkyVvzKh6/preview', title: 'Action Scene', thumbnail: '/manual.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1ZmhaN6ft7z-WufCFmiDoTYMUWD_MX2-9/preview', title: 'Brunette Clip', thumbnail: '/fok.jpg' },
-        { type: 'video', src: 'https://drive.google.com/file/d/1oNTdU03qDdoPCscx5kqmsTdoFXueoXVp/preview', title: 'Teen Scene', thumbnail: '/f.jpg' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1T5nC_AYzfp3RZ9NvKCHchMTLSktmTajg/preview', title: 'Funny Clip',thumbnail: '/secret/pagla.jpg' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1osCjA7soR9r9l7rdt0roG4DewVOk98Nn/preview', title: 'Couple Moment', thumbnail: '/secret/goju.jpg' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1C-fGEcNowdv6Igyb_PZCtMUtDuB7NIgr/preview', title: 'Romantic Video', thumbnail: '/secret/horny.jpg' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1aW3atn8w4OkSfvmhnt1lEKjuNwVvn_60/preview', title: 'Throat Romantice', thumbnail: '/secret/hornyh.jpg' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1rk4xeKb5WpXi8BO9nNJNtOFMKtBDsqNb/preview', title: 'Funny Dub', thumbnail: '/secret/deep.jpg' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1OX1MiT6NDNhHUdLvSwQiJwfmTDUD34Ha/preview', title: 'Drama Clip', thumbnail: '/secret/step.jpg' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1ounJZxu1fY-MNXUHCdNyejkKTz4J99lG/preview', title: 'Teen Clip', thumbnail: '/secret/blonde.jpg' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1_4TgeMds_TSBVw5B-BznJaBWkyVvzKh6/preview', title: 'Action Scene', thumbnail: '/secret/manual.jpg' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1ZmhaN6ft7z-WufCFmiDoTYMUWD_MX2-9/preview', title: 'Brunette Clip', thumbnail: '/secret/fok.jpg' },
+        { type: 'video', src: 'https://drive.google.com/file/d/1oNTdU03qDdoPCscx5kqmsTdoFXueoXVp/preview', title: 'Teen Scene', thumbnail: '/secret/f.jpg' },
         { type: 'image', src: '/secret-pic.jpg', title: 'Secret Image' }
       ]
     },
@@ -65,6 +81,7 @@ const SecretVault: React.FC = () => {
     setQuery('');
     setShowGallery(false);
     setShowPlayer(false);
+    setGalleryHistory([]); // নতুন যুক্ত করা হলো
     // triggerIsland("Secret Vault Activated 🔐", "success");
   };
 
@@ -72,6 +89,7 @@ const SecretVault: React.FC = () => {
     if (showPlayer) setShowPlayer(false);
     else if (showGallery) setShowGallery(false);
     else setIsOpen(false);
+    setGalleryHistory([]); // নতুন যুক্ত করা হলো
   };
 
   useEffect(() => {
@@ -94,8 +112,9 @@ const SecretVault: React.FC = () => {
     };
   }, []);
 
-  const getThumbnail = (src: string, manualThumbnail?: string) => {
+  const getThumbnail = (src?: string, manualThumbnail?: string) => {
     if (manualThumbnail) return manualThumbnail;
+    if (!src) return null; // এই লাইনটি নতুন যুক্ত হলো
     if (src.includes('youtube.com') || src.includes('youtu.be')) {
       let videoId = null;
       if (src.includes('embed/')) videoId = src.split('embed/')[1]?.split('?')[0];
@@ -134,11 +153,33 @@ const SecretVault: React.FC = () => {
   };
 
   const openMedia = (item: MediaItem) => {
-    setCurrentMedia(item);
-    setShowPlayer(true);
+    if (item.type === 'folder' && item.items) {
+      // বর্তমান গ্যালারিটি হিস্ট্রিতে সেভ করে রাখা হচ্ছে (যাতে Back করা যায়)
+      setGalleryHistory([...galleryHistory, { items: galleryItems, title: galleryTitle }]);
+      
+      // নতুন ফোল্ডারের ডাটা দিয়ে গ্যালারি আপডেট করা হচ্ছে
+      setGalleryItems(item.items);
+      setGalleryTitle(item.title);
+    } else if (item.src) {
+      // ভিডিও বা ছবি হলে আগের মতোই পপআপ প্লেয়ার ওপেন হবে
+      setCurrentMedia(item as MediaItem & { src: string });
+      setShowPlayer(true);
+    }
   };
 
-  const isExternalVideo = (src: string) => {
+  // Back বাটনে ক্লিক করলে আগের গ্যালারিতে ফিরে যাওয়ার ফাংশন
+  const handleBack = () => {
+    const newHistory = [...galleryHistory];
+    const prev = newHistory.pop();
+    if (prev) {
+      setGalleryItems(prev.items);
+      setGalleryTitle(prev.title);
+      setGalleryHistory(newHistory);
+    }
+  };
+
+  const isExternalVideo = (src?: string) => {
+    if (!src) return false; // এই লাইনটি নতুন যুক্ত হলো
     return src.includes('youtube') || src.includes('youtu.be') || src.includes('vimeo') || src.includes('drive.google.com');
   };
 
@@ -206,10 +247,20 @@ const SecretVault: React.FC = () => {
             {/* Gallery Header */}
             <div className="sticky top-0 z-50 px-6 py-4 border-b bg-black/80 backdrop-blur-xl border-white/10">
                 <div className="flex items-center justify-between max-w-6xl mx-auto">
-                    <h2 className="flex items-center gap-3 text-2xl font-black tracking-tight text-white">
-                        <Grid className="text-purple-500" /> 
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-400">{galleryTitle}</span>
-                    </h2>
+                    <div className="flex items-center gap-4">
+    {galleryHistory.length > 0 && (
+        <button 
+            onClick={handleBack} 
+            className="p-2 text-white transition-all rounded-full bg-white/10 hover:bg-purple-600"
+        >
+            <ArrowLeft size={20} />
+        </button>
+    )}
+    <h2 className="flex items-center gap-3 text-2xl font-black tracking-tight text-white">
+        <Grid className="text-purple-500" /> 
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-400">{galleryTitle}</span>
+    </h2>
+</div>
                     <button onClick={() => setShowGallery(false)} className="p-2 transition-all rounded-full text-neutral-400 hover:bg-white/10 hover:text-white hover:rotate-90">
                         <X size={24} />
                     </button>
