@@ -60,6 +60,7 @@ const WelcomeGreeting  = lazy(() => import('./components/sections/WelcomeGreetin
 // ── Pages (separate routes — always lazy) ────────────────────
 const UserProfile = lazy(() => import('./pages/UserProfile'));
 const ToolsPage   = lazy(() => import('./pages/ToolsPage'));
+const AdminPage   = lazy(() => import('./pages/AdminPage'));
 const GalleryPage = lazy(() => import('./pages/GalleryPage'));
 const VaultPage   = lazy(() => import('./pages/VaultPage'));
 const RedirectPage = lazy(() => import('./pages/RedirectPage'));
@@ -456,6 +457,9 @@ const AppContent: React.FC = () => {
         />
 
         {/* ── Other Pages — সব lazy loaded ── */}
+        <Route path="/admin" element={
+          <Suspense fallback={<PageFallback />}><AdminPage /></Suspense>
+        } />
         <Route path="/profile" element={
           <Suspense fallback={<PageFallback />}><UserProfile /></Suspense>
         } />

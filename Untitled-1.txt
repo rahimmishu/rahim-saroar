@@ -1,5 +1,5 @@
 File Tree: rahim-saroar-mishu-portfolio
-Generated on: 4/14/2026, 2:52:54 PM
+Generated on: 4/14/2026, 3:36:16 PM
 Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 
 ────────────────────────────────────────────────────────────────────────────────
@@ -102,6 +102,7 @@ Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 ├── lib/
 │   ├── PerformanceOptimizer.ts
 │   ├── registerSW.ts
+│   ├── supabase.ts
 │   └── utils.ts
 ├── pages/
 │   ├── GalleryPage.tsx

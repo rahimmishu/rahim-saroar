@@ -1,14 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { X, Mail, Lock, User, ArrowRight, Loader2, Sparkles, Shield } from "lucide-react";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-  GoogleAuthProvider,
-  FacebookAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
-import { auth } from "../../firebase";
+import { useAuth } from "../../context/AuthContext";
 import ReCAPTCHA from "react-google-recaptcha";
 
 /* ─── Icons ─────────────────────────────────────────── */
@@ -45,6 +37,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading]         = useState(false);
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const { login, signup, signInWithGoogle } = useAuth();
 
   useEffect(() => {
     if (isOpen) {
@@ -53,43 +46,49 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
+  // ✅ নতুন সোশ্যাল লগইন ফাংশন
   const handleSocialLogin = async (providerName: "google" | "facebook") => {
     setError(""); setLoading(true);
     try {
-      const provider = providerName === "google" ? new GoogleAuthProvider() : new FacebookAuthProvider();
-      await signInWithPopup(auth, provider);
-      onClose();
+      if (providerName === "google") {
+        await signInWithGoogle();
+        onClose();
+      } else {
+        setError("Facebook login is not configured yet.");
+      }
     } catch (err: any) {
-      setError(err.code === "auth/popup-closed-by-user" ? "Login cancelled." : err.message);
+      setError(err.message || "Social login failed.");
     }
     setLoading(false);
   };
 
+  // ✅ নতুন ফর্ম সাবমিট ফাংশন
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     if (!captchaValue) { setError("Please verify you are not a robot! 🤖"); return; }
     setLoading(true);
+    
     try {
       if (isSignUp) {
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        await updateProfile(cred.user, { displayName: name });
+        const { error: signUpError } = await signup(email, password, name);
+        if (signUpError) throw signUpError;
+        
+        // সাইনআপ সফল হলে ইউজারকে লগইন ট্যাবে পাঠিয়ে দিতে পারেন
+        setIsSignUp(false);
+        setError("Account created! Please log in.");
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        const { error: loginError } = await login(email, password);
+        if (loginError) throw loginError;
+        onClose(); // লগইন সফল হলে মডাল বন্ধ হয়ে যাবে
       }
-      onClose();
     } catch (err: any) {
-      const map: Record<string, string> = {
-        "auth/invalid-credential": "Invalid email or password.",
-        "auth/email-already-in-use": "Email already in use.",
-        "auth/weak-password": "Password must be at least 6 chars.",
-        "auth/user-not-found": "Account not found.",
-        "auth/wrong-password": "Wrong password.",
-      };
-      setError(map[err.code] ?? err.message);
+      // Supabase এর এরর মেসেজ সরাসরি দেখানো
+      setError(err.message || "Authentication failed.");
       setCaptchaValue(null);
       recaptchaRef.current?.reset();
     }
+    
     setLoading(false);
   };
 
@@ -418,7 +417,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             <div className="mt-5 flex items-center justify-center gap-1.5">
               <Shield size={11} style={{color:"#2e3347"}} />
               <p className="text-[10px] tracking-wide" style={{color:"#2e3347"}}>
-                Secured by Firebase & Google reCAPTCHA™
+                Secured by Supabase & Google reCAPTCHA™
               </p>
             </div>
           </div>
