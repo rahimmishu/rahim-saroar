@@ -267,10 +267,13 @@ const VaultPage: React.FC = () => {
     );
   }
 
-  // ── GALLERY VIEW ─────────────────────────────────────────────────────────────
+// ── GALLERY VIEW ─────────────────────────────────────────────────────────────
   if (view === 'gallery') {
     return (
-      <div className="min-h-screen bg-[#050505] text-white overflow-y-auto">
+      <div 
+        className="fixed inset-0 h-screen bg-[#050505] text-white overflow-y-auto overflow-x-hidden overscroll-contain" 
+        style={{ WebkitOverflowScrolling: 'touch' }}
+      >
         <div className="sticky top-0 z-50 px-6 py-4 border-b bg-black/80 backdrop-blur-xl border-white/10">
           <div className="flex items-center justify-between max-w-6xl mx-auto">
             
