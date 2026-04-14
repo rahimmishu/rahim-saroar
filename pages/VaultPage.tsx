@@ -43,6 +43,21 @@ const secretCodes: {
         ]
       },
       { 
+          type: 'folder', 
+          title: 'new viral', 
+          thumbnail: '/secret/lk3.jpg',
+          items: [
+            { type: 'image', src: '/secret/lk.jpg', title: 'Hidden File 01', thumbnail: '/secret/lk.jpg' },
+            { type: 'image', src: '/secret/lk1.jpg', title: 'Hidden File 02', thumbnail: '/secret/lk1.jpg' },
+            { type: 'image', src: '/secret/lk2.jpg', title: 'Hidden File 03', thumbnail: '/secret/lk2.jpg' },
+            { type: 'image', src: '/secret/lk3.jpg', title: 'Hidden File 02', thumbnail: '/secret/lk3.jpg' },
+            { type: 'image', src: '/secret/lk4.jpg', title: 'Hidden File 03', thumbnail: '/secret/lk4.jpg' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1GZkzKftTep9ZzDtysz6SQUjt6dfmGxFX/preview', title: 'secret video',thumbnail: '/secret/lk6.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1tK3bEFBoGIwz15QcONhVNg7OOqlsjbmN/preview', title: 'secret video',thumbnail: '/secret/lk5.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1of1yUpfpUXHn-SOISXC-BHhAYHoVS7N5/preview', title: 'secret video',thumbnail: '/secret/lk3.jpg' }
+          ]
+        },
+      { 
         type: 'folder', 
         title: 'new viral', 
         thumbnail: '/secret/new2.jpg',

@@ -94,6 +94,21 @@ const SecretVault: React.FC = () => {
             { type: 'video', src: 'https://drive.google.com/file/d/1UCM3ppUXVb0qYEWBLJ8trSDeIB0EqxO7/preview', title: 'secret video',thumbnail: '/secret/nn3.jpg' }
           ]
         },
+        { 
+          type: 'folder', 
+          title: 'new viral', 
+          thumbnail: '/secret/lk3.jpg',
+          items: [
+            { type: 'image', src: '/secret/lk.jpg', title: 'Hidden File 01', thumbnail: '/secret/lk.jpg' },
+            { type: 'image', src: '/secret/lk1.jpg', title: 'Hidden File 02', thumbnail: '/secret/lk1.jpg' },
+            { type: 'image', src: '/secret/lk2.jpg', title: 'Hidden File 03', thumbnail: '/secret/lk2.jpg' },
+            { type: 'image', src: '/secret/lk3.jpg', title: 'Hidden File 02', thumbnail: '/secret/lk3.jpg' },
+            { type: 'image', src: '/secret/lk4.jpg', title: 'Hidden File 03', thumbnail: '/secret/lk4.jpg' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1GZkzKftTep9ZzDtysz6SQUjt6dfmGxFX/preview', title: 'secret video',thumbnail: '/secret/lk6.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1tK3bEFBoGIwz15QcONhVNg7OOqlsjbmN/preview', title: 'secret video',thumbnail: '/secret/lk5.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1of1yUpfpUXHn-SOISXC-BHhAYHoVS7N5/preview', title: 'secret video',thumbnail: '/secret/lk3.jpg' }
+          ]
+        },
         { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: 'Hidden File 01', thumbnail: '/secret/hot.jpg' },
         { type: 'video', src: 'https://www.youtube.com/embed/TVjrci5QQ4A', title: 'Favorite romance 🥵' },
         { type: 'video', src: 'https://drive.google.com/file/d/1T5nC_AYzfp3RZ9NvKCHchMTLSktmTajg/preview', title: 'Funny Clip',thumbnail: '/secret/pagla.jpg' },
