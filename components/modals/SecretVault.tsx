@@ -46,10 +46,38 @@ const SecretVault: React.FC = () => {
             { type: 'video', src: 'https://drive.google.com/file/d/138yEDWOF_oSfOBzsdoPPb4UGaGvqFkYB/preview', title: 'secret video',thumbnail: '/secret/nm1.png' }
           ]
         },
+        { 
+          type: 'folder', 
+          title: 'new viral', 
+          thumbnail: '/secret/new2.jpg',
+          items: [
+            { type: 'image', src: '/secret/new2.jpg', title: 'Hidden File 01', thumbnail: '/secret/new2.jpg' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1Rv5u81m_BYYxhbxpBERYfIzyWvPsX6aw/preview', title: 'secret video',thumbnail: '/secret/mm1.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1I3UWeq2qgLObNWK4JEcwRpjih5pYvtr5/preview', title: 'secret video',thumbnail: '/secret/mm2.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/18FPaUW7IyChBJ_Oj7M1SzPS4hqhvDY8H/preview', title: 'secret video',thumbnail: '/secret/mm3.png' }
+          ]
+        },
+        { 
+          type: 'folder', 
+          title: 'new viral', 
+          thumbnail: '/secret/ss1.jpg',
+          items: [
+            { type: 'image', src: '/secret/ss1.jpg', title: 'Hidden File 01', thumbnail: '/secret/ss1.jpg' },
+            { type: 'image', src: '/secret/ss2.jpg', title: 'Hidden File 01', thumbnail: '/secret/ss2.jpg' },
+            { type: 'image', src: '/secret/ss3.jpg', title: 'Hidden File 01', thumbnail: '/secret/ss3.jpg' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1zZ7fi4jgw961N8pexKlTqQqXQPA92zo9/preview', title: 'secret video',thumbnail: '/secret/bn.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/11Q-OGigPDyARVIr9S7Exc5ITfS7DXOem/preview', title: 'secret video',thumbnail: '/secret/bn2.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1xFWPt1XYpvjhLAnkhfMTY6v7YCDTegyr/preview', title: 'secret video',thumbnail: '/secret/ss5.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1k5fHTAFWJjHkAcx2TeeRhtww9HdkejRP/preview', title: 'secret video',thumbnail: '/secret/ss6.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1Xyt4DBifWALIUeBkGtuPbGs_VdgnTvY_/preview', title: 'secret video',thumbnail: '/secret/ss7.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1PLxlo4BgBdAOyv3hgIGgvEnjpMWvYcFb/preview', title: 'secret video',thumbnail: '/secret/ss8.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1JE_hKj9wOMTWMubc3rpuzMAyRKJsu2lT/preview', title: 'secret video',thumbnail: '/secret/ss9.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/15sPdo1o4BwN41lon-oL2ZbMjqd9jK9xI/preview', title: 'secret video',thumbnail: '/secret/ss10.png' },
+            { type: 'video', src: 'https://drive.google.com/file/d/1M60pu9BTIiK3fWS6S6EbMc_c4F4V716G/preview', title: 'secret video',thumbnail: '/secret/ss1.jpg' },
+            { type: 'video', src: 'https://drive.google.com/file/d/11V71lZ7noPBgVF5np2dZLJfgoHcnhZ6G/preview', title: 'secret video',thumbnail: '/secret/ss5.png' },
+          ]
+        },
         { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1L3EmyqG1dtBYJTvCu46QRGusROpFVZAs#grid', title: 'new viral', thumbnail: '/secret/new4.jpg' },
-        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1Olhm4gxG_MbZUvESalNZDVBCDEufIZGA#grid', title: 'bangla viral', thumbnail: '/secret/new3.jpg' },
-        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1xQOy834GMMulzcIqnDbERcBue69p25nd#grid', title: 'Hidden File 01', thumbnail: '/secret/new2.jpg' },
-        { type: 'folder', src: 'https://drive.google.com/embeddedfolderview?id=1Pv264KpS96cm6MGyXEkW-3Ri30BeGkLK#grid', title: 'Hidden File 02', thumbnail: '/secret/new.jpg' },
         { type: 'video', src: 'https://drive.google.com/file/d/1hgoelYUpZs7Qve0PFt_lvR1Rw_vBSWn9/preview', title: 'Hidden File 01', thumbnail: '/secret/hot.jpg' },
         { type: 'video', src: 'https://www.youtube.com/embed/TVjrci5QQ4A', title: 'Favorite romance 🥵' },
         { type: 'video', src: 'https://drive.google.com/file/d/1T5nC_AYzfp3RZ9NvKCHchMTLSktmTajg/preview', title: 'Funny Clip',thumbnail: '/secret/pagla.jpg' },
