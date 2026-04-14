@@ -284,7 +284,7 @@ const SecretVault: React.FC = () => {
 
       {/* GALLERY VIEW - PREMIUM GRID */}
       {showGallery && (
-        <div className="fixed inset-0 z-[100000] bg-[#050505] animate-in zoom-in-95 duration-500 overflow-y-auto">
+        <div className="fixed inset-0 z-[100000] bg-[#050505] animate-in zoom-in-95 duration-500 overflow-y-auto overflow-x-hidden touch-pan-y overscroll-contain">
             
             {/* Gallery Header */}
             <div className="sticky top-0 z-50 px-6 py-4 border-b bg-black/80 backdrop-blur-xl border-white/10">
