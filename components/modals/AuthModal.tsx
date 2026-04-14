@@ -37,7 +37,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading]         = useState(false);
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
-  const { login, signup, signInWithGoogle } = useAuth();
+  const { login, signup, signInWithGoogle, signInWithFacebook } = useAuth();
 
   useEffect(() => {
     if (isOpen) {
@@ -46,21 +46,22 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  // ✅ নতুন সোশ্যাল লগইন ফাংশন
+  // ✅ আপডেটেড সোশ্যাল লগইন ফাংশন
   const handleSocialLogin = async (providerName: "google" | "facebook") => {
     setError(""); setLoading(true);
     try {
       if (providerName === "google") {
         await signInWithGoogle();
-        onClose();
-      } else {
-        setError("Facebook login is not configured yet.");
+      } else if (providerName === "facebook") {
+        await signInWithFacebook();
       }
+      // নোট: Google/Facebook এ ক্লিক করলে পেজটি রিডাইরেক্ট হয়ে গুগলের পেজে চলে যাবে।
     } catch (err: any) {
       setError(err.message || "Social login failed.");
+      setLoading(false);
     }
-    setLoading(false);
   };
+  
 
   // ✅ নতুন ফর্ম সাবমিট ফাংশন
   const handleSubmit = async (e: React.FormEvent) => {

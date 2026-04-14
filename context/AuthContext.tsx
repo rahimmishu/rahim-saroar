@@ -10,6 +10,7 @@ interface AuthContextType {
   signup: (email: string, password: string, name?: string) => Promise<{ error: any }>;
   logout: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithFacebook: () => Promise<void>;
   // Helper: force a manual refresh of the current user object (Old backward compatibility)
   refreshUser: () => Promise<void>;
 }
@@ -61,10 +62,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const signInWithGoogle = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-    });
-  };
+  await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin,
+    },
+  });
+};
+
+  const signInWithFacebook = async () => {
+  await supabase.auth.signInWithOAuth({
+    provider: 'facebook',
+    options: {
+      redirectTo: window.location.origin,
+    },
+  });
+};
 
   /** Call this after updateProfile to force an immediate context refresh */
   const refreshUser = async () => {
@@ -75,7 +88,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout, signInWithGoogle, refreshUser }}>
+    <AuthContext.Provider value={{ user, loading, login, signup, logout, signInWithGoogle, signInWithFacebook, refreshUser }}>
       {!loading && children}
     </AuthContext.Provider>
   );
