@@ -35,7 +35,8 @@ export default function LazyImage({
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(priority); // priority হলে শুরু থেকেই true
   const [hasError, setHasError] = useState(false);
-  const imgRef = useRef<HTMLImageElement>(null);
+  // ✅ Type ref to support both div (for observer) and img (for direct load)
+  const imgRef = useRef<HTMLDivElement | HTMLImageElement>(null);
 
   useEffect(() => {
     if (priority) return; // priority image-এ observer লাগবে না
@@ -69,7 +70,7 @@ export default function LazyImage({
 
   return (
     <div
-      ref={!priority ? (imgRef as any) : undefined}
+      ref={!priority ? (imgRef as React.RefObject<HTMLDivElement>) : undefined}
       className={className}
       style={{
         position: 'relative',
@@ -96,7 +97,7 @@ export default function LazyImage({
       {/* Actual image — isInView true হলেই src set হবে */}
       {isInView && !hasError && (
         <img
-          ref={priority ? imgRef : undefined}
+          ref={priority ? (imgRef as React.RefObject<HTMLImageElement>) : undefined}
           src={src}
           alt={alt}
           loading={priority ? 'eager' : 'lazy'}

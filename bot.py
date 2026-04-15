@@ -16,6 +16,15 @@ load_dotenv('.env.local')
 TOKEN = os.getenv('TOKEN')
 WEB_APP_URL = 'https://rahim-saroar.vercel.app/'
 
+# ✅ VALIDATION: Check if TOKEN exists
+if not TOKEN or TOKEN.strip() == '':
+    print("❌ CRITICAL ERROR: Telegram bot TOKEN is not set!")
+    print("Please set the TOKEN environment variable in .env.local file.")
+    print("Expected format: TOKEN=<your_telegram_bot_token>")
+    exit(1)  # Exit immediately if token is missing
+else:
+    print("✅ Bot TOKEN loaded successfully.")
+
 # Upstash Redis Connection
 redis = Redis(url=os.getenv('UPSTASH_REDIS_REST_URL'), token=os.getenv('UPSTASH_REDIS_REST_TOKEN'))
 
@@ -83,7 +92,28 @@ async def yt(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("⚠️ <b>ব্যবহারবিধি:</b> /yt &lt;video_link&gt;", parse_mode='HTML')
         return
     url = context.args[0]
+    
+    # ✅ VALIDATION: Check if URL is a valid YouTube URL
+    def is_valid_youtube_url(url: str) -> bool:
+        """Validate if URL is a valid YouTube URL"""
+        youtube_domains = [
+            'youtube.com',
+            'youtu.be',
+            'www.youtube.com',
+            'm.youtube.com'
+        ]
+        try:
+            url_lower = url.lower()
+            return any(domain in url_lower for domain in youtube_domains)
+        except:
+            return False
+    
+    if not is_valid_youtube_url(url):
+        await update.message.reply_text("❌ <b>Invalid URL!</b>\nপ্লিজ একটি বৈধ YouTube লিংক দিন।\n\n✅ বৈধ লিংক উদাহরণ:\n• https://www.youtube.com/watch?v=dQw4w9WgXcQ\n• https://youtu.be/dQw4w9WgXcQ", parse_mode='HTML')
+        return
+    
     processing_msg = await update.message.reply_text("⏳ <i>ভিডিও প্রসেস হচ্ছে, অপেক্ষা করুন...</i>", parse_mode='HTML')
+    filename = None
     try:
         ydl_opts = {'format': 'best[ext=mp4][filesize<=45M]/worst[ext=mp4]', 'outtmpl': 'video_%(id)s.%(ext)s', 'quiet': True, 'noplaylist': True}
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -92,10 +122,19 @@ async def yt(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await processing_msg.edit_text("📤 <i>টেলিগ্রামে আপলোড করা হচ্ছে...</i>", parse_mode='HTML')
         with open(filename, 'rb') as video_file:
             await update.message.reply_video(video=video_file, caption=f"🎬 <b>{info.get('title', 'Downloaded Video')}</b>", parse_mode='HTML')
-        os.remove(filename)
         await processing_msg.delete()
     except Exception as e:
-        await processing_msg.edit_text("❌ <b>Error:</b> ভিডিওটি ডাউনলোড করা সম্ভব হয়নি।", parse_mode='HTML')
+        error_msg = str(e)
+        print(f"❌ YouTube Download Error: {error_msg}")
+        await processing_msg.edit_text("❌ <b>Error:</b> ভিডিওটি ডাউনলোড করা সম্ভব হয়নি।", parse_mode='HTML')
+    finally:
+        # ✅ CRITICAL FIX: Always delete the file, even if upload failed
+        if filename and os.path.exists(filename):
+            try:
+                os.remove(filename)
+                print(f"✅ Cleaned up: {filename}")
+            except Exception as cleanup_error:
+                print(f"⚠️ Failed to delete file {filename}: {cleanup_error}")
 
 # --- Ramadan Assistant ---
 RAMADAN_CONTENT = {

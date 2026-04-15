@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo, useCallback, ReactNode } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase'; // 🔥 Supabase কানেকশন
 
@@ -8,11 +8,11 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<{ error: any }>;
   signup: (email: string, password: string, name?: string) => Promise<{ error: any }>;
-  logout: () => Promise<void>;
-  signInWithGoogle: () => Promise<void>;
-  signInWithFacebook: () => Promise<void>;
+  logout: () => Promise<{ error: any }>;
+  signInWithGoogle: () => Promise<{ error: any }>;
+  signInWithFacebook: () => Promise<{ error: any }>;
   // Helper: force a manual refresh of the current user object (Old backward compatibility)
-  refreshUser: () => Promise<void>;
+  refreshUser: () => Promise<{ error: any }>;
 }
 
 // ─── Context ──────────────────────────────────────────────
@@ -28,6 +28,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       setLoading(false);
+    }).catch(error => {
+      console.error('[AuthContext] getSession error:', error);
+      setLoading(false);
     });
 
     // সেশন পরিবর্তন (লগইন/লগআউট) হলে ট্র্যাক করবে
@@ -39,56 +42,104 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error };
-  };
+  const login = useCallback(async (email: string, password: string) => {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      return { error };
+    } catch (error) {
+      console.error('[AuthContext] login error:', error);
+      return { error };
+    }
+  }, []);
 
-  const signup = async (email: string, password: string, name?: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: name,
+  const signup = useCallback(async (email: string, password: string, name?: string) => {
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+          }
         }
-      }
-    });
-    return { error };
-  };
+      });
+      return { error };
+    } catch (error) {
+      console.error('[AuthContext] signup error:', error);
+      return { error };
+    }
+  }, []);
 
-  const logout = async () => {
-    await supabase.auth.signOut();
-  };
+  const logout = useCallback(async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      return { error };
+    } catch (error) {
+      console.error('[AuthContext] logout error:', error);
+      return { error };
+    }
+  }, []);
 
-  const signInWithGoogle = async () => {
-  await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: window.location.origin,
-    },
-  });
-};
+  const signInWithGoogle = useCallback(async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+      return { error };
+    } catch (error) {
+      console.error('[AuthContext] signInWithGoogle error:', error);
+      return { error };
+    }
+  }, []);
 
-  const signInWithFacebook = async () => {
-  await supabase.auth.signInWithOAuth({
-    provider: 'facebook',
-    options: {
-      redirectTo: window.location.origin,
-    },
-  });
-};
+  const signInWithFacebook = useCallback(async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'facebook',
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+      return { error };
+    } catch (error) {
+      console.error('[AuthContext] signInWithFacebook error:', error);
+      return { error };
+    }
+  }, []);
 
   /** Call this after updateProfile to force an immediate context refresh */
-  const refreshUser = async () => {
-    const { data } = await supabase.auth.getUser();
-    if (data.user) {
-      setUser({ ...data.user });
+  const refreshUser = useCallback(async () => {
+    try {
+      const { data } = await supabase.auth.getUser();
+      if (data.user) {
+        setUser({ ...data.user });
+      }
+      return { error: null };
+    } catch (error) {
+      console.error('[AuthContext] refreshUser error:', error);
+      return { error };
     }
-  };
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      user,
+      loading,
+      login,
+      signup,
+      logout,
+      signInWithGoogle,
+      signInWithFacebook,
+      refreshUser,
+    }),
+    [user, loading, login, signup, logout, signInWithGoogle, signInWithFacebook, refreshUser]
+  );
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout, signInWithGoogle, signInWithFacebook, refreshUser }}>
+    <AuthContext.Provider value={value}>
       {!loading && children}
     </AuthContext.Provider>
   );

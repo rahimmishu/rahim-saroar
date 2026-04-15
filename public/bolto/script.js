@@ -160,24 +160,26 @@ class TTSPlayer {
         if (ttsBtn) ttsBtn.classList.add('tts-speaking');
         if (orbContainer) orbContainer.classList.add('speaking');
         if (orb && orb.setAIState) orb.setAIState('speaking');
-        while (this.queue.length > 0) {
-            if (this.stopped || myId !== this._loopId) break;
-            const b64 = this.queue.shift();
-            try {
-                await this._playB64(b64);
-            } catch (e) {
-                console.warn('TTS segment error:', e);
+        // ✅ Optimized: Process queue until stopped or cancelled, no redundant checks
+        try {
+            while (this.queue.length > 0 && !this.stopped && myId === this._loopId) {
+                const b64 = this.queue.shift();
+                try {
+                    await this._playB64(b64);
+                } catch (e) {
+                    console.warn('TTS segment error:', e);
+                }
+            }
+        } finally {
+            // ✅ Cleanup: Only run if this is the current playback session
+            if (myId === this._loopId) {
+                this.playing = false;
+                if (ttsBtn) ttsBtn.classList.remove('tts-speaking');
+                if (orbContainer) orbContainer.classList.remove('speaking');
+                if (orb && orb.setAIState) orb.setAIState('idle');
+                if (typeof this.onPlaybackComplete === 'function') this.onPlaybackComplete();
             }
         }
-        if (myId !== this._loopId) {
-            this.playing = false;
-            return;
-        }
-        this.playing = false;
-        if (ttsBtn) ttsBtn.classList.remove('tts-speaking');
-        if (orbContainer) orbContainer.classList.remove('speaking');
-        if (orb && orb.setAIState) orb.setAIState('idle');
-        if (typeof this.onPlaybackComplete === 'function') this.onPlaybackComplete();
     }
     _playB64(b64) {
         return new Promise(resolve => {
@@ -784,13 +786,17 @@ async function sendMessageWithImage(text, imgBase64) {
         let sseBuffer = '';
         let fullResponse = '';
         let cursorEl = null;
-        let streamDone = false;
-        while (!streamDone) {
+        // ✅ Optimized: Simplified stream processing without redundant flag
+        while (true) {
             const { done, value } = await reader.read();
-            if (done) break;
+            if (done) break; // Exit on reader EOF
+            
             sseBuffer += decoder.decode(value, { stream: true });
             const lines = sseBuffer.split('\n\n');
             sseBuffer = lines.pop();
+            
+            // Process each SSE line
+            let shouldStop = false;
             for (const line of lines) {
                 if (!line.startsWith('data: ')) continue;
                 try {
@@ -821,12 +827,14 @@ async function sendMessageWithImage(text, imgBase64) {
                     }
                     if (data.audio && ttsPlayer) ttsPlayer.enqueue(data.audio);
                     if (data.error) throw new Error(data.error);
-                    if (data.done) { streamDone = true; break; }
+                    // ✅ Set flag to exit outer loop when stream completes
+                    if (data.done) { shouldStop = true; break; }
                 } catch (parseErr) {
                     if (parseErr.message && !parseErr.message.includes('JSON')) throw parseErr;
                 }
             }
-            if (streamDone) break;
+            // ✅ Exit outer loop if stream signaled completion
+            if (shouldStop) break;
         }
         if (cursorEl) cursorEl.remove();
         const textSpan = contentEl.querySelector('.msg-stream-text');
@@ -1364,13 +1372,17 @@ async function sendMessage(textOverride) {
         let sseBuffer = '';
         let fullResponse = '';
         let cursorEl = null;
-        let streamDone = false;
-        while (!streamDone) {
+        // ✅ Optimized: Simplified stream processing without redundant flag
+        while (true) {
             const { done, value } = await reader.read();
-            if (done) break;
+            if (done) break; // Exit on reader EOF
+            
             sseBuffer += decoder.decode(value, { stream: true });
             const lines = sseBuffer.split('\n\n');
             sseBuffer = lines.pop();
+            
+            // Process each SSE line
+            let shouldStop = false;
             for (const line of lines) {
                 if (!line.startsWith('data: ')) continue;
                 try {
@@ -1394,11 +1406,11 @@ async function sendMessage(textOverride) {
                     }
                     if ('chunk' in data) {
                         const chunkText = data.chunk || '';
-                        // নতুন কোড:
-                    if (chunkText && !firstChunkReceived) {
-                        firstChunkReceived = true;
-                        if (ttsPlayer) ttsPlayer.reset();
-                        if (orb && orb.setAIState) orb.setAIState('speaking'); // নতুন লাইন
+                        // ✅ Handle first chunk received state
+                        if (chunkText && !firstChunkReceived) {
+                            firstChunkReceived = true;
+                            if (ttsPlayer) ttsPlayer.reset();
+                            if (orb && orb.setAIState) orb.setAIState('speaking');
                         }
                         fullResponse += chunkText;
                         const textSpan = contentEl.querySelector('.msg-stream-text');
@@ -1418,13 +1430,15 @@ async function sendMessage(textOverride) {
                         ttsPlayer.enqueue(data.audio);
                     }
                     if (data.error) throw new Error(data.error);
-                    if (data.done) { streamDone = true; break; }
+                    // ✅ Set flag to exit outer loop when stream completes
+                    if (data.done) { shouldStop = true; break; }
                 } catch (parseErr) {
                     if (parseErr.message && !parseErr.message.includes('JSON'))
                         throw parseErr;
                 }
             }
-            if (streamDone) break;
+            // ✅ Exit outer loop if stream signaled completion
+            if (shouldStop) break;
         }
         if (cursorEl) cursorEl.remove();
         const textSpan = contentEl.querySelector('.msg-stream-text');

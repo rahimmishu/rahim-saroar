@@ -248,13 +248,17 @@ const StatItem = ({ icon: Icon, value, label, color }: any) => {
 const FeedbackList = () => {
   const [feedbacks, setFeedbacks] = useState<any[]>([]);
 
+  // ✅ Firestore listener with proper cleanup
   useEffect(() => {
     const q = query(collection(db, "feedbacks"), orderBy("createdAt", "desc"), limit(10));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const realData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setFeedbacks([...realData, ...customFeedbacks]);
     });
-    return () => unsubscribe();
+    // ✅ Cleanup: unsubscribe from Firestore listener
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const displayFeedbacks = feedbacks.length > 0 ? feedbacks : customFeedbacks;

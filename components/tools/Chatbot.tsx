@@ -47,13 +47,21 @@ const Chatbot: React.FC<ChatbotProps> = ({ isOpen, onClose }) => {
     scrollToBottom();
   }, [messages, isOpen, isTyping]);
 
-  // Initialize Gemini Chat Session (Logic Unchanged)
+  // Initialize Gemini Chat Session with secure API key from environment
   useEffect(() => {
     const initChat = async () => {
       try {
-        const ai = new GoogleGenAI({ apiKey: "AIzaSyCFcqaHvTeuAJF-My1kJmMN1cLERFZUSpM" });
+        // ✅ Get API key from environment variable
+        const apiKey = import.meta.env.VITE_GOOGLE_GENAI_API_KEY;
+        
+        if (!apiKey) {
+          console.error("Missing API Key: VITE_GOOGLE_GENAI_API_KEY is not set in .env file");
+          return;
+        }
+
+        const ai = new GoogleGenAI({ apiKey });
         const chat = ai.chats.create({
-          model: 'gemini-1.5-flash', // মডেল নাম আপডেট করা হলো (স্ট্যান্ডার্ড)
+          model: 'gemini-1.5-flash',
           config: {
             systemInstruction: SYSTEM_INSTRUCTION,
           }

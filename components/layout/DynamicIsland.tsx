@@ -58,26 +58,40 @@ const DynamicIsland: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // ✅ Track all timers to clean up on unmount or message change
+    const timerIds: NodeJS.Timeout[] = [];
+
     const handleEvent = (e: any) => {
+      // ✅ Clear any existing timers before setting new ones
+      timerIds.forEach(id => clearTimeout(id));
+      timerIds.length = 0;
+
       setMessage(e.detail.msg);
       setType(e.detail.type);
       setActive(true);
 
-      // open animation
-      setTimeout(() => setIsExpanded(true), 100);
+      // ✅ Open animation timer
+      const openTimer = setTimeout(() => setIsExpanded(true), 100);
+      timerIds.push(openTimer);
 
-      // custom duration — default 7s
+      // ✅ Custom duration — default 7s
       const closeDuration = e.detail.duration ?? 7000;
       const closeTimer = setTimeout(() => {
         setIsExpanded(false);
-        setTimeout(() => setActive(false), 500);
+        // ✅ Close animation timer with cleanup tracking
+        const finalTimer = setTimeout(() => setActive(false), 500);
+        timerIds.push(finalTimer);
       }, closeDuration);
-
-      return () => clearTimeout(closeTimer);
+      timerIds.push(closeTimer);
     };
 
     window.addEventListener('dynamic-island', handleEvent);
-    return () => window.removeEventListener('dynamic-island', handleEvent);
+    
+    // ✅ Cleanup: Remove listener AND all timers on unmount
+    return () => {
+      window.removeEventListener('dynamic-island', handleEvent);
+      timerIds.forEach(id => clearTimeout(id));
+    };
   }, []);
 
   return (

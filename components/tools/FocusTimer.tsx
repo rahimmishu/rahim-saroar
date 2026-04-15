@@ -53,7 +53,7 @@ const FocusTimer: React.FC<FocusTimerProps> = ({ onClose }) => {
     }
   };
 
-  // Handle Fullscreen Controls Visibility
+  // ✅ Handle Fullscreen Controls Visibility with proper cleanup
   const handleMouseMove = () => {
     setShowControls(true);
     if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
@@ -62,22 +62,40 @@ const FocusTimer: React.FC<FocusTimerProps> = ({ onClose }) => {
     }
   };
 
+  // ✅ Fullscreen change listener with cleanup
   useEffect(() => {
     const handleEsc = () => {
-        if (!document.fullscreenElement) setIsFullScreen(false);
+      if (!document.fullscreenElement) setIsFullScreen(false);
     };
     document.addEventListener('fullscreenchange', handleEsc);
+    
+    // ✅ Cleanup: Remove listener on unmount
     return () => document.removeEventListener('fullscreenchange', handleEsc);
   }, []);
 
+  // ✅ Timer interval with cleanup
   useEffect(() => {
     if (isActive && timeLeft > 0) {
       timerRef.current = setInterval(() => setTimeLeft((p) => p - 1), 1000);
     } else if (timeLeft === 0) {
       setIsActive(false);
     }
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+    
+    // ✅ Cleanup: Clear interval on unmount or dependency change
+    return () => { 
+      if (timerRef.current) clearInterval(timerRef.current); 
+    };
   }, [isActive, timeLeft]);
+
+  // ✅ Cleanup controlsTimeoutRef on unmount
+  useEffect(() => {
+    return () => {
+      if (controlsTimeoutRef.current) {
+        clearTimeout(controlsTimeoutRef.current);
+        controlsTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/\D/g, '').slice(0, 3);

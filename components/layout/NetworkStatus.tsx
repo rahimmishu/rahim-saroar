@@ -41,14 +41,21 @@ const NetworkStatus: React.FC = () => {
       }
     };
 
+    let statusTimeoutId: NodeJS.Timeout | null = null;
+    
     if (connection) {
-      setTimeout(updateConnectionStatus, 5000);
+      statusTimeoutId = setTimeout(updateConnectionStatus, 5000);
       connection.addEventListener('change', updateConnectionStatus);
     }
 
     return () => {
+      // ✅ Ensure all cleanup is performed
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
+      
+      if (statusTimeoutId) {
+        clearTimeout(statusTimeoutId);
+      }
       
       if (connection) {
         connection.removeEventListener('change', updateConnectionStatus); 

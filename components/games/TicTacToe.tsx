@@ -50,6 +50,14 @@ const TicTacToe: React.FC<TicTacToeProps> = ({ onClose }) => {
       const timer = setTimeout(() => {
         const availableMoves = board.map((val, idx) => val === null ? idx : null).filter(val => val !== null);
         
+        // ✅ Add bounds checking - ensure availableMoves is not empty
+        if (availableMoves.length === 0) {
+          console.warn("No available moves for CPU");
+          setIsDraw(true);
+          return;
+        }
+        
+        // ✅ Safe access with bounds checking
         if (availableMoves.length > 0) {
           // Simple AI: Pick random available spot
           const randomMove = availableMoves[Math.floor(Math.random() * availableMoves.length)];

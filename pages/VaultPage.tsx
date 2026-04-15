@@ -52,6 +52,8 @@ const isExternalVideo = (src?: string) => {
 const VaultPage: React.FC = () => {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
+  // ✅ Track setTimeout IDs for race condition prevention
+  const timeoutIdsRef = useRef<NodeJS.Timeout[]>([]);
 
   const [query, setQuery] = useState('');
   const [message, setMessage] = useState('');
@@ -64,6 +66,14 @@ const VaultPage: React.FC = () => {
   const [galleryHistory, setGalleryHistory] = useState<{items: MediaItem[], title: string}[]>([]);
 
   useEffect(() => { inputRef.current?.focus(); }, []);
+
+  // ✅ Cleanup all timeouts on unmount
+  useEffect(() => {
+    return () => {
+      timeoutIdsRef.current.forEach(id => clearTimeout(id));
+      timeoutIdsRef.current = [];
+    };
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -83,6 +93,11 @@ const VaultPage: React.FC = () => {
   // 🔥 এখানেই মূল ডাটাবেসের ম্যাজিকটা হবে!
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // ✅ Clear any previous timeouts to prevent race conditions
+    timeoutIdsRef.current.forEach(id => clearTimeout(id));
+    timeoutIdsRef.current = [];
+    
     const lowerQuery = query.toLowerCase().trim();
     setIsLoading(true);
     setMessage('🔄 Checking Database...');
@@ -132,12 +147,14 @@ const VaultPage: React.FC = () => {
         const finalItems = [...Array.from(folderMap.values()), ...directItems];
 
         setMessage('📂 Access Granted!');
-        setTimeout(() => {
+        // ✅ Track timeout ID to clear if new search happens
+        const timeoutId1 = setTimeout(() => {
           setGalleryItems(finalItems);
           setGalleryTitle(lowerQuery.toUpperCase());
           setView('gallery');
           setIsLoading(false);
         }, 800);
+        timeoutIdsRef.current.push(timeoutId1);
 
       } else {
         // ২. ডাটাবেসে না পেলে লোকাল কোড চেক করবে (magic, intro ইত্যাদি)
@@ -145,18 +162,22 @@ const VaultPage: React.FC = () => {
         if (result) {
           setMessage(result.msg);
           if (result.type === 'gallery' && result.items) {
-            setTimeout(() => {
+            // ✅ Track timeout ID
+            const timeoutId2 = setTimeout(() => {
               setGalleryItems(result.items!);
               setGalleryTitle(lowerQuery.toUpperCase());
               setView('gallery');
               setIsLoading(false);
             }, 800);
+            timeoutIdsRef.current.push(timeoutId2);
           } else if (result.type === 'media') {
-            setTimeout(() => {
+            // ✅ Track timeout ID
+            const timeoutId3 = setTimeout(() => {
               setCurrentMedia({ type: result.mediaType!, src: result.src!, title: 'Secret Content' });
               setView('player');
               setIsLoading(false);
             }, 800);
+            timeoutIdsRef.current.push(timeoutId3);
           }
         } else {
           setMessage('❌ Access Denied: Invalid Code');

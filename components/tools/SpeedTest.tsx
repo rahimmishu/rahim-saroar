@@ -106,7 +106,12 @@ const SpeedTest: React.FC<SpeedTestProps> = ({ onClose }) => {
     try {
       const response = await fetch(dlUrl + "&r=" + Math.random());
       const reader = response.body?.getReader();
-      if (!reader) return;
+      
+      // ✅ Add null checking for reader before using it
+      if (!reader) {
+        console.warn("No reader available from response body");
+        return;
+      }
 
       while (isRunningRef.current) {
         const { done, value } = await reader.read();

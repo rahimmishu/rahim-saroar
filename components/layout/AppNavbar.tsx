@@ -38,8 +38,14 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // ✅ FIXED: Body overflow with proper cleanup on unmount
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : 'unset';
+    
+    // ✅ Cleanup: reset overflow when component unmounts or menu closes
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
   }, [isOpen]);
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {

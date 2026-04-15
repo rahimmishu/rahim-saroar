@@ -71,11 +71,26 @@ const SecretVault: React.FC = () => {
     if (manualThumbnail) return manualThumbnail;
     if (!src) return null; 
     if (src.includes('youtube.com') || src.includes('youtu.be')) {
-      let videoId = null;
-      if (src.includes('embed/')) videoId = src.split('embed/')[1]?.split('?')[0];
-      else if (src.includes('v=')) videoId = src.split('v=')[1]?.split('&')[0];
-      else videoId = src.split('/').pop();
-      if (videoId) return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+      let videoId: string | null = null;
+      
+      // ✅ Add proper validation for string split results
+      if (src.includes('embed/')) {
+        const embedParts = src.split('embed/');
+        videoId = (embedParts[1]?.split('?')[0]) || null;
+      }
+      else if (src.includes('v=')) {
+        const vParts = src.split('v=');
+        videoId = (vParts[1]?.split('&')[0]) || null;
+      }
+      else {
+        const pathParts = src.split('/');
+        videoId = (pathParts.length > 0 ? pathParts[pathParts.length - 1] : null) || null;
+      }
+      
+      // ✅ Ensure videoId is not empty before using
+      if (videoId && videoId.trim()) {
+        return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+      }
     }
     return null;
   };

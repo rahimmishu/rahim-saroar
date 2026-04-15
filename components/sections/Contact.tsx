@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Mail, MessageSquare, Send, Github, Linkedin, Twitter, Phone, MapPin, Sparkles, Zap, CheckCircle2 } from 'lucide-react';
 
 const contactStyles = `
@@ -106,16 +106,34 @@ const Contact: React.FC = () => {
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  // ✅ Track timeout ref for cleanup
+  const submitTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // ✅ Clear any existing timeout before creating new one
+    if (submitTimeoutRef.current) clearTimeout(submitTimeoutRef.current);
+    
     // Handle form submission here
     setIsSubmitted(true);
-    setTimeout(() => {
+    
+    // ✅ Set timeout and store reference for cleanup
+    submitTimeoutRef.current = setTimeout(() => {
       setIsSubmitted(false);
       setFormData({ name: '', email: '', subject: '', message: '' });
+      submitTimeoutRef.current = null;
     }, 3000);
   };
+
+  // ✅ Cleanup timeout on component unmount
+  useEffect(() => {
+    return () => {
+      if (submitTimeoutRef.current) {
+        clearTimeout(submitTimeoutRef.current);
+        submitTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

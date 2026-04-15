@@ -217,6 +217,16 @@ const MusicPlayer: React.FC<MusicPlayerProps> = ({ isPlaying, togglePlay }) => {
     ];
 
   const currentTrack = playlist[currentTrackIndex];
+  
+  // ✅ Add safe fallback UI if track is undefined (out of bounds)
+  if (!currentTrack) {
+    return (
+      <div className="text-center text-slate-400 py-4">
+        <p>No track available. Please select a valid track.</p>
+      </div>
+    );
+  }
+  
   const isYoutube = currentTrack?.type === 'youtube';
   const isGhostStory = currentTrack?.category === 'ghosts';
 

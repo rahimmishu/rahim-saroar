@@ -7,6 +7,9 @@ import { usePerformanceOptimizer } from './hooks/usePerformanceOptimizer';
 import { registerServiceWorker } from './lib/registerSW';
 registerServiceWorker();
 
+// 🛡️ Error Boundary (prevents component crashes from breaking entire app)
+import ErrorBoundary from './components/ui/ErrorBoundary';
+
 // 📱 Mobile detection (lightweight)
 import useMobileDetect from './hooks/useMobileDetect';
 
@@ -178,17 +181,23 @@ const AppContent: React.FC = () => {
     }
   }, []);
 
+  // ✅ Theme management (separate concern)
   useEffect(() => {
     const html = document.documentElement;
     isDarkMode ? html.classList.add('dark') : html.classList.remove('dark');
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  }, [isDarkMode]);
 
-    if (!isMobileLite) {
-      const handleClick = () => navigator.vibrate?.(5);
-      document.addEventListener('click', handleClick);
-      return () => document.removeEventListener('click', handleClick);
-    }
-  }, [isDarkMode, isMobileLite]);
+  // ✅ FIXED: Click listener with proper cleanup (outside conditional)
+  useEffect(() => {
+    if (isMobileLite) return;
+    
+    const handleClick = () => navigator.vibrate?.(5);
+    document.addEventListener('click', handleClick);
+    
+    // ✅ Cleanup runs ALWAYS when dependency changes or component unmounts
+    return () => document.removeEventListener('click', handleClick);
+  }, [isMobileLite]);
 
   const toggleTheme = () => setIsDarkMode(prev => !prev);
 
@@ -196,8 +205,10 @@ const AppContent: React.FC = () => {
     console.log('New Feedback Submitted:', data);
   };
 
+  // ✅ FIXED: Keydown listener with proper cleanup and all dependencies
   useEffect(() => {
     if (isMobileLite) return;
+    
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
         e.target instanceof HTMLInputElement ||
@@ -214,9 +225,12 @@ const AppContent: React.FC = () => {
         }
       }
     };
+    
     window.addEventListener('keydown', handleKeyDown);
+    
+    // ✅ Proper cleanup: always removes listener
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMobileLite]);
+  }, [isMobileLite, toggleTheme]);
 
   const Reveal = isMobileLite ? LiteReveal : RevealOnScroll;
 
@@ -362,90 +376,118 @@ const AppContent: React.FC = () => {
                 style={{ position: 'relative', zIndex: 10 }}
               >
                 {/* NAVBAR — above fold, eagerly loaded */}
-                {isMobileLite ? (
-                  <LiteNavbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
-                ) : (
-                  <AppNavbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
-                )}
+                <ErrorBoundary level="section">
+                  {isMobileLite ? (
+                    <LiteNavbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+                  ) : (
+                    <AppNavbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+                  )}
+                </ErrorBoundary>
 
                 {/* HERO — above fold, eagerly loaded */}
-                {isMobileLite ? <LiteHero /> : <Hero />}
+                <ErrorBoundary level="section">
+                  {isMobileLite ? <LiteHero /> : <Hero />}
+                </ErrorBoundary>
 
-                <TechMarquee />
+                <ErrorBoundary level="section">
+                  <TechMarquee />
+                </ErrorBoundary>
 
                 {/* ── Below-fold sections — সব Suspense-এ wrap করা ── */}
 
                 <Reveal delay={0.1}>
                   <section id="about">
-                    <Suspense fallback={<SectionFallback />}>
-                      {isMobileLite ? <LiteAbout /> : <About />}
-                    </Suspense>
+                    <ErrorBoundary level="section">
+                      <Suspense fallback={<SectionFallback />}>
+                        {isMobileLite ? <LiteAbout /> : <About />}
+                      </Suspense>
+                    </ErrorBoundary>
                   </section>
                 </Reveal>
 
                 <Reveal delay={0.1}>
                   <section id="projects">
-                    <Suspense fallback={<SectionFallback />}>
-                      <Projects />
-                    </Suspense>
+                    <ErrorBoundary level="section">
+                      <Suspense fallback={<SectionFallback />}>
+                        <Projects />
+                      </Suspense>
+                    </ErrorBoundary>
                   </section>
                 </Reveal>
 
                 <Reveal>
                   <section id="resources">
-                    <Suspense fallback={<SectionFallback />}>
-                      <Resources />
-                    </Suspense>
+                    <ErrorBoundary level="section">
+                      <Suspense fallback={<SectionFallback />}>
+                        <Resources />
+                      </Suspense>
+                    </ErrorBoundary>
                   </section>
                 </Reveal>
 
                 <Reveal>
-                  <Suspense fallback={<SectionFallback />}>
-                    <FacebookFeed />
-                  </Suspense>
+                  <ErrorBoundary level="section">
+                    <Suspense fallback={<SectionFallback />}>
+                      <FacebookFeed />
+                    </Suspense>
+                  </ErrorBoundary>
                 </Reveal>
 
                 <Reveal>
                   <section id="journey">
-                    <Suspense fallback={<SectionFallback />}>
-                      <Journey />
-                    </Suspense>
+                    <ErrorBoundary level="section">
+                      <Suspense fallback={<SectionFallback />}>
+                        <Journey />
+                      </Suspense>
+                    </ErrorBoundary>
                   </section>
                 </Reveal>
 
                 <div id="feedback">
-                  <Suspense fallback={<SectionFallback />}>
-                    <FeedbackList />
-                  </Suspense>
+                  <ErrorBoundary level="section">
+                    <Suspense fallback={<SectionFallback />}>
+                      <FeedbackList />
+                    </Suspense>
+                  </ErrorBoundary>
                 </div>
 
                 <Reveal>
                   <section id="contact">
-                    <Suspense fallback={<SectionFallback />}>
-                      <Contact />
-                    </Suspense>
+                    <ErrorBoundary level="section">
+                      <Suspense fallback={<SectionFallback />}>
+                        <Contact />
+                      </Suspense>
+                    </ErrorBoundary>
                   </section>
                 </Reveal>
 
-                <Suspense fallback={<NullFallback />}>
-                  <FeedbackSlider onSubmit={handleNewFeedback} />
-                </Suspense>
+                <ErrorBoundary level="widget">
+                  <Suspense fallback={<NullFallback />}>
+                    <FeedbackSlider onSubmit={handleNewFeedback} />
+                  </Suspense>
+                </ErrorBoundary>
 
-                <Suspense fallback={<NullFallback />}>
-                  <Footer />
-                </Suspense>
+                <ErrorBoundary level="widget">
+                  <Suspense fallback={<NullFallback />}>
+                    <Footer />
+                  </Suspense>
+                </ErrorBoundary>
 
                 {/* Global Widgets — lazy loaded, only mount when needed */}
-                <Suspense fallback={<NullFallback />}>
-                  <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
-                </Suspense>
+                <ErrorBoundary level="widget">
+                  <Suspense fallback={<NullFallback />}>
+                    <Chatbot isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+                  </Suspense>
+                </ErrorBoundary>
 
-                <Suspense fallback={<NullFallback />}>
-                  <MusicPlayer
-                    isPlaying={isMusicPlaying}
-                    togglePlay={() => setIsMusicPlaying(!isMusicPlaying)}
-                  />
-                </Suspense>
+                <ErrorBoundary level="widget">
+                  <Suspense fallback={<NullFallback />}>
+                    <MusicPlayer
+                      isPlaying={isMusicPlaying}
+                      togglePlay={() => setIsMusicPlaying(!isMusicPlaying)}
+                    />
+                  </Suspense>
+                </ErrorBoundary>
 
                 <FloatingDock
                   toggleChat={() => setIsChatOpen(!isChatOpen)}
@@ -459,26 +501,44 @@ const AppContent: React.FC = () => {
 
         {/* ── Other Pages — সব lazy loaded ── */}
         <Route path="/admin" element={
-          <Suspense fallback={<PageFallback />}><AdminPage /></Suspense>
+          <ErrorBoundary level="page">
+            <Suspense fallback={<PageFallback />}><AdminPage /></Suspense>
+          </ErrorBoundary>
         } />
         <Route path="/profile" element={
-          <Suspense fallback={<PageFallback />}><UserProfile /></Suspense>
+          <ErrorBoundary level="page">
+            <Suspense fallback={<PageFallback />}><UserProfile /></Suspense>
+          </ErrorBoundary>
         } />
         <Route path="/tools" element={
-          <Suspense fallback={<PageFallback />}><ToolsPage /></Suspense>
+          <ErrorBoundary level="page">
+            <Suspense fallback={<PageFallback />}><ToolsPage /></Suspense>
+          </ErrorBoundary>
         } />
         <Route path="/gallery" element={
-          <Suspense fallback={<PageFallback />}><GalleryPage /></Suspense>
+          <ErrorBoundary level="page">
+            <Suspense fallback={<PageFallback />}><GalleryPage /></Suspense>
+          </ErrorBoundary>
         } />
-        <Route path="/assistant" element={<BoltoAssistant />} />
+        <Route path="/assistant" element={
+          <ErrorBoundary level="page">
+            <BoltoAssistant />
+          </ErrorBoundary>
+        } />
         <Route path="/vault" element={
-          <Suspense fallback={<PageFallback />}><VaultPage /></Suspense>
+          <ErrorBoundary level="page">
+            <Suspense fallback={<PageFallback />}><VaultPage /></Suspense>
+          </ErrorBoundary>
         } />
         <Route path="/link" element={
-          <Suspense fallback={<PageFallback />}><RedirectPage /></Suspense>
+          <ErrorBoundary level="page">
+            <Suspense fallback={<PageFallback />}><RedirectPage /></Suspense>
+          </ErrorBoundary>
         } />
         <Route path="/privacy" element={
-          <Suspense fallback={<PageFallback />}><PrivacyPage /></Suspense>
+          <ErrorBoundary level="page">
+            <Suspense fallback={<PageFallback />}><PrivacyPage /></Suspense>
+          </ErrorBoundary>
         } />
 
       </Routes>
@@ -490,11 +550,19 @@ const AppContent: React.FC = () => {
 // Root App
 // ============================================================
 const App: React.FC = () => (
-  <Router>
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  </Router>
+  <ErrorBoundary level="app" onError={(error, errorInfo) => {
+    // Send to error tracking service (Sentry, LogRocket, etc.) if needed
+    if (process.env.NODE_ENV === 'production') {
+      console.error('🔴 App Error:', error.message);
+      // Example: Sentry.captureException(error);
+    }
+  }}>
+    <Router>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </Router>
+  </ErrorBoundary>
 );
 
 export default App;
