@@ -24,6 +24,7 @@ import DynamicTitle from './components/layout/DynamicTitle';
 import NetworkStatus from './components/layout/NetworkStatus';
 import FloatingDock from './components/layout/FloatingDock';
 import { AuthProvider } from './context/AuthContext';
+import BoltoAssistant from './pages/BoltoAssistant';
 
 // ============================================================
 // 🦥 LAZY LOADS — below-fold sections (scroll করলে তখন load হবে)
@@ -469,6 +470,7 @@ const AppContent: React.FC = () => {
         <Route path="/gallery" element={
           <Suspense fallback={<PageFallback />}><GalleryPage /></Suspense>
         } />
+        <Route path="/assistant" element={<BoltoAssistant />} />
         <Route path="/vault" element={
           <Suspense fallback={<PageFallback />}><VaultPage /></Suspense>
         } />

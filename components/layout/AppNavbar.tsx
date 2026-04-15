@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Camera, Wrench, Sparkles, Home, Briefcase, BookOpen, User, Mail, Lock, LogOut, LogIn, ChevronDown, ArrowRight, UserCircle } from 'lucide-react';
+import { Menu, X, Camera, Wrench, Sparkles, Home, Briefcase, User, Mail, Lock, LogOut, LogIn, ChevronDown, ArrowRight, UserCircle } from 'lucide-react';
 import ThemeToggle from '../ui/ThemeToggle';
 import { useAuth } from '../../context/AuthContext'; 
 import AuthModal from '../modals/AuthModal'; 
@@ -25,11 +25,11 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
   const navigate = useNavigate();
 
   const navLinks = [
-    { label: 'Home',      href: '#home',      icon: <Home size={18} /> },
-    { label: 'Projects',  href: '#projects',  icon: <Briefcase size={18} /> },
-    { label: 'Resources', href: '#resources', isSpecial: true, icon: <BookOpen size={18} /> }, 
-    { label: 'About',     href: '#about',     icon: <User size={18} /> },
-    { label: 'Contact',   href: '#contact',   icon: <Mail size={18} /> },
+    { label: 'Home',      href: '#home',      icon: <Home size={18} />,      isSpecial: false },
+    { label: 'Projects',  href: '#projects',  icon: <Briefcase size={18} />, isSpecial: false },
+    { label: 'Assistant', href: '/assistant', icon: <Sparkles size={18} />,  isSpecial: true },
+    { label: 'About',     href: '#about',     icon: <User size={18} />,      isSpecial: false },
+    { label: 'Contact',   href: '#contact',   icon: <Mail size={18} />,      isSpecial: false },
   ];
 
   useEffect(() => {
@@ -167,12 +167,16 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
 
                 {/* 🔗 Navigation Links */}
                 {navLinks.map((link) => {
-                  if (link.label === 'Resources') {
+                  if (link.isSpecial) {
                     return (
                       <a 
                         key={link.label} 
                         href={link.href} 
-                        onClick={(e) => handleLinkClick(e, link.href)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          navigate(link.href);
+                          setIsOpen(false);
+                        }}
                         className="mx-1"
                       >
                         <div className="relative flex items-center justify-center p-0 group">
@@ -234,17 +238,17 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
                       <div className="relative">
                         <div className="absolute -inset-0.5 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full opacity-75 group-hover:opacity-100 blur-sm transition-opacity"></div>
                         <div className="relative overflow-hidden bg-white rounded-full shadow-lg w-7 h-7">
-                          {user.photoURL ? (
-                            <img src={user.photoURL} alt={user.displayName || 'User'} className="object-cover w-full h-full" />
+                          {(user as any).photoURL ? (
+                            <img src={(user as any).photoURL} alt={(user as any).displayName || 'User'} className="object-cover w-full h-full" />
                           ) : (
                             <div className="flex items-center justify-center w-full h-full text-xs font-bold text-white bg-gradient-to-br from-purple-500 to-blue-500">
-                              {user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U'}
+                              {(user as any).displayName ? (user as any).displayName.charAt(0).toUpperCase() : 'U'}
                             </div>
                           )}
                         </div>
                       </div>
                       <span className="text-sm font-semibold text-slate-700 dark:text-slate-300 max-w-[80px] truncate">
-                        {user.displayName?.split(' ')[0] || 'User'}
+                        {(user as any).displayName?.split(' ')[0] || 'User'}
                       </span>
                       <ChevronDown size={14} className={`transition-all duration-300 text-slate-500 ${isProfileMenuOpen ? 'rotate-180' : ''}`} />
                     </button>
@@ -253,7 +257,7 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
                     {isProfileMenuOpen && (
                       <div className="absolute right-0 mt-3 overflow-hidden duration-300 border shadow-2xl w-60 bg-white/95 dark:bg-black/95 backdrop-blur-2xl border-white/20 dark:border-white/10 shadow-purple-500/20 dark:shadow-purple-400/10 rounded-3xl animate-in fade-in slide-in-from-top-3 z-[60]">
                         <div className="relative px-5 py-4 border-b border-slate-100/50 dark:border-slate-800/50 bg-gradient-to-br from-purple-50/50 to-pink-50/50 dark:from-purple-900/20 dark:to-pink-900/20">
-                          <p className="text-sm font-bold truncate text-slate-800 dark:text-white">{user.displayName || 'User'}</p>
+                          <p className="text-sm font-bold truncate text-slate-800 dark:text-white">{(user as any).displayName || 'User'}</p>
                           <p className="text-xs truncate text-slate-500 dark:text-slate-400">{user.email}</p>
                           <div className="absolute top-0 right-0 w-20 h-20 rounded-full bg-gradient-to-br from-purple-500/10 to-transparent blur-2xl"></div>
                         </div>
@@ -341,18 +345,18 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
                     <div className="relative">
                       <div className="absolute rounded-full -inset-1 bg-gradient-to-br from-purple-500 to-blue-500 animate-spin-slow"></div>
                       <div className="relative overflow-hidden bg-white rounded-full shadow-xl w-14 h-14">
-                        {user.photoURL ? (
-                          <img src={user.photoURL} alt={user.displayName || 'User'} className="object-cover w-full h-full" />
+                        {(user as any).photoURL ? (
+                          <img src={(user as any).photoURL} alt={(user as any).displayName || 'User'} className="object-cover w-full h-full" />
                         ) : (
                           <div className="flex items-center justify-center w-full h-full text-xl font-bold text-white bg-gradient-to-tr from-purple-500 to-blue-500">
-                            {user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U'}
+                            {(user as any).displayName ? (user as any).displayName.charAt(0).toUpperCase() : 'U'}
                           </div>
                         )}
                       </div>
                     </div>
                     
                     <div className="overflow-hidden">
-                      <div className="text-lg font-bold truncate text-slate-800 dark:text-white">{user.displayName || 'User'}</div>
+                      <div className="text-lg font-bold truncate text-slate-800 dark:text-white">{(user as any).displayName || 'User'}</div>
                       <div className="text-xs truncate text-slate-500 dark:text-slate-400">{user.email}</div>
                     </div>
                   </div>
@@ -396,7 +400,15 @@ const AppNavbar: React.FC<NavbarProps> = ({ isDarkMode, toggleTheme }) => {
               <a 
                 key={link.label}
                 href={link.href}
-                onClick={(e) => handleLinkClick(e, link.href)} 
+                onClick={(e) => {
+                  if (link.isSpecial) {
+                    e.preventDefault();
+                    navigate(link.href);
+                    setIsOpen(false);
+                  } else {
+                    handleLinkClick(e, link.href);
+                  }
+                }}
                 className={`group relative overflow-hidden flex items-center gap-4 text-lg font-bold p-4 rounded-3xl border transition-all duration-500 shadow-lg hover:shadow-2xl active:scale-95
                   ${link.isSpecial 
                     ? 'bg-gradient-to-br from-blue-50/90 to-purple-50/90 dark:from-blue-900/30 dark:to-purple-900/30 border-blue-200/50 dark:border-blue-800/50 text-blue-600 dark:text-blue-400 hover:shadow-blue-500/20' 

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#050510">
+    <title>B.O.L.T.U</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+    <div class="app">
+        <div id="orb-container"></div>
+        <header class="header glass-panel">
+            <div class="header-left">
+                <img src="logo.png" alt="BOLTU AI" class="custom-brand-logo">
+                <span class="tagline"></span>
+            </div>
+            <div class="header-center">
+            </div>
+            <div class="header-right">
+                <div class="status-badge" id="status-badge">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Online</span>
+                </div>
+                <button class="btn-icon activity-toggle" id="activity-toggle" title="View activity flow">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                </button>
+                <button class="btn-icon search-results-toggle" id="search-results-toggle" title="View search results" style="display: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </button>
+                <button class="btn-icon settings-btn" id="settings-btn" title="Settings">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                    </svg>
+                </button>
+                <button class="btn-icon new-chat-btn" id="new-chat-btn" title="New Chat">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+        <aside class="activity-panel glass-panel" id="activity-panel" aria-hidden="true">
+            <div class="activity-header">
+                <h3 class="activity-title">Activity</h3>
+                <button class="activity-close" id="activity-close" title="Close" aria-label="Close activity panel">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="activity-list" id="activity-list">
+                <div class="activity-empty" id="activity-empty">Send a message to see the flow here.</div>
+            </div>
+        </aside>
+        <main class="chat-area" id="chat-area">
+            <div class="chat-messages" id="chat-messages">
+                <div class="welcome-screen" id="welcome-screen">
+                    <div class="welcome-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h2 class="welcome-title" id="welcome-title">Good evening.</h2>
+                    <p class="welcome-sub">How may I assist you today?</p>
+                    <div class="welcome-chips">
+                        <button class="chip" data-msg="What can you do?">What can you do?</button>
+                        <button class="chip" data-msg="Open YouTube for me">Open YouTube</button>
+                        <button class="chip" data-msg="Tell me a fun fact">Fun fact</button>
+                        <button class="chip" data-msg="Play some music">Play music</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="input-bar glass-panel">
+            <div class="input-wrapper">
+                <textarea id="message-input"
+                          placeholder="Ask Boltu anything..."
+                          rows="1"
+                          maxlength="32000"></textarea>
+                <div class="input-actions">
+                    <button class="action-btn cam-btn" id="cam-btn" title="Camera — capture and send for vision">
+                        <svg class="cam-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                        <svg class="cam-icon-active" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                            <circle cx="12" cy="13" r="4" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn mic-btn" id="mic-btn" title="Voice input — click to start auto-listen (restarts after each response)">
+                        <svg class="mic-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+                        </svg>
+                        <svg class="mic-icon-active" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <rect x="4" y="4" width="16" height="16" rx="3"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn tts-btn" id="tts-btn" title="Text to Speech">
+                        <svg class="tts-icon-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                            <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+                        </svg>
+                        <svg class="tts-icon-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn send-btn" id="send-btn" title="Send message">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="input-meta" id="input-meta">
+                <span class="char-count" id="char-count"></span>
+            </div>
+        </footer>
+        <aside class="search-results-widget glass-panel" id="search-results-widget" aria-hidden="true">
+            <div class="search-results-header">
+                <h3 class="search-results-title">Live search</h3>
+                <button class="search-results-close" id="search-results-close" title="Close" aria-label="Close search results">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="search-results-query" id="search-results-query"></div>
+            <div class="search-results-answer" id="search-results-answer"></div>
+            <div class="search-results-list" id="search-results-list"></div>
+        </aside>
+        <div class="settings-panel glass-panel" id="settings-panel" aria-hidden="true">
+            <div class="settings-header">
+                <h3 class="settings-title">Settings</h3>
+                <button class="settings-close btn-icon" id="settings-close" title="Close" aria-label="Close settings">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+            <div class="settings-body">
+                <div class="settings-item">
+                    <label class="settings-label" for="toggle-auto-activity">Auto-open activity panel</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-auto-activity" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-item">
+                    <label class="settings-label" for="toggle-auto-search">Auto-open search results</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-auto-search" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-item">
+                    <label class="settings-label" for="toggle-thinking-sounds">Thinking sound effects</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-thinking-sounds" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-item">
+                    <label class="settings-label" for="toggle-voice-interrupt">Voice interruption</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-voice-interrupt" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <p class="settings-hint">Activity and search panels open automatically when data is available. Thinking sounds play a short cue while the AI processes. Voice interruption lets you interrupt the AI by speaking — it will stop talking and listen to you.</p>
+            </div>
+        </div>
+        <div class="panel-overlay" id="panel-overlay" aria-hidden="true"></div>
+        <div class="speech-widget" id="speech-widget" aria-hidden="true">
+            <div class="speech-widget-inner">
+                <span class="speech-widget-label">Listening...</span>
+                <span class="speech-widget-text" id="speech-widget-text"></span>
+            </div>
+        </div>
+        <div class="toast-container" id="toast-container" aria-live="polite"></div>
+        <div class="cam-panel" id="cam-panel" aria-hidden="true">
+            <div class="cam-panel-header" id="cam-panel-header">
+                <span class="cam-panel-title">
+                    <span class="cam-panel-dot"></span>
+                    Vision
+                </span>
+                <div class="cam-panel-controls">
+                    <label class="cam-panel-vision-mode" title="Vision Mode — attach camera to every message">
+                        <input type="checkbox" id="cam-vision-mode" />
+                        <span class="cam-panel-vision-label">Live</span>
+                    </label>
+                    <button class="cam-panel-btn cam-minimize" id="cam-minimize" title="Minimize">−</button>
+                    <button class="cam-panel-btn cam-close" id="cam-close" title="Close camera">×</button>
+                </div>
+            </div>
+            <div class="cam-panel-body">
+                <video id="cam-video" autoplay playsinline muted></video>
+                <div class="cam-panel-overlay">
+                    <span class="cam-panel-status">Vision ready</span>
+                </div>
+            </div>
+            <div class="cam-panel-resize" id="cam-panel-resize" title="Drag to resize"></div>
+        </div>
+        <canvas id="cam-canvas" style="display: none;"></canvas>
+    </div>
+    <script src="orb.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
