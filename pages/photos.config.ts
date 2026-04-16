@@ -48,6 +48,38 @@ export interface Photo {
 export const photos: Photo[] = [
   {
     id: 1,
+    src: '/mishu-rahim-saroar.jpg',
+    caption: 'Event',
+    alt: 'Rahim Saroar Mishu Bangla new year event, traditional Panjabi attire, cultural fashion Bangladesh',
+    title: 'Rahim Saroar Mishu – Traditional Panjabi Style at Bangla new year',
+    category: 'Event',
+  },
+  {
+    id: 2,
+    src: '/mishu-rahim.jpg',
+    caption: 'Event',
+    alt: 'Rahim Saroar Mishu Bangla new year event, traditional Panjabi attire, cultural fashion Bangladesh',
+    title: 'Rahim Saroar Mishu – Traditional Panjabi Style at Bangla new year',
+    category: 'Event',
+  },
+  {
+    id: 3,
+    src: '/paharpur_rahim_saroar_1.png',
+    caption: 'Event',
+    alt: 'Rahim Saroar Mishu at Eid event wearing traditional Panjabi attire, cultural fashion Bangladesh',
+    title: 'Rahim Saroar Mishu – Traditional Panjabi Style at Eid',
+    category: 'Event',
+  },
+  {
+    id: 4,
+    src: '/rahim-saroar-eid.png',
+    caption: 'Event',
+    alt: 'Rahim Saroar Mishu at Eid event wearing traditional Panjabi attire, cultural fashion Bangladesh',
+    title: 'Rahim Saroar Mishu – Traditional Panjabi Style at Eid',
+    category: 'Event',
+  },
+  {
+    id: 5,
     src: '/rahim-saroar-mishu-profile.jpg',
     caption: 'Profile',
     alt: 'Rahim Saroar Mishu AI enthusiast and web developer from Bangladesh, official profile portrait',
@@ -55,7 +87,7 @@ export const photos: Photo[] = [
     category: 'Portrait',
   },
   {
-    id: 2,
+    id: 6,
     src: '/rahim-saroar-mishu-content-creator.jpg',
     caption: 'Content Creation',
     alt: 'Rahim Saroar Mishu creating video content for Rhythm of Peace YouTube channel, Bangladesh content creator',
@@ -63,7 +95,7 @@ export const photos: Photo[] = [
     category: 'Content Creation',
   },
   {
-    id: 3,
+    id: 7,
     src: '/rahim-saroar-mishu-web-developer.jpg',
     caption: 'College',
     alt: 'Rahim Saroar Mishu at college campus, web developer and student life in Bangladesh',
@@ -71,7 +103,7 @@ export const photos: Photo[] = [
     category: 'Education',
   },
   {
-    id: 4,
+    id: 8,
     src: '/rahim-saroar-mishu-speaker.jpg',
     caption: 'Public Speaking',
     alt: 'Rahim Saroar Mishu speaking at a tech event in Bangladesh, public speaker and AI enthusiast on stage',
@@ -79,7 +111,7 @@ export const photos: Photo[] = [
     category: 'Public Speaking',
   },
   {
-    id: 5,
+    id: 9,
     src: '/rahim-saroar-mishu-lifestyle.jpg',
     caption: 'Lifestyle',
     alt: 'Rahim Saroar Mishu lifestyle portrait, young AI developer and content creator from Bangladesh',
@@ -87,7 +119,7 @@ export const photos: Photo[] = [
     category: 'Lifestyle',
   },
   {
-    id: 6,
+    id: 10,
     src: '/rahim-saroar-mishu-coding.jpg',
     caption: 'Workspace',
     alt: 'Rahim Saroar Mishu coding at his developer workspace with Python, programmer desk setup Bangladesh',
@@ -95,7 +127,7 @@ export const photos: Photo[] = [
     category: 'Workspace',
   },
   {
-    id: 7,
+    id: 11,
     src: '/rahim-saroar-mishu-sugarmill.jpg',
     caption: 'Travel',
     alt: 'Rahim Saroar Mishu at Sugarmill Bangladesh during travel vlog shoot, travel and lifestyle photography',
@@ -103,7 +135,7 @@ export const photos: Photo[] = [
     category: 'Travel',
   },
   {
-    id: 8,
+    id: 12,
     src: '/rahim-saroar-mishu-school.jpg',
     caption: 'School',
     alt: 'Rahim Saroar Mishu school life memories at Mangalbari Sirajia, early education and childhood Bangladesh',
@@ -111,7 +143,7 @@ export const photos: Photo[] = [
     category: 'Education',
   },
   {
-    id: 9,
+    id: 13,
     src: '/rahim-saroar-mishu-J.jpg',
     caption: 'Workspace',
     alt: 'Rahim Saroar Mishu tech desk setup and workspace tour, developer environment and gear Bangladesh',
@@ -119,7 +151,7 @@ export const photos: Photo[] = [
     category: 'Workspace',
   },
   {
-    id: 10,
+    id: 14,
     src: '/rahim-saroar-mishu-fuad.jpg',
     caption: 'Friend',
     alt: 'Rahim Saroar Mishu hanging out with friends, social life of a young developer in Bangladesh',
@@ -127,7 +159,7 @@ export const photos: Photo[] = [
     category: 'Social',
   },
   {
-    id: 11,
+    id: 15,
     src: '/rahim-saroar-mishu-coffee.jpg',
     caption: 'Workspace',
     alt: 'Rahim Saroar Mishu coding late night with coffee cup, developer productivity lifestyle Bangladesh',
@@ -135,7 +167,7 @@ export const photos: Photo[] = [
     category: 'Workspace',
   },
   {
-    id: 12,
+    id: 16,
     src: '/rahim-saroar-mishu-c.jpg',
     caption: 'Workspace',
     alt: 'Rahim Saroar Mishu modern minimalist desk setup, clean and aesthetic developer workspace Bangladesh',
@@ -143,7 +175,7 @@ export const photos: Photo[] = [
     category: 'Workspace',
   },
   {
-    id: 13,
+    id: 17,
     src: '/rahim-saroar-mishu-biya.jpg',
     caption: 'Event',
     alt: 'Rahim Saroar Mishu at a wedding event wearing traditional Panjabi attire, cultural fashion Bangladesh',
@@ -151,7 +183,7 @@ export const photos: Photo[] = [
     category: 'Event',
   },
    {
-    id: 14,
+    id: 18,
     src: '/mishu.png',
     caption: 'Exam',
     alt: 'Rahim Saroar Mishu at a college exam, student life and academic activities Bangladesh',
@@ -159,7 +191,7 @@ export const photos: Photo[] = [
     category: 'Exam',
   },
   {
-    id: 15,
+    id: 19,
     src: '/rahim-saroar-mishu.png',
     caption: 'Exam',
     alt: 'Rahim Saroar Mishu at a college exam, student life and academic activities Bangladesh',
@@ -167,7 +199,7 @@ export const photos: Photo[] = [
     category: 'Exam',
   },
   {
-    id: 16,
+    id: 20,
     src: '/rahim-saroar.jpg',
     caption: 'Exam',
     alt: 'Rahim Saroar Mishu at a college exam, student life and academic activities Bangladesh',
@@ -175,7 +207,7 @@ export const photos: Photo[] = [
     category: 'Exam',
   },
   {
-    id: 17,
+    id: 21,
     src: '/rahim-saroar.png',
     caption: 'Event',
     alt: 'Rahim Saroar Mishu at Eid event wearing traditional Panjabi attire, cultural fashion Bangladesh',
