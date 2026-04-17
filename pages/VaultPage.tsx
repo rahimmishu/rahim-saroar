@@ -3,7 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import {
   Search, X, Lock, Grid, Play, Video, Sparkles,
-  Command, ArrowRight, ArrowLeft, Folder, ChevronLeft, ChevronRight
+  Command, ArrowRight, ArrowLeft, Folder, ChevronLeft, ChevronRight,
+  Share2, Check // 👈 New Icons added for sharing
 } from 'lucide-react';
 
 interface MediaItem {
@@ -48,12 +49,12 @@ const isExternalVideo = (src?: string) => {
 
 const VaultPage: React.FC = () => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams(); // 🔗 URL Parameters
+  const [searchParams, setSearchParams] = useSearchParams();
   const inputRef = useRef<HTMLInputElement>(null);
   const timeoutIdsRef = useRef<NodeJS.Timeout[]>([]);
 
   const [query, setQuery] = useState('');
-  const [currentCode, setCurrentCode] = useState(''); // Track active code
+  const [currentCode, setCurrentCode] = useState('');
   const [message, setMessage] = useState('');
   const [view, setView] = useState<'search' | 'gallery' | 'player'>('search');
   const [galleryItems, setGalleryItems] = useState<MediaItem[]>([]);
@@ -61,6 +62,8 @@ const VaultPage: React.FC = () => {
   const [currentMedia, setCurrentMedia] = useState<MediaItem | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [galleryHistory, setGalleryHistory] = useState<{items: MediaItem[], title: string}[]>([]);
+  
+  const [copied, setCopied] = useState(false); // 👈 Track copy status
 
   useEffect(() => { inputRef.current?.focus(); }, []);
 
@@ -78,7 +81,7 @@ const VaultPage: React.FC = () => {
         else if (view === 'gallery') {
           setView('search');
           setGalleryHistory([]); 
-          setSearchParams({}); // URL Clear on escape
+          setSearchParams({}); 
         }
         else navigate('/');
       }
@@ -87,7 +90,14 @@ const VaultPage: React.FC = () => {
     return () => window.removeEventListener('keydown', onKey);
   }, [view, navigate, setSearchParams]);
 
-  // ── 🔥 Core Search & Deep Linking Logic ──
+  // ── 🔥 Copy Link Logic ──
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  // ── Core Search & Deep Linking Logic ──
   const executeSearch = async (searchCode: string, targetFolder?: string | null) => {
     timeoutIdsRef.current.forEach(id => clearTimeout(id));
     timeoutIdsRef.current = [];
@@ -149,19 +159,20 @@ const VaultPage: React.FC = () => {
         }
 
         setMessage('📂 Access Granted!');
+        
+        // 🔗 URL Update Immediately
+        if (targetFolder) {
+            setSearchParams({ code: lowerQuery, folder: targetFolder }, { replace: true });
+        } else {
+            setSearchParams({ code: lowerQuery }, { replace: true });
+        }
+
         const timeoutId1 = setTimeout(() => {
           setGalleryItems(initialItems);
           setGalleryTitle(initialTitle);
           setGalleryHistory(initialHistory);
           setView('gallery');
           setIsLoading(false);
-          
-          // Update URL for sharing
-          if (targetFolder) {
-              setSearchParams({ code: lowerQuery, folder: targetFolder }, { replace: true });
-          } else {
-              setSearchParams({ code: lowerQuery }, { replace: true });
-          }
         }, 800);
         timeoutIdsRef.current.push(timeoutId1);
 
@@ -190,7 +201,7 @@ const VaultPage: React.FC = () => {
         } else {
           setMessage('❌ Access Denied: Invalid Code');
           setIsLoading(false);
-          setSearchParams({}); // Clear URL if code is invalid
+          setSearchParams({});
         }
       }
     } catch (err) {
@@ -206,7 +217,6 @@ const VaultPage: React.FC = () => {
     executeSearch(query);
   };
 
-  // ── 🔗 Trigger Search automatically if URL has parameters ──
   useEffect(() => {
     const codeParam = searchParams.get('code');
     const folderParam = searchParams.get('folder');
@@ -223,8 +233,8 @@ const VaultPage: React.FC = () => {
       setGalleryHistory([...galleryHistory, { items: galleryItems, title: galleryTitle }]);
       setGalleryItems(item.items);
       setGalleryTitle(item.title);
-      // 🔗 Update URL when entering folder
-      setSearchParams({ code: currentCode, folder: item.title });
+      // 🔗 Update URL
+      setSearchParams({ code: currentCode, folder: item.title }, { replace: true });
     } else if (item.src) {
       setCurrentMedia(item as MediaItem & { src: string });
       setView('player');
@@ -238,12 +248,11 @@ const VaultPage: React.FC = () => {
       setGalleryItems(prev.items);
       setGalleryTitle(prev.title);
       setGalleryHistory(newHistory);
-      
-      // 🔗 Update URL when going back
+      // 🔗 Update URL 
       if (newHistory.length === 0) {
-          setSearchParams({ code: currentCode });
+          setSearchParams({ code: currentCode }, { replace: true });
       } else {
-          setSearchParams({ code: currentCode, folder: prev.title });
+          setSearchParams({ code: currentCode, folder: prev.title }, { replace: true });
       }
     }
   };
@@ -360,15 +369,26 @@ const VaultPage: React.FC = () => {
                 </span>
               </h2>
             </div>
-            <button onClick={() => { 
-                setView('search'); 
-                setGalleryHistory([]); 
-                setQuery('');
-                setCurrentCode('');
-                setSearchParams({}); // 🔗 Clear URL on close
-            }} className="p-2.5 transition-all rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10 hover:text-white hover:rotate-90 hover:scale-110">
-              <X size={20} />
-            </button>
+            
+            {/* 🔗 Share & Close Buttons */}
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={handleCopyLink} 
+                className="flex items-center gap-2 px-4 py-2.5 transition-all rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:bg-purple-600/20 hover:text-purple-400 hover:border-purple-500/40"
+              >
+                {copied ? <Check size={18} className="text-emerald-400" /> : <Share2 size={18} />}
+                <span className="hidden text-sm font-bold sm:inline">{copied ? "Copied!" : "Share Link"}</span>
+              </button>
+              <button onClick={() => { 
+                  setView('search'); 
+                  setGalleryHistory([]); 
+                  setQuery('');
+                  setCurrentCode('');
+                  setSearchParams({}); 
+              }} className="p-2.5 transition-all rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10 hover:text-white hover:rotate-90 hover:scale-110">
+                <X size={20} />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -422,12 +442,22 @@ const VaultPage: React.FC = () => {
   // ── PLAYER VIEW ──
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 duration-500 bg-black/95 backdrop-blur-2xl animate-in fade-in">
-      <button
-        onClick={() => setView('gallery')}
-        className="absolute z-50 p-3 transition-all duration-300 border rounded-full bg-white/5 text-slate-300 top-6 right-6 border-white/10 hover:bg-white/10 hover:text-white hover:scale-110 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] backdrop-blur-md"
-      >
-        <X size={24} />
-      </button>
+      
+      {/* 🔗 Share & Close Buttons for Player */}
+      <div className="absolute z-50 flex items-center gap-3 top-6 right-6">
+        <button 
+          onClick={handleCopyLink} 
+          className="p-3 transition-all duration-300 border rounded-full bg-white/5 text-slate-300 border-white/10 hover:bg-purple-600/20 hover:text-purple-400 hover:border-purple-500/40 hover:scale-110 backdrop-blur-md"
+        >
+          {copied ? <Check size={24} className="text-emerald-400" /> : <Share2 size={24} />}
+        </button>
+        <button
+          onClick={() => setView('gallery')}
+          className="p-3 transition-all duration-300 border rounded-full bg-white/5 text-slate-300 border-white/10 hover:bg-white/10 hover:text-white hover:scale-110 backdrop-blur-md"
+        >
+          <X size={24} />
+        </button>
+      </div>
 
       {/* 🎛️ Slider Navigation Buttons */}
       {playableItems.length > 1 && (

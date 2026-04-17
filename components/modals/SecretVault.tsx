@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, X, Lock, Grid, Play, Video, Sparkles, Command, ArrowRight, Folder, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { 
+  Search, X, Lock, Grid, Play, Video, Sparkles, Command, 
+  ArrowRight, Folder, ArrowLeft, ChevronLeft, ChevronRight,
+  Share2, Check // 👈 Added sharing icons
+} from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface MediaItem {
@@ -13,6 +17,7 @@ interface MediaItem {
 const SecretVault: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const [currentCode, setCurrentCode] = useState(''); // 👈 Track current secret code
   const [message, setMessage] = useState('');
   
   const [showGallery, setShowGallery] = useState(false);
@@ -23,6 +28,7 @@ const SecretVault: React.FC = () => {
   const [currentMedia, setCurrentMedia] = useState<MediaItem | null>(null);
   const [galleryHistory, setGalleryHistory] = useState<{items: MediaItem[], title: string}[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [copied, setCopied] = useState(false); // 👈 Track copy status
 
   const secretCodes: { [key: string]: { 
       msg: string, type: 'text' | 'media' | 'gallery', src?: string, mediaType?: 'image' | 'video', items?: MediaItem[], action?: () => void 
@@ -35,6 +41,7 @@ const SecretVault: React.FC = () => {
     setIsOpen(true);
     setMessage('');
     setQuery('');
+    setCurrentCode('');
     setShowGallery(false);
     setShowPlayer(false);
     setGalleryHistory([]);
@@ -45,6 +52,7 @@ const SecretVault: React.FC = () => {
     else if (showGallery) setShowGallery(false);
     else setIsOpen(false);
     setGalleryHistory([]);
+    setCurrentCode('');
   };
 
   useEffect(() => {
@@ -63,6 +71,21 @@ const SecretVault: React.FC = () => {
       window.removeEventListener('open-secret-search', handleNavbarSignal);
     };
   }, [showPlayer, showGallery]);
+
+  // ── 🔥 Copy Deep Link Logic ──
+  const handleCopyLink = () => {
+    const baseUrl = window.location.origin;
+    let shareUrl = `${baseUrl}/vault?code=${currentCode}`;
+    
+    // If inside a folder, append the folder name to the URL
+    if (galleryHistory.length > 0) {
+      shareUrl += `&folder=${encodeURIComponent(galleryTitle)}`;
+    }
+
+    navigator.clipboard.writeText(shareUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const getThumbnail = (src?: string, manualThumbnail?: string) => {
     if (manualThumbnail) return manualThumbnail;
@@ -93,6 +116,7 @@ const SecretVault: React.FC = () => {
     const lowerQuery = query.toLowerCase().trim();
     setIsLoading(true);
     setMessage('🔄 Checking Database...');
+    setCurrentCode(lowerQuery); // Save the code for sharing
 
     try {
       const { data, error } = await supabase
@@ -168,6 +192,7 @@ const SecretVault: React.FC = () => {
         } else {
           setMessage("❌ Access Denied: Invalid Code");
           setIsLoading(false);
+          setCurrentCode('');
         }
       }
     } catch (err) {
@@ -305,9 +330,20 @@ const SecretVault: React.FC = () => {
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400">{galleryTitle}</span>
                         </h2>
                     </div>
-                    <button onClick={closeAll} className="p-2.5 transition-all rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10 hover:text-white hover:rotate-90 hover:scale-110">
-                        <X size={20} />
-                    </button>
+
+                    {/* 🔗 Share & Close Buttons */}
+                    <div className="flex items-center gap-3">
+                      <button 
+                        onClick={handleCopyLink} 
+                        className="flex items-center gap-2 px-4 py-2.5 transition-all rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:bg-purple-600/20 hover:text-purple-400 hover:border-purple-500/40"
+                      >
+                        {copied ? <Check size={18} className="text-emerald-400" /> : <Share2 size={18} />}
+                        <span className="hidden text-sm font-bold sm:inline">{copied ? "Copied!" : "Share Link"}</span>
+                      </button>
+                      <button onClick={closeAll} className="p-2.5 transition-all rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10 hover:text-white hover:rotate-90 hover:scale-110">
+                          <X size={20} />
+                      </button>
+                    </div>
                 </div>
             </div>
 
@@ -360,9 +396,22 @@ const SecretVault: React.FC = () => {
       {/* ── PLAYER VIEW (MODAL) ── */}
       {showPlayer && currentMedia && (
         <div className="fixed inset-0 z-[100001] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-4 animate-in fade-in duration-500">
-            <button onClick={() => setShowPlayer(false)} className="absolute z-50 p-3 transition-all duration-300 border rounded-full bg-white/5 text-slate-300 top-6 right-6 border-white/10 hover:bg-white/10 hover:text-white hover:scale-110 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] backdrop-blur-md">
-                <X size={24} />
-            </button>
+            
+            {/* 🔗 Share & Close Buttons for Player */}
+            <div className="absolute z-50 flex items-center gap-3 top-6 right-6">
+              <button 
+                onClick={handleCopyLink} 
+                className="p-3 transition-all duration-300 border rounded-full bg-white/5 text-slate-300 border-white/10 hover:bg-purple-600/20 hover:text-purple-400 hover:border-purple-500/40 hover:scale-110 backdrop-blur-md"
+              >
+                {copied ? <Check size={24} className="text-emerald-400" /> : <Share2 size={24} />}
+              </button>
+              <button 
+                onClick={() => setShowPlayer(false)} 
+                className="p-3 transition-all duration-300 border rounded-full bg-white/5 text-slate-300 border-white/10 hover:bg-white/10 hover:text-white hover:scale-110 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] backdrop-blur-md"
+              >
+                  <X size={24} />
+              </button>
+            </div>
 
             {/* 🎛️ Slider Navigation Buttons */}
             {playableItems.length > 1 && (
