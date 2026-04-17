@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Search, X, Lock, Grid, Play, Video, Sparkles, Command, ArrowRight, Folder, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Search, X, Lock, Grid, Play, Video, Sparkles, Command, ArrowRight, Folder, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface MediaItem {
@@ -55,24 +55,20 @@ const SecretVault: React.FC = () => {
       }
       if (e.key === 'Escape') closeAll();
     };
-
     const handleNavbarSignal = () => openSecretSearch();
-
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('open-secret-search', handleNavbarSignal);
-
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('open-secret-search', handleNavbarSignal);
     };
-  }, []);
+  }, [showPlayer, showGallery]);
 
   const getThumbnail = (src?: string, manualThumbnail?: string) => {
     if (manualThumbnail) return manualThumbnail;
     if (!src) return null; 
     if (src.includes('youtube.com') || src.includes('youtu.be')) {
       let videoId: string | null = null;
-      
       if (src.includes('embed/')) {
         const embedParts = src.split('embed/');
         videoId = (embedParts[1]?.split('?')[0]) || null;
@@ -85,7 +81,6 @@ const SecretVault: React.FC = () => {
         const pathParts = src.split('/');
         videoId = (pathParts.length > 0 ? pathParts[pathParts.length - 1] : null) || null;
       }
-      
       if (videoId && videoId.trim()) {
         return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
       }
@@ -129,7 +124,6 @@ const SecretVault: React.FC = () => {
               });
             }
             folderMap.get(row.folder_name).items.push(item);
-            
             if (!folderMap.get(row.folder_name).thumbnail) {
               folderMap.get(row.folder_name).thumbnail = row.thumbnail || (row.type === 'image' ? row.src : undefined);
             }
@@ -209,6 +203,33 @@ const SecretVault: React.FC = () => {
     return src.includes('youtube') || src.includes('youtu.be') || src.includes('vimeo') || src.includes('drive.google.com');
   };
 
+  // ── 🎛️ Slider Logic ──
+  const playableItems = galleryItems.filter(item => item.type !== 'folder');
+  const currentIndex = currentMedia ? playableItems.findIndex(item => item.src === currentMedia.src) : -1;
+
+  const handleNext = useCallback(() => {
+    if (currentIndex === -1 || playableItems.length <= 1) return;
+    const nextIndex = (currentIndex + 1) % playableItems.length;
+    setCurrentMedia(playableItems[nextIndex]);
+  }, [currentIndex, playableItems]);
+
+  const handlePrev = useCallback(() => {
+    if (currentIndex === -1 || playableItems.length <= 1) return;
+    const prevIndex = (currentIndex - 1 + playableItems.length) % playableItems.length;
+    setCurrentMedia(playableItems[prevIndex]);
+  }, [currentIndex, playableItems]);
+
+  useEffect(() => {
+    const handleKeyDownPlayer = (e: KeyboardEvent) => {
+      if (showPlayer) {
+        if (e.key === 'ArrowRight') handleNext();
+        if (e.key === 'ArrowLeft') handlePrev();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDownPlayer);
+    return () => window.removeEventListener('keydown', handleKeyDownPlayer);
+  }, [showPlayer, handleNext, handlePrev]);
+
   if (!isOpen && !showGallery && !showPlayer) return null;
 
   return (
@@ -216,14 +237,9 @@ const SecretVault: React.FC = () => {
       {/* ── SEARCH VIEW (MODAL) ── */}
       {isOpen && !showGallery && !showPlayer && (
         <div className="fixed inset-0 z-[99999] bg-[#050505]/90 backdrop-blur-2xl flex items-start justify-center pt-[20vh] animate-in fade-in duration-500">
-          
-          {/* Immersive Glowing Orbs */}
           <div className="absolute top-[10vh] left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-purple-600/20 blur-[120px] rounded-full pointer-events-none animate-pulse"></div>
-          
           <div className="relative z-10 w-full max-w-xl mx-4 group">
-            {/* Animated Glow Behind Box */}
             <div className="absolute -inset-1 rounded-[2rem] bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-pink-500/20 blur-xl opacity-50 transition duration-500 group-hover:opacity-100"></div>
-            
             <div className="relative overflow-hidden border shadow-2xl bg-black/40 border-white/10 rounded-3xl backdrop-blur-2xl">
               <div className="flex items-center px-6 py-6 border-b border-white/5 bg-white/[0.02]">
                 <Command className={`w-6 h-6 mr-4 text-purple-400 ${isLoading ? 'animate-spin' : 'animate-pulse'}`} />
@@ -242,7 +258,6 @@ const SecretVault: React.FC = () => {
                    <button onClick={closeAll} className="px-2.5 py-1 text-[10px] font-black tracking-widest uppercase rounded-md bg-white/5 text-slate-400 border border-white/10 shadow-inner hover:bg-white/10 hover:text-white transition-colors">ESC</button>
                 </div>
               </div>
-              
               <div className="p-10 text-center min-h-[160px] flex flex-col items-center justify-center">
                   {message ? (
                       <div className="duration-500 animate-in slide-in-from-bottom-4 fade-in">
@@ -270,8 +285,6 @@ const SecretVault: React.FC = () => {
       {/* ── GALLERY VIEW (MODAL) ── */}
       {showGallery && (
         <div className="fixed inset-0 z-[100000] h-screen bg-[#050505] text-slate-200 animate-in zoom-in-95 duration-500 overflow-y-auto overflow-x-hidden overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
-            
-            {/* Immersive Background Orbs */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
               <div className="absolute top-[-10%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-purple-600/10 blur-[120px] animate-pulse"></div>
               <div className="absolute bottom-[-10%] left-[-10%] w-[30vw] h-[30vw] rounded-full bg-blue-600/5 blur-[100px] animate-pulse" style={{ animationDelay: '2s' }}></div>
@@ -298,7 +311,7 @@ const SecretVault: React.FC = () => {
                 </div>
             </div>
 
-            <div className="relative z-10 grid w-full max-w-6xl grid-cols-1 gap-6 p-6 pb-24 mx-auto duration-700 md:grid-cols-2 lg:grid-cols-3 animate-in fade-in slide-in-from-bottom-8">
+            <div key={`${galleryTitle}-${galleryHistory.length}`} className="relative z-10 grid w-full max-w-6xl grid-cols-1 gap-6 p-6 pb-24 mx-auto duration-700 md:grid-cols-2 lg:grid-cols-3 animate-in fade-in slide-in-from-bottom-8 zoom-in-90">
                 {galleryItems.map((item, idx) => {
                     const thumbUrl = getThumbnail(item.src, item.thumbnail);
                     return (
@@ -331,7 +344,6 @@ const SecretVault: React.FC = () => {
                                     </div>
                                 )}
                             </div>
-
                             <div className="absolute inset-x-0 bottom-0 p-6 transition-all duration-500 translate-y-4 bg-gradient-to-t from-black via-black/80 to-transparent opacity-80 group-hover:opacity-100 group-hover:translate-y-0">
                                 <h3 className="flex items-center gap-3 text-lg font-bold text-white truncate drop-shadow-md">
                                     {item.title} 
@@ -351,6 +363,24 @@ const SecretVault: React.FC = () => {
             <button onClick={() => setShowPlayer(false)} className="absolute z-50 p-3 transition-all duration-300 border rounded-full bg-white/5 text-slate-300 top-6 right-6 border-white/10 hover:bg-white/10 hover:text-white hover:scale-110 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] backdrop-blur-md">
                 <X size={24} />
             </button>
+
+            {/* 🎛️ Slider Navigation Buttons */}
+            {playableItems.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+                  className="absolute left-4 md:left-10 top-1/2 -translate-y-1/2 z-50 p-3 md:p-4 transition-all duration-300 border rounded-full bg-black/40 text-slate-300 border-white/10 hover:bg-white/10 hover:text-white hover:scale-110 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] backdrop-blur-md"
+                >
+                  <ChevronLeft size={28} />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleNext(); }}
+                  className="absolute right-4 md:right-10 top-1/2 -translate-y-1/2 z-50 p-3 md:p-4 transition-all duration-300 border rounded-full bg-black/40 text-slate-300 border-white/10 hover:bg-white/10 hover:text-white hover:scale-110 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] backdrop-blur-md"
+                >
+                  <ChevronRight size={28} />
+                </button>
+              </>
+            )}
             
             <div className="relative flex flex-col items-center w-full duration-500 max-w-7xl animate-in zoom-in-95">
                 <div className="relative w-full overflow-hidden bg-black border shadow-2xl rounded-3xl border-white/10 ring-1 ring-white/5 shadow-purple-500/10">
@@ -359,13 +389,19 @@ const SecretVault: React.FC = () => {
                         <iframe src={currentMedia.src} className="w-full aspect-video max-h-[85vh] bg-white" allowFullScreen allow="autoplay; encrypted-media"></iframe> : 
                         <video src={currentMedia.src} controls autoPlay className="w-full h-auto max-h-[85vh]" />
                     ) : (
-                        <img src={currentMedia.src} className="w-full h-auto max-h-[85vh] object-contain" />
+                        <img key={currentMedia.src} src={currentMedia.src} className="w-full h-auto max-h-[85vh] object-contain animate-in fade-in duration-300" />
                     )}
                 </div>
-                <div className="mt-8 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
-                  <h3 className="text-xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">
+                <div className="mt-6 md:mt-8 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-3">
+                  <h3 className="text-lg font-bold tracking-wide text-transparent md:text-xl bg-clip-text bg-gradient-to-r from-white to-slate-400">
                     {currentMedia.title}
                   </h3>
+                  {/* 📟 Counter Badge */}
+                  {playableItems.length > 1 && (
+                    <span className="px-2 py-0.5 rounded-md bg-white/10 text-xs font-bold text-slate-400">
+                      {currentIndex + 1} / {playableItems.length}
+                    </span>
+                  )}
                 </div>
             </div>
         </div>
