@@ -1,5 +1,5 @@
 File Tree: rahim-saroar-mishu-portfolio
-Generated on: 4/14/2026, 3:36:16 PM
+Generated on: 4/17/2026, 11:17:12 AM
 Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 
 ────────────────────────────────────────────────────────────────────────────────
@@ -82,6 +82,7 @@ Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 │   │   ├── WeatherApp.css
 │   │   └── WeatherApp.tsx
 │   └── ui/
+│       ├── ErrorBoundary.tsx
 │       ├── LazyImage.tsx
 │       ├── PerformanceDebug.tsx
 │       ├── RevealOnScroll.tsx
@@ -105,6 +106,8 @@ Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 │   ├── supabase.ts
 │   └── utils.ts
 ├── pages/
+│   ├── AdminPage.tsx
+│   ├── BoltoAssistant.tsx
 │   ├── GalleryPage.tsx
 │   ├── PrivacyPage.tsx
 │   ├── RedirectPage.tsx
@@ -113,6 +116,25 @@ Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 │   ├── VaultPage.tsx
 │   └── photos.config.ts
 ├── public/
+│   ├── bolto/
+│   │   ├── audio/
+│   │   │   ├── starter_1.mp3
+│   │   │   ├── starter_10.mp3
+│   │   │   ├── starter_2.mp3
+│   │   │   ├── starter_3.mp3
+│   │   │   ├── starter_4.mp3
+│   │   │   ├── starter_5.mp3
+│   │   │   ├── starter_6.mp3
+│   │   │   ├── starter_7.mp3
+│   │   │   ├── starter_8.mp3
+│   │   │   └── starter_9.mp3
+│   │   ├── favicon.ico
+│   │   ├── index.html
+│   │   ├── logo.png
+│   │   ├── orb.js
+│   │   ├── script.js
+│   │   ├── style.css
+│   │   └── viewer.html
 │   ├── downloads/
 │   │   └── Exam routine.pdf
 │   ├── secret/
@@ -122,6 +144,9 @@ Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 │   │   ├── deep.jpg
 │   │   ├── f.jpg
 │   │   ├── fok.jpg
+│   │   ├── ggg.jpg
+│   │   ├── gggg.png
+│   │   ├── ggggg.png
 │   │   ├── goju.jpg
 │   │   ├── horny.jpg
 │   │   ├── hornyh.jpg
@@ -188,12 +213,17 @@ Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 │   ├── hand-tracking.jpg
 │   ├── jarvis-ai.jpg
 │   ├── map-bg.jpg
+│   ├── mishu-rahim-saroar.jpg
+│   ├── mishu-rahim.jpg
 │   ├── mishu-rahim.png
 │   ├── mishu.png
 │   ├── mywot4b74afe4ed33f8f9012b.html
+│   ├── og-image-v2.jpg
 │   ├── og-image.jpg
 │   ├── paharpur_rahim_saroar (1).jpg
+│   ├── paharpur_rahim_saroar_1.png
 │   ├── portfolio.png
+│   ├── rahim-saroar-eid.png
 │   ├── rahim-saroar-mishu-J.jpg
 │   ├── rahim-saroar-mishu-biya.jpg
 │   ├── rahim-saroar-mishu-c.jpg
@@ -224,6 +254,8 @@ Root path: c:\Users\User\Documents\rahim-saroar-mishu-portfolio
 ├── App.css
 ├── App.tsx
 ├── Dockerfile
+├── ERROR_BOUNDARY_IMPLEMENTATION.md
+├── HEALTH_CHECK_REPORT.md
 ├── LICENSE
 ├── README.md
 ├── SECURITY.md

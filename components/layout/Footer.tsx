@@ -81,6 +81,9 @@ const Footer: React.FC = () => {
       { name: 'About', href: '#about' },
       { name: 'Projects', href: '#projects' },
       { name: 'Contact', href: '#contact' },
+      { name: 'Help & Support', href: '/support' },
+      { name: 'Terms & Conditions', href: '/terms' },
+      { name: 'Privacy Policy', href: '/privacy' },
     ],
     social: [
       { icon: Github, href: 'https://github.com/rahimmishu/rahim-saroar', label: 'GitHub' },
@@ -142,9 +145,9 @@ const Footer: React.FC = () => {
                 <Sparkles size={11} />
                 Explore
               </h4>
-              <ul className="space-y-2.5">
-                {footerLinks.explore.map((link, i) => (
-                  <li key={i}>
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-3 max-w-[280px] mx-auto">
+            {footerLinks.explore.map((link, i) => (
+              <li key={i}>
                     <a
                       href={link.href}
                       className="inline-block text-sm font-semibold footer-link text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400"

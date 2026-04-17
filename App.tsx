@@ -69,6 +69,8 @@ const GalleryPage = lazy(() => import('./pages/GalleryPage'));
 const VaultPage   = lazy(() => import('./pages/VaultPage'));
 const RedirectPage = lazy(() => import('./pages/RedirectPage'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
+const SupportPage = lazy(() => import('./pages/SupportPage')); // [cite: 14, 15]
+const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions')); // [cite: 14, 16]
 
 // ============================================================
 // Suspense fallbacks
@@ -540,6 +542,19 @@ const AppContent: React.FC = () => {
             <Suspense fallback={<PageFallback />}><PrivacyPage /></Suspense>
           </ErrorBoundary>
         } />
+        {/* Support Page Route */}
+        <Route path="/support" element={
+          <ErrorBoundary level="page">
+            <Suspense fallback={<PageFallback />}><SupportPage /></Suspense>
+          </ErrorBoundary>
+        } /> // 
+
+        {/* Terms and Conditions Route */}
+        <Route path="/terms" element={
+          <ErrorBoundary level="page">
+            <Suspense fallback={<PageFallback />}><TermsAndConditions /></Suspense>
+          </ErrorBoundary>
+        } /> //
 
       </Routes>
     </main>
