@@ -251,7 +251,8 @@ const AppContent: React.FC = () => {
       {/* Heavy effects — desktop only, lazy loaded */}
       {!isMobileLite && (
         <Suspense fallback={<NullFallback />}>
-          <SunlightSpotlight className="z-[50]" />
+          {/* z-index বাড়ানো হয়েছে এবং pointer-events-none যুক্ত করা হয়েছে */}
+          <SunlightSpotlight className="z-[9999] pointer-events-none" />
           <DynamicIsland />
           <WelcomeGreeting ready={!isLoading} />
         </Suspense>
