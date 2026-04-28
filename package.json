@@ -13,14 +13,14 @@
     "@google/genai": "^1.50.0",
     "@google/generative-ai": "^0.24.1",
     "@remix-run/router": "^1.23.2",
-    "@supabase/supabase-js": "^2.103.0",
+    "@supabase/supabase-js": "^2.105.0",
     "@types/canvas-confetti": "^1.9.0",
-    "@types/three": "^0.183.1",
+    "@types/three": "^0.184.0",
     "@upstash/redis": "^1.37.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/node": "^5.6.6",
     "canvas-confetti": "^1.9.4",
-    "cloudinary": "^2.9.0",
+    "cloudinary": "^2.10.0",
     "clsx": "^2.1.1",
     "firebase": "^12.12.0",
     "framer-motion": "^12.38.0",
@@ -34,7 +34,7 @@
     "react-router": "6.22.3",
     "react-router-dom": "^6.22.3",
     "tailwind-merge": "^3.5.0",
-    "three": "^0.183.2"
+    "three": "^0.184.0"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
