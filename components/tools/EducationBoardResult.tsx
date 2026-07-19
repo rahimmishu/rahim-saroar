@@ -1,202 +1,394 @@
-import React, { useState } from 'react';
-import { Search, AlertCircle } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  User,
+  Building2,
+  MapPin,
+  Search,
+  Trash2,
+  RefreshCw,
+  CheckCircle2,
+  X,
+  GraduationCap,
+} from "lucide-react";
 
-interface ResultData {
-  name?: string;
-  fatherName?: string;
-  motherName?: string;
-  board?: string;
-  group?: string;
-  result?: string; 
-  institute?: string;
-  subjectGrades?: { code: string; subject: string; grade: string }[];
-  error?: string;
+type Tab = "individual" | "institution" | "district";
+
+interface SubjectResult {
+  code: string;
+  name: string;
+  grade: string;
 }
 
-export default function EducationBoardResult() {
-  const [exam, setExam] = useState('');
-  const [year, setYear] = useState('');
-  const [board, setBoard] = useState('');
-  const [roll, setRoll] = useState('');
-  const [reg, setReg] = useState('');
-  
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [resultData, setResultData] = useState<ResultData | null>(null);
+// Sample data used only to demonstrate the result modal's layout.
+const SAMPLE_SUBJECTS: SubjectResult[] = [
+  { code: "101", name: "Bangla", grade: "A+" },
+  { code: "107", name: "English", grade: "A+" },
+  { code: "109", name: "Mathematics", grade: "A+" },
+  { code: "127", name: "Physics", grade: "A+" },
+  { code: "137", name: "Chemistry", grade: "A+" },
+  { code: "138", name: "Biology", grade: "A" },
+  { code: "153", name: "Higher Math", grade: "A+" },
+  { code: "154", name: "ICT", grade: "A+" },
+  { code: "150", name: "Religion & Moral Education", grade: "A+" },
+];
 
-const handleSubmit = async (e: React.FormEvent) => {
+const SAMPLE_STUDENT = {
+  name: "Sample Student Name",
+  fatherName: "Sample Father Name",
+  motherName: "Sample Mother Name",
+  roll: "123456",
+  registration: "1234567890",
+  board: "Dhaka",
+  year: "2025",
+  institute: "Sample High School, Dhaka",
+  group: "Science",
+  gpa: "5.00",
+  result: "PASSED",
+};
+
+const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
+  { id: "individual", label: "Individual", icon: User },
+  { id: "institution", label: "Institution", icon: Building2 },
+  { id: "district", label: "District", icon: MapPin },
+];
+
+const INSTRUCTIONS = [
+  "Select your examination, board, and year correctly.",
+  "Enter your roll number exactly as printed on your admit card.",
+  "Registration number is required for verification.",
+  "Enter the captcha text shown in the image below.",
+  "Click \u201cCheck Individual Result\u201d to view your result.",
+];
+
+export default function ResultCheckerUI() {
+  const [activeTab, setActiveTab] = useState<Tab>("individual");
+  const [showModal, setShowModal] = useState(false);
+
+  const [exam, setExam] = useState("SSC/Dakhil");
+  const [board, setBoard] = useState("Dhaka");
+  const [year, setYear] = useState("2025");
+  const [roll, setRoll] = useState("");
+  const [registration, setRegistration] = useState("");
+  const [captchaInput, setCaptchaInput] = useState("");
+  const [captchaSeed, setCaptchaSeed] = useState(1);
+
+  const handleClear = () => {
+    setRoll("");
+    setRegistration("");
+    setCaptchaInput("");
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setErrorMsg('');
-    setResultData(null);
-
-    try {
-      // অরিজিনাল API URL
-      const targetUrl = `https://api.bangladesh.gov.org/?exam=${exam}&year=${year}&board=${board}&roll=${roll}&reg=${reg}`;
-      
-      // corsproxy.io এর বদলে allorigins.win প্রক্সি ব্যবহার করা হলো
-      const apiUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-      
-      const response = await fetch(apiUrl);
-      
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const data = await response.json();
-      
-      if (data.error) {
-        setErrorMsg(data.error);
-      } else {
-        setResultData(data);
-      }
-    } catch (error) {
-      console.error("Error fetching result:", error);
-      setErrorMsg('সার্ভারে কানেক্ট করা যাচ্ছে না। API টি ডাউন থাকতে পারে অথবা বোর্ড সার্ভার ব্যস্ত আছে।');
-    } finally {
-      setLoading(false);
-    }
+    // Demonstration only: opens the modal with sample data.
+    setShowModal(true);
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center w-full h-full tools-root">
-      <div 
-        className="relative bg-neutral-950 p-8 md:p-10 rounded-[40px] w-full max-w-[750px] shadow-2xl"
-        style={{ border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 32px 80px rgba(0,0,0,0.7)' }}
-      >
-        {/* Top Highlight Line */}
-        <div className="absolute top-0 h-px left-8 right-8 card-top-line" />
+    <div className="w-full min-h-screen px-4 py-10 font-sans bg-slate-50 md:py-14">
+      {/* ─── Page Header ─── */}
+      <div className="max-w-4xl mx-auto mb-8 text-center">
+        <h1 className="text-2xl font-bold text-slate-800 md:text-3xl">
+          Web Based Result <span className="text-blue-600">2026</span>
+        </h1>
+        <p className="mt-2 text-base font-bold text-slate-700 md:text-lg">
+          Result Publication System for Education Board Bangladesh
+        </p>
+        <p className="mt-1 text-xs text-slate-500 md:text-sm">
+          Check Individual, Institution &amp; District-Wise Results from a single, secure portal.
+        </p>
+      </div>
 
-        {/* Header */}
-        <div className="mb-10 text-center">
-          <h2 className="text-2xl font-black tracking-widest text-white md:text-3xl tools-mono">BOARD RESULT</h2>
-          <p className="text-[11px] font-bold text-white/40 tracking-[0.2em] mt-3 uppercase">
-            Education Board Bangladesh
-          </p>
+      {/* ─── Main Card ─── */}
+      <div className="max-w-4xl mx-auto overflow-hidden bg-white border shadow-lg rounded-2xl border-slate-200 shadow-slate-200/50">
+        {/* Tabs */}
+        <div className="flex border-b border-slate-200">
+          {TABS.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex flex-1 items-center justify-center gap-2 border-b-[3px] px-4 py-4 text-sm font-semibold transition-colors ${
+                  isActive
+                    ? "border-blue-600 text-blue-600"
+                    : "border-transparent text-slate-400 hover:text-slate-600"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
 
-        {/* --- Form Section --- */}
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5 md:grid-cols-2">
-          
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold tracking-[0.15em] text-white/50 tools-mono ml-1">EXAMINATION</label>
-            <select required value={exam} onChange={(e) => setExam(e.target.value)} 
-              className="w-full bg-white/5 border border-white/10 rounded-2xl p-3.5 text-sm text-white/90 outline-none focus:border-indigo-500/50 focus:bg-white/10 transition-all cursor-pointer">
-              <option value="" className="text-white bg-neutral-900">Select Exam</option>
-              <option value="jsc" className="text-white bg-neutral-900">JSC/JDC</option>
-              <option value="ssc" className="text-white bg-neutral-900">SSC/Dakhil/Equivalent</option>
-              <option value="hsc" className="text-white bg-neutral-900">HSC/Alim/Equivalent</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold tracking-[0.15em] text-white/50 tools-mono ml-1">YEAR</label>
-            <select required value={year} onChange={(e) => setYear(e.target.value)} 
-              className="w-full bg-white/5 border border-white/10 rounded-2xl p-3.5 text-sm text-white/90 outline-none focus:border-indigo-500/50 focus:bg-white/10 transition-all cursor-pointer">
-              <option value="" className="text-white bg-neutral-900">Select Year</option>
-              <option value="2026" className="text-white bg-neutral-900">2026</option>
-              <option value="2025" className="text-white bg-neutral-900">2025</option>
-              <option value="2024" className="text-white bg-neutral-900">2024</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold tracking-[0.15em] text-white/50 tools-mono ml-1">BOARD</label>
-            <select required value={board} onChange={(e) => setBoard(e.target.value)} 
-              className="w-full bg-white/5 border border-white/10 rounded-2xl p-3.5 text-sm text-white/90 outline-none focus:border-indigo-500/50 focus:bg-white/10 transition-all cursor-pointer">
-              <option value="" className="text-white bg-neutral-900">Select Board</option>
-              <option value="dhaka" className="text-white bg-neutral-900">Dhaka</option>
-              <option value="rajshahi" className="text-white bg-neutral-900">Rajshahi</option>
-              <option value="comilla" className="text-white bg-neutral-900">Comilla</option>
-              <option value="jessore" className="text-white bg-neutral-900">Jessore</option>
-              <option value="chittagong" className="text-white bg-neutral-900">Chittagong</option>
-              <option value="dinajpur" className="text-white bg-neutral-900">Dinajpur</option>
-              <option value="madrasah" className="text-white bg-neutral-900">Madrasah</option>
-              <option value="technical" className="text-white bg-neutral-900">Technical</option>
-            </select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold tracking-[0.15em] text-white/50 tools-mono ml-1">ROLL</label>
-              <input required type="number" placeholder="Roll No" value={roll} onChange={(e) => setRoll(e.target.value)} 
-                className="w-full bg-white/5 border border-white/10 rounded-2xl p-3.5 text-sm text-white/90 outline-none focus:border-indigo-500/50 focus:bg-white/10 transition-all placeholder:text-white/20" />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold tracking-[0.15em] text-white/50 tools-mono ml-1">REG (Opt)</label>
-              <input type="number" placeholder="Reg No" value={reg} onChange={(e) => setReg(e.target.value)} 
-                className="w-full bg-white/5 border border-white/10 rounded-2xl p-3.5 text-sm text-white/90 outline-none focus:border-indigo-500/50 focus:bg-white/10 transition-all placeholder:text-white/20" />
-            </div>
-          </div>
-
-          <div className="flex justify-center col-span-1 mt-6 md:col-span-2">
-            <button 
-              type="submit" 
-              disabled={loading} 
-              className="relative group flex items-center justify-center gap-3 w-full md:w-auto px-10 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-bold tracking-widest uppercase overflow-hidden transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:hover:scale-100"
-            >
-              {loading ? (
-                <span className="flex items-center gap-2"><span className="w-4 h-4 border-2 rounded-full border-white/20 border-t-white animate-spin"></span> SEARCHING...</span>
-              ) : (
-                <span className="flex items-center gap-2"><Search size={16} /> CHECK RESULT</span>
-              )}
-            </button>
-          </div>
-        </form>
-
-        {/* Error Message */}
-        {errorMsg && (
-          <div className="flex items-center gap-3 p-4 mt-6 text-sm text-red-400 border rounded-xl bg-red-500/10 border-red-500/20">
-            <AlertCircle size={18} className="shrink-0" />
-            <p>{errorMsg}</p>
-          </div>
-        )}
-
-        {/* --- Result Display Section --- */}
-        {resultData && (
-          <div className="mt-8 overflow-hidden border border-white/10 rounded-3xl bg-white/5 backdrop-blur-md">
-            <div className="p-4 text-center border-b bg-white/5 border-white/10 text-white/80 tools-mono text-xs tracking-[0.1em]">
-              RESULT OF {exam.toUpperCase()} EXAMINATION - {year}
-            </div>
-            
-            <div className="p-6">
-              <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
-                <div className="flex justify-between pb-3 border-b border-white/5"><span className="text-white/50">Name</span> <span className="font-bold text-white">{resultData.name || 'N/A'}</span></div>
-                <div className="flex justify-between pb-3 border-b border-white/5"><span className="text-white/50">GPA</span> <span className="font-black text-emerald-400">{resultData.result || 'N/A'}</span></div>
-                <div className="flex justify-between pb-3 border-b border-white/5"><span className="text-white/50">Father</span> <span className="font-medium text-white/90">{resultData.fatherName || 'N/A'}</span></div>
-                <div className="flex justify-between pb-3 border-b border-white/5"><span className="text-white/50">Mother</span> <span className="font-medium text-white/90">{resultData.motherName || 'N/A'}</span></div>
-                <div className="flex justify-between pb-3 border-b border-white/5"><span className="text-white/50">Board</span> <span className="font-medium uppercase text-white/90">{board}</span></div>
-                <div className="flex justify-between pb-3 border-b border-white/5"><span className="text-white/50">Institute</span> <span className="font-medium text-white/90">{resultData.institute || 'N/A'}</span></div>
+        {/* Content grid */}
+        <div className="grid grid-cols-1 md:grid-cols-5">
+          {/* Left column: Form */}
+          <form
+            onSubmit={handleSubmit}
+            className="col-span-3 p-6 space-y-4 md:p-8"
+          >
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  Examination
+                </label>
+                <select
+                  value={exam}
+                  onChange={(e) => setExam(e.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                >
+                  <option>SSC/Dakhil</option>
+                  <option>HSC/Alim</option>
+                  <option>JSC/JDC</option>
+                </select>
+              </div>
+              <div>
+                <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  Name of Board
+                </label>
+                <select
+                  value={board}
+                  onChange={(e) => setBoard(e.target.value)}
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                >
+                  <option>Dhaka</option>
+                  <option>Rajshahi</option>
+                  <option>Chattogram</option>
+                  <option>Barishal</option>
+                  <option>Sylhet</option>
+                  <option>Dinajpur</option>
+                  <option>Jashore</option>
+                  <option>Comilla</option>
+                  <option>Mymensingh</option>
+                </select>
               </div>
             </div>
 
-            {/* Subject Grades */}
-            {resultData.subjectGrades && resultData.subjectGrades.length > 0 && (
-              <div className="px-6 pb-6 overflow-x-auto">
-                <table className="w-full text-sm text-left">
-                  <thead className="text-[10px] text-white/40 uppercase tracking-wider tools-mono border-b border-white/10">
-                    <tr>
-                      <th className="py-3 font-medium">Code</th>
-                      <th className="py-3 font-medium">Subject</th>
-                      <th className="py-3 font-medium text-center">Grade</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {resultData.subjectGrades.map((sub, index) => (
-                      <tr key={index} className="transition-colors border-b border-white/5 hover:bg-white/5">
-                        <td className="py-3 text-white/60">{sub.code}</td>
-                        <td className="py-3 text-white/90">{sub.subject}</td>
-                        <td className="py-3 font-bold text-center text-indigo-400">{sub.grade}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        )}
+            <div>
+              <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Exam Year
+              </label>
+              <select
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              >
+                <option>2025</option>
+                <option>2024</option>
+                <option>2023</option>
+              </select>
+            </div>
 
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  Roll Number
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={roll}
+                  onChange={(e) => setRoll(e.target.value)}
+                  placeholder="e.g. 123456"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                  Registration Number
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={registration}
+                  onChange={(e) => setRegistration(e.target.value)}
+                  placeholder="e.g. 1234567890"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                />
+              </div>
+            </div>
+
+            {/* Captcha */}
+            <div>
+              <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                Security Check
+              </label>
+              <div className="flex items-center gap-2">
+                <div
+                  key={captchaSeed}
+                  className="flex h-11 w-32 shrink-0 select-none items-center justify-center rounded-lg border border-slate-300 bg-slate-100 font-mono text-lg italic tracking-[0.3em] text-slate-500"
+                  style={{ backgroundImage: "repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0 2px, transparent 2px 8px)" }}
+                >
+                  8k2Qx
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCaptchaSeed((s) => s + 1)}
+                  aria-label="Refresh captcha"
+                  className="flex items-center justify-center transition border rounded-lg h-11 w-11 shrink-0 border-slate-300 text-slate-500 hover:bg-slate-50 hover:text-blue-600"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                </button>
+                <input
+                  type="text"
+                  value={captchaInput}
+                  onChange={(e) => setCaptchaInput(e.target.value)}
+                  placeholder="Enter captcha"
+                  className="w-full px-3 text-sm transition bg-white border rounded-lg outline-none h-11 border-slate-300 text-slate-800 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                />
+              </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+              <button
+                type="submit"
+                className="flex items-center justify-center flex-1 gap-2 px-5 py-3 text-sm font-bold text-white transition bg-blue-600 rounded-lg shadow-sm shadow-blue-600/30 hover:bg-blue-700 active:translate-y-px"
+              >
+                <Search className="w-4 h-4" />
+                Check Individual Result
+              </button>
+              <button
+                type="button"
+                onClick={handleClear}
+                className="flex items-center justify-center gap-2 px-5 py-3 text-sm font-bold transition bg-white border rounded-lg border-slate-300 text-slate-600 hover:bg-slate-50 active:translate-y-px"
+              >
+                <Trash2 className="w-4 h-4" />
+                Clear
+              </button>
+            </div>
+          </form>
+
+          {/* Right column: Info panel */}
+          <div className="col-span-2 p-6 border-t border-slate-200 bg-slate-50/60 md:border-l md:border-t-0 md:p-8">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center justify-center w-8 h-8 text-blue-600 bg-blue-100 rounded-full">
+                <User className="w-4 h-4" />
+              </div>
+              <h3 className="text-sm font-bold text-slate-800">Individual Result</h3>
+            </div>
+            <p className="text-sm leading-relaxed text-slate-500">
+              Check a single student&apos;s examination result instantly using
+              their roll and registration number. Results are compiled
+              directly from official board data.
+            </p>
+
+            <ul className="mt-5 space-y-3">
+              {INSTRUCTIONS.map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
+
+      {/* ─── Result Modal ─── */}
+      {showModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60"
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal header */}
+            <div className="flex items-start justify-between gap-4 bg-[#1853A5] px-5 py-4 text-white">
+              <div className="flex items-center gap-2">
+                <GraduationCap className="w-5 h-5 shrink-0" />
+                <h2 className="text-sm font-bold tracking-wide uppercase md:text-base">
+                  Result of SSC/Dakhil/Equivalent Examination &ndash; {SAMPLE_STUDENT.year}
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowModal(false)}
+                aria-label="Close"
+                className="p-1 transition rounded-full shrink-0 text-white/80 hover:bg-white/10 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-5 md:p-6">
+              {/* Demo data notice */}
+              <p className="px-3 py-2 mb-4 text-xs font-medium rounded-md bg-amber-50 text-amber-700">
+                Sample data shown for layout demonstration only.
+              </p>
+
+              {/* Student info grid */}
+              <div className="grid grid-cols-1 p-4 text-sm border rounded-lg gap-x-6 gap-y-2 border-slate-200 sm:grid-cols-2">
+                <InfoRow label="Name" value={SAMPLE_STUDENT.name} />
+                <InfoRow label="Result" value={SAMPLE_STUDENT.result} highlight />
+                <InfoRow label="Father's Name" value={SAMPLE_STUDENT.fatherName} />
+                <InfoRow label="GPA" value={SAMPLE_STUDENT.gpa} highlight />
+                <InfoRow label="Mother's Name" value={SAMPLE_STUDENT.motherName} />
+                <InfoRow label="Group" value={SAMPLE_STUDENT.group} />
+                <InfoRow label="Roll No." value={SAMPLE_STUDENT.roll} />
+                <InfoRow label="Registration No." value={SAMPLE_STUDENT.registration} />
+                <InfoRow label="Board" value={SAMPLE_STUDENT.board} />
+                <InfoRow label="Institute" value={SAMPLE_STUDENT.institute} />
+              </div>
+
+              {/* Subject-wise table */}
+              <div className="mt-6">
+                <h4 className="mb-2 text-xs font-bold tracking-wider uppercase text-slate-500">
+                  Subject-wise Grade / Marks
+                </h4>
+                <div className="overflow-hidden border rounded-lg border-slate-200">
+                  <table className="w-full text-sm text-left">
+                    <thead>
+                      <tr className="bg-[#1853A5] text-white">
+                        <th className="px-4 py-2.5 font-semibold">Subject Code</th>
+                        <th className="px-4 py-2.5 font-semibold">Subject Name</th>
+                        <th className="px-4 py-2.5 font-semibold">Grade</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {SAMPLE_SUBJECTS.map((s, i) => (
+                        <tr
+                          key={s.code}
+                          className={`border-t border-slate-200 ${i % 2 === 1 ? "bg-slate-50" : "bg-white"}`}
+                        >
+                          <td className="px-4 py-2.5 text-slate-600">{s.code}</td>
+                          <td className="px-4 py-2.5 text-slate-800">{s.name}</td>
+                          <td className="px-4 py-2.5 font-semibold text-blue-600">{s.grade}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function InfoRow({
+  label,
+  value,
+  highlight,
+}: {
+  label: string;
+  value: string;
+  highlight?: boolean;
+}) {
+  return (
+    <div className="flex justify-between gap-3 py-1">
+      <span className="text-slate-500">{label}</span>
+      <span className={`text-right font-semibold ${highlight ? "text-blue-600" : "text-slate-800"}`}>
+        {value}
+      </span>
     </div>
   );
 }
