@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import Tools from '../components/tools/Tools';
 
+
 const ToolsPage: React.FC = () => {
   const navigate = useNavigate();
 

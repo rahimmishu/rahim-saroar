@@ -13,7 +13,8 @@ import FocusTimer from './FocusTimer';
 import TicTacToe from '../games/TicTacToe';
 import MemoryGame from '../games/MemoryGame';
 import GpaCalculator from './GpaCalculator'; 
-
+import EducationBoardResult from './EducationBoardResult'; // এই লাইনটি যোগ করুন
+import { BookOpen } from 'lucide-react'; // আইকনের লিস্টে (লাইনের শুরুতে) BookOpen যোগ করতে পারেন, অথবা নিচে দেখুন
 
 // ==========================================
 // GLOBAL PREMIUM STYLES
@@ -277,6 +278,14 @@ const Tools: React.FC = () => {
 
   const apps = [
     {
+      id: 'result-checker',
+      name: 'Board Result',
+      icon: <BookOpen className="text-white drop-shadow-md" size={30} />, // এখানে আপনার ইম্পোর্ট করা আইকনটি দিন
+      color: 'bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700', // কার্ডের কালার থিম
+      glow: 'rgba(79,70,229,0.35)', // গ্লো ইফেক্ট
+      description: 'Check SSC/HSC Results' // কার্ডের নিচের ছোট লেখা
+    },
+    {
       id: 'rps',
       name: 'RPS Game',
       icon: <Hand className="text-white rotate-90 drop-shadow-md" size={30} />,
@@ -360,7 +369,8 @@ const Tools: React.FC = () => {
       case 'weather':    return <WeatherApp onClose={() => setActiveApp(null)} />;
       case 'focus':      return <FocusTimer onClose={() => setActiveApp(null)} />;
       case 'tictactoe':  return <TicTacToe onClose={() => setActiveApp(null)} />;
-      case 'memory':     return <MemoryGame onClose={() => setActiveApp(null)} />;
+      case 'memory': return <MemoryGame onClose={() => setActiveApp(null)} />;
+      case 'result-checker': return <EducationBoardResult />;
       default:           return null;
     }
   };
